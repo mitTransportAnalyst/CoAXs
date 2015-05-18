@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>CoAXs</title>
+
+  <!-- css libraries -->
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+  
+  <!-- leaflet toolset -->
+  <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css">
+  <script src="/bower_components/leaflet/dist/leaflet.js"></script>
+
+  <!-- google places api -->
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+  
+  <!-- ng source -->
+  <script src="/bower_components/angular/angular.min.js"></script>
+
+  <!-- ng models/directive -->
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/ui-router/release/angular-ui-router.min.js"></script>
+  <script src="/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+
+  <script src="/static/scripts/pages/user/project/main.js"></script>
+  <link rel="stylesheet" href="/static/style/main.css"> 
+
+</head>
+
+<body ng-app="flocktrackerApp">
+<%= data %>
+  <nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+      <a class="navbar-brand" ui-sref="projects">
+        <img src="/static/gfx/logo.svg" class="logo"></img>
+      </a>
+    </div>
+    <div class="navbar-header">
+      <a class="navbar-brand" ui-sref="projects">Test's Flocktracker Dashboard</a>
+    </div>
+    <div id="navbar">
+      <ul class="nav navbar-nav pull-right">
+        <li><a href="/logout"><i class="fa fa-times"></i> Logout</a></li>
+        <li><a ui-sref="account"><i class="fa fa-briefcase"></i> User Account</a> </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div class="container">
+   <div ui-view></div>
+  </div>
+
+
+  <div class="container">
+    <footer>
+      <div class="container">
+        <center>
+          <small class="text-muted">© 2015 Urban Launchpad MX, Singapore-MIT Alliance for Research and Technology</small>
+        </center>
+      </div>
+    </footer>
+  </div>
+
+</body>
+<!-- google api -->
+<script src="https://apis.google.com/js/client.js"></script>
+</html>
