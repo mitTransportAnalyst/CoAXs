@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css">
   <script src="/bower_components/leaflet/dist/leaflet.js"></script>
 
-  <!-- google places api -->
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+  <!-- conveyal client lib -->
+  <script src="/public/scripts/analyst.js"></script>
   
   <!-- ng source -->
   <script src="/bower_components/angular/angular.min.js"></script>
@@ -23,28 +23,16 @@
   <script src="/bower_components/ui-router/release/angular-ui-router.min.js"></script>
   <script src="/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
 
-  <script src="/static/scripts/pages/user/project/main.js"></script>
-  <link rel="stylesheet" href="/static/style/main.css"> 
+  <script src="/public/scripts/main.js"></script>
+  <link rel="stylesheet" href="/public/style/main.css"> 
 
 </head>
 
-<body ng-app="flocktrackerApp">
-<%= data %>
-  <nav class="navbar navbar-inverse">
-    <div class="navbar-header">
-      <a class="navbar-brand" ui-sref="projects">
-        <img src="/static/gfx/logo.svg" class="logo"></img>
-      </a>
-    </div>
-    <div class="navbar-header">
-      <a class="navbar-brand" ui-sref="projects">Test's Flocktracker Dashboard</a>
-    </div>
-    <div id="navbar">
-      <ul class="nav navbar-nav pull-right">
-        <li><a href="/logout"><i class="fa fa-times"></i> Logout</a></li>
-        <li><a ui-sref="account"><i class="fa fa-briefcase"></i> User Account</a> </li>
-      </ul>
-    </div>
+<body ng-app="coaxsApp">
+  <nav>
+    <h6>
+      CoAXs
+    </h6>
   </nav>
 
 
@@ -53,17 +41,13 @@
   </div>
 
 
+<footer>
   <div class="container">
-    <footer>
-      <div class="container">
-        <center>
-          <small class="text-muted">© 2015 Urban Launchpad MX, Singapore-MIT Alliance for Research and Technology</small>
-        </center>
-      </div>
-    </footer>
+    <center>
+      <small class="text-muted">© 2015 MIT</small>
+    </center>
   </div>
+</footer>
 
 </body>
-<!-- google api -->
-<script src="https://apis.google.com/js/client.js"></script>
 </html>
