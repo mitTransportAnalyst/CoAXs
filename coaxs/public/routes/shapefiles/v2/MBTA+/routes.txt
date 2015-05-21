@@ -1,0 +1,12 @@
+route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color
+93c4f45,41880d0,93c4f45,CT+MA,3,https://pro.transitmix.net/map/41880d0/line/93c4f45,AD0101
+80d18a0,41880d0,80d18a0,32+1,3,https://pro.transitmix.net/map/41880d0/line/80d18a0,0D7215
+552cc30,41880d0,552cc30,CT+BU,3,https://pro.transitmix.net/map/41880d0/line/552cc30,AD0101
+e003fda,41880d0,e003fda,LH+1,3,https://pro.transitmix.net/map/41880d0/line/e003fda,CE5504
+1f80529,41880d0,1f80529,32+2,3,https://pro.transitmix.net/map/41880d0/line/1f80529,0D7215
+ee48237,41880d0,ee48237,28+3,3,https://pro.transitmix.net/map/41880d0/line/ee48237,0071CA
+b41473f,41880d0,b41473f,LH+3,3,https://pro.transitmix.net/map/41880d0/line/b41473f,CE5504
+8d71159,41880d0,8d71159,LH+2,3,https://pro.transitmix.net/map/41880d0/line/8d71159,CE5504
+e023f68,41880d0,e023f68,28+1,3,https://pro.transitmix.net/map/41880d0/line/e023f68,0071CA
+575aa59,41880d0,575aa59,LH+4,3,https://pro.transitmix.net/map/41880d0/line/575aa59,CE5504
+101d7e7,41880d0,101d7e7,28+2,3,https://pro.transitmix.net/map/41880d0/line/101d7e7,0071CA

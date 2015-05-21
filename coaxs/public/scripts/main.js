@@ -48,13 +48,37 @@ coaxsApp.service('analystService', function() {
 coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletData, analystService) {
 
   // ui variables
-  $scope.view_stations = false;
 
-  $scope.param_stations = {[
-    type : 'Normal',
-    type : 'Platform',
-    type : 'Full',
-  ]}
+  $scope.base = {
+    'view_stations' : false,
+    'view_rush'     : false,
+    'view_off'      : false,
+    'view_foo'      : false,
+    'view_bar'      : false,
+  }
+
+  $scope.param_stations = {
+    'Normal'   : 0,
+    'Platform' : 1,
+    'Full'     : 2,
+  };
+
+
+  // current scenario
+
+  $scope.variationModel = {
+    station : 0,
+    peak    : 5.0,
+    offpeak : 10.0,
+  }
+
+  $scope.scenario = {
+    '28' : angular.copy($scope.variationModel),
+    '32' : angular.copy($scope.variationModel),
+    '66' : angular.copy($scope.variationModel),
+    'CT' : angular.copy($scope.variationModel),
+  }
+
 
   // basic views
 
@@ -62,7 +86,6 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     scrollWheelZoom    : true,
     zoomControl        : false,
     attributionControl : false,
-    tileLayer          : 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
   };
 
   $scope.center_global = {
@@ -119,7 +142,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       $scope.layers_left.geojson['subways'] = L.geoJson(data, {
         style: function (feature) {
           return {
-            color     : 'black',
+            color     : feature.properties.LINE,
             weight    : 1,
             opacity   : 1,
             dashArray : 1,
@@ -132,5 +155,15 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       $scope.layers_left.geojson['subways'].addTo(map);
     });
   });
+
+  $scope.baseToggle = function (menu) {
+    angular.forEach($scope.base, function(value, key) {
+      if (key == menu) {
+        this[key] = !$scope.base[menu];
+      } else {
+        this[key] = false;
+      }
+    }, $scope.base);
+  }
 
 });

@@ -17,60 +17,62 @@
 
 
 <div class="basecol">
-  <h4 ng-click="view_stations = !view_stations">
+  <h4 ng-click="baseToggle('view_stations')">
     Station Type
     <small>
-      {{ param_stations }}
+      {{ param_stations.keys }}
     </small>
   </h4>
-  <div ng-show="view_stations">
-    <ul>
-      <li ng-repeat="station_type in param_stations">
-        <label>{{station_type.name}}
-          <input type="radio" ng-model="$parent.name" name="name" value="{{station_type.name}}" required />
+  <div ng-show="base.view_stations">
+    <ul ng-repeat="(key_sc, value_sc) in scenario" class="fa-ul">
+    {{ key_sc }}
+      <li ng-repeat="(key_st, value_st) in param_stations">
+        <label>
+          <input type="radio" ng-model="scenario[key_sc].station" value="{{ value_st }}" required />
+          {{ key_st }}
         </label>
       </li>
     </ul>
   </div>
 </div>
 <div class="basecol" style="margin-left: 20%">
-  <h4 ng-click="view_rush = !view_rush">
+  <h4 ng-click="baseToggle('view_rush')">
     Station Type
     <small>
       Foo
     </small>
   </h4>
-  <div ng-show="view_rush">
+  <div ng-show="base.view_rush">
     <p>Minimal</p>
     <p>Raised level</p>
     <p>Full station</p>
   </div>
 </div>
 <div class="basecol" style="margin-left: 40%">
-  <h4 ng-click="view_off = !view_off">
+  <h4 ng-click="baseToggle('view_off')">
     Station Type
   </h4>
-  <div ng-show="view_off">
+  <div ng-show="base.view_off">
     <p>Minimal</p>
     <p>Raised level</p>
     <p>Full station</p>
   </div>
 </div>
 <div class="basecol" style="margin-left: 60%">
-  <h4 ng-click="view_stations = !view_stations">
+  <h4 ng-click="baseToggle('view_foo')">
     Station Type
   </h4>
-  <div ng-show="view_stations">
+  <div ng-show="base.view_foo">
     <p>Minimal</p>
     <p>Raised level</p>
     <p>Full station</p>
   </div>
 </div>
 <div class="basecol" style="margin-left: 80%">
-  <h4 ng-click="view_stations = !view_stations">
+  <h4 ng-click="baseToggle('view_bar')">
     Station Type
   </h4>
-  <div ng-show="view_stations">
+  <div ng-show="base.view_bar">
     <p>Minimal</p>
     <p>Raised level</p>
     <p>Full station</p>
