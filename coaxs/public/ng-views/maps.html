@@ -1,0 +1,78 @@
+<leaflet  center   = "center_left"
+          defaults = "defaults_left"
+          geojson  = "geojson_left"
+          id       = "map_left"
+          layers   = "layers_left"
+          markers  = "markers_left"
+          >
+</leaflet>
+<leaflet  center   = "center_right"
+          defaults = "defaults_right"
+          geojson  = "geojson_right"
+          id       = "map_right"
+          layers   = "layers_right"
+          markers  = "markers_right"
+          >
+</leaflet>
+
+
+<div class="basecol">
+  <h4 ng-click="view_stations = !view_stations">
+    Station Type
+    <small>
+      {{ param_stations }}
+    </small>
+  </h4>
+  <div ng-show="view_stations">
+    <ul>
+      <li ng-repeat="station_type in param_stations">
+        <label>{{station_type.name}}
+          <input type="radio" ng-model="$parent.name" name="name" value="{{station_type.name}}" required />
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="basecol" style="margin-left: 20%">
+  <h4 ng-click="view_rush = !view_rush">
+    Station Type
+    <small>
+      Foo
+    </small>
+  </h4>
+  <div ng-show="view_rush">
+    <p>Minimal</p>
+    <p>Raised level</p>
+    <p>Full station</p>
+  </div>
+</div>
+<div class="basecol" style="margin-left: 40%">
+  <h4 ng-click="view_off = !view_off">
+    Station Type
+  </h4>
+  <div ng-show="view_off">
+    <p>Minimal</p>
+    <p>Raised level</p>
+    <p>Full station</p>
+  </div>
+</div>
+<div class="basecol" style="margin-left: 60%">
+  <h4 ng-click="view_stations = !view_stations">
+    Station Type
+  </h4>
+  <div ng-show="view_stations">
+    <p>Minimal</p>
+    <p>Raised level</p>
+    <p>Full station</p>
+  </div>
+</div>
+<div class="basecol" style="margin-left: 80%">
+  <h4 ng-click="view_stations = !view_stations">
+    Station Type
+  </h4>
+  <div ng-show="view_stations">
+    <p>Minimal</p>
+    <p>Raised level</p>
+    <p>Full station</p>
+  </div>
+</div>

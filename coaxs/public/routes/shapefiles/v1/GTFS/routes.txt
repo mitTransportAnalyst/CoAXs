@@ -1,0 +1,6 @@
+route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color
+79bab5d,41880d0,79bab5d,28+,3,https://pro.transitmix.net/map/41880d0/line/79bab5d,0071CA
+93c4f45,41880d0,93c4f45,CT+MA,3,https://pro.transitmix.net/map/41880d0/line/93c4f45,CE5504
+80d18a0,41880d0,80d18a0,32+,3,https://pro.transitmix.net/map/41880d0/line/80d18a0,0D7215
+82b1f8c,41880d0,82b1f8c,CT+BU,3,https://pro.transitmix.net/map/41880d0/line/82b1f8c,CE5504
+ada6889,41880d0,ada6889,66+,3,https://pro.transitmix.net/map/41880d0/line/ada6889,B10086

@@ -10,19 +10,37 @@ app.use(morgan('dev'));
 app.use( bodyParser.json() );   
 
 
-app.use('/static', express.static(__dirname + '/public')); // set up ejs static file management
+app.use('/public', express.static(__dirname + '/public')); // set up ejs static file management
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 
 
+/// ROUTING /// 
 app.get('/', function (req, res) {
 	res.render('index.ejs', {
 	  data : 'foo',
 	});
 });
 
+app.get('/geojson/existing', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/shapefiles/existing/',
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  res.sendFile('lines.geojson', options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+})
+
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Coaxs app listening at http://%s:%s', host, port);
 });
