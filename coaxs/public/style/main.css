@@ -3,6 +3,19 @@ body {
   background-color : #F5F5F3;
 }
 
+/*bs modification*/
+.btn {
+  border-radius    : 0px;
+  background-color : rgba(0,0,0,1);
+  border-width     : 0px;
+  color            : #FFF;
+}
+
+.btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
+  background-color : rgb(50, 50, 50);
+  color            : #FFF;
+}
+
 /*navigation*/
 nav {
   position         : absolute;
@@ -27,9 +40,10 @@ label {
   padding-right    : 10px;
 }
 .basecol div {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(50, 50, 50);
   max-height : 300px;
-  overflow-y : scroll
+  overflow-y : scroll;
+  overflow-x : hidden;
 }
 
 /*maps*/

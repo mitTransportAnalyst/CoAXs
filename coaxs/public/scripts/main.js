@@ -57,6 +57,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     'view_bar'      : false,
   }
 
+  $scope.tabnav = '28';
+
   $scope.param_stations = {
     'Normal'   : 0,
     'Platform' : 1,
@@ -66,10 +68,21 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   // current scenario
 
+  $scope.timesteps = {
+    mstep: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    sstep: [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+  };
+
   $scope.variationModel = {
     station : 0,
-    peak    : 5.0,
-    offpeak : 10.0,
+    peak    : {
+      mstep : 5,
+      sstep : 0,
+    },
+    offpeak : {
+      mstep : 10,
+      sstep : 0,
+    },
   }
 
   $scope.scenario = {
@@ -164,6 +177,16 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         this[key] = false;
       }
     }, $scope.base);
+  }
+
+  $scope.tabnavToggle = function (menu) {
+    angular.forEach($scope.tabnav, function(value, key) {
+      if (key == menu) {
+        this[key] = true;
+      } else {
+        this[key] = false;
+      }
+    }, $scope.tabnav);
   }
 
 });
