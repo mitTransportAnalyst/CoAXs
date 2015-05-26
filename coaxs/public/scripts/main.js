@@ -1,4 +1,4 @@
-var coaxsApp = angular.module('coaxsApp', ['ui.router', 'ui.bootstrap', 'leaflet-directive']);
+var coaxsApp = angular.module('coaxsApp', ['coaxsFilters', 'ui.router', 'ui.bootstrap', 'leaflet-directive']);
 
 coaxsApp.config(function($stateProvider, $urlRouterProvider) {
     
@@ -68,20 +68,15 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   // current scenario
 
-  $scope.timesteps = {
-    mstep: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-    sstep: [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
-  };
-
   $scope.variationModel = {
     station : 0,
     peak    : {
-      mstep : 5,
-      sstep : 0,
+      min : 5,
+      sec : 0,
     },
     offpeak : {
-      mstep : 10,
-      sstep : 0,
+      min : 10,
+      sec : 0,
     },
   }
 
@@ -179,14 +174,57 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     }, $scope.base);
   }
 
-  $scope.tabnavToggle = function (menu) {
-    angular.forEach($scope.tabnav, function(value, key) {
-      if (key == menu) {
-        this[key] = true;
+  $scope.setTabnav = function (val) {
+    $scope.tabnav = val;
+  }
+
+  $scope.subTime = function (tabnav, peak, timeval) {
+    var value = null;
+    
+    if (peak) {
+      value = $scope.scenario[tabnav].peak;
+    } else {
+      value = $scope.scenario[tabnav].offpeak;
+    }
+
+    if (value[timeval] > 1) {
+      value[timeval] -= 1;
+    } else if (value[timeval] == 1) {
+      value[timeval] = 0
+    } else {
+      value[timeval] = 59
+    }
+  }
+
+  $scope.addTime = function (tabnav, peak, timeval) {
+    var value = null;
+    
+    if (peak) {
+      value = $scope.scenario[tabnav].peak;
+    } else {
+      value = $scope.scenario[tabnav].offpeak;
+    }
+    console.log(value)
+
+    if (value[timeval] < 59) {
+      value[timeval] += 1;
+    } else if (value[timeval] == 59) {
+      if (timeval == 'min') {
+        value[timeval] = 60
       } else {
-        this[key] = false;
+        value[timeval] = 0
       }
-    }, $scope.tabnav);
+    } else {
+      value[timeval] = 0
+    }
   }
 
 });
+
+
+
+
+
+
+
+

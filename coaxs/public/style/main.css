@@ -6,6 +6,10 @@ body {
 /*bs modification*/
 .btn {
   border-radius    : 0px;
+}
+
+.btn-default {
+  border-radius    : 0px;
   background-color : rgba(0,0,0,1);
   border-width     : 0px;
   color            : #FFF;
