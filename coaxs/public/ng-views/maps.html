@@ -18,39 +18,56 @@
 
 <div class="basecol">
   <h4 ng-click="baseToggle('view_stations')">
-    Station Type
+    Station Types
     <small>
       {{ param_stations.keys }}
     </small>
   </h4>
   <div ng-show="base.view_stations">
-    <ul ng-repeat="(key_sc, value_sc) in scenario" class="fa-ul">
-    {{ key_sc }}
-      <li ng-repeat="(key_st, value_st) in param_stations">
-        <label>
-          <input type="radio" ng-model="scenario[key_sc].station" value="{{ value_st }}" required />
-          {{ key_st }}
-        </label>
-      </li>
-    </ul>
+    <div ng-repeat="(key_sc, value_sc) in scenario" class="container">
+      Route Number {{ key_sc }}
+      <ul class="fa-ul">
+        <li ng-repeat="(key_st, value_st) in param_stations">
+          <label>
+            <input type="radio" ng-model="scenario[key_sc].station" value="{{ value_st }}" required />
+            {{ key_st }}
+          </label>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 <div class="basecol" style="margin-left: 20%">
   <h4 ng-click="baseToggle('view_rush')">
     Station Type
     <small>
-      Foo
+      Peak Frequency
     </small>
   </h4>
   <div ng-show="base.view_rush">
-    <p>Minimal</p>
-    <p>Raised level</p>
-    <p>Full station</p>
+    <div class="container">
+      <h1>
+        2
+      </h1>
+      
+      <p>
+        Hours step is:
+        <select ng-model="hstep" ng-options="opt for opt in options.hstep"></select>
+      </p>
+      <p>
+        Minutes step is:
+        <select ng-model="mstep" ng-options="opt for opt in options.mstep"></select>
+      </p>
+
+    </div>
   </div>
 </div>
 <div class="basecol" style="margin-left: 40%">
   <h4 ng-click="baseToggle('view_off')">
     Station Type
+    <small>
+      Off-Peak Frequency
+    </small>
   </h4>
   <div ng-show="base.view_off">
     <p>Minimal</p>

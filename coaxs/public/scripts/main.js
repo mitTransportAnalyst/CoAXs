@@ -149,7 +149,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
           };
         },
         onEachFeature: function (feature, layer) {
-          layer.bindPopup(feature.properties.description);
+          layer.bindPopup(feature.properties.LINE + ' Line.<br>' + feature.properties.ROUTE);
         }
       });
       $scope.layers_left.geojson['subways'].addTo(map);

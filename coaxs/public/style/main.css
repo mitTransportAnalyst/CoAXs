@@ -27,7 +27,7 @@ label {
   padding-right    : 10px;
 }
 .basecol div {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
   max-height : 300px;
   overflow-y : scroll
 }
