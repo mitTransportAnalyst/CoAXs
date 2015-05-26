@@ -144,25 +144,84 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   });
 
 
-  $http.get("/geojson/existing")
+  // get geojson files
+
+  $http.get('/geojson/existing')
   .success(function(data, status) {
     leafletData.getMap('map_left').then(function(map) {
       $scope.layers_left.geojson['subways'] = L.geoJson(data, {
         style: function (feature) {
           return {
             color     : feature.properties.LINE,
-            weight    : 1,
-            opacity   : 1,
-            dashArray : 1,
+            weight    : 2,
+            opacity   : 0.5,
+            dashArray : 0,
           };
         },
         onEachFeature: function (feature, layer) {
-          layer.bindPopup(feature.properties.LINE + ' Line.<br>' + feature.properties.ROUTE);
+          layer.bindPopup(feature.properties.LINE + ' Line<br>' + feature.properties.ROUTE);
         }
       });
       $scope.layers_left.geojson['subways'].addTo(map);
     });
   });
+
+  $http.get('/geojson/proposed')
+  .success(function(data, status) {
+    leafletData.getMap('map_left').then(function(map) {
+
+      var exampleDir = {
+        '0' : null,
+        '1' : null,
+      }
+
+      var exampleAlt = {
+        '0' : exampleDir,
+        '1' : exampleDir,
+        '2' : exampleDir,
+        '3' : exampleDir,
+      }
+
+      $scope.layers_left.geojson['proposed'] = {
+        '1' : exampleAlt,
+        '2' : exampleAlt,
+        '3' : exampleAlt,
+        '4' : exampleAlt,
+      }
+
+      for (var i = 0; i < data.features.length; i++) {
+        var feature = data.features[i].properties;
+        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction] = L.geoJson(data.features[i], {
+          style: function (feature) {
+            return {
+              color     : '#' + feature.properties.routes_route_color,
+              weight    : 3,
+              opacity   : 0.1,
+              dashArray : 0,
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.LINE + ' Line<br>' + feature.properties.ROUTE);
+            (function(layer, properties) {
+              layer.on("mouseover", function (e) {
+                layer.setStyle({
+                  opacity : 1,
+                });
+              });
+              layer.on("mouseout", function (e) {
+                layer.setStyle({
+                  opacity : 0.1,
+                }); 
+              });
+            })(layer, feature.properties);
+          }
+        })
+
+        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction].addTo(map);
+      }
+    });
+  });
+
 
   $scope.baseToggle = function (menu) {
     angular.forEach($scope.base, function(value, key) {
