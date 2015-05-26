@@ -1,3 +1,30 @@
+<nav>
+  <div class="section" style="pull-right">
+    <h6>
+      CoAXs
+    </h6>
+  </div>
+  <div class="section" style="pull-right">
+    <h6 ng-click="baseToggle('view_stations')">
+      Station Types
+    </h6>
+  </div>
+  <div class="section" style="pull-right">
+    <h6 ng-click="baseToggle('view_rush')">
+      Frequencies
+    </h6>
+  </div>
+</nav>
+
+<div class="topcol topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+  <h4>{{ targetFeature.properties.altName }}</h4>
+  <div class="topinfo-body container">
+    <h6>The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor.</h6>
+  </div>
+</div>
+
+
+
 <leaflet  center   = "center_left"
           defaults = "defaults_left"
           geojson  = "geojson_left"
@@ -16,92 +43,93 @@
 </leaflet>
 
 
-<div class="basecol">
+
+
+<div class="basecol" ng-show="base.view_stations">
   <h4 ng-click="baseToggle('view_stations')">
     Station Types
-    <small>
-      {{ param_stations.keys }}
-    </small>
   </h4>
-  <div ng-show="base.view_stations">
 
-    <div ng-include="'tabnav.html'"></div>
+  <div ng-include="'tabnav.html'"></div>
 
-    <div class="btn-group btn-group-justified">
-      <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="0">
-        <i class="fa fa-star"></i> 
-        <i class="fa fa-star-o"></i> 
-        <i class="fa fa-star-o"></i>
-        <br>
-        Normal
-      </label>
-      <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="1">
-        <i class="fa fa-star"></i> 
-        <i class="fa fa-star"></i> 
-        <i class="fa fa-star-o"></i>
-        <br>
-        Platform
-      </label>
-      <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="2">
-        <i class="fa fa-star"></i> 
-        <i class="fa fa-star"></i> 
-        <i class="fa fa-star"></i> 
-        <br>
-        BRT
-      </label>
-    </div>
-
+  <div class="btn-group btn-group-justified">
+    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="0">
+      <i class="fa fa-star"></i> 
+      <i class="fa fa-star-o"></i> 
+      <i class="fa fa-star-o"></i>
+      <br>
+      Normal
+    </label>
+    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="1">
+      <i class="fa fa-star"></i> 
+      <i class="fa fa-star"></i> 
+      <i class="fa fa-star-o"></i>
+      <br>
+      Platform
+    </label>
+    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="2">
+      <i class="fa fa-star"></i> 
+      <i class="fa fa-star"></i> 
+      <i class="fa fa-star"></i> 
+      <br>
+      BRT
+    </label>
   </div>
 </div>
-<div class="basecol" style="margin-left: 20%">
+
+<div class="basecol" ng-show="base.view_rush">
   <h4 ng-click="baseToggle('view_rush')">
     Frequencies
   </h4>
-  <div ng-show="base.view_rush">
 
-    <div ng-include="'tabnav.html'"></div>
+  <div ng-include="'tabnav.html'"></div>
 
-    <center ng-init="showPeak = true">
+  <div class="body">
+    <div class="col-xs-6 body text-center">
       <h2>
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, showPeak, 'min')">-</button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, showPeak, 'min')">+</button>
+          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, true, 'min')"><i class="fa fa-angle-down"></i></button>
+          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, true, 'min')"><i class="fa fa-angle-up"></i></button>
         </div>
 
-        <span ng-show="showPeak">
+        <span>
           {{ scenario[tabnav].peak.min | integerLength }} : {{ scenario[tabnav].peak.sec | integerLength }} 
         </span>
 
-        <span ng-show="!showPeak">
-          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
-        </span>
-
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, showPeak, 'sec')">-</button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, showPeak, 'sec')">+</button>
+          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, true, 'sec')"><i class="fa fa-angle-down"></i></button>
+          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, true, 'sec')"><i class="fa fa-angle-up"></i></button>
         </div>
       </h2>
 
       <h4>
-        <span ng-click="showPeak = !showPeak">
-          <span ng-show="showPeak">
-            Peak
-            <small>
-              <i class="fa fa-exchange"></i> Off-Peak
-            </small>
-          </span>
-          <span ng-show="!showPeak">
-            <small>
-              Peak <i class="fa fa-exchange"></i>
-            </small>
-            Off-Peak
-          </span>
-        </span>
+        Peak
       </h4>
-    </center>
+    </div>
+
+    <div class="col-xs-6 body text-center">
+      <h2>
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, false, 'min')"><i class="fa fa-angle-down"></i></button>
+          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, false, 'min')"><i class="fa fa-angle-up"></i></button>
+        </div>
+
+        <span>
+          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
+        </span>
+
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, false, 'sec')"><i class="fa fa-angle-down"></i></button>
+          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, false, 'sec')"><i class="fa fa-angle-up"></i></button>
+        </div>
+      </h2>
+
+      <h4>
+        Off-Peak
+      </h4>
+    </div>
   </div>
 </div>
-
 
 
 

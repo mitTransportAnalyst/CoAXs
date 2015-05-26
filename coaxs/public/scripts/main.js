@@ -201,16 +201,20 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
             };
           },
           onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.LINE + ' Line<br>' + feature.properties.ROUTE);
             (function(layer, properties) {
+              $scope.allDetails = layer;
               layer.on("mouseover", function (e) {
+                $scope.targetFeature = feature;
+                console.log($scope.targetFeature);
                 layer.setStyle({
                   opacity : 1,
+                  weight  : 5,
                 });
               });
               layer.on("mouseout", function (e) {
                 layer.setStyle({
                   opacity : 0.1,
+                  weight  : 3,
                 }); 
               });
             })(layer, feature.properties);
@@ -222,6 +226,12 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     });
   });
 
+  $scope.$on("leafletDirectiveMap.geojsonMouseover", function(ev, leafletEvent) {
+    console.log('f');
+  });
+  $scope.$on("leafletDirectiveMap.geojsonClick", function(ev, featureSelected, leafletEvent) {
+    console.log('we');
+  });
 
   $scope.baseToggle = function (menu) {
     angular.forEach($scope.base, function(value, key) {
@@ -263,7 +273,6 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     } else {
       value = $scope.scenario[tabnav].offpeak;
     }
-    console.log(value)
 
     if (value[timeval] < 59) {
       value[timeval] += 1;

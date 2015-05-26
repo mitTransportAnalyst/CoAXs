@@ -15,7 +15,11 @@ body {
   color            : #FFF;
 }
 
-.btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
+button {
+  cursor           : pointer;
+}
+
+nav div.section selected, nav div.section.active, nav div.section.focus, nav div.section.hover, nav div.section:active, nav div.section:focus, nav div.section:hover, .btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
   background-color : rgb(50, 50, 50);
   color            : #FFF;
 }
@@ -23,32 +27,57 @@ body {
 /*navigation*/
 nav {
   position         : absolute;
-  z-index          : 100;
-  background-color : #000;
   width            : 100%;
+  z-index          : 100;
+  color            : #FFF;
+  background-color : #000;
+  height           : 32px;
+  cursor           : pointer;
+  overflow         : hidden;
+}
+nav div.section {
+  background-color : #000;
+  float            : left;
   padding-left     : 10px;
   padding-right    : 10px;
+  max-width        : 10%;
+}
+.topcol {
+  position         : absolute;
+  top              : 32px;
+  background-color : #000;
   color            : #FFF;
+  z-index          : 100;
+}
+.topleft {
+  width            : 50%;
+}
+.topinfo {
+  background-color : #5F0D0A;
+}
+.topinfo-body {
+  background-color : rgba(255,255,255,0.2);
+  margin-bottom    : 5px;
 }
 .basecol {
   position         : absolute;
-  width            : 20%;
+  width            : 50%;
   bottom           : 0px;
   background-color : #000;
   color            : #FFF;
+  overflow-y       : scroll;
+  overflow-x       : hidden;
 }
 label {
   font-weight      : 300;
 }
-.basecol h4 {
+.basecol h4, .topcol h4 {
   padding-left     : 10px;
   padding-right    : 10px;
 }
-.basecol div {
-  background-color: rgb(50, 50, 50);
-  max-height : 300px;
-  overflow-y : scroll;
-  overflow-x : hidden;
+.basecol .body, .topcol .body {
+  background-color : rgb(50, 50, 50);
+  max-height       : 300px;
 }
 
 /*maps*/
