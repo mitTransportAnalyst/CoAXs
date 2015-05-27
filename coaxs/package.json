@@ -11,5 +11,7 @@
     "morgan": "^1.5.3"
   },
   "devDependencies": {},
-  "scripts": {}
+  "scripts": {
+    "start" : "node app.js"
+  }
 }

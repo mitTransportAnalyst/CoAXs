@@ -1,7 +1,7 @@
 <nav>
   <div class="section" style="pull-right">
     <h6>
-      CoAXs
+      COAXS
     </h6>
   </div>
   <div class="section" style="pull-right">
@@ -19,7 +19,18 @@
 <div class="topcol topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}">
   <h4>{{ targetFeature.properties.altName }}</h4>
   <div class="topinfo-body container">
-    <h6>The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor.</h6>
+    <h6>
+      The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor.
+      The highlighted portion shown indicates the 
+      <span ng-show="targetFeature.properties.direction == 0">
+        inbound 
+      </span>
+      <span ng-show="!targetFeature.properties.direction == 0">
+        outbound 
+      </span>
+      path of the route.
+      Alternative scenarios along this corridor are: 
+    </h6>
   </div>
 </div>
 

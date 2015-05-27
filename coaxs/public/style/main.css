@@ -51,6 +51,7 @@ nav div.section {
 }
 .topleft {
   width            : 50%;
+  overflow         : hidden;
 }
 .topinfo {
   background-color : #5F0D0A;
@@ -58,6 +59,7 @@ nav div.section {
 .topinfo-body {
   background-color : rgba(255,255,255,0.2);
   margin-bottom    : 5px;
+  width            : 100%;
 }
 .basecol {
   position         : absolute;

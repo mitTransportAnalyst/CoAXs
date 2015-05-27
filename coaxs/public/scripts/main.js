@@ -65,6 +65,11 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     'Full'     : 2,
   };
 
+  $scope.targetFeature = {
+    'properties' : {},
+    'alternative' : {},
+  }
+
 
   // current scenario
 
@@ -171,27 +176,36 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     leafletData.getMap('map_left').then(function(map) {
 
       var exampleDir = {
-        '0' : null,
-        '1' : null,
+        '0' : {
+          'leaflet' : null,
+          'base'    : null,
+        },
+        '1' : {
+          'leaflet' : null,
+          'base'    : null,
+        },
       }
 
       var exampleAlt = {
-        '0' : exampleDir,
-        '1' : exampleDir,
-        '2' : exampleDir,
-        '3' : exampleDir,
+        '0' : JSON.parse(JSON.stringify(exampleDir)),
+        '1' : JSON.parse(JSON.stringify(exampleDir)),
+        '2' : JSON.parse(JSON.stringify(exampleDir)),
+        '3' : JSON.parse(JSON.stringify(exampleDir)),
       }
 
       $scope.layers_left.geojson['proposed'] = {
-        '1' : exampleAlt,
-        '2' : exampleAlt,
-        '3' : exampleAlt,
-        '4' : exampleAlt,
+        '1' : JSON.parse(JSON.stringify(exampleAlt)),
+        '2' : JSON.parse(JSON.stringify(exampleAlt)),
+        '3' : JSON.parse(JSON.stringify(exampleAlt)),
+        '4' : JSON.parse(JSON.stringify(exampleAlt)),
       }
+
+      var geojsonList = [];
 
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
-        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction] = L.geoJson(data.features[i], {
+        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['base'] = feature;
+        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet'] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color     : '#' + feature.properties.routes_route_color,
@@ -204,34 +218,41 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
             (function(layer, properties) {
               $scope.allDetails = layer;
               layer.on("mouseover", function (e) {
-                $scope.targetFeature = feature;
-                console.log($scope.targetFeature);
+                $scope.updateTargetFeature(feature.properties);
+                
+                routesLayer.eachLayer(function (layer) {
+                  layer.setStyle({
+                    opacity : 0.1,
+                    weight  : 3,
+                  });
+                });
+                
                 layer.setStyle({
                   opacity : 1,
                   weight  : 5,
                 });
               });
-              layer.on("mouseout", function (e) {
-                layer.setStyle({
-                  opacity : 0.1,
-                  weight  : 3,
-                }); 
-              });
-            })(layer, feature.properties);
+            })
+            (layer, feature.properties);
           }
         })
 
-        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction].addTo(map);
+        geojsonList.push($scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet']);
+
+        if (i == 0) {
+          $scope.updateTargetFeature(data.features[i].properties);
+        }
       }
+      var routesLayer = L.layerGroup(geojsonList)
+      routesLayer.addTo(map);
     });
   });
 
-  $scope.$on("leafletDirectiveMap.geojsonMouseover", function(ev, leafletEvent) {
-    console.log('f');
-  });
-  $scope.$on("leafletDirectiveMap.geojsonClick", function(ev, featureSelected, leafletEvent) {
-    console.log('we');
-  });
+  $scope.updateTargetFeature = function (properties) {
+    $scope.targetFeature.properties = properties;
+    $scope.targetFeature.alternative = $scope.layers_left.geojson['proposed'][properties.corId];
+  }
+
 
   $scope.baseToggle = function (menu) {
     angular.forEach($scope.base, function(value, key) {
