@@ -225,7 +225,6 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
           },
           base: feature,
         })
-
         geojsonList.push($scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet']);
       }
       $scope.routesLayer = L.layerGroup(geojsonList)
@@ -235,28 +234,52 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   $http.get('/geojson/proposed_stops')
   .success(function(data, status) {
-    console.log(data);
     leafletData.getMap('map_left').then(function(map) {
+      var stopList = [];
       var stopicon_base = L.Icon.extend({
         options : {
           iconUrl      :     'public/imgs/stop.png',
           iconSize     :     [16, 18],
           iconAnchor   :     [8, 18],
-          shadowAnchor :     [4, 62],
-          popupAnchor  :     [-3, -76],
+          popupAnchor  :     [0, -15],
+          className    :     'icon-off',
         }
       });
       var stopicon = new stopicon_base();
+
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
-        L.marker([stop.geometry.coordinates[0][1], stop.geometry.coordinates[0][0]], {
-          'icon' : stopicon
-        }).addTo(map);
+        stopList.push(L.marker([stop.properties.stop_lat, stop.properties.stop_lon], {
+          'icon'        : stopicon,
+          'riseOnHover' : true,
+          'base'        : stop.properties,
+        }))
       }
+      $scope.stopsLayer = L.layerGroup(stopList);
+      $scope.stopsLayer.addTo(map);
     });
   });
 
   $scope.updateTargetFeature = function (properties) {
+    var stopicon_base = L.Icon.extend({
+      options : {
+        iconUrl      :     'public/imgs/stop.png',
+        iconSize     :     [16, 18],
+        iconAnchor   :     [8, 18],
+        popupAnchor  :     [0, -15],
+        className    :     'icon-off',
+      }
+    });
+    var stopicon_on = L.Icon.extend({
+      options : {
+        iconUrl      :     'public/imgs/stop.png',
+        iconSize     :     [16, 18],
+        iconAnchor   :     [8, 18],
+        popupAnchor  :     [0, -15],
+        className    :     'icon-on',
+      }
+    });
+    
     if (properties) {
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
@@ -274,6 +297,14 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         }
       });
 
+      $scope.stopsLayer.eachLayer(function (marker) { console.log(typeof properties.route_id, typeof marker.options.base.stop_id);
+        if (marker.options.base.stop_id.includes(properties.route_id)) {
+          marker.setIcon(new stopicon_on());
+        } else {
+          marker.setIcon(new stopicon_base());
+        }
+      });
+
       angular.forEach($scope.layers_left.geojson['proposed'][properties.corId], function(each) {
         if (each[0].base && each[1].base) {
           $scope.targetFeature.alternatives.push(each[0].base);
@@ -283,12 +314,18 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     } else {
       $scope.targetFeature.properties   = null;
       $scope.targetFeature.alternatives = null;
+
       $scope.routesLayer.eachLayer(function (layer) {
         layer.setStyle({
           opacity : 0.1,
           weight  : 3,
         });
       });
+
+      $scope.stopsLayer.eachLayer(function (marker) {
+        marker.setIcon(new stopicon_base());
+      });
+
     }
   }
 

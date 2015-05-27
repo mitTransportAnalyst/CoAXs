@@ -90,6 +90,16 @@ label {
   max-height       : 300px;
 }
 
+
+/*leaflet map*/
+.icon-off {
+  display: none;
+}
+.icon-on {
+  display: inline;
+}
+
+
 /*maps*/
 .angular-leaflet-map {
   height           : 100%;
