@@ -15,6 +15,13 @@ body {
   color            : #FFF;
 }
 
+.badge {
+  background-color : #FFF;
+  color            : rgb(50, 50, 50);
+  cursor           : pointer;
+  opacity          : 0.8;
+}
+
 button {
   cursor           : pointer;
 }
@@ -23,6 +30,7 @@ nav div.section selected, nav div.section.active, nav div.section.focus, nav div
   background-color : rgb(50, 50, 50);
   color            : #FFF;
 }
+
 
 /*navigation*/
 nav {

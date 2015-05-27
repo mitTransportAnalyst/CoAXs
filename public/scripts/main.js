@@ -66,8 +66,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   };
 
   $scope.targetFeature = {
-    'properties' : {},
-    'alternative' : {},
+    'properties'   : {},
+    'alternatives' : {},
   }
 
 
@@ -219,38 +219,77 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
               $scope.allDetails = layer;
               layer.on("mouseover", function (e) {
                 $scope.updateTargetFeature(feature.properties);
-                
-                routesLayer.eachLayer(function (layer) {
-                  layer.setStyle({
-                    opacity : 0.1,
-                    weight  : 3,
-                  });
-                });
-                
-                layer.setStyle({
-                  opacity : 1,
-                  weight  : 5,
-                });
               });
             })
             (layer, feature.properties);
-          }
+          },
+          base: feature,
         })
 
         geojsonList.push($scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet']);
-
-        if (i == 0) {
-          $scope.updateTargetFeature(data.features[i].properties);
-        }
       }
-      var routesLayer = L.layerGroup(geojsonList)
-      routesLayer.addTo(map);
+      $scope.routesLayer = L.layerGroup(geojsonList)
+      $scope.routesLayer.addTo(map);
+    });
+  });
+
+  $http.get('/geojson/proposed_stops')
+  .success(function(data, status) {
+    console.log(data);
+    leafletData.getMap('map_left').then(function(map) {
+      var stopicon_base = L.Icon.extend({
+        options : {
+          iconUrl      :     'public/imgs/stop.png',
+          iconSize     :     [16, 18],
+          iconAnchor   :     [8, 18],
+          shadowAnchor :     [4, 62],
+          popupAnchor  :     [-3, -76],
+        }
+      });
+      var stopicon = new stopicon_base();
+      for (var i=0; i<data.features.length; i++) {
+        var stop = data.features[i];
+        L.marker([stop.geometry.coordinates[0][1], stop.geometry.coordinates[0][0]], {
+          'icon' : stopicon
+        }).addTo(map);
+      }
     });
   });
 
   $scope.updateTargetFeature = function (properties) {
-    $scope.targetFeature.properties = properties;
-    $scope.targetFeature.alternative = $scope.layers_left.geojson['proposed'][properties.corId];
+    if (properties) {
+      $scope.targetFeature.properties   = properties;
+      $scope.targetFeature.alternatives = [];
+
+      $scope.routesLayer.eachLayer(function (layer) {
+        layer.setStyle({
+          opacity : 0.1,
+          weight  : 3,
+        });
+        if (layer.options.base.route_id == properties.route_id) {
+          layer.setStyle({
+            opacity : 0.35,
+            weight  : 5,
+          });
+        }
+      });
+
+      angular.forEach($scope.layers_left.geojson['proposed'][properties.corId], function(each) {
+        if (each[0].base && each[1].base) {
+          $scope.targetFeature.alternatives.push(each[0].base);
+          $scope.targetFeature.alternatives.push(each[1].base);
+        }
+      }, $scope.layers_left.geojson['proposed'][properties.corId])
+    } else {
+      $scope.targetFeature.properties   = null;
+      $scope.targetFeature.alternatives = null;
+      $scope.routesLayer.eachLayer(function (layer) {
+        layer.setStyle({
+          opacity : 0.1,
+          weight  : 3,
+        });
+      });
+    }
   }
 
 

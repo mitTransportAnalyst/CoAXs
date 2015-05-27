@@ -56,6 +56,23 @@ app.get('/geojson/proposed', function (req, res) {
   });
 })
 
+app.get('/geojson/proposed_stops', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  res.sendFile('stops.geojson', options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+})
+
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
   var port = server.address().port;
