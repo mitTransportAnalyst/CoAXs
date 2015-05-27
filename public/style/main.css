@@ -40,7 +40,6 @@ nav {
   color            : #FFF;
   background-color : #000;
   height           : 32px;
-  cursor           : pointer;
   overflow         : hidden;
 }
 nav div.section {
@@ -49,6 +48,7 @@ nav div.section {
   padding-left     : 10px;
   padding-right    : 10px;
   max-width        : 10%;
+  cursor           : pointer;
 }
 .topcol {
   position         : absolute;
@@ -87,7 +87,6 @@ label {
 }
 .basecol .body, .topcol .body {
   background-color : rgb(50, 50, 50);
-  max-height       : 300px;
 }
 
 

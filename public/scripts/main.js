@@ -51,10 +51,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   $scope.base = {
     'view_stations' : false,
-    'view_rush'     : false,
-    'view_off'      : false,
-    'view_foo'      : false,
-    'view_bar'      : false,
+    'view_freq'     : false,
+    'view_scenario' : false,
   }
 
   $scope.tabnav = '28';
@@ -279,7 +277,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         className    :     'icon-on',
       }
     });
-    
+
     if (properties) {
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
