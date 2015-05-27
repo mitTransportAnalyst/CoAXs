@@ -111,7 +111,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     baselayers: {
       carto_light: {
         name : 'Foo',
-        url  : 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+        url  : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
         type : 'xyz'
       }
     },
