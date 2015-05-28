@@ -7,30 +7,39 @@ body {
 .btn {
   border-radius    : 0px;
 }
-
 .btn-default {
   border-radius    : 0px;
   background-color : rgba(0,0,0,1);
   border-width     : 0px;
   color            : #FFF;
 }
-
 .badge {
   background-color : #FFF;
-  color            : rgb(50, 50, 50);
+  color            : #1fa67a;
   cursor           : pointer;
   opacity          : 0.8;
 }
-
 button {
   cursor           : pointer;
 }
-
-nav div.section selected, nav div.section.active, nav div.section.focus, nav div.section.hover, nav div.section:active, nav div.section:focus, nav div.section:hover, .btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
+nav div.section, nav div.section.active, nav div.section.focus, nav div.section.hover, nav div.section:active, nav div.section:focus, nav div.section:hover, .btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
   background-color : rgb(50, 50, 50);
   color            : #FFF;
 }
-
+.form-control {
+  border-width     : 0px;
+  border-radius    : 0px;
+}
+.btn-savealt {
+  background-color : #1fa67a;
+}
+.btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
+  color            : #FFF;
+  border-left-width: 0px;
+}
+.btn-choose.active, .btn-choose.focus, .btn-choose.hover, .btn-choose:active, .btn-choose:focus, .btn-choose:hover {
+  color            : #FFF;
+}
 
 /*navigation*/
 nav {
@@ -50,15 +59,15 @@ nav div.section {
   max-width        : 10%;
   cursor           : pointer;
 }
-.topcol {
+.topcol-l {
   position         : absolute;
   top              : 32px;
-  background-color : #000;
   color            : #FFF;
   z-index          : 100;
+  width            : 50%;
 }
 .topleft {
-  width            : 50%;
+  width            : 100%;
   overflow         : hidden;
 }
 .topinfo {
@@ -78,15 +87,22 @@ nav div.section {
   overflow-y       : scroll;
   overflow-x       : hidden;
 }
+.saveAlt {
+  background-color : #1fa67a;
+  overflow         : hidden;
+}
 label {
   font-weight      : 300;
 }
-.basecol h4, .topcol h4 {
+.basecol h1, .topcol-l h1, .basecol h2, .topcol-l h2, .basecol h3, .topcol-l h3, .basecol h4, .topcol-l h4, .basecol h5, .topcol-l h5, .basecol h6, .topcol-l h6 {
   padding-left     : 10px;
   padding-right    : 10px;
 }
 .basecol .body, .topcol .body {
   background-color : rgb(50, 50, 50);
+}
+.timeAdjust {
+  border-radius    : 50%;
 }
 
 

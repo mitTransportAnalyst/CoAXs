@@ -48,20 +48,13 @@ coaxsApp.service('analystService', function() {
 coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletData, analystService) {
 
   // ui variables
-
   $scope.base = {
     'view_stations' : false,
     'view_freq'     : false,
     'view_scenario' : false,
   }
 
-  $scope.tabnav = '28';
-
-  $scope.param_stations = {
-    'Normal'   : 0,
-    'Platform' : 1,
-    'Full'     : 2,
-  };
+  $scope.tabnav = 'BH';
 
   $scope.targetFeature = {
     'properties'   : {},
@@ -72,22 +65,31 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   // current scenario
 
   $scope.variationModel = {
-    station : 0,
-    peak    : {
+    name     : null,
+    station  : 0,
+    route_id : null,
+    peak     : {
       min : 5,
       sec : 0,
     },
-    offpeak : {
+    offpeak  : {
       min : 10,
       sec : 0,
     },
   }
 
   $scope.scenario = {
-    '28' : angular.copy($scope.variationModel),
-    '32' : angular.copy($scope.variationModel),
-    '66' : angular.copy($scope.variationModel),
+    'BH' : angular.copy($scope.variationModel),
+    'HP' : angular.copy($scope.variationModel),
+    'HD' : angular.copy($scope.variationModel),
     'CT' : angular.copy($scope.variationModel),
+  }
+
+  $scope.variants = {
+    'BH' : [],
+    'HP' : [],
+    'HD' : [],
+    'CT' : [],
   }
 
 
@@ -295,7 +297,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         }
       });
 
-      $scope.stopsLayer.eachLayer(function (marker) { console.log(typeof properties.route_id, typeof marker.options.base.stop_id);
+      $scope.stopsLayer.eachLayer(function (marker) {
         if (marker.options.base.stop_id.includes(properties.route_id)) {
           marker.setIcon(new stopicon_on());
         } else {
@@ -323,10 +325,15 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       $scope.stopsLayer.eachLayer(function (marker) {
         marker.setIcon(new stopicon_base());
       });
-
     }
   }
 
+
+  $scope.newVariant = function (tabnav) {
+    $scope.variants[tabnav].push($scope.scenario[tabnav])
+    console.log($scope.routesLayer);
+    $scope.scenario[tabnav] = angular.copy($scope.variationModel);
+  }
 
   $scope.baseToggle = function (menu) {
     angular.forEach($scope.base, function(value, key) {

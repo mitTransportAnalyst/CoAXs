@@ -21,33 +21,78 @@
   </div>
 </nav>
 
-<div class="topcol topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.altName">
-  <h4>
-    {{ targetFeature.properties.altName }}
-    <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature(false)"></i>
-  </h4>
-  <div class="topinfo-body container">
-    <h6>
-      The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor.
-      You last hovered over the  
-      <span ng-show="targetFeature.properties.direction == 0">
-        inbound 
-      </span>
-      <span ng-show="!targetFeature.properties.direction == 0">
-        outbound 
-      </span>
-      portion of the route's path.
-    </h6>
-
-    <h6 ng-show="targetFeature.alternatives">
-      There are {{ targetFeature.alternatives.length/2 }} alternatives along this corridor. They are: 
-      <span ng-repeat="feature in targetFeature.alternatives">
-        <span class="badge" style="color: #{{ feature.routes_route_color }};" ng-show="feature.direction == 0" ng-click="updateTargetFeature(feature)">
-          {{ feature.altName }}
+<div class="topcol-l">
+  <div class="topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.altName">
+    <h4>
+      {{ targetFeature.properties.altName }}
+      <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature(false)"></i>
+    </h4>
+    <div class="topinfo-body container">
+      <h6>
+        The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
+        You last selected the  
+        <span ng-show="targetFeature.properties.direction == 0">
+          inbound 
         </span>
-      </span>
-    </h6>
-    
+        <span ng-show="!targetFeature.properties.direction == 0">
+          outbound 
+        </span>
+        portion of the route's path.
+      </h6>
+
+      <h6 ng-show="targetFeature.alternatives">
+        There are {{ targetFeature.alternatives.length/2 }} alternatives along this corridor. They are: 
+        <span ng-repeat="feature in targetFeature.alternatives">
+          <span class="badge" style="color: #{{ feature.routes_route_color }};" ng-show="feature.direction == 0" ng-click="updateTargetFeature(feature)">
+            {{ feature.altName }}
+          </span>
+        </span>
+      </h6>
+      
+      <button class="btn btn-choose pull-right" type="button" ng-click="scenario[targetFeature.properties.corName].route_id = targetFeature.properties.route_id" style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+        Use this path for the {{ targetFeature.properties.corLonName }} corridor
+      </button>
+
+    </div>
+  </div>
+
+  <div class="topleft saveAlt" ng-show="saveAlt">
+    <h4>
+      Save this Route {{ tabnav }} alternative
+      <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=!saveAlt"></i>
+    </h4>
+    <div class="topinfo-body container">
+      <h6 ng-if="scenario[tabnav].route_id">
+        This alternative route variation is based off of the path for route {{ scenario[tabnav].route_id }}.
+      </h6>
+      <h6 ng-if="!scenario[tabnav].route_id">
+        You have not selected a path from the available options for this route. To select a path variation, choose from the available variations on the underlying map.
+      </h6>
+      <h6>
+        Your alternative for Route {{ tabnav }} has installed
+        <span ng-if="scenario[tabnav].station == 0">
+          traditional standard bus stops.
+        </span>
+        <span ng-if="scenario[tabnav].station == 1">
+          bus stops enhanced with raised platforms.
+        </span>
+        <span ng-if="scenario[tabnav].station == 2">
+          BRT bus stations that feature both raised platforms and preboarding fare purchasing
+        </span>
+        Peak frequencies along your alternative of Route {{ tabnav }} have been set to {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals. Off-peak frequencies have been set to {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals. Complete the field below to add this alternative to Route {{ tabnav }}.
+      </h6>
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
+        <span class="input-group-btn">
+          <button class="btn btn-savealt" type="button" ng-if="!scenario[tabnav].name || !scenario[tabnav].route_id" style="cursor:not-allowed" disabled>
+            Save Alternative
+          </button>
+          <button class="btn btn-savealt" type="button" ng-click="newVariant(tabnav); saveAlt=!saveAlt" ng-if="scenario[tabnav].name && scenario[tabnav].route_id">
+            Save Alternative
+          </button>
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -74,28 +119,36 @@
 
 
 <div class="basecol" ng-show="base.view_scenario">
-  <h4 ng-click="baseToggle('view_scenario')">
-    Station Types
+  <h4>
+    <span ng-click="baseToggle('view_scenario')">
+      Station Types
+    </span>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
   
   <div class="col-xs-12 body">
-    Foobar
-    <h2>
-      Foobar
-    </h2>
 
-    <h4>
-      Peak
+  <span >
+    <h3>
+      Foobar 
+    </h3>
+    <h4 ng-repeat="variant in variants[tabnav]">
+      {{ variant.name }}: Station type {{ variant.station }} with a peak frequency of {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} and an off-peak frequency of {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }}.
     </h4>
+  <span>
+
   </div>
 </div>
 
 
 <div class="basecol" ng-show="base.view_stations">
-  <h4 ng-click="baseToggle('view_stations')">
-    Station Types
+
+  <h4>
+    <span ng-click="baseToggle('view_stations')">
+      Station Types
+    </span>
+    <i class="fa fa-plus-square-o pull-right" ng-click="saveAlt=!saveAlt"></i>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
@@ -126,8 +179,11 @@
 </div>
 
 <div class="basecol" ng-show="base.view_freq">
-  <h4 ng-click="baseToggle('view_freq')">
-    Frequencies
+  <h4>
+    <span ng-click="baseToggle('view_freq')">
+      Frequencies
+    </span>
+    <i class="fa fa-plus-square-o pull-right" ng-click="saveAlt=!saveAlt"></i>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
@@ -136,8 +192,7 @@
     <div class="col-xs-6 body text-center">
       <h2>
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, true, 'min')"><i class="fa fa-angle-down"></i></button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, true, 'min')"><i class="fa fa-angle-up"></i></button>
+          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, true, 'min')"><i class="fa fa-angle-down"></i></button>
         </div>
 
         <span>
@@ -145,8 +200,7 @@
         </span>
 
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, true, 'sec')"><i class="fa fa-angle-down"></i></button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, true, 'sec')"><i class="fa fa-angle-up"></i></button>
+          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, true, 'min')"><i class="fa fa-angle-up"></i></button>
         </div>
       </h2>
 
@@ -158,8 +212,7 @@
     <div class="col-xs-6 body text-center">
       <h2>
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, false, 'min')"><i class="fa fa-angle-down"></i></button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, false, 'min')"><i class="fa fa-angle-up"></i></button>
+          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, false, 'min')"><i class="fa fa-angle-down"></i></button>
         </div>
 
         <span>
@@ -167,8 +220,7 @@
         </span>
 
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-info" ng-click="subTime(tabnav, false, 'sec')"><i class="fa fa-angle-down"></i></button>
-          <button type="button" class="btn btn-info" ng-click="addTime(tabnav, false, 'sec')"><i class="fa fa-angle-up"></i></button>
+          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, false, 'min')"><i class="fa fa-angle-up"></i></button>
         </div>
       </h2>
 
@@ -188,23 +240,23 @@
   <div class="btn-group btn-group-justified" role="group">
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('28')"
-                            ng-class="tabnav == '28' ? 'btn-selected' : ''">
-        28
+                            ng-click="setTabnav('BH')"
+                            ng-class="tabnav == 'BH' ? 'btn-selected' : ''">
+        BH
       </button>
     </div>
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('32')"
-                            ng-class="tabnav == '32' ? 'btn-selected' : ''">
-        32
+                            ng-click="setTabnav('HP')"
+                            ng-class="tabnav == 'HP' ? 'btn-selected' : ''">
+        HP
       </button>
     </div>
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('66')"
-                            ng-class="tabnav == '66' ? 'btn-selected' : ''">
-        66
+                            ng-click="setTabnav('HD')"
+                            ng-class="tabnav == 'HD' ? 'btn-selected' : ''">
+        HD
       </button>
     </div>
     <div class="btn-group" role="group">
