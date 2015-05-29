@@ -93,7 +93,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   }
 
 
-  // basic views
+  // basic leaflet angular directive view models
 
   $scope.defaults_global = {
     scrollWheelZoom    : true,
@@ -203,8 +203,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       var geojsonList = [];
 
       for (var i = 0; i < data.features.length; i++) {
-        var feature = data.features[i].properties;
-        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['base'] = feature;
+        var feature = data.features[i].properties; console.log(feature);
         $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet'] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
@@ -216,7 +215,6 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
           },
           onEachFeature: function (feature, layer) {
             (function(layer, properties) {
-              $scope.allDetails = layer;
               layer.on("mouseover", function (e) {
                 $scope.updateTargetFeature(feature.properties);
               });
@@ -256,7 +254,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         }))
       }
       $scope.stopsLayer = L.layerGroup(stopList);
-      $scope.stopsLayer.addTo(map);
+      $scope.stopsLayer.addTo(map); 
     });
   });
 
@@ -330,8 +328,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
 
   $scope.newVariant = function (tabnav) {
-    $scope.variants[tabnav].push($scope.scenario[tabnav])
-    console.log($scope.routesLayer);
+    $scope.variants[tabnav].push($scope.scenario[tabnav]);
+    $scope.saveAlt = false;
     $scope.scenario[tabnav] = angular.copy($scope.variationModel);
   }
 

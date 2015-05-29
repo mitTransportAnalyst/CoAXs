@@ -120,24 +120,47 @@
 
 <div class="basecol" ng-show="base.view_scenario">
   <h4>
-    <span ng-click="baseToggle('view_scenario')">
-      Station Types
+    <span ng-click="baseToggle('view_scenario'); console.log('too', targetFeature.alternatives)">
+      Scenario Overview
     </span>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
   
   <div class="col-xs-12 body">
+    <h5>
+      User-created Variations
+    </h5>
+    <h6>
+      A total of {{ variants[tabnav].length }} variations have been created for this route this session.
+    </h6>
+    <ul>
 
-  <span >
-    <h3>
-      Foobar 
-    </h3>
-    <h4 ng-repeat="variant in variants[tabnav]">
-      {{ variant.name }}: Station type {{ variant.station }} with a peak frequency of {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} and an off-peak frequency of {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }}.
-    </h4>
-  <span>
-
+      <li ng-repeat="feature in targetFeature.alternatives">
+        <ul>
+          Variations of {{ feature.route_id }}:
+          <li ng-repeat="variant in variants[tabnav]">
+            <span ng-if="variant.route_id == feature.route_id">
+              <b>{{ variant.name }} </b>
+              (Station type: 
+              <span ng-if="variant.station == 0">
+                Standard 
+              </span>
+              <span ng-if="variant.station == 1">
+                Raised Platform  
+              </span>
+              <span ng-if="variant.station == 2">
+                BRT Station 
+              </span>
+              
+              , Peak frequency: {{ variant.peak.min }}:{{ variant.peak.sec | integerLength }}
+              , Off-Peak frequency: {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }}
+              )
+            </span>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
 
