@@ -15,7 +15,7 @@ body {
 }
 .badge {
   background-color : #FFF;
-  color            : #1fa67a;
+  color            : rgb(50, 50, 50);
   cursor           : pointer;
   opacity          : 0.8;
 }

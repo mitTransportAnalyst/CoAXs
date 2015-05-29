@@ -240,7 +240,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     });
   });
 
-  $scope.updateTargetFeature = function (properties) {
+  $scope.updateTargetFeature = function (properties) { 
     var stopicon_base = L.Icon.extend({
       options : {
         iconUrl      :     'public/imgs/stop.png',
@@ -310,11 +310,14 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     }
   }
 
+  $scope.test = function (other) {
+    console.log('foo', other);
+  }
 
   $scope.newVariant = function (tabnav) {
     $scope.variants[tabnav].push($scope.scenario[tabnav]);
     $scope.saveAlt = false;
-    $scope.scenario[tabnav] = angular.copy($scope.variationModel);
+    $scope.scenario[tabnav].name = null;
   }
 
   $scope.baseToggle = function (menu) {

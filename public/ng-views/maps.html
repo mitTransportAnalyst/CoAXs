@@ -99,10 +99,14 @@
       <div class="input-group">
         <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
         <span class="input-group-btn">
-          <button class="btn btn-savealt" type="button" ng-if="!scenario[tabnav].name || !scenario[tabnav].route_id" style="cursor:not-allowed" disabled>
+          <button class="btn btn-savealt" type="button" 
+            ng-if="!scenario[tabnav].name || !scenario[tabnav].route_id" 
+            style="cursor:not-allowed" disabled>
             Save Alternative
           </button>
-          <button class="btn btn-savealt" type="button" ng-click="newVariant(tabnav); saveAlt=!saveAlt" ng-if="scenario[tabnav].name && scenario[tabnav].route_id">
+          <button class="btn btn-savealt" type="button" 
+            ng-click="newVariant(tabnav); saveAlt=!saveAlt" 
+            ng-if="scenario[tabnav].name && scenario[tabnav].route_id">
             Save Alternative
           </button>
         </span>
@@ -143,14 +147,23 @@
   <div ng-include="'tabnav.html'"></div>
   
   <div class="col-xs-12 body">
-    <h5 ng-show="scenario[tabnav].name">{{ scenario[tabnav].name }}</h5>
-    <span ng-show="!scenario[tabnav].name" style="color:red">
-      <h5 ng-click="saveAlt=!saveAlt">
+    <h5 ng-show="scenario[tabnav].route_id">
+      <span ng-click="test(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
+        Route {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.altName }} variant along the {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.corLonName }} Corridor
+      </span>
+      
+      <span class="badge" style="color: #{{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.routes_route_color }}" 
+            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
+        View path on map
+      </span>
+    </h5>
+    <span ng-show="!scenario[tabnav].route_id" style="color:red">
+      <h5 ng-click="baseToggle('view_overview')">
         <i class="fa fa-exclamation-triangle"></i> No variants available! 
-        <span class="badge">Save current settings as a variation for this route.</span>
+        <span class="badge">Select a path variation on map.</span>
       </h5>
     </span>
-    <h6>
+    <h6 ng-click="baseToggle('view_stations')">
       <i class="fa fa-bus"></i> 
       Station type: 
         <span ng-if="scenario[tabnav].station == 0">
@@ -164,7 +177,7 @@
         </span>
       
     </h6>
-    <h6>
+    <h6 ng-click="baseToggle('view_freq')">
       <i class="fa fa-clock-o"></i> 
       Frequency: {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} Peak, 
       {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} Off-Peak
