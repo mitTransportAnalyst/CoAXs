@@ -51,7 +51,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   $scope.base = {
     'view_stations' : false,
     'view_freq'     : false,
-    'view_scenario' : false,
+    'view_overview' : false,
+    'view_variants' : false,
   }
 
   $scope.tabnav = 'BH';

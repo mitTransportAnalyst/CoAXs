@@ -5,8 +5,13 @@
     </h6>
   </div>
   <div class="section">
-    <h6 ng-click="baseToggle('view_scenario')">
-      Scenario Overview
+    <h6 ng-click="baseToggle('view_overview')">
+      Overview
+    </h6>
+  </div>
+  <div class="section">
+    <h6 ng-click="baseToggle('view_variants')">
+      Variations
     </h6>
   </div>
   <div class="section">
@@ -49,8 +54,18 @@
         </span>
       </h6>
       
-      <button class="btn btn-choose pull-right" type="button" ng-click="scenario[targetFeature.properties.corName].route_id = targetFeature.properties.route_id" style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+      <button class="btn btn-choose pull-right" type="button" 
+              ng-if="scenario[targetFeature.properties.corName].route_id !== targetFeature.properties.route_id"
+              ng-click="scenario[targetFeature.properties.corName].route_id = targetFeature.properties.route_id" 
+              style="background-color: #{{ targetFeature.properties.routes_route_color }}">
         Use this path for the {{ targetFeature.properties.corLonName }} corridor
+      </button>
+
+      <button class="btn btn-choose pull-right" type="button" 
+              ng-if="scenario[targetFeature.properties.corName].route_id == targetFeature.properties.route_id"
+              style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+        <i class="fa fa-check"></i>
+        Path selected
       </button>
 
     </div>
@@ -118,10 +133,50 @@
 
 
 
-<div class="basecol" ng-show="base.view_scenario">
+<div class="basecol" ng-show="base.view_overview">
   <h4>
-    <span ng-click="baseToggle('view_scenario'); console.log('too', targetFeature.alternatives)">
-      Scenario Overview
+    <span ng-click="baseToggle('view_overview')">
+      Overview of Current Properties
+    </span>
+  </h4>
+
+  <div ng-include="'tabnav.html'"></div>
+  
+  <div class="col-xs-12 body">
+    <h5 ng-show="scenario[tabnav].name">{{ scenario[tabnav].name }}</h5>
+    <span ng-show="!scenario[tabnav].name" style="color:red">
+      <h5 ng-click="saveAlt=!saveAlt">
+        <i class="fa fa-exclamation-triangle"></i> No variants available! 
+        <span class="badge">Save current settings as a variation for this route.</span>
+      </h5>
+    </span>
+    <h6>
+      <i class="fa fa-bus"></i> 
+      Station type: 
+        <span ng-if="scenario[tabnav].station == 0">
+          Standard
+        </span>
+        <span ng-if="scenario[tabnav].station == 1">
+          Raised Platform
+        </span>
+        <span ng-if="scenario[tabnav].station == 2">
+          BRT Station
+        </span>
+      
+    </h6>
+    <h6>
+      <i class="fa fa-clock-o"></i> 
+      Frequency: {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} Peak, 
+      {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} Off-Peak
+    </h6>
+  </div>
+</div>
+
+
+<div class="basecol" ng-show="base.view_variants">
+  <h4>
+    <span ng-click="baseToggle('view_variants')">
+      Variations
     </span>
   </h4>
 
@@ -136,7 +191,7 @@
     </h6>
     <ul>
 
-      <li ng-repeat="feature in targetFeature.alternatives">
+      <li ng-repeat="feature in []">
         <ul>
           Variations of {{ feature.route_id }}:
           <li ng-repeat="variant in variants[tabnav]">
@@ -171,7 +226,7 @@
     <span ng-click="baseToggle('view_stations')">
       Station Types
     </span>
-    <i class="fa fa-plus-square-o pull-right" ng-click="saveAlt=!saveAlt"></i>
+    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
@@ -206,7 +261,7 @@
     <span ng-click="baseToggle('view_freq')">
       Frequencies
     </span>
-    <i class="fa fa-plus-square-o pull-right" ng-click="saveAlt=!saveAlt"></i>
+    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
   </h4>
 
   <div ng-include="'tabnav.html'"></div>
