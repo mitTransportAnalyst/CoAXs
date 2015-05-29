@@ -315,7 +315,8 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   }
 
   $scope.newVariant = function (tabnav) {
-    $scope.variants[tabnav].push($scope.scenario[tabnav]);
+    var tempCurrent = angular.copy($scope.scenario[tabnav]);
+    $scope.variants[tabnav].push(tempCurrent);
     $scope.saveAlt = false;
     $scope.scenario[tabnav].name = null;
   }

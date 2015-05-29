@@ -40,6 +40,12 @@ nav div.section, nav div.section.active, nav div.section.focus, nav div.section.
 .btn-choose.active, .btn-choose.focus, .btn-choose.hover, .btn-choose:active, .btn-choose:focus, .btn-choose:hover {
   color            : #FFF;
 }
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: rgb(75, 75, 75);
+}
+.fa.pull-right { 
+  line-height: inherit;
+}
 
 /*navigation*/
 nav {
