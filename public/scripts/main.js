@@ -65,7 +65,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   // current scenario
 
   $scope.variationModel = {
-    name     : null,
+    name     : 'Default',
     station  : 0,
     route_id : null,
     peak     : {
@@ -195,12 +195,12 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
             };
           },
           onEachFeature: function (feature, layer) {
-            (function(layer, properties) {
-              layer.on("mouseover", function (e) {
-                $scope.updateTargetFeature(feature.properties);
-              });
-            })
-            (layer, feature.properties);
+            // (function(layer, properties) {
+            //   layer.on("mouseover", function (e) {
+            //     $scope.updateTargetFeature(feature.properties);
+            //   });
+            // })
+            // (layer, feature.properties);
           },
           base: feature,
         })
