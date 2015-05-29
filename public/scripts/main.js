@@ -175,36 +175,17 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   .success(function(data, status) {
     leafletData.getMap('map_left').then(function(map) {
 
-      var exampleDir = {
-        '0' : {
-          'leaflet' : null,
-          'base'    : null,
-        },
-        '1' : {
-          'leaflet' : null,
-          'base'    : null,
-        },
-      }
-
-      var exampleAlt = {
-        '0' : JSON.parse(JSON.stringify(exampleDir)),
-        '1' : JSON.parse(JSON.stringify(exampleDir)),
-        '2' : JSON.parse(JSON.stringify(exampleDir)),
-        '3' : JSON.parse(JSON.stringify(exampleDir)),
-      }
-
-      $scope.layers_left.geojson['proposed'] = {
-        '1' : JSON.parse(JSON.stringify(exampleAlt)),
-        '2' : JSON.parse(JSON.stringify(exampleAlt)),
-        '3' : JSON.parse(JSON.stringify(exampleAlt)),
-        '4' : JSON.parse(JSON.stringify(exampleAlt)),
-      }
-
+      $scope.layers_left.geojson['proposed'] = {}
       var geojsonList = [];
 
       for (var i = 0; i < data.features.length; i++) {
-        var feature = data.features[i].properties; console.log(feature);
-        $scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet'] = L.geoJson(data.features[i], {
+        var feature = data.features[i].properties;
+
+        if (!$scope.layers_left.geojson['proposed'][feature.route_id]) { 
+          $scope.layers_left.geojson['proposed'][feature.route_id] = {};
+        }
+
+        $scope.layers_left.geojson['proposed'][feature.route_id][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color     : '#' + feature.properties.routes_route_color,
@@ -223,7 +204,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
           },
           base: feature,
         })
-        geojsonList.push($scope.layers_left.geojson['proposed'][feature.corId][feature.altId][feature.direction]['leaflet']);
+        geojsonList.push($scope.layers_left.geojson['proposed'][feature.route_id][feature.direction]);
       }
       $scope.routesLayer = L.layerGroup(geojsonList)
       $scope.routesLayer.addTo(map);
@@ -303,12 +284,14 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         }
       });
 
-      angular.forEach($scope.layers_left.geojson['proposed'][properties.corId], function(each) {
-        if (each[0].base && each[1].base) {
-          $scope.targetFeature.alternatives.push(each[0].base);
-          $scope.targetFeature.alternatives.push(each[1].base);
+      angular.forEach($scope.layers_left.geojson['proposed'], function(each) {
+        if (each[0] && each[1]) {
+          if (properties.corId == each[0].options.base.corId && properties.corId == each[1].options.base.corId) {
+            $scope.targetFeature.alternatives.push(each[0].options.base);
+            $scope.targetFeature.alternatives.push(each[1].options.base);
+          }
         }
-      }, $scope.layers_left.geojson['proposed'][properties.corId])
+      }, $scope.layers_left.geojson['proposed'])
     } else {
       $scope.targetFeature.properties   = null;
       $scope.targetFeature.alternatives = null;
