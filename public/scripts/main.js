@@ -52,7 +52,6 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     'view_stations' : false,
     'view_freq'     : false,
     'view_overview' : false,
-    'view_variants' : false,
   }
 
   $scope.tabnav = 'BH';
@@ -312,6 +311,11 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   $scope.test = function (other) {
     console.log('foo', other);
+  }
+
+  $scope.setScenario = function (tabnav, variant) {
+    $scope.scenario[tabnav] = angular.copy(variant);
+    $scope.scenario[tabnav].name = null;
   }
 
   $scope.newVariant = function (tabnav) {

@@ -10,11 +10,6 @@
     </h6>
   </div>
   <div class="section">
-    <h6 ng-click="baseToggle('view_variants')">
-      Variations
-    </h6>
-  </div>
-  <div class="section">
     <h6 ng-click="baseToggle('view_stations')">
       Station Types
     </h6>
@@ -186,9 +181,9 @@
 </div>
 
 
-<div class="basecol" ng-show="base.view_variants">
+<div class="basecol" ng-show="base.view_overview">
   <h4>
-    <span ng-click="baseToggle('view_variants')">
+    <span ng-click="baseToggle('view_overview')">
       Variations
     </span>
   </h4>
@@ -210,11 +205,11 @@
 
     <span ng-show="!scenario[tabnav].route_id" style="color:red">
       <h5 ng-click="baseToggle('view_overview')">
-        <i class="fa fa-exclamation-triangle"></i> No path selected for [tabnav]! 
+        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. 
         <span class="badge">Select a path variation on map.</span>
       </h5>
     </span>
-    
+
     <h6 ng-click="baseToggle('view_stations')">
       <i class="fa fa-bus"></i> 
       Station type: 
@@ -272,7 +267,7 @@
           </td>
           <td>
             {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }}
-            <i class="fa fa-refresh pull-right" ng-click="scenario[tabnav] = variant"></i>
+            <i class="fa fa-refresh pull-right" ng-click="setScenario(tabnav, variant)"></i>
           </td>
         </tr>
       </tbody>
