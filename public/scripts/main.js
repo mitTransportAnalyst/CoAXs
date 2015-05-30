@@ -65,7 +65,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   // current scenario
 
   $scope.variationModel = {
-    name     : 'Default',
+    name     : null,
     station  : 0,
     route_id : null,
     peak     : {
