@@ -20,21 +20,21 @@
     <div class="topinfo-body container">
       <h6>
         The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
-        You last selected the  
-        <span ng-show="targetFeature.properties.direction == 0">
-          inbound 
-        </span>
-        <span ng-show="!targetFeature.properties.direction == 0">
-          outbound 
-        </span>
-        portion of the route's path.
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
-        There are {{ targetFeature.alternatives.length/2 }} alternatives along this corridor. They are: 
+        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} variations along this corridor, {{ variants[tabnav].length }} of which have been created this session. They are: 
         <span ng-repeat="feature in targetFeature.alternatives">
-          <span class="badge" style="color: #{{ feature.routes_route_color }};" ng-show="feature.direction == 0" ng-click="updateTargetFeature(feature)">
+          <span class="badge" style="color: #{{ targetFeature.properties.routes_route_color }}" 
+                ng-show="feature.direction == 0" 
+                ng-click="updateTargetFeature(feature)">
             {{ feature.altName }}
+          </span>
+        </span>
+        <span ng-repeat="variant in variants[tabnav]">
+          <span class="badge"  style="color: #{{ targetFeature.properties.routes_route_color }}" 
+                ng-click="updateTargetFeature(variant)">
+            {{ variant.name }}
           </span>
         </span>
       </h6>
@@ -155,6 +155,7 @@
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
+          <th><i class="fa fa-check-square"></i></th>
           <th>Name</th>
           <th>Station Type</th>
           <th>Peak</th>
@@ -169,6 +170,10 @@
             ng-if="value[0].options.base.corName == tabnav"
             ng-mouseover="updateTargetFeature(value[0].options.base)"
             ng-click="updateTargetFeature(value[0].options.base)">
+          <td ng-click="setAlternative(); $event.stopPropagation()">
+            <i class="fa fa-square-o" ng-if="!value[0].options.base.default"></i>
+            <i class="fa fa-check-square" ng-if="value[0].options.base.default"></i>
+          </td>
           <td>{{ value[0].options.base.altName }}</td>
           <td>
             Standard
