@@ -130,57 +130,6 @@
 </leaflet>
 
 
-
-
-<div class="basecol" ng-show="base.view_overview">
-  <h4>
-    <span ng-click="baseToggle('view_overview')">
-      Overview of Current Properties
-    </span>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-  
-  <div class="col-xs-12 body">
-    <h5 ng-show="scenario[tabnav].route_id">
-      <span ng-click="test(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
-        Route {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.altName }} variant along the {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.corLonName }} Corridor
-      </span>
-      
-      <span class="badge" style="color: #{{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.routes_route_color }}" 
-            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
-        View path on map
-      </span>
-    </h5>
-    <span ng-show="!scenario[tabnav].route_id" style="color:red">
-      <h5 ng-click="baseToggle('view_overview')">
-        <i class="fa fa-exclamation-triangle"></i> No path selected for [tabnav]! 
-        <span class="badge">Select a path variation on map.</span>
-      </h5>
-    </span>
-    <h6 ng-click="baseToggle('view_stations')">
-      <i class="fa fa-bus"></i> 
-      Station type: 
-        <span ng-if="scenario[tabnav].station == 0">
-          Standard
-        </span>
-        <span ng-if="scenario[tabnav].station == 1">
-          Raised Platform
-        </span>
-        <span ng-if="scenario[tabnav].station == 2">
-          BRT Station
-        </span>
-      
-    </h6>
-    <h6 ng-click="baseToggle('view_freq')">
-      <i class="fa fa-clock-o"></i> 
-      Frequency: {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} Peak, 
-      {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} Off-Peak
-    </h6>
-  </div>
-</div>
-
-
 <div class="basecol" ng-show="base.view_overview">
   <h4>
     <span ng-click="baseToggle('view_overview')">
@@ -198,7 +147,7 @@
       </span>
       
       <span class="badge" style="color: #{{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.routes_route_color }}" 
-            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
+            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base); base.view_overview=false">
         View path on map
       </span>
     </h5>
@@ -209,9 +158,6 @@
       </h5>
     </span>
 
-    <h5>
-      User-created Variations
-    </h5>
     <h6>
       A total of {{ variants[tabnav].length }} user-created variations have been created for this route this session.
     </h6>
@@ -227,7 +173,9 @@
       </thead>
       <tbody>
         <tr ng-repeat="(key, value) in layers_left.geojson['proposed']" 
-            ng-if="value[0].options.base.corName == tabnav">
+            ng-if="value[0].options.base.corName == tabnav"
+            ng-mouseover="updateTargetFeature(value[0].options.base)"
+            ng-click="updateTargetFeature(value[0].options.base)">
           <td>{{ value[0].options.base.altName }}</td>
           <td>
             Standard
@@ -237,6 +185,7 @@
           </td>
           <td>
             10:00
+            <i class="fa fa-pencil-square-o pull-right" ng-click="test();$event.stopPropagation()"></i>
           </td>
         </tr>
 
@@ -258,19 +207,61 @@
           </td>
           <td>
             {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }}
-            <i class="fa fa-refresh pull-right" ng-click="setScenario(tabnav, variant)"></i>
+            <i class="fa fa-pencil-square-o" ng-click="test();$event.stopPropagation()"></i>
           </td>
         </tr>
 
       </tbody>
     </table>
-
   </div>
+
+  <div class="col-xs-12 body">
+    <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
+      <div class="col-xs-6 text-center">
+        <h3>
+          {{ scenario[tabnav].peak.min | integerLength }} : {{ scenario[tabnav].peak.sec | integerLength }} 
+          <small>Peak</small>
+          <input type="range" min="0" max="30" ng-model="scenario[tabnav].peak.min" />
+        </h3>
+      </div>
+      <div class="col-xs-6 text-center">
+        <h3>
+          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
+          <small>Off-Peak</small>
+          <input type="range" min="0" max="30" ng-model="scenario[tabnav].offpeak.min" />
+        </h3>
+      </div>
+
+      <div class="btn-group btn-group-justified">
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="0">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star-o"></i> 
+          <i class="fa fa-star-o"></i>
+          Normal
+        </label>
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="1">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star-o"></i>
+          Platform
+        </label>
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="2">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          BRT
+        </label>
+        <label class="btn btn-success">
+          <i class="fa fa-cloud-upload"></i> Save Variation
+        </label>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
 <div class="basecol" ng-show="base.view_stations">
-
   <h4>
     <span ng-click="baseToggle('view_stations')">
       Station Types

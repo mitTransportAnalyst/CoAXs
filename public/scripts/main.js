@@ -292,6 +292,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
           }
         }
       }, $scope.layers_left.geojson['proposed'])
+
     } else {
       $scope.targetFeature.properties   = null;
       $scope.targetFeature.alternatives = null;
