@@ -9,16 +9,6 @@
       Overview
     </h6>
   </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_stations')">
-      Station Types
-    </h6>
-  </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_freq')">
-      Frequencies
-    </h6>
-  </div>
 </nav>
 
 <div class="topcol-l">
@@ -168,7 +158,10 @@
           <th>Name</th>
           <th>Station Type</th>
           <th>Peak</th>
-          <th>Off-Peak</th>
+          <th>
+            Off-Peak
+            <i class="fa fa-plus-circle pull-right" ng-click="createVar = !createVar"></i>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -185,7 +178,6 @@
           </td>
           <td>
             10:00
-            <i class="fa fa-pencil-square-o pull-right" ng-click="test();$event.stopPropagation()"></i>
           </td>
         </tr>
 
@@ -215,7 +207,7 @@
     </table>
   </div>
 
-  <div class="col-xs-12 body">
+  <div class="col-xs-12 body" ng-show="createVar">
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
       <div class="col-xs-6 text-center">
         <h3>
@@ -251,7 +243,7 @@
           <i class="fa fa-star"></i> 
           BRT
         </label>
-        <label class="btn btn-success">
+        <label class="btn btn-success" ng-click="saveAlt=!saveAlt">
           <i class="fa fa-cloud-upload"></i> Save Variation
         </label>
       </div>
@@ -259,96 +251,6 @@
   </div>
 
 </div>
-
-
-<div class="basecol" ng-show="base.view_stations">
-  <h4>
-    <span ng-click="baseToggle('view_stations')">
-      Station Types
-    </span>
-    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-
-  <div class="btn-group btn-group-justified">
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="0">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star-o"></i> 
-      <i class="fa fa-star-o"></i>
-      <br>
-      Normal
-    </label>
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="1">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star-o"></i>
-      <br>
-      Platform
-    </label>
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="2">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <br>
-      BRT
-    </label>
-  </div>
-</div>
-
-<div class="basecol" ng-show="base.view_freq">
-  <h4>
-    <span ng-click="baseToggle('view_freq')">
-      Frequencies
-    </span>
-    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-
-  <div class="body">
-    <div class="col-xs-6 body text-center">
-      <h2>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, true, 'min')"><i class="fa fa-angle-down"></i></button>
-        </div>
-
-        <span>
-          {{ scenario[tabnav].peak.min | integerLength }} : {{ scenario[tabnav].peak.sec | integerLength }} 
-        </span>
-
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, true, 'min')"><i class="fa fa-angle-up"></i></button>
-        </div>
-      </h2>
-
-      <h4>
-        Peak
-      </h4>
-    </div>
-
-    <div class="col-xs-6 body text-center">
-      <h2>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, false, 'min')"><i class="fa fa-angle-down"></i></button>
-        </div>
-
-        <span>
-          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
-        </span>
-
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, false, 'min')"><i class="fa fa-angle-up"></i></button>
-        </div>
-      </h2>
-
-      <h4>
-        Off-Peak
-      </h4>
-    </div>
-  </div>
-</div>
-
 
 
 
