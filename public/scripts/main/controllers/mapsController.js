@@ -192,14 +192,14 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     });
   });
 
-  $scope.targetCorridor = function (corName) {
+  $scope.targetCorridor = function (attribute, corName) { console.log(corName)
     var tempBounds = []
     $scope.routesLayer.eachLayer(function (layer) {
       layer.setStyle({
         opacity : 0.1,
         weight  : 3,
       });
-      if (layer.options.base.corName == corName) {
+      if (layer.options.base[attribute] == corName) {
         layer.setStyle({
           opacity : 0.35,
           weight  : 5,
@@ -236,7 +236,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
 
-      $scope.targetCorridor(properties.route_id);
+      $scope.targetCorridor('route_id', properties.route_id);
 
       $scope.stopsLayer.eachLayer(function (marker) {
         if (marker.options.base.stop_id.includes(properties.route_id)) {

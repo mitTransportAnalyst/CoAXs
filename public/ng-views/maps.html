@@ -15,7 +15,7 @@
   <span ng-show="base.view_overview">
     <span class="fa-stack" 
           ng-click="setTabnav('BH')"
-          ng-mouseover="targetCorridor('BH')"
+          ng-mouseover="targetCorridor('corName', 'BH')"
           ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
           style="color:#0071CA">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -26,7 +26,7 @@
 
     <span class="fa-stack" 
           ng-click="setTabnav('HP')"
-          ng-mouseover="targetCorridor('HP')"
+          ng-mouseover="targetCorridor('corName', 'HP')"
           ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
           style="color:#0D7215">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -37,7 +37,7 @@
 
     <span class="fa-stack" 
           ng-click="setTabnav('HD')"
-          ng-mouseover="targetCorridor('HD')"
+          ng-mouseover="targetCorridor('corName', 'HD')"
           ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
           style="color:#CE5504">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -48,7 +48,7 @@
 
     <span class="fa-stack" 
           ng-click="setTabnav('CT')"
-          ng-mouseover="targetCorridor('CT')"
+          ng-mouseover="targetCorridor('corName', 'CT')"
           ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
           style="color:#AD0101">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -212,13 +212,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(key, value) in layers_left.geojson['proposed']" 
-            ng-if="value[0].options.base.corName == tabnav"
-            ng-mouseover="updateTargetFeature(value[0].options.base)"
-            ng-click="updateTargetFeature(value[0].options.base)">
-          <td ng-click="setAlternative(); $event.stopPropagation()">
-            <i class="fa fa-square-o" ng-if="!value[0].options.base.default"></i>
-            <i class="fa fa-check-square" ng-if="value[0].options.base.default"></i>
+        <tr ng-repeat    = "(key, value) in layers_left.geojson['proposed']" 
+            ng-if        = "value[0].options.base.corName == tabnav"
+            ng-mouseover = "updateTargetFeature(value[0].options.base)"
+            ng-click     = "updateTargetFeature(value[0].options.base)">
+          <td ng-click = "setAlternative(); $event.stopPropagation()">
+            <i class = "fa fa-square-o" ng-if="!value[0].options.base.default"></i>
+            <i class = "fa fa-check-square" ng-if="value[0].options.base.default"></i>
           </td>
           <td>{{ value[0].options.base.altName }}</td>
           <td>
