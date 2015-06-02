@@ -192,7 +192,27 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     });
   });
 
-  $scope.updateTargetFeature = function (properties) { 
+  $scope.targetCorridor = function (corName) {
+    var tempBounds = []
+    $scope.routesLayer.eachLayer(function (layer) {
+      layer.setStyle({
+        opacity : 0.1,
+        weight  : 3,
+      });
+      if (layer.options.base.corName == corName) {
+        layer.setStyle({
+          opacity : 0.35,
+          weight  : 5,
+        });
+        tempBounds.push(layer.getBounds())
+      }
+    });
+    leafletData.getMap('map_left').then(function(map) {
+      map.panInsideBounds(tempBounds[0]);
+    })
+  }
+
+  $scope.updateTargetFeature = function (properties) {
     var stopicon_base = L.Icon.extend({
       options : {
         iconUrl      :     'public/imgs/stop.png',
@@ -212,22 +232,11 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       }
     });
 
-    if (properties) { console.log(properties);
+    if (properties) {
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
 
-      $scope.routesLayer.eachLayer(function (layer) {
-        layer.setStyle({
-          opacity : 0.1,
-          weight  : 3,
-        });
-        if (layer.options.base.route_id == properties.route_id) {
-          layer.setStyle({
-            opacity : 0.35,
-            weight  : 5,
-          });
-        }
-      });
+      $scope.targetCorridor(properties.route_id);
 
       $scope.stopsLayer.eachLayer(function (marker) {
         if (marker.options.base.stop_id.includes(properties.route_id)) {

@@ -13,7 +13,9 @@
   </div>
 
   <span ng-show="base.view_overview">
-    <span class="fa-stack" ng-click="setTabnav('BH'); base.view_overview=true"
+    <span class="fa-stack" 
+          ng-click="setTabnav('BH')"
+          ng-mouseover="targetCorridor('BH')"
           ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
           style="color:#0071CA">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -22,7 +24,9 @@
       </i>
     </span>
 
-    <span class="fa-stack" ng-click="setTabnav('HP'); base.view_overview=true"
+    <span class="fa-stack" 
+          ng-click="setTabnav('HP')"
+          ng-mouseover="targetCorridor('HP')"
           ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
           style="color:#0D7215">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -31,7 +35,9 @@
       </i>
     </span>
 
-    <span class="fa-stack" ng-click="setTabnav('HD'); base.view_overview=true"
+    <span class="fa-stack" 
+          ng-click="setTabnav('HD')"
+          ng-mouseover="targetCorridor('HD')"
           ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
           style="color:#CE5504">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -40,7 +46,9 @@
       </i>
     </span>
 
-    <span class="fa-stack" ng-click="setTabnav('CT'); base.view_overview=true"
+    <span class="fa-stack" 
+          ng-click="setTabnav('CT')"
+          ng-mouseover="targetCorridor('CT')"
           ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
           style="color:#AD0101">
       <i class="fa fa-circle fa-stack-2x"></i>
