@@ -212,7 +212,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       }
     });
 
-    if (properties) {
+    if (properties) { console.log(properties);
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
 
@@ -265,6 +265,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
 
   $scope.test = function (other) {
     console.log('foo', other);
+    console.log($scope.scenario);
   }
 
   $scope.setScenario = function (tabnav, variant) {

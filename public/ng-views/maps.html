@@ -4,12 +4,53 @@
       COAXS
     </h6>
   </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_overview')">
-      Overview
-    </h6>
-  </div>
 </nav>
+
+<div class="leftnav-1">
+  <div class="fa-stack fa-lg" ng-click="baseToggle('view_overview')">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
+  </div>
+
+  <span ng-show="base.view_overview">
+    <span class="fa-stack" ng-click="setTabnav('BH'); base.view_overview=true"
+          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+          style="color:#0071CA">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>BH</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" ng-click="setTabnav('HP'); base.view_overview=true"
+          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+          style="color:#0D7215">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HP</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" ng-click="setTabnav('HD'); base.view_overview=true"
+          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+          style="color:#CE5504">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HD</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" ng-click="setTabnav('CT'); base.view_overview=true"
+          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+          style="color:#AD0101">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>CT</small>
+      </i>
+    </span>
+  </span>  
+
+</div>
 
 <div class="topcol-l">
   <div class="topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.altName">
@@ -121,13 +162,10 @@
 
 
 <div class="basecol" ng-show="base.view_overview">
-  <h4>
-    <span ng-click="baseToggle('view_overview')">
-      Variations
-    </span>
+  <h4 ng-click="baseToggle('view_overview')">
+    Routes Overview
+    <i class="fa fa-times-circle-o pull-right"></i>
   </h4>
-
-  <div ng-include="'tabnav.html'"></div>
   
   <div class="col-xs-12 body">
 
@@ -258,39 +296,5 @@
 
 
 
-
-
-<script type="text/ng-template" id="tabnav.html">
-  <div class="btn-group btn-group-justified" role="group">
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('BH')"
-                            ng-class="tabnav == 'BH' ? 'btn-selected' : ''">
-        BH
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('HP')"
-                            ng-class="tabnav == 'HP' ? 'btn-selected' : ''">
-        HP
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('HD')"
-                            ng-class="tabnav == 'HD' ? 'btn-selected' : ''">
-        HD
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('CT')"
-                            ng-class="tabnav == 'CT' ? 'btn-selected' : ''">
-        CT
-      </button>
-    </div>
-  </div>
-</script>
 
 

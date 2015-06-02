@@ -3,6 +3,7 @@ body {
   background-color : #F5F5F3;
 }
 
+
 /*bs modification*/
 .btn {
   border-radius    : 0px;
@@ -83,6 +84,32 @@ nav div.section {
   background-color : rgba(255,255,255,0.2);
   margin-bottom    : 5px;
   width            : 100%;
+}
+.leftnav-1 {
+  position         : absolute;
+  top              : 32px;
+  margin-top       : 10px; 
+  margin-left      : 10px;
+  z-index          : 100;
+  cursor           : pointer;
+  font-size        : 1.5em;
+  text-align       : center;
+  text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
+}
+.leftnav-1 small {
+  font-weight      : 900;
+  text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
+}
+.dots {
+  background-color : #FFF;
+  border-radius    : 35px;
+}
+.dot-unselected {
+  opacity          : 0.35;
+  text-shadow      : 0px 0px 0px;
+}
+.dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
+  opacity          : 0.75;
 }
 .basecol {
   position         : absolute;
