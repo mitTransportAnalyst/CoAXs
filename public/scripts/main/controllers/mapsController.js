@@ -192,7 +192,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
     });
   });
 
-  $scope.targetCorridor = function (attribute, corName) { console.log(corName)
+  $scope.targetCorridor = function (attribute, corName) {
     var tempBounds = []
     $scope.routesLayer.eachLayer(function (layer) {
       layer.setStyle({
@@ -208,6 +208,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       }
     });
     leafletData.getMap('map_left').then(function(map) {
+      map.setZoom(12);
       map.panInsideBounds(tempBounds[0]);
     })
   }

@@ -139,7 +139,7 @@
             Save Alternative
           </button>
           <button class="btn btn-savealt" type="button" 
-            ng-click="newVariant(tabnav); saveAlt=!saveAlt" 
+            ng-click="newVariant(tabnav); saveAlt=!saveAlt; createVar=false" 
             ng-if="scenario[tabnav].name && scenario[tabnav].route_id">
             Save Alternative
           </button>
@@ -215,10 +215,11 @@
         <tr ng-repeat    = "(key, value) in layers_left.geojson['proposed']" 
             ng-if        = "value[0].options.base.corName == tabnav"
             ng-mouseover = "updateTargetFeature(value[0].options.base)"
-            ng-click     = "updateTargetFeature(value[0].options.base)">
+            ng-click     = "updateTargetFeature(value[0].options.base); 
+                            scenario[targetFeature.properties.corName].route_id = targetFeature.properties.route_id">
           <td ng-click = "setAlternative(); $event.stopPropagation()">
-            <i class = "fa fa-square-o" ng-if="!value[0].options.base.default"></i>
-            <i class = "fa fa-check-square" ng-if="value[0].options.base.default"></i>
+            <i class = "fa fa-square-o" ng-if="value[0].options.base.route_id !== scenario[targetFeature.properties.corName].route_id"></i>
+            <i class = "fa fa-check-square" ng-if="value[0].options.base.route_id == scenario[targetFeature.properties.corName].route_id"></i>
           </td>
           <td>{{ value[0].options.base.altName }}</td>
           <td>

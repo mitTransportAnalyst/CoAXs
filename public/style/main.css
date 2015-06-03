@@ -107,6 +107,7 @@ nav div.section {
 .dot-unselected {
   opacity          : 0.35;
   text-shadow      : 0px 0px 0px;
+  font-size        : 0.75em;
 }
 .dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
   opacity          : 0.75;
