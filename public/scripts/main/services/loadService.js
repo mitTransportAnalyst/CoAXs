@@ -30,11 +30,11 @@ coaxsApp.service('loadService', function ($http) {
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
         if (!proposedLayer[feature.routeId]) { proposedLayer[feature.routeId] = {} };
-
+        var color = '#' + feature.routeColor;
         proposedLayer[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
-              color     : '#' + feature.properties.routes_route_color,
+              color     : color,
               weight    : 3,
               opacity   : 0.1,
               dashArray : 0,

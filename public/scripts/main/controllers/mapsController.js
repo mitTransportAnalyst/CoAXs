@@ -1,6 +1,6 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService) {
 
-  // ui management variables
+  // UI management variables
   $scope.base = {
     'view_stations' : false,
     'view_freq'     : false,
@@ -13,8 +13,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.tabnav = 'BH'; // set default view on start
 
 
-  // current scenario
-
+  // Management for current scenario
   $scope.variationModel = {
     name     : null,
     station  : 0,
@@ -28,14 +27,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       sec : 0,
     },
   }
-
   $scope.scenario = {
     'BH' : angular.copy($scope.variationModel),
     'HP' : angular.copy($scope.variationModel),
     'HD' : angular.copy($scope.variationModel),
     'CT' : angular.copy($scope.variationModel),
   }
-
   $scope.variants = {
     'BH' : [],
     'HP' : [],
@@ -44,41 +41,35 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  // basic leaflet angular directive view models
-
-  $scope.defaults_global = {
+  // Angular Leaflet Directiive - base components
+  var defaults_global = {
     scrollWheelZoom    : true,
     zoomControl        : false,
     attributionControl : false,
   };
-
-  $scope.center_global = {
+  var center_global = {
     lat  : 42.360543,
     lng  : -71.058169,
     zoom : 12,
   };
-
-  $scope.layers_global = {
+  var layers_global = {
     baselayers: {
       carto_light: {
-        name : 'Foo',
+        name : 'CartoLight Basemap',
         url  : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
         type : 'xyz'
       }
     }
   };
-
-
-  // Angular Leaflet Directiive
-  // left map
-  $scope.defaults_left  = angular.copy($scope.defaults_global);
-  $scope.center_left    = angular.copy($scope.center_global);
-  $scope.layers_left    = angular.copy($scope.layers_global);
+  // Assembling left map
+  $scope.defaults_left  = angular.copy(defaults_global);
+  $scope.center_left    = angular.copy(center_global);
+  $scope.layers_left    = angular.copy(layers_global);
   $scope.markers_left   = [];
-  // right map
-  $scope.defaults_right = angular.copy($scope.defaults_global);
-  $scope.center_right   = angular.copy($scope.center_global);
-  $scope.layers_right   = angular.copy($scope.layers_global);
+  // Assembling right map
+  $scope.defaults_right = angular.copy(defaults_global);
+  $scope.center_right   = angular.copy(center_global);
+  $scope.layers_right   = angular.copy(layers_global);
   $scope.markers_right  = {
     main: {
       lat       : $scope.center_right.lat,
@@ -99,7 +90,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       $scope.routesLayer.addTo(map);
     });
 
-    $scope.stopsLayer = loadService.getProposedRoutes(function(stopsLayer) {
+    $scope.stopsLayer = loadService.getProposedStops(function(stopsLayer) {
       $scope.stopsLayer = stopsLayer;
       $scope.stopsLayer.addTo(map);
     });
