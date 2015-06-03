@@ -1,4 +1,5 @@
-coaxsApp.service('analystService', function() {
+coaxsApp.service('analystService', function () {
+
     var Analyst = window.Analyst;
     var analyst = new Analyst(window.L, {
       apiUrl      : 'http://mit-analyst.dev.conveyal.com/api',
@@ -14,8 +15,7 @@ coaxsApp.service('analystService', function() {
       .singlePointRequest({
         'lat' : marker.model.lat,
         'lng' : marker.model.lng
-      }, 
-      { 'scenario' : globalScenario })
+      })
       .then(function (response) {
         if (isoLayer) {
           isoLayer.redraw();
@@ -33,19 +33,6 @@ coaxsApp.service('analystService', function() {
 });
 
 
-
-globalScenario = null;
-
-globalScenario = {
-          'id'            : 0,
-          'description'   : 'No description',
-          'modifications' : [{
-            'type'        : 'remove-trip',
-            'agencyId'    : '1',
-            'routeId'     : ['34E', '350', '4050', '230', '351', '2427', '110', '352', '111', '112', '354', '114', '236', '116', '117', '238', '119', '10', '11', '14', '15', '16', '17', '18', '19', '116117'],
-            'tripId'      : null,
-          }] 
-        }
 
 
 

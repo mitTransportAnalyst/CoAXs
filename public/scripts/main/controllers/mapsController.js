@@ -1,18 +1,16 @@
-coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletData, analystService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService) {
 
-  // ui variables
+  // ui management variables
   $scope.base = {
     'view_stations' : false,
     'view_freq'     : false,
     'view_overview' : false,
   }
-
-  $scope.tabnav = 'BH';
-
   $scope.targetFeature = {
-    'properties'   : {},
-    'alternatives' : {},
+    'properties'    : {},
+    'alternatives'  : {},
   }
+  $scope.tabnav = 'BH'; // set default view on start
 
 
   // current scenario
@@ -20,7 +18,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   $scope.variationModel = {
     name     : null,
     station  : 0,
-    route_id : null,
+    routeId  : null,
     peak     : {
       min : 5,
       sec : 0,
@@ -67,25 +65,20 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
         url  : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
         type : 'xyz'
       }
-    },
-    overlays : {},
-    geojson  : {},
+    }
   };
 
 
-  // left map intial
+  // Angular Leaflet Directiive
+  // left map
   $scope.defaults_left  = angular.copy($scope.defaults_global);
   $scope.center_left    = angular.copy($scope.center_global);
   $scope.layers_left    = angular.copy($scope.layers_global);
-
   $scope.markers_left   = [];
-
-
-  // right map intial
+  // right map
   $scope.defaults_right = angular.copy($scope.defaults_global);
   $scope.center_right   = angular.copy($scope.center_global);
   $scope.layers_right   = angular.copy($scope.layers_global);
-
   $scope.markers_right  = {
     main: {
       lat       : $scope.center_right.lat,
@@ -95,6 +88,25 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   };
 
 
+  // initialize imported data
+  leafletData.getMap('map_left').then(function(map) {
+    loadService.getExisting(function(subways) {
+      subways.addTo(map);
+    });
+
+    loadService.getProposedRoutes(function(routesLayer) {
+      $scope.routesLayer = routesLayer;
+      $scope.routesLayer.addTo(map);
+    });
+
+    $scope.stopsLayer = loadService.getProposedRoutes(function(stopsLayer) {
+      $scope.stopsLayer = stopsLayer;
+      $scope.stopsLayer.addTo(map);
+    });
+  });
+
+
+
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leafletData.getMap('map_right').then(function(map) {
       analystService.dragendAction(marker, map);
@@ -102,95 +114,7 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
   });
 
 
-  // get geojson files
 
-  $http.get('/geojson/existing')
-  .success(function(data, status) {
-    leafletData.getMap('map_left').then(function(map) {
-      $scope.layers_left.geojson['subways'] = L.geoJson(data, {
-        style: function (feature) {
-          return {
-            color     : feature.properties.LINE,
-            weight    : 2,
-            opacity   : 0.5,
-            dashArray : 0,
-          };
-        },
-        onEachFeature: function (feature, layer) {
-          layer.bindPopup(feature.properties.LINE + ' Line<br>' + feature.properties.ROUTE);
-        }
-      });
-      $scope.layers_left.geojson['subways'].addTo(map);
-    });
-  });
-
-  $http.get('/geojson/proposed')
-  .success(function(data, status) {
-    leafletData.getMap('map_left').then(function(map) {
-
-      $scope.layers_left.geojson['proposed'] = {}
-      var geojsonList = [];
-
-      for (var i = 0; i < data.features.length; i++) {
-        var feature = data.features[i].properties;
-
-        if (!$scope.layers_left.geojson['proposed'][feature.route_id]) { 
-          $scope.layers_left.geojson['proposed'][feature.route_id] = {};
-        }
-
-        $scope.layers_left.geojson['proposed'][feature.route_id][feature.direction] = L.geoJson(data.features[i], {
-          style: function (feature) {
-            return {
-              color     : '#' + feature.properties.routes_route_color,
-              weight    : 3,
-              opacity   : 0.1,
-              dashArray : 0,
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            // (function(layer, properties) {
-            //   layer.on("mouseover", function (e) {
-            //     $scope.updateTargetFeature(feature.properties);
-            //   });
-            // })
-            // (layer, feature.properties);
-          },
-          base: feature,
-        })
-        geojsonList.push($scope.layers_left.geojson['proposed'][feature.route_id][feature.direction]);
-      }
-      $scope.routesLayer = L.layerGroup(geojsonList)
-      $scope.routesLayer.addTo(map);
-    });
-  });
-
-  $http.get('/geojson/proposed_stops')
-  .success(function(data, status) {
-    leafletData.getMap('map_left').then(function(map) {
-      var stopList = [];
-      var stopicon_base = L.Icon.extend({
-        options : {
-          iconUrl      :     'public/imgs/stop.png',
-          iconSize     :     [16, 18],
-          iconAnchor   :     [8, 18],
-          popupAnchor  :     [0, -15],
-          className    :     'icon-off',
-        }
-      });
-      var stopicon = new stopicon_base();
-
-      for (var i=0; i<data.features.length; i++) {
-        var stop = data.features[i];
-        stopList.push(L.marker([stop.properties.stop_lat, stop.properties.stop_lon], {
-          'icon'        : stopicon,
-          'riseOnHover' : true,
-          'base'        : stop.properties,
-        }))
-      }
-      $scope.stopsLayer = L.layerGroup(stopList);
-      $scope.stopsLayer.addTo(map); 
-    });
-  });
 
   $scope.targetCorridor = function (attribute, corName) {
     var tempBounds = []
@@ -237,10 +161,10 @@ coaxsApp.controller('mapsController', function ($scope, $http, $state, leafletDa
       $scope.targetFeature.properties   = properties;
       $scope.targetFeature.alternatives = [];
 
-      $scope.targetCorridor('route_id', properties.route_id);
+      $scope.targetCorridor('routeId', properties.routeId);
 
       $scope.stopsLayer.eachLayer(function (marker) {
-        if (marker.options.base.stop_id.includes(properties.route_id)) {
+        if (marker.options.base.stop_id.includes(properties.routeId)) {
           marker.setIcon(new stopicon_on());
         } else {
           marker.setIcon(new stopicon_base());
