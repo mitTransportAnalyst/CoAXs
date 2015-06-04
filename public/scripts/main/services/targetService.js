@@ -46,28 +46,23 @@ coaxsApp.service('targetService', function (leafletData) {
 	  return routesLayer
 	}
 
-  this.newTargetFeature = function (routesLayer, properties) {
+  this.newTargetFeature = function (routes, properties) {
   	var targetFeature = {
   		properties   : properties,
   		alternatives : [],
   	};
 
-    // stopsLayer.eachLayer(function (marker) {
-    //   if (marker.options.base.stop_id.includes(properties.routeId)) {
-    //     marker.setIcon(new stopicon_on());
-    //   } else {
-    //     marker.setIcon(new stopicon_base());
-    //   }
-    // });
+  	for (var key in routes) {
+  		var route = routes[key];
+  		if (route[0] && route[1]) {
+        if (properties.corId == route[0].options.base.corId && properties.corId == route[1].options.base.corId) { 
+          targetFeature.alternatives.push(route[0].options.base);
+          targetFeature.alternatives.push(route[1].options.base);
+        }
+  		}
+  	}
 
-    // angular.forEach(layers_left.geojson['proposed'], function(each) {
-    //   if (each[0] && each[1]) {
-    //     if (properties.corId == each[0].options.base.corId && properties.corId == each[1].options.base.corId) {
-    //       targetFeature.alternatives.push(each[0].options.base);
-    //       targetFeature.alternatives.push(each[1].options.base);
-    //     }
-    //   }
-    // }, layers_left.geojson['proposed'])
+    return targetFeature;
   }
 
   this.clearTargetFeature = function () {

@@ -46,7 +46,7 @@ coaxsApp.service('loadService', function ($http) {
         geojsonList.push(proposedLayer[feature.routeId][feature.direction]);
       }
 
-      proposedLayer['L'] = L.layerGroup(geojsonList); console.log('proposedLayer', proposedLayer.L);
+      proposedLayer['L'] = L.layerGroup(geojsonList);
       cb(proposedLayer);
     });    
   }
