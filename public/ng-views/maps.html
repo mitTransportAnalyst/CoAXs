@@ -1,21 +1,21 @@
 <nav>
   <div class="section">
     <h6>
-      COAXS
+      FOO
     </h6>
   </div>
 </nav>
 
 <div class="leftnav-1">
-  <div class="fa-stack fa-lg" ng-click="baseToggle('view_overview')">
+  <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
   </div>
 
-  <span ng-show="base.view_overview">
+  <span ng-show="dotSelect">
     <span class="fa-stack" 
-          ng-click="setTabnav('BH')"
-          ng-mouseover="targetCorridor('corName', 'BH')"
+          ng-click="setTabnav('BH'); baseToggle('view_overview')"
+          ng-mouseover="targetCorridor('BH')"
           ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
           style="color:#0071CA">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -25,8 +25,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="setTabnav('HP')"
-          ng-mouseover="targetCorridor('corName', 'HP')"
+          ng-click="setTabnav('HP'); baseToggle('view_overview')"
+          ng-mouseover="targetCorridor('HP')"
           ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
           style="color:#B10086">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -36,8 +36,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="setTabnav('HD')"
-          ng-mouseover="targetCorridor('corName', 'HD')"
+          ng-click="setTabnav('HD'); baseToggle('view_overview')"
+          ng-mouseover="targetCorridor('HD')"
           ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
           style="color:#CE5504">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -47,8 +47,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="setTabnav('CT')"
-          ng-mouseover="targetCorridor('corName', 'CT')"
+          ng-click="setTabnav('CT'); baseToggle('view_overview')"
+          ng-mouseover="targetCorridor('CT')"
           ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
           style="color:#AD0101">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -61,14 +61,14 @@
 </div>
 
 <div class="topcol-l">
-  <div class="topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.altName">
+  <div class="topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.varName">
     <h4>
-      {{ targetFeature.properties.altName }}
+      {{ targetFeature.properties.varName }}
       <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature(false)"></i>
     </h4>
     <div class="topinfo-body container">
       <h6>
-        The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
+        The {{ targetFeature.properties.varName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
@@ -77,7 +77,7 @@
           <span class="badge" style="color: #{{ targetFeature.properties.routes_route_color }}" 
                 ng-show="feature.direction == 0" 
                 ng-click="updateTargetFeature(feature)">
-            {{ feature.altName }}
+            {{ feature.varName }}
           </span>
         </span>
         <span ng-repeat="variant in variants[tabnav]">
@@ -178,12 +178,12 @@
   <div class="col-xs-12 body">
 
     <h5 ng-show="scenario[tabnav].routeId">
-      <span ng-click="test(layers_left.geojson.proposed[scenario[tabnav].routeId][0].options.base)">
-        Route {{ layers_left.geojson.proposed[scenario[tabnav].routeId][0].options.base.altName }} variant along the {{ layers_left.geojson.proposed[scenario[tabnav].routeId][0].options.base.corLonName }} Corridor
+      <span>
+        Route {{ routes[scenario[tabnav].routeId][0].options.base.varName }} variant along the {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} Corridor
       </span>
       
-      <span class="badge" style="color: #{{ layers_left.geojson.proposed[scenario[tabnav].routeId][0].options.base.routes_route_color }}" 
-            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].routeId][0].options.base); base.view_overview=false">
+      <span class="badge" style="color: #{{ routes[scenario[tabnav].routeId][0].options.base.routes_route_color }}" 
+            ng-click="updateTargetFeature(routes[scenario[tabnav].routeId][0].options.base); base.view_overview=false">
         View path on map
       </span>
     </h5>
@@ -212,7 +212,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat    = "(key, value) in layers_left.geojson['proposed']" 
+        <tr ng-repeat    = "(key, value) in routes" 
             ng-if        = "value[0].options.base.corName == tabnav"
             ng-mouseover = "updateTargetFeature(value[0].options.base)"
             ng-click     = "updateTargetFeature(value[0].options.base); 
@@ -221,7 +221,7 @@
             <i class = "fa fa-square-o"     ng-if="value[0].options.base.routeId !== scenario[targetFeature.properties.corName].routeId"></i>
             <i class = "fa fa-check-square" ng-if="value[0].options.base.routeId  == scenario[targetFeature.properties.corName].routeId"></i>
           </td>
-          <td>{{ value[0].options.base.altName }}</td>
+          <td>{{ value[0].options.base.varName }}</td>
           <td>
             Standard
           </td>

@@ -46,8 +46,8 @@ coaxsApp.service('loadService', function ($http) {
         geojsonList.push(proposedLayer[feature.routeId][feature.direction]);
       }
 
-      var routesLayer = L.layerGroup(geojsonList);
-      cb(routesLayer);
+      proposedLayer['L'] = L.layerGroup(geojsonList); console.log('proposedLayer', proposedLayer.L);
+      cb(proposedLayer);
     });    
   }
 
@@ -68,7 +68,7 @@ coaxsApp.service('loadService', function ($http) {
 
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
-        stopList.push(L.marker([stop.properties.stop_lat, stop.properties.stop_lon], {
+        stopList.push(L.marker([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], {
           'icon'        : new stopicon(),
           'riseOnHover' : true,
           'base'        : stop.properties,
