@@ -248,6 +248,14 @@
           </td>
           <td>
             {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+            <span class="badge pull-right" ng-click="createVar = !createVar">
+              <span ng-if="!createVar">
+                <i class="fa fa-bookmark-o"></i> Close Modifier
+              </span>
+              <span ng-if="createVar">
+                <i class="fa fa-bookmark-o"></i> Modify
+              </span>
+            </span>
           </td>
         </tr>
       </tbody>
