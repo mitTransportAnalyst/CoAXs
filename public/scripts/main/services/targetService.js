@@ -46,27 +46,22 @@ coaxsApp.service('targetService', function (leafletData) {
 	  return routesLayer
 	}
 
-  this.newTargetFeature = function (routes, properties) {
-  	var targetFeature = {
-  		properties   : properties,
-  		alternatives : [],
-  	};
-
-  	for (var key in routes) {
-  		var route = routes[key];
-  		if (route[0] && route[1]) {
-        if (properties.corId == route[0].options.base.corId && properties.corId == route[1].options.base.corId) { 
-          targetFeature.alternatives.push(route[0].options.base);
-          targetFeature.alternatives.push(route[1].options.base);
-        }
-  		}
-  	}
-
-    return targetFeature;
-  }
-
-  this.clearTargetFeature = function () {
-
+  this.newTargetFeature = function (routeId, routesLayer) {
+    var properties = null;
+    var alternatives = [];
+    routesLayer.eachLayer(function (layer) {
+      if (layer.options.base.routeId == routeId) {
+        properties = layer.options.base;
+      }
+    })
+    if (properties) {
+	    routesLayer.eachLayer(function (layer) {
+	      if (layer.options.base.corId == properties.corId) {
+	        alternatives.push(layer.options.base);
+	      }
+	    })
+    }
+    return { properties: properties, alternatives: alternatives };
   }
 
 });

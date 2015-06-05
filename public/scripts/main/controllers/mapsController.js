@@ -1,30 +1,24 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, supportService) {
 
   // Management for current scenario
-  $scope.variationModel = {
+  var scenarioBase = {
     name     : null,
     station  : 0,
     routeId  : null,
-    peak     : {
-      min : 5,
-      sec : 0,
-    },
-    offpeak  : {
-      min : 10,
-      sec : 0,
-    },
+    peak     : { min : 5,  sec : 0 },
+    offpeak  : { min : 10, sec : 0 },
   }
   $scope.scenario = {
-    'BH' : angular.copy($scope.variationModel),
-    'HP' : angular.copy($scope.variationModel),
-    'HD' : angular.copy($scope.variationModel),
-    'CT' : angular.copy($scope.variationModel),
+    'BH' : angular.copy(scenarioBase),
+    'HP' : angular.copy(scenarioBase),
+    'HD' : angular.copy(scenarioBase),
+    'CT' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'BH' : [],
-    'HP' : [],
-    'HD' : [],
-    'CT' : [],
+    'BH' : { sel : null, all : {} },
+    'HP' : { sel : null, all : {} },
+    'HD' : { sel : null, all : {} },
+    'CT' : { sel : null, all : {} },
   }
 
 
@@ -86,6 +80,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
       delete routes.L;
       $scope.routes = routes;
+
+      for (var key in routes) {
+        var tabnavAlt = routes[key][0].options.base.corName;
+        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
+        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
+        var uuid = $scope.newVariant(tabnavAlt, false);
+        if (routes[key][0].options.base.default || routes[key][1].options.base.default) {
+          $scope.variants[tabnavAlt].sel = uuid;
+        }
+      }
     });
 
     loadService.getProposedStops(function(stops) {
@@ -100,29 +104,24 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     targetService.targetStops(stopsLayer, null);
   }
 
-  $scope.updateTargetFeature = function (properties) {
-    var id = properties ? properties.routeId : null;
-    targetService.targetCorridor(routesLayer, id);
-    targetService.targetStops(stopsLayer, id);
-    if (properties) {
-      $scope.targetFeature = targetService.newTargetFeature($scope.routes, properties);
+  $scope.updateTargetFeature = function (routeId) {
+    targetService.targetCorridor(routesLayer, routeId);
+    targetService.targetStops(stopsLayer, routeId);
+    if (routeId) {
+      $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {
       $scope.targetFeature = {};
     }
   }
 
-
-  $scope.setScenario = function (tabnav, variant) {
-    $scope.scenario[tabnav] = angular.copy(variant);
-    $scope.scenario[tabnav].name = null;
+  $scope.newVariant = function (tabnav, autoSet) {
+    var uuid = supportService.generateUUID();
+    $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
+    $scope.scenario[tabnav] = angular.copy(scenarioBase);
+    if (autoSet) { $scope.variants[tabnav].sel = uuid };
+    return uuid;
   }
 
-  $scope.newVariant = function (tabnav) {
-    var tempCurrent = angular.copy($scope.scenario[tabnav]);
-    $scope.variants[tabnav].push(tempCurrent);
-    $scope.saveAlt = false;
-    $scope.scenario[tabnav].name = null;
-  }
 
 
 
