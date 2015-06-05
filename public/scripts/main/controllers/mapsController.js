@@ -124,7 +124,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.setSelectedVariant = function (tabnav, uuid) {
     $scope.variants[tabnav].sel = uuid;
-    $scope.scenario[tabnav].routeId = $scope.variants[tabnav].all[uuid].routeId;
+    $scope.scenario[tabnav].routeId = uuid ? $scope.variants[tabnav].all[uuid].routeId : null;
   }
 
 

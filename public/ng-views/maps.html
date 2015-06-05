@@ -63,12 +63,12 @@
 <div class="topcol-l">
   <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show="targetFeature.properties">
     <h4>
-      {{ targetFeature.properties.varName }}
+      {{ targetFeature.properties.varName }} allignment
       <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature()"></i>
     </h4>
     <div class="topinfo-body container">
       <h6>
-        The {{ targetFeature.properties.varName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
+        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
@@ -100,12 +100,12 @@
 
   <div class="topleft saveAlt" ng-show="saveAlt">
     <h4>
-      Save this Route {{ tabnav }} alternative
+      Save this variation of the {{ routes[scenario[tabnav].routeId][0].options.base.varName }} path
       <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false; createVar=false"></i>
     </h4>
     <div class="topinfo-body container">
       <h6 ng-if="scenario[tabnav].routeId">
-        This alternative route variation is based off of the path for route {{ scenario[tabnav].routeId }}.
+        This alternative route variation is based off of the path for route {{ routes[scenario[tabnav].routeId][0].options.base.varName }} within the {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} corridor.
       </h6>
       <h6 ng-if="!scenario[tabnav].routeId">
         You have not selected a path from the available options for this route. To select a path variation, choose from the available variations on the underlying map.
@@ -127,7 +127,7 @@
         <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
-            ng-if="!scenario[tabnav].name || !scenario[tabnav].routeId" 
+            ng-if="!scenario[tabnav].name" 
             style="cursor:not-allowed" disabled>
             Save Alternative
           </button>
@@ -162,7 +162,7 @@
 </leaflet>
 
 
-<div class="basecol" ng-show="overview">
+<div class="basecol" ng-show="overview" style="max-height: 80%">
   <h4 ng-click="overview=false; tabnav=null">
     Routes Overview
     <i class="fa fa-times-circle-o pull-right"></i>
@@ -201,11 +201,16 @@
         </tr>
       </thead>
       <tbody>
+
         <tr ng-repeat    = "(key, variant) in variants[tabnav].all" 
             ng-click     = "updateTargetFeature(variant.routeId)">
           <td>
-            <i class = "fa fa-square-o" ng-if="variants[tabnav].sel !== key" ng-click="setSelectedVariant(tabnav, key); $event.stopPropagation()"></i>
-            <i class = "fa fa-check-square" ng-if="variants[tabnav].sel == key"></i>
+            <i  class = "fa fa-square-o" 
+                ng-if="variants[tabnav].sel !== key" 
+                ng-click="setSelectedVariant(tabnav, key); $event.stopPropagation()"></i>
+            <i  class = "fa fa-check-square" 
+                ng-if="variants[tabnav].sel == key"
+                ng-click="setSelectedVariant(tabnav, null); $event.stopPropagation()"></i>
           </td>
           <td>{{ variant.name }}</td>
           <td>
@@ -226,7 +231,8 @@
             {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }} 
           </td>
         </tr>
-
+      </tbody>
+      <tbody>
         <tr>
           <td>
             <i class="fa fa-sliders"></i>
@@ -249,10 +255,10 @@
           <td>
             {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
             <span class="badge pull-right" ng-click="createVar = !createVar">
-              <span ng-if="!createVar">
+              <span ng-if="createVar">
                 <i class="fa fa-bookmark-o"></i> Close Modifier
               </span>
-              <span ng-if="createVar">
+              <span ng-if="!createVar">
                 <i class="fa fa-bookmark-o"></i> Modify
               </span>
             </span>
@@ -266,14 +272,14 @@
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
       <div class="col-xs-6 text-center">
         <h3>
-          {{ scenario[tabnav].peak.min | integerLength }} : {{ scenario[tabnav].peak.sec | integerLength }} 
+          {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
           <small>Peak</small>
           <input type="range" min="0" max="30" ng-model="scenario[tabnav].peak.min" />
         </h3>
       </div>
       <div class="col-xs-6 text-center">
         <h3>
-          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
+          {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
           <small>Off-Peak</small>
           <input type="range" min="0" max="30" ng-model="scenario[tabnav].offpeak.min" />
         </h3>
