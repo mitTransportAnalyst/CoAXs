@@ -13,13 +13,6 @@ coaxsApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 
-coaxsApp.run(function($rootScope) {
-  $rootScope.Utils = {
-    keys : Object.keys
-  }
-})
-
-
 
 
 

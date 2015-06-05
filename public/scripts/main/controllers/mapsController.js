@@ -87,7 +87,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
         var uuid = $scope.newVariant(tabnavAlt, false);
         if (routes[key][0].options.base.default || routes[key][1].options.base.default) {
-          $scope.variants[tabnavAlt].sel = uuid;
+          $scope.setSelectedVariant(tabnavAlt, uuid);
         }
       }
     });
@@ -122,7 +122,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return uuid;
   }
 
+  $scope.setSelectedVariant = function (tabnav, uuid) {
+    $scope.variants[tabnav].sel = uuid;
+    $scope.scenario[tabnav].routeId = $scope.variants[tabnav].all[uuid].routeId;
+  }
 
 
+  $scope.test = function(foo) {
+    console.log('running test');
+    console.log(foo);
+  }
 
 });
