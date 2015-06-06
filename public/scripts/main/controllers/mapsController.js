@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, supportService) {
+coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, loadService, targetService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
@@ -28,11 +28,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     zoomControl        : false,
     attributionControl : false,
   };
-  var center_global = {
-    lat  : 42.360543,
-    lng  : -71.058169,
-    zoom : 12,
-  };
   var layers_global = {
     baselayers: {
       carto_light: {
@@ -42,15 +37,20 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     }
   };
+  var center_global = {
+    lat  : 42.360543,
+    lng  : -71.058169,
+    zoom : 12,
+  };
   // Assembling left map
   $scope.defaults_left  = angular.copy(defaults_global);
   $scope.center_left    = angular.copy(center_global);
   $scope.layers_left    = angular.copy(layers_global);
-  $scope.markers_left   = [];
   // Assembling right map
   $scope.defaults_right = angular.copy(defaults_global);
   $scope.center_right   = angular.copy(center_global);
   $scope.layers_right   = angular.copy(layers_global);
+  $scope.geojson_right  = null;
   $scope.markers_right  = {
     main: {
       lat       : $scope.center_right.lat,
@@ -99,6 +99,36 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
 
+  $scope.updateRightRoutes = function() {
+    var data = [];
+    routesLayer.eachLayer(function (layer) {
+      var layer = layer.toGeoJSON().features[0];
+      data.push({
+        type       : 'Feature',
+        id         : layer.properties.routeId,
+        properties : layer.properties,
+        geometry   : layer.geometry,
+      });
+    });
+    console.log(data);
+    data = L.layerGroup(data);
+    console.log(data);
+    data = data.toGeoJSON();
+    console.log(data);
+
+    $scope.geojson_right = {
+      data : data,
+      style: {
+        fillColor: "green",
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+      },
+    }
+  };
+
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
     targetService.targetStops(stopsLayer, null);
@@ -126,6 +156,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.variants[tabnav].sel = uuid;
     $scope.scenario[tabnav].routeId = uuid ? $scope.variants[tabnav].all[uuid].routeId : null;
   }
+
+
+
+
 
 
   $scope.test = function(foo) {

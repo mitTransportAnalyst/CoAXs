@@ -1,6 +1,6 @@
 <nav>
   <div class="section">
-    <h6>
+    <h6 ng-click="updateRightRoutes()" >
       FOO
     </h6>
   </div>
@@ -101,7 +101,7 @@
   <div class="topleft saveAlt" ng-show="saveAlt">
     <h4>
       Save this variation of the {{ routes[scenario[tabnav].routeId][0].options.base.varName }} path
-      <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false; createVar=false"></i>
+      <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false"></i>
     </h4>
     <div class="topinfo-body container">
       <h6 ng-if="scenario[tabnav].routeId">
@@ -127,14 +127,14 @@
         <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
-            ng-if="!scenario[tabnav].name" 
+            ng-show="!scenario[tabnav].name" 
             style="cursor:not-allowed" disabled>
-            Save Alternative
+            Save Variation
           </button>
           <button class="btn btn-savealt" type="button" 
-            ng-click="newVariant(tabnav, true); saveAlt=false; createVar=false" 
-            ng-if="scenario[tabnav].name && scenario[tabnav].routeId">
-            Save Alternative
+            ng-click="saveAlt=false; newVariant(tabnav, true)" 
+            ng-show="scenario[tabnav].name && scenario[tabnav].routeId">
+            Save Variation
           </button>
         </span>
       </div>
@@ -146,10 +146,9 @@
 
 <leaflet  center   = "center_left"
           defaults = "defaults_left"
-          geojson  = "geojson_left"
           id       = "map_left"
           layers   = "layers_left"
-          markers  = "markers_left"
+          geojson  = "geojson_right"
           >
 </leaflet>
 <leaflet  center   = "center_right"
@@ -304,7 +303,7 @@
           <i class="fa fa-star"></i> 
           BRT
         </label>
-        <label class="btn btn-success" ng-click="saveAlt=!saveAlt">
+        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
           <i class="fa fa-cloud-upload"></i> Save Variation
         </label>
       </div>
