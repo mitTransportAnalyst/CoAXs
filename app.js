@@ -17,9 +17,13 @@ app.set('view engine', 'ejs');
 
 /// ROUTING /// 
 app.get('/', function (req, res) {
-	res.render('index.ejs', {
-	  data : 'foo',
-	});
+  res.render('index.ejs', {
+    data : 'foo',
+  });
+});
+
+app.post('/posttest', function (req, res) {
+  console.log("POST TEST", req);
 });
 
 app.get('/geojson/existing', function (req, res) {

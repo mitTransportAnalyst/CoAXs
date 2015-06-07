@@ -1,69 +1,96 @@
 <nav>
   <div class="section">
-    <h6>
-      COAXS
-    </h6>
-  </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_overview')">
-      Overview
-    </h6>
-  </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_variants')">
-      Variations
-    </h6>
-  </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_stations')">
-      Station Types
-    </h6>
-  </div>
-  <div class="section">
-    <h6 ng-click="baseToggle('view_freq')">
-      Frequencies
+    <h6 ng-click="updateRightRoutes()" >
+      FOO
     </h6>
   </div>
 </nav>
 
+<div class="leftnav-1">
+  <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
+  </div>
+
+  <span ng-show="dotSelect">
+    <span class="fa-stack" 
+          ng-click="tabnav='BH'; overview=true"
+          ng-mouseover="targetCorridor('BH')"
+          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+          style="color:#0071CA">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>BH</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='HP'; overview=true"
+          ng-mouseover="targetCorridor('HP')"
+          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+          style="color:#B10086">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HP</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='HD'; overview=true"
+          ng-mouseover="targetCorridor('HD')"
+          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+          style="color:#CE5504">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HD</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='CT'; overview=true"
+          ng-mouseover="targetCorridor('CT')"
+          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+          style="color:#AD0101">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>CT</small>
+      </i>
+    </span>
+  </span>  
+
+</div>
+
 <div class="topcol-l">
-  <div class="topleft" style="background-color: #{{ targetFeature.properties.routes_route_color }}" ng-show="targetFeature.properties.altName">
+  <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show="targetFeature.properties">
     <h4>
-      {{ targetFeature.properties.altName }}
-      <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature(false)"></i>
+      {{ targetFeature.properties.varName }} allignment
+      <i class="fa fa-times-circle-o pull-right" ng-click="updateTargetFeature()"></i>
     </h4>
     <div class="topinfo-body container">
       <h6>
-        The {{ targetFeature.properties.altName }} runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
-        You last selected the  
-        <span ng-show="targetFeature.properties.direction == 0">
-          inbound 
-        </span>
-        <span ng-show="!targetFeature.properties.direction == 0">
-          outbound 
-        </span>
-        portion of the route's path.
+        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
-        There are {{ targetFeature.alternatives.length/2 }} alternatives along this corridor. They are: 
-        <span ng-repeat="feature in targetFeature.alternatives">
-          <span class="badge" style="color: #{{ feature.routes_route_color }};" ng-show="feature.direction == 0" ng-click="updateTargetFeature(feature)">
-            {{ feature.altName }}
+        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} path alternatives along this corridor. {{ variants[tabnav].all | keyLength }} variations, based off of these route path alternatives, have been created this session. They are: 
+        <span ng-repeat="(key, variant) in variants[tabnav].all">
+          <span class="badge"  style="color: #{{ targetFeature.properties.routeColor }}" 
+                ng-click="updateTargetFeature(variant.routeId)">
+            {{ variant.name }}
           </span>
         </span>
       </h6>
       
       <button class="btn btn-choose pull-right" type="button" 
-              ng-if="scenario[targetFeature.properties.corName].route_id !== targetFeature.properties.route_id"
-              ng-click="scenario[targetFeature.properties.corName].route_id = targetFeature.properties.route_id" 
-              style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+              ng-if="scenario[tabnav].routeId !== targetFeature.properties.routeId"
+              ng-click="scenario[targetFeature.properties.corName].routeId = targetFeature.properties.routeId" 
+              style="background-color: #{{ targetFeature.properties.routeColor }}">
         Use this path for the {{ targetFeature.properties.corLonName }} corridor
       </button>
 
       <button class="btn btn-choose pull-right" type="button" 
-              ng-if="scenario[targetFeature.properties.corName].route_id == targetFeature.properties.route_id"
-              style="background-color: #{{ targetFeature.properties.routes_route_color }}">
+              ng-if="scenario[targetFeature.properties.corName].routeId == targetFeature.properties.routeId"
+              style="background-color: #{{ targetFeature.properties.routeColor }}">
         <i class="fa fa-check"></i>
         Path selected
       </button>
@@ -73,14 +100,14 @@
 
   <div class="topleft saveAlt" ng-show="saveAlt">
     <h4>
-      Save this Route {{ tabnav }} alternative
-      <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=!saveAlt"></i>
+      Save this variation of the {{ routes[scenario[tabnav].routeId][0].options.base.varName }} path
+      <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false"></i>
     </h4>
     <div class="topinfo-body container">
-      <h6 ng-if="scenario[tabnav].route_id">
-        This alternative route variation is based off of the path for route {{ scenario[tabnav].route_id }}.
+      <h6 ng-if="scenario[tabnav].routeId">
+        This alternative route variation is based off of the path for route {{ routes[scenario[tabnav].routeId][0].options.base.varName }} within the {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} corridor.
       </h6>
-      <h6 ng-if="!scenario[tabnav].route_id">
+      <h6 ng-if="!scenario[tabnav].routeId">
         You have not selected a path from the available options for this route. To select a path variation, choose from the available variations on the underlying map.
       </h6>
       <h6>
@@ -100,14 +127,14 @@
         <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
-            ng-if="!scenario[tabnav].name || !scenario[tabnav].route_id" 
+            ng-show="!scenario[tabnav].name" 
             style="cursor:not-allowed" disabled>
-            Save Alternative
+            Save Variation
           </button>
           <button class="btn btn-savealt" type="button" 
-            ng-click="newVariant(tabnav); saveAlt=!saveAlt" 
-            ng-if="scenario[tabnav].name && scenario[tabnav].route_id">
-            Save Alternative
+            ng-click="saveAlt=false; newVariant(tabnav, true)" 
+            ng-show="scenario[tabnav].name && scenario[tabnav].routeId">
+            Save Variation
           </button>
         </span>
       </div>
@@ -119,10 +146,9 @@
 
 <leaflet  center   = "center_left"
           defaults = "defaults_left"
-          geojson  = "geojson_left"
           id       = "map_left"
           layers   = "layers_left"
-          markers  = "markers_left"
+          geojson  = "geojson_right"
           >
 </leaflet>
 <leaflet  center   = "center_right"
@@ -135,229 +161,158 @@
 </leaflet>
 
 
-
-
-<div class="basecol" ng-show="base.view_overview">
-  <h4>
-    <span ng-click="baseToggle('view_overview')">
-      Overview of Current Properties
-    </span>
+<div class="basecol" ng-show="overview" style="max-height: 80%">
+  <h4 ng-click="overview=false; tabnav=null">
+    Routes Overview
+    <i class="fa fa-times-circle-o pull-right"></i>
   </h4>
-
-  <div ng-include="'tabnav.html'"></div>
   
   <div class="col-xs-12 body">
-    <h5 ng-show="scenario[tabnav].route_id">
-      <span ng-click="test(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
-        Route {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.altName }} variant along the {{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.corLonName }} Corridor
+
+    <h5 ng-show="variants[tabnav].sel">
+      <span>
+        {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
       </span>
       
-      <span class="badge" style="color: #{{ layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base.routes_route_color }}" 
-            ng-click="updateTargetFeature(layers_left.geojson.proposed[scenario[tabnav].route_id][0].options.base)">
+      <span class="badge" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
+            ng-click="overview=false">
         View path on map
       </span>
     </h5>
-    <span ng-show="!scenario[tabnav].route_id" style="color:red">
-      <h5 ng-click="baseToggle('view_overview')">
-        <i class="fa fa-exclamation-triangle"></i> No variants available! 
-        <span class="badge">Select a path variation on map.</span>
+
+    <span ng-show="!variants[tabnav].sel" style="color:red">
+      <h5>
+        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
       </h5>
     </span>
-    <h6 ng-click="baseToggle('view_stations')">
-      <i class="fa fa-bus"></i> 
-      Station type: 
-        <span ng-if="scenario[tabnav].station == 0">
-          Standard
-        </span>
-        <span ng-if="scenario[tabnav].station == 1">
-          Raised Platform
-        </span>
-        <span ng-if="scenario[tabnav].station == 2">
-          BRT Station
-        </span>
-      
-    </h6>
-    <h6 ng-click="baseToggle('view_freq')">
-      <i class="fa fa-clock-o"></i> 
-      Frequency: {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} Peak, 
-      {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} Off-Peak
-    </h6>
-  </div>
-</div>
 
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th><i class="fa fa-check-square"></i></th>
+          <th>Name</th>
+          <th>Station Type</th>
+          <th>Peak</th>
+          <th>
+            Off-Peak
+            <i class="fa fa-plus-circle pull-right" ng-click="createVar = !createVar"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
 
-<div class="basecol" ng-show="base.view_variants">
-  <h4>
-    <span ng-click="baseToggle('view_variants')">
-      Variations
-    </span>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-  
-  <div class="col-xs-12 body">
-    <h5>
-      User-created Variations
-    </h5>
-    <h6>
-      A total of {{ variants[tabnav].length }} variations have been created for this route this session.
-    </h6>
-    <ul>
-
-      <li ng-repeat="feature in []">
-        <ul>
-          Variations of {{ feature.route_id }}:
-          <li ng-repeat="variant in variants[tabnav]">
-            <span ng-if="variant.route_id == feature.route_id">
-              <b>{{ variant.name }} </b>
-              (Station type: 
-              <span ng-if="variant.station == 0">
-                Standard 
-              </span>
-              <span ng-if="variant.station == 1">
-                Raised Platform  
-              </span>
-              <span ng-if="variant.station == 2">
-                BRT Station 
-              </span>
-              
-              , Peak frequency: {{ variant.peak.min }}:{{ variant.peak.sec | integerLength }}
-              , Off-Peak frequency: {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }}
-              )
+        <tr ng-repeat    = "(key, variant) in variants[tabnav].all" 
+            ng-click     = "updateTargetFeature(variant.routeId)">
+          <td>
+            <i  class = "fa fa-square-o" 
+                ng-if="variants[tabnav].sel !== key" 
+                ng-click="setSelectedVariant(tabnav, key); $event.stopPropagation()"></i>
+            <i  class = "fa fa-check-square" 
+                ng-if="variants[tabnav].sel == key"
+                ng-click="setSelectedVariant(tabnav, null); $event.stopPropagation()"></i>
+          </td>
+          <td>{{ variant.name }}</td>
+          <td>
+            <span ng-if="variant.station == 0">
+              Standard 
             </span>
-          </li>
-        </ul>
-      </li>
-    </ul>
+            <span ng-if="variant.station == 1">
+              Raised Platform  
+            </span>
+            <span ng-if="variant.station == 2">
+              BRT Station 
+            </span>
+          </td>
+          <td>
+            {{ variant.peak.min }}:{{ variant.peak.sec | integerLength }} 
+          </td>
+          <td>
+            {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }} 
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td>
+            <i class="fa fa-sliders"></i>
+          </td>
+          <td><b>Current Scenario</b></td>
+          <td>
+            <span ng-if="scenario[tabnav].station == 0">
+              Standard 
+            </span>
+            <span ng-if="scenario[tabnav].station == 1">
+              Raised Platform  
+            </span>
+            <span ng-if="scenario[tabnav].station == 2">
+              BRT Station 
+            </span>
+          </td>
+          <td>
+            {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} 
+          </td>
+          <td>
+            {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+            <span class="badge pull-right" ng-click="createVar = !createVar">
+              <span ng-if="createVar">
+                <i class="fa fa-bookmark-o"></i> Close Modifier
+              </span>
+              <span ng-if="!createVar">
+                <i class="fa fa-bookmark-o"></i> Modify
+              </span>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <div class="col-xs-12 body" ng-show="createVar">
+    <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
+      <div class="col-xs-6 text-center">
+        <h3>
+          {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
+          <small>Peak</small>
+          <input type="range" min="0" max="30" ng-model="scenario[tabnav].peak.min" />
+        </h3>
+      </div>
+      <div class="col-xs-6 text-center">
+        <h3>
+          {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+          <small>Off-Peak</small>
+          <input type="range" min="0" max="30" ng-model="scenario[tabnav].offpeak.min" />
+        </h3>
+      </div>
+
+      <div class="btn-group btn-group-justified">
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="0">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star-o"></i> 
+          <i class="fa fa-star-o"></i>
+          Normal
+        </label>
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="1">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star-o"></i>
+          Platform
+        </label>
+        <label class="btn btn-info" ng-model="scenario[tabnav].station" btn-radio="2">
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          <i class="fa fa-star"></i> 
+          BRT
+        </label>
+        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
+          <i class="fa fa-cloud-upload"></i> Save Variation
+        </label>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
-<div class="basecol" ng-show="base.view_stations">
 
-  <h4>
-    <span ng-click="baseToggle('view_stations')">
-      Station Types
-    </span>
-    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-
-  <div class="btn-group btn-group-justified">
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="0">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star-o"></i> 
-      <i class="fa fa-star-o"></i>
-      <br>
-      Normal
-    </label>
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="1">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star-o"></i>
-      <br>
-      Platform
-    </label>
-    <label class="btn btn-success" ng-model="scenario[tabnav].station" btn-radio="2">
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <i class="fa fa-star"></i> 
-      <br>
-      BRT
-    </label>
-  </div>
-</div>
-
-<div class="basecol" ng-show="base.view_freq">
-  <h4>
-    <span ng-click="baseToggle('view_freq')">
-      Frequencies
-    </span>
-    <i class="fa fa-bookmark-o pull-right" ng-click="saveAlt=!saveAlt"></i>
-  </h4>
-
-  <div ng-include="'tabnav.html'"></div>
-
-  <div class="body">
-    <div class="col-xs-6 body text-center">
-      <h2>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, true, 'min')"><i class="fa fa-angle-down"></i></button>
-        </div>
-
-        <span>
-          {{ scenario[tabnav].peak.min | integerLength }} : {{ scenario[tabnav].peak.sec | integerLength }} 
-        </span>
-
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, true, 'min')"><i class="fa fa-angle-up"></i></button>
-        </div>
-      </h2>
-
-      <h4>
-        Peak
-      </h4>
-    </div>
-
-    <div class="col-xs-6 body text-center">
-      <h2>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="subTime(tabnav, false, 'min')"><i class="fa fa-angle-down"></i></button>
-        </div>
-
-        <span>
-          {{ scenario[tabnav].offpeak.min | integerLength }} : {{ scenario[tabnav].offpeak.sec | integerLength }} 
-        </span>
-
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-lg btn-info timeAdjust" ng-click="addTime(tabnav, false, 'min')"><i class="fa fa-angle-up"></i></button>
-        </div>
-      </h2>
-
-      <h4>
-        Off-Peak
-      </h4>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-<script type="text/ng-template" id="tabnav.html">
-  <div class="btn-group btn-group-justified" role="group">
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('BH')"
-                            ng-class="tabnav == 'BH' ? 'btn-selected' : ''">
-        BH
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('HP')"
-                            ng-class="tabnav == 'HP' ? 'btn-selected' : ''">
-        HP
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('HD')"
-                            ng-class="tabnav == 'HD' ? 'btn-selected' : ''">
-        HD
-      </button>
-    </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" 
-                            ng-click="setTabnav('CT')"
-                            ng-class="tabnav == 'CT' ? 'btn-selected' : ''">
-        CT
-      </button>
-    </div>
-  </div>
-</script>
 
 

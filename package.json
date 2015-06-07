@@ -7,13 +7,14 @@
   "dependencies": {
     "body-parser": "^1.12.4",
     "bower": "1.4.1",
+    "debug": "^2.2.0",
     "ejs": "~0.8.5",
     "express": "~4.9.0",
     "morgan": "^1.5.3"
   },
   "devDependencies": {},
   "scripts": {
-    "start" : "node app.js",
-    "postinstall" : "./node_modules/bower/bin/bower install"
+    "start": "node app.js",
+    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }
