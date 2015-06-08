@@ -20,6 +20,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     'HD' : { sel : null, all : {} },
     'CT' : { sel : null, all : {} },
   }
+  $scope.combos = {}
 
 
   // Angular Leaflet Directiive - base components
@@ -127,12 +128,26 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.scenario[tabnav].routeId = uuid ? $scope.variants[tabnav].all[uuid].routeId : null;
   }
 
-  $scope.updateRightRoutes = function() {
+  $scope.updateRightRoutes = function(comboId) {
     if (typeof geoJsonRight == 'undefined') {geoJsonRight = null};
-    rightService.updateRightRoutes($scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+    rightService.updateRightRoutes($scope.combos[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
       geoJsonRight = geoJson;
     });
   };
+
+  $scope.newCombo = function (name) {
+    var uuid = supportService.generateUUID();
+    $scope.combos[uuid] = {
+      name : name,
+      sel  : {
+        'BH' : $scope.variants['BH'].sel,
+        'HP' : $scope.variants['HP'].sel,
+        'HD' : $scope.variants['HD'].sel,
+        'CT' : $scope.variants['CT'].sel,
+      }
+    };
+    $scope.updateRightRoutes(comboId);
+  }
 
 
 

@@ -1,12 +1,12 @@
 coaxsApp.service('rightService', function (leafletData) {
 
-  this.updateRightRoutes = function (variants, routesLayer, geoJsonRight, cb) {
+  this.updateRightRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
     leafletData.getMap('map_right').then(function(map) {
       if (geoJsonRight) { map.removeLayer(geoJsonRight); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
         var currenCor   = layer.options.base.corName;
-        var variantName = variants[currenCor].sel;
+        var variantName = combo.sel[currenCor];
         var variant     = variantName ? variants[currenCor].all[variantName] : null;
 
         if (variant && variant.routeId == layer.options.base.routeId) {
