@@ -40,14 +40,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     zoomControl        : false,
     attributionControl : false,
   };
-  var layers_global = {
-    baselayers: {
-      carto_light: {
-        name : 'CartoLight Basemap',
-        url  : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
-        type : 'xyz'
-      }
-    }
+  var tiles_global = {
+      name: 'CartoDB Light',
+      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+      type: 'xyz',
   };
   var center_global = {
     lat  : 42.360543,
@@ -57,11 +53,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Assembling left map
   $scope.defaults_left  = angular.copy(defaults_global);
   $scope.center_left    = angular.copy(center_global);
-  $scope.layers_left    = angular.copy(layers_global);
+  $scope.tiles_left    = angular.copy(tiles_global);
   // Assembling right map
   $scope.defaults_right = angular.copy(defaults_global);
   $scope.center_right   = angular.copy(center_global);
-  $scope.layers_right   = angular.copy(layers_global);
+  $scope.tiles_right   = angular.copy(tiles_global);
   $scope.geojson_right  = null;
   $scope.markers_right  = {
     main: {
