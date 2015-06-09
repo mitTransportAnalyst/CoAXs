@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, loadService, targetService, supportService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, rightService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
@@ -20,6 +20,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     'HD' : { sel : null, all : {} },
     'CT' : { sel : null, all : {} },
   }
+  $scope.combos = {}
 
 
   // Angular Leaflet Directiive - base components
@@ -99,36 +100,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   });
 
 
-  $scope.updateRightRoutes = function() {
-    var data = [];
-    routesLayer.eachLayer(function (layer) {
-      var layer = layer.toGeoJSON().features[0];
-      data.push({
-        type       : 'Feature',
-        id         : layer.properties.routeId,
-        properties : layer.properties,
-        geometry   : layer.geometry,
-      });
-    });
-    console.log(data);
-    data = L.layerGroup(data);
-    console.log(data);
-    data = data.toGeoJSON();
-    console.log(data);
-
-    $scope.geojson_right = {
-      data : data,
-      style: {
-        fillColor: "green",
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-      },
-    }
-  };
-
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
     targetService.targetStops(stopsLayer, null);
@@ -148,13 +119,34 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     var uuid = supportService.generateUUID();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
     $scope.scenario[tabnav] = angular.copy(scenarioBase);
-    if (autoSet) { $scope.variants[tabnav].sel = uuid };
+    if (autoSet) { $scope.setSelectedVariant(tabnav, uuid); };
     return uuid;
   }
 
   $scope.setSelectedVariant = function (tabnav, uuid) {
     $scope.variants[tabnav].sel = uuid;
     $scope.scenario[tabnav].routeId = uuid ? $scope.variants[tabnav].all[uuid].routeId : null;
+  }
+
+  $scope.updateRightRoutes = function(comboId) {
+    if (typeof geoJsonRight == 'undefined') {geoJsonRight = null};
+    rightService.updateRightRoutes($scope.combos[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+      geoJsonRight = geoJson;
+    });
+  };
+
+  $scope.newCombo = function (name) {
+    var comboId = supportService.generateUUID();
+    $scope.combos[comboId] = {
+      name : name,
+      sel  : {
+        'BH' : $scope.variants['BH'].sel,
+        'HP' : $scope.variants['HP'].sel,
+        'HD' : $scope.variants['HD'].sel,
+        'CT' : $scope.variants['CT'].sel,
+      }
+    };
+    $scope.updateRightRoutes(comboId);
   }
 
 
@@ -168,3 +160,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   }
 
 });
+
+
+
