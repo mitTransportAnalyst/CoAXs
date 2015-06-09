@@ -136,8 +136,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
 
   $scope.newCombo = function (name) {
-    var uuid = supportService.generateUUID();
-    $scope.combos[uuid] = {
+    var comboId = supportService.generateUUID();
+    $scope.combos[comboId] = {
       name : name,
       sel  : {
         'BH' : $scope.variants['BH'].sel,

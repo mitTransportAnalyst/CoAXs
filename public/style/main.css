@@ -23,10 +23,6 @@ body {
 button {
   cursor           : pointer;
 }
-nav div.section, nav div.section.active, nav div.section.focus, nav div.section.hover, nav div.section:active, nav div.section:focus, nav div.section:hover, .btn-selected, .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
-  background-color : rgb(50, 50, 50);
-  color            : #FFF;
-}
 .form-control {
   border-width     : 0px;
   border-radius    : 0px;
@@ -44,31 +40,30 @@ nav div.section, nav div.section.active, nav div.section.focus, nav div.section.
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: rgb(75, 75, 75);
 }
-.fa.pull-right { 
+.fa .pull-right { 
   line-height: inherit;
 }
 
 /*navigation*/
 nav {
   position         : absolute;
-  width            : 100%;
+  width            : 50%;
+  left             : 50%;
   z-index          : 100;
   color            : #FFF;
   background-color : #000;
-  height           : 32px;
+  height           : 32;
   overflow         : hidden;
 }
 nav div.section {
   background-color : #000;
-  float            : left;
+  float            : right;
   padding-left     : 10px;
   padding-right    : 10px;
-  max-width        : 10%;
   cursor           : pointer;
 }
 .topcol-l {
   position         : absolute;
-  top              : 32px;
   color            : #FFF;
   z-index          : 100;
   width            : 50%;
@@ -87,22 +82,17 @@ nav div.section {
 }
 .leftnav-1 {
   position         : absolute;
-  top              : 32px;
-  margin-top       : 10px; 
-  margin-left      : 10px;
+  padding          : 10px;
   z-index          : 100;
   cursor           : pointer;
   font-size        : 1.5em;
-  text-align       : center;
+  width            : 50%;
+  float            : left;
   text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
 }
 .leftnav-1 small {
   font-weight      : 900;
   text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
-}
-.dots {
-  background-color : #FFF;
-  border-radius    : 35px;
 }
 .dot-unselected {
   opacity          : 0.35;
