@@ -25,6 +25,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     all : {},
   }
 
+  // left globals
+  var subwaysLayer = null;
+  var stopsLayer = null;
+  var routesLayer = null;
+
+  // right globals
+  var geoJsonRight = null;
+
 
   // Angular Leaflet Directiive - base components
   var defaults_global = {
@@ -71,7 +79,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
 
   // initialize imported data
-  var subwaysLayer, stopsLayer, routesLayer;
   leafletData.getMap('map_left').then(function(map) {
     loadService.getExisting(function(subways) {
       subways.addTo(map);
@@ -132,10 +139,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   $scope.updateRightRoutes = function(comboId) {
-    if (typeof geoJsonRight == 'undefined') {geoJsonRight = null};
-    rightService.updateRightRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
-      geoJsonRight = geoJson;
-    });
+    if (comboId) {
+      rightService.updateRightRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+        geoJsonRight = geoJson;
+      });
+      $scope.combos.sel = comboId;
+    } else {
+      rightService.clearRightRoutes(geoJsonRight);
+      $scope.combos.sel = null;
+      geoJsonRight = null;
+    }
   };
 
   $scope.newCombo = function (name) {

@@ -5,10 +5,6 @@
   </div>
 </div>
 
-<div class="topcol right" ng-show="combos.sel" style="margin-left:50px">
-  <h3>{{ combos.all[combos.sel].name }} <small>Scenario</small></h3>
-</div>
-
 
 <div class="topnav">
   <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
@@ -362,11 +358,11 @@
 
 <div class="basecol right" style="max-height: 80%">
   <h4 ng-click="combosView=!combosView; overview=false; tabnav=null">
-    <span ng-show="combos.sel">
-      No scenario selected
-    </span>
     <span ng-show="!combos.sel">
       No scenario selected
+    </span>
+    <span ng-show="combos.sel">
+      Scenario {{ combos.all[combos.sel].name }}
     </span>
     <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
     <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i>
@@ -394,28 +390,23 @@
           <td>
             <i  class = "fa fa-square-o" 
                 ng-if="combos.sel !== key" 
-                ng-click=""></i>
+                ng-click="updateRightRoutes(key)"></i>
             <i  class = "fa fa-check-square" 
                 ng-if="combos.sel == key"
-                ng-click=""></i>
+                ng-click="updateRightRoutes()"></i>
           </td>
-          <td>{{ variant }} {{ key }}</td>
+          <td>{{ variant.name }}</td>
           <td>
-            <span ng-if="variant.station == 0">
-              Standard 
-            </span>
-            <span ng-if="variant.station == 1">
-              Raised Platform  
-            </span>
-            <span ng-if="variant.station == 2">
-              BRT Station 
-            </span>
+            <i class="fa fa-check" ng-if="variant.sel['BH']"></i>
           </td>
           <td>
-            {{ variant.peak.min }}:{{ variant.peak.sec | integerLength }} 
+            <i class="fa fa-check" ng-if="variant.sel['HP']"></i>
           </td>
           <td>
-            {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }} 
+            <i class="fa fa-check" ng-if="variant.sel['HD']"></i>
+          </td>
+          <td>
+            <i class="fa fa-check" ng-if="variant.sel['CT']"></i>
           </td>
         </tr>
       </tbody>
