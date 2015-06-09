@@ -53,11 +53,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Assembling left map
   $scope.defaults_left  = angular.copy(defaults_global);
   $scope.center_left    = angular.copy(center_global);
-  $scope.tiles_left    = angular.copy(tiles_global);
+  $scope.tiles_left     = angular.copy(tiles_global);
   // Assembling right map
   $scope.defaults_right = angular.copy(defaults_global);
   $scope.center_right   = angular.copy(center_global);
-  $scope.tiles_right   = angular.copy(tiles_global);
+  $scope.tiles_right    = angular.copy(tiles_global);
   $scope.geojson_right  = null;
   $scope.markers_right  = {
     main: {
