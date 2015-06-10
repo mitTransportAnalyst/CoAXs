@@ -22,6 +22,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
   $scope.combos = {
     sel : null,
+    com : null,
     all : {},
   }
 
