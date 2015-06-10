@@ -84,10 +84,11 @@ app.get('/geojson/proposed_stops', function (req, res) {
   });
 })
 
-app.get('/geojson/pois' function (req, res) {
+app.get('/geojson/pois', function (req, res) {
   drive.files.get({
-    'fileId': '19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac'
-  }).execute(function(response) {
+    auth : API_KEY,
+    id   : '19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac',
+  }, function(response) {
     console.log('drive response:', response);
   });
 })

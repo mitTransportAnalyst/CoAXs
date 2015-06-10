@@ -82,12 +82,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       subwaysLayer = subways;
     });
 
-    loadService.getProposedRoutes(function(routes) {
-      routesLayer = routes.L;
+    loadService.getProposedRoutes(function(data) {
+      routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
-      delete routes.L;
-      $scope.routes = routes;
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
 
       for (var key in routes) {
         var tabnavAlt = routes[key][0].options.base.corName;

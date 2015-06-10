@@ -25,13 +25,13 @@ coaxsApp.service('loadService', function ($http) {
     .success(function (data, status) {
 
       var geojsonList   = [];
-      var proposedLayer = {};
+      var routes = {};
 
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
-        if (!proposedLayer[feature.routeId]) { proposedLayer[feature.routeId] = {} };
+        if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
-        proposedLayer[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
+        routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color     : color,
@@ -42,12 +42,12 @@ coaxsApp.service('loadService', function ($http) {
           },
           base: feature
         });
+        console.log(routes[feature.routeId][feature.direction]);
 
-        geojsonList.push(proposedLayer[feature.routeId][feature.direction]);
+        geojsonList.push(routes[feature.routeId][feature.direction]);
       }
 
-      proposedLayer['L'] = L.layerGroup(geojsonList);
-      cb(proposedLayer);
+      cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
     });    
   }
 
