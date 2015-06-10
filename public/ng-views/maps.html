@@ -393,7 +393,7 @@
           <th>Hyde Park</th>
           <th>Harvard-Dudley</th>
           <th>Sullivan-Dudley</th>
-          <th ng-show="scenarioCompare">Compare</th>
+          <th>Compare</th>
         </tr>
       </thead>
       <tbody>
@@ -409,20 +409,44 @@
           </td>
           <td>{{ variant.name }}</td>
           <td>
-            <i class="fa fa-check text-success" ng-if="variant.sel['BH']"></i>
-            <i class="fa fa-times text-danger" ng-if="!variant.sel['BH']"></i>
+            <span ng-if="variant.sel['BH']">
+              <i class="fa fa-check text-success"></i>
+              <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
+            </span>
+            <span ng-if="!variant.sel['BH']">
+              <i class="fa fa-times text-danger"></i>
+              <small><i>None selected</i></small>
+            </span>
           </td>
           <td>
-            <i class="fa fa-check text-success" ng-if="variant.sel['HP']"></i>
-            <i class="fa fa-times text-danger" ng-if="!variant.sel['HP']"></i>
+            <span ng-if="variant.sel['HP']">
+              <i class="fa fa-check text-success"></i>
+              <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
+            </span>
+            <span ng-if="!variant.sel['HP']">
+              <i class="fa fa-times text-danger"></i>
+              <small><i>None selected</i></small>
+            </span>
           </td>
           <td>
-            <i class="fa fa-check text-success" ng-if="variant.sel['HD']"></i>
-            <i class="fa fa-times text-danger" ng-if="!variant.sel['HD']"></i>
+            <span ng-if="variant.sel['HD']">
+              <i class="fa fa-check text-success"></i>
+              <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
+            </span>
+            <span ng-if="!variant.sel['HD']">
+              <i class="fa fa-times text-danger"></i>
+              <small><i>None selected</i></small>
+            </span>
           </td>
           <td>
-            <i class="fa fa-check text-success" ng-if="variant.sel['CT']"></i>
-            <i class="fa fa-times text-danger" ng-if="!variant.sel['CT']"></i>
+            <span ng-if="variant.sel['CT']">
+              <i class="fa fa-check text-success"></i>
+              <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
+            </span>
+            <span ng-if="!variant.sel['CT']">
+              <i class="fa fa-times text-danger"></i>
+              <small><i>None selected</i></small>
+            </span>
           </td>
           <td ng-show="scenarioCompare">
             <i  class = "fa fa-square-o" 
@@ -431,6 +455,9 @@
             <i  class = "fa fa-check-square" 
                 ng-if="combos.com == key"
                 ng-click="updateRightRoutes()"></i>
+          </td>
+          <td ng-show="!scenarioCompare">
+            <i class="fa fa-ban"></i>
           </td>
         </tr>
       </tbody>
