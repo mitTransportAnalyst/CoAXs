@@ -2,7 +2,7 @@ coaxsApp.service('loadService', function ($http) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
-    .success(function(data, status) {
+    .success(function (data, status) {
       var subwayRoutes = L.geoJson(data, {
         style: function (feature) {
           return {
@@ -22,7 +22,7 @@ coaxsApp.service('loadService', function ($http) {
 
   this.getProposedRoutes = function (cb) {
     $http.get('/geojson/proposed')
-    .success(function(data, status) {
+    .success(function (data, status) {
 
       var geojsonList   = [];
       var proposedLayer = {};
@@ -53,7 +53,7 @@ coaxsApp.service('loadService', function ($http) {
 
   this.getProposedStops = function (cb) {
     $http.get('/geojson/proposed_stops')
-    .success(function(data, status) {
+    .success(function (data, status) {
 
       var stopList = [];
       var stopicon = L.Icon.extend({
@@ -80,7 +80,23 @@ coaxsApp.service('loadService', function ($http) {
     });
   }
 
+$http.get('/geojson/pois')
+.success(function (data, status) {
+  console.log(data);
+  console.log(status);
+})
+
+
+
 });
+
+
+
+
+
+
+
+
 
 
 
