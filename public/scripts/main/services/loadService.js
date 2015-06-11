@@ -1,4 +1,4 @@
-coaxsApp.service('loadService', function ($http) {
+coaxsApp.service('loadService', function ($http, supportService) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
@@ -29,6 +29,8 @@ coaxsApp.service('loadService', function ($http) {
 
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
+        feature['length'] = supportService.getLength(data.features[i].geometry);
+
         if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
@@ -42,7 +44,6 @@ coaxsApp.service('loadService', function ($http) {
           },
           base: feature
         });
-        console.log(routes[feature.routeId][feature.direction]);
 
         geojsonList.push(routes[feature.routeId][feature.direction]);
       }

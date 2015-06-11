@@ -82,7 +82,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       subwaysLayer = subways;
     });
 
-    loadService.getProposedRoutes(function(data) {
+    loadService.getProposedRoutes(function(data) { console.log(data);
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 

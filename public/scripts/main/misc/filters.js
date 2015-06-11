@@ -1,4 +1,5 @@
 angular.module('coaxsFilters', [])
+
 .filter('integerLength', function() {
   return function(input) {
     if (input < 10) {
@@ -7,6 +8,7 @@ angular.module('coaxsFilters', [])
     return input;
   };
 })
+
 .filter('keyLength', function() {
   return function(input){
     if (angular.isObject(input)) {

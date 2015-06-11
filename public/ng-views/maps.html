@@ -71,7 +71,7 @@
     </h4>
     <div class="topinfo-body container">
       <h6>
-        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}).
+        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}). This particular path is {{ targetFeature.properties.length | number:2 }} miles long.
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
@@ -85,14 +85,15 @@
       </h6>
       
       <button class="btn btn-choose pull-right" type="button" 
-              ng-if="scenario[tabnav].routeId !== targetFeature.properties.routeId"
-              ng-click="scenario[targetFeature.properties.corName].routeId = targetFeature.properties.routeId" 
+              ng-show="scenario[tabnav].routeId !== targetFeature.properties.routeId"
+              ng-click="scenario[targetFeature.properties.corName].routeId = targetFeature.properties.routeId;
+                        createVar=true" 
               style="background-color: #{{ targetFeature.properties.routeColor }}">
         Use this path for the {{ targetFeature.properties.corLonName }} corridor
       </button>
 
       <button class="btn btn-choose pull-right" type="button" 
-              ng-if="scenario[targetFeature.properties.corName].routeId == targetFeature.properties.routeId"
+              ng-show="scenario[targetFeature.properties.corName].routeId == targetFeature.properties.routeId"
               style="background-color: #{{ targetFeature.properties.routeColor }}">
         <i class="fa fa-check"></i>
         Path selected
@@ -249,10 +250,10 @@
             ng-click     = "updateTargetFeature(variant.routeId)">
           <td>
             <i  class = "fa fa-square-o" 
-                ng-if="variants[tabnav].sel !== key" 
+                ng-show="variants[tabnav].sel !== key" 
                 ng-click="setSelectedVariant(tabnav, key); $event.stopPropagation()"></i>
             <i  class = "fa fa-check-square" 
-                ng-if="variants[tabnav].sel == key"
+                ng-show="variants[tabnav].sel == key"
                 ng-click="setSelectedVariant(tabnav, null); $event.stopPropagation()"></i>
           </td>
           <td>{{ variant.name }}</td>
@@ -299,7 +300,7 @@
             {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
             <span class="badge pull-right" ng-click="createVar = !createVar">
               <span ng-if="createVar">
-                <i class="fa fa-bookmark-o"></i> Close Modifier
+                <i class="fa fa-times"></i> Close Modifier
               </span>
               <span ng-if="!createVar">
                 <i class="fa fa-bookmark-o"></i> Modify
@@ -363,6 +364,9 @@
     </span>
     <span ng-show="combos.sel">
       Scenario {{ combos.all[combos.sel].name }}
+      <span ng-show="combos.com">
+        Compared with {{ combos.all[combos.com].name }}
+      </span>
     </span>
     <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
     <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i>
@@ -448,7 +452,7 @@
               <small><i>None selected</i></small>
             </span>
           </td>
-          <td ng-show="scenarioCompare">
+          <td ng-show="scenarioCompare && combos.sel !== key">
             <i  class = "fa fa-circle-o" 
                 ng-if="combos.com !== key" 
                 ng-click="combos.com=key"></i>
@@ -456,7 +460,7 @@
                 ng-if="combos.com == key"
                 ng-click="combos.com=null"></i>
           </td>
-          <td ng-show="!scenarioCompare">
+          <td ng-show="!scenarioCompare || combos.sel == key">
             <i class="fa fa-ban"></i>
           </td>
         </tr>
