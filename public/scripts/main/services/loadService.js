@@ -87,7 +87,7 @@ coaxsApp.service('loadService', function ($http, supportService) {
       if (status == 200) {
         var circles = [];
         var geojsonMarkerOptions = {
-          radius      : 8,
+          radius      : 5,
           fillColor   : 'rgba(139,139,210,0.3)',
           color       : 'rgba(36,36,76,0.8)',
           weight      : 1,
