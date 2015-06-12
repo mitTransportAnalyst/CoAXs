@@ -64,6 +64,7 @@ coaxsApp.service('targetService', function (leafletData) {
     return { properties: properties, alternatives: alternatives };
   }
 
+
 });
 
 
