@@ -98,7 +98,7 @@ coaxsApp.service('loadService', function ($http, supportService) {
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
           for (var n=0; n<pois.length; n++) {
-            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], geojsonMarkerOptions));
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], geojsonMarkerOptions).bindPopup(pois[n].poiTag));
           }
         }
 
