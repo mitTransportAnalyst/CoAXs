@@ -85,11 +85,24 @@ coaxsApp.service('loadService', function ($http, supportService) {
     $http.get('/geojson/pois')
     .success(function (data, status) {
       if (status == 200) {
-        var allPoints = [];
+        var circles = [];
+        var geojsonMarkerOptions = {
+          radius      : 8,
+          fillColor   : 'rgba(139,139,210,0.3)',
+          color       : 'rgba(36,36,76,0.8)',
+          weight      : 1,
+          opacity     : 1,
+          fillOpacity : 0.8
+        };
+
         for (var i=0; i<data.length; i++) {
-          allPoints.push(JSON.parse(data[i].POIs));
+          var pois = JSON.parse(data[i].POIs);
+          for (var n=0; n<pois.length; n++) {
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], geojsonMarkerOptions));
+          }
         }
-        cb(allPoints);
+
+        cb(L.layerGroup(circles));
       }
     })
   }

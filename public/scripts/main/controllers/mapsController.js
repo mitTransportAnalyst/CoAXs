@@ -75,9 +75,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
 
-  // initialize imported data
-  leafletData.getMap('map_left').then(function(map) {
-    loadService.getExisting(function(subways) {
+  // initialize imported data - MAP LEFT
+  leafletData.getMap('map_left').then(function (map) {
+    loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     });
@@ -100,11 +100,25 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     });
 
-    loadService.getProposedStops(function(stops) {
+    loadService.getProposedStops(function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
     });
   });
+
+  // initialize imported data - MAP RIGHT
+  leafletData.getMap('map_right').then(function (map) {
+    loadService.getExisting(function (subways) {
+      subways.addTo(map);
+      subwaysLayer = subways;
+    });
+
+    loadService.getUsersPoints(function (points) {
+      points.addTo(map);
+    })
+  })
+
+
 
 
   $scope.targetCorridor = function (id) {
