@@ -5,7 +5,7 @@ coaxsApp.service('analystService', function () {
       apiUrl      : 'http://mit-analyst.dev.conveyal.com/api',
       tileUrl     : 'http://mit-analyst.dev.conveyal.com/tile',
       shapefileId : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-      graphId     : '94de64a1a8762769b7d50d0bda3d5763',
+      graphId     : '0ebb30ab8664001407b0ad524b102bd4',
       showIso     : true
     });
     var isoLayer = null

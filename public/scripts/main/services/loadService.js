@@ -1,8 +1,8 @@
-coaxsApp.service('loadService', function ($http) {
+coaxsApp.service('loadService', function ($http, supportService) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
-    .success(function(data, status) {
+    .success(function (data, status) {
       var subwayRoutes = L.geoJson(data, {
         style: function (feature) {
           return {
@@ -22,16 +22,18 @@ coaxsApp.service('loadService', function ($http) {
 
   this.getProposedRoutes = function (cb) {
     $http.get('/geojson/proposed')
-    .success(function(data, status) {
+    .success(function (data, status) {
 
       var geojsonList   = [];
-      var proposedLayer = {};
+      var routes = {};
 
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
-        if (!proposedLayer[feature.routeId]) { proposedLayer[feature.routeId] = {} };
+        feature['length'] = supportService.getLength(data.features[i].geometry);
+
+        if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
-        proposedLayer[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
+        routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color     : color,
@@ -43,17 +45,16 @@ coaxsApp.service('loadService', function ($http) {
           base: feature
         });
 
-        geojsonList.push(proposedLayer[feature.routeId][feature.direction]);
+        geojsonList.push(routes[feature.routeId][feature.direction]);
       }
 
-      proposedLayer['L'] = L.layerGroup(geojsonList);
-      cb(proposedLayer);
+      cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
     });    
   }
 
   this.getProposedStops = function (cb) {
     $http.get('/geojson/proposed_stops')
-    .success(function(data, status) {
+    .success(function (data, status) {
 
       var stopList = [];
       var stopicon = L.Icon.extend({
@@ -80,7 +81,43 @@ coaxsApp.service('loadService', function ($http) {
     });
   }
 
+  this.getUsersPoints = function (cb) {
+    $http.get('/geojson/pois')
+    .success(function (data, status) {
+      if (status == 200) {
+        var circles = [];
+        var geojsonMarkerOptions = {
+          radius      : 5,
+          fillColor   : 'rgba(139,139,210,0.3)',
+          color       : 'rgba(36,36,76,0.8)',
+          weight      : 1,
+          opacity     : 1,
+          fillOpacity : 0.8
+        };
+
+        for (var i=0; i<data.length; i++) {
+          var pois = JSON.parse(data[i].POIs);
+          for (var n=0; n<pois.length; n++) {
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], geojsonMarkerOptions).bindPopup(pois[n].poiTag));
+          }
+        }
+
+        cb(L.layerGroup(circles));
+      }
+    })
+  }
+
+
+
 });
+
+
+
+
+
+
+
+
 
 
 

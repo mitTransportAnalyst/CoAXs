@@ -30,6 +30,12 @@ coaxsApp.service('rightService', function (leafletData) {
     })
   };
 
+  this.clearRightRoutes = function (geoJsonRight) {
+    leafletData.getMap('map_right').then(function(map) {
+      map.removeLayer(geoJsonRight);
+    })
+  };
+
 });
 
 

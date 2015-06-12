@@ -62,7 +62,7 @@ nav div.section {
   padding-right    : 10px;
   cursor           : pointer;
 }
-.topcol-l {
+.topcol {
   position         : absolute;
   color            : #FFF;
   z-index          : 100;
@@ -80,7 +80,7 @@ nav div.section {
   margin-bottom    : 5px;
   width            : 100%;
 }
-.leftnav-1 {
+.topnav {
   position         : absolute;
   padding          : 10px;
   z-index          : 100;
@@ -90,7 +90,11 @@ nav div.section {
   float            : left;
   text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
 }
-.leftnav-1 small {
+.right {
+  left             : 50%;
+  color            : rgb(50,50,50);
+}
+.topnav small {
   font-weight      : 900;
   text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
 }
@@ -118,7 +122,7 @@ nav div.section {
 label {
   font-weight      : 300;
 }
-.basecol h1, .topcol-l h1, .basecol h2, .topcol-l h2, .basecol h3, .topcol-l h3, .basecol h4, .topcol-l h4, .basecol h5, .topcol-l h5, .basecol h6, .topcol-l h6 {
+.basecol h1, .topcol h1, .basecol h2, .topcol h2, .basecol h3, .topcol h3, .basecol h4, .topcol h4, .basecol h5, .topcol h5, .basecol h6, .topcol h6 {
   padding-left     : 10px;
   padding-right    : 10px;
 }

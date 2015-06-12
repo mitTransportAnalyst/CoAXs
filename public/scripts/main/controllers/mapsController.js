@@ -20,7 +20,19 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     'HD' : { sel : null, all : {} },
     'CT' : { sel : null, all : {} },
   }
-  $scope.combos = {}
+  $scope.combos = {
+    sel : null,
+    com : null,
+    all : {},
+  }
+
+  // left globals
+  var subwaysLayer = null;
+  var stopsLayer = null;
+  var routesLayer = null;
+
+  // right globals
+  var geoJsonRight = null;
 
 
   // Angular Leaflet Directiive - base components
@@ -29,14 +41,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     zoomControl        : false,
     attributionControl : false,
   };
-  var layers_global = {
-    baselayers: {
-      carto_light: {
-        name : 'CartoLight Basemap',
-        url  : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
-        type : 'xyz'
-      }
-    }
+  var tiles_global = {
+      name: 'CartoDB Light',
+      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+      type: 'xyz',
   };
   var center_global = {
     lat  : 42.360543,
@@ -46,11 +54,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Assembling left map
   $scope.defaults_left  = angular.copy(defaults_global);
   $scope.center_left    = angular.copy(center_global);
-  $scope.layers_left    = angular.copy(layers_global);
+  $scope.tiles_left     = angular.copy(tiles_global);
   // Assembling right map
   $scope.defaults_right = angular.copy(defaults_global);
   $scope.center_right   = angular.copy(center_global);
-  $scope.layers_right   = angular.copy(layers_global);
+  $scope.tiles_right    = angular.copy(tiles_global);
   $scope.geojson_right  = null;
   $scope.markers_right  = {
     main: {
@@ -67,20 +75,19 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
 
-  // initialize imported data
-  var subwaysLayer, stopsLayer, routesLayer;
-  leafletData.getMap('map_left').then(function(map) {
-    loadService.getExisting(function(subways) {
+  // initialize imported data - MAP LEFT
+  leafletData.getMap('map_left').then(function (map) {
+    loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     });
 
-    loadService.getProposedRoutes(function(routes) {
-      routesLayer = routes.L;
+    loadService.getProposedRoutes(function(data) {
+      routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
-      delete routes.L;
-      $scope.routes = routes;
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
 
       for (var key in routes) {
         var tabnavAlt = routes[key][0].options.base.corName;
@@ -93,11 +100,25 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     });
 
-    loadService.getProposedStops(function(stops) {
+    loadService.getProposedStops(function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
     });
   });
+
+  // initialize imported data - MAP RIGHT
+  leafletData.getMap('map_right').then(function (map) {
+    loadService.getExisting(function (subways) {
+      subways.addTo(map);
+      subwaysLayer = subways;
+    });
+
+    loadService.getUsersPoints(function (points) {
+      points.addTo(map);
+    })
+  })
+
+
 
 
   $scope.targetCorridor = function (id) {
@@ -117,6 +138,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.newVariant = function (tabnav, autoSet) {
     var uuid = supportService.generateUUID();
+    $scope.scenario[tabnav]['created'] = Date.now();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
     $scope.scenario[tabnav] = angular.copy(scenarioBase);
     if (autoSet) { $scope.setSelectedVariant(tabnav, uuid); };
@@ -129,17 +151,24 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   $scope.updateRightRoutes = function(comboId) {
-    if (typeof geoJsonRight == 'undefined') {geoJsonRight = null};
-    rightService.updateRightRoutes($scope.combos[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
-      geoJsonRight = geoJson;
-    });
+    if (comboId) {
+      rightService.updateRightRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+        geoJsonRight = geoJson;
+      });
+      $scope.combos.sel = comboId;
+    } else {
+      rightService.clearRightRoutes(geoJsonRight);
+      $scope.combos.sel = null;
+      geoJsonRight = null;
+    }
   };
 
   $scope.newCombo = function (name) {
     var comboId = supportService.generateUUID();
-    $scope.combos[comboId] = {
-      name : name,
-      sel  : {
+    $scope.combos.all[comboId] = {
+      name    : name,
+      created : Date.now(),
+      sel     : {
         'BH' : $scope.variants['BH'].sel,
         'HP' : $scope.variants['HP'].sel,
         'HD' : $scope.variants['HD'].sel,
@@ -147,6 +176,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     };
     $scope.updateRightRoutes(comboId);
+    $scope.combos.sel = comboId;
+    $scope.comboName = null;
   }
 
 
