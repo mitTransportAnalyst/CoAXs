@@ -1,0 +1,45 @@
+  <span ng-show="dotSelect">
+    <span class="fa-stack" 
+          ng-click="tabnav='BH'; overview=true"
+          ng-mouseover="targetCorridor('BH')"
+          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+          style="color:#0071CA">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>BH</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='HP'; overview=true"
+          ng-mouseover="targetCorridor('HP')"
+          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+          style="color:#B10086">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HP</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='HD'; overview=true"
+          ng-mouseover="targetCorridor('HD')"
+          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+          style="color:#CE5504">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HD</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="tabnav='CT'; overview=true"
+          ng-mouseover="targetCorridor('CT')"
+          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+          style="color:#AD0101">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>CT</small>
+      </i>
+    </span>
+  </span>

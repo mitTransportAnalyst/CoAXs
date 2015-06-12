@@ -1,0 +1,44 @@
+
+  <div class="topleft saveAlt" ng-show="saveCombo">
+    <h4>
+      Save this scenario alternative
+      <i class="fa fa-times-circle-o pull-right" ng-click="saveCombo=false"></i>
+    </h4>
+    <div class="topinfo-body container">
+      <h6>
+        Of the four routes customizable in this model, the following are included in this scenario:
+      </h6>
+      <h6 ng-repeat="(key, variant) in variants" ng-show="variant.sel">
+        <b class="badge" style="color: #{{ routes[variant.all[variant.sel].routeId][0].options.base.routeColor }}">
+          {{ variant.all[variant.sel].name }}: 
+        </b>
+        The station type used along this routes is a
+        <span ng-if="variant.all[variant.sel].station == 0">
+          standard bus stop.
+        </span>
+        <span ng-if="variant.all[variant.sel].station == 1">
+          raised platform.
+        </span>
+        <span ng-if="variant.all[variant.sel].station == 2">
+          BRT station.
+        </span>
+        Peak service operates at a {{ variant.all[variant.sel].peak.min }}:{{ variant.all[variant.sel].peak.sec | integerLength }} headway, while 
+        off-peak service operates at a {{ variant.all[variant.sel].offpeak.min }}:{{ variant.all[variant.sel].offpeak.sec | integerLength }} headway.
+      </h6>
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="comboName" placeholder="Enter a name for this scenario...">
+        <span class="input-group-btn">
+          <button class="btn btn-savealt" type="button" 
+            ng-show="!comboName"
+            style="cursor:not-allowed" disabled>
+            Save Scenario Combination
+          </button>
+          <button class="btn btn-savealt" type="button" 
+            ng-show="comboName"
+            ng-click="newCombo(comboName); saveCombo=false">
+            Save Scenario Combination
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
