@@ -42,4 +42,16 @@ angular.module('coaxsFilters', [])
       return String(hours + ':' + minutes)
     }
   }
+})
+
+.filter('convertPercentage', function () {
+  return function (input) {
+    return Number(input)*100;
+  }
 });
+
+
+
+
+
+
