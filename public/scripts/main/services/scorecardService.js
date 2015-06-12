@@ -3,13 +3,7 @@ coaxsApp.service('scorecardService', function () {
   this.generateRouteScore = function () {
 
 
-    var time = {
-      count  : 75,
-      dist   : {
-        move : 30,
-        load : 70,
-      },
-    };
+
     var vehicles = {
       count  : 20,
       cost   : 450000,
@@ -44,31 +38,66 @@ coaxsApp.service('scorecardService', function () {
     bus.dist[0] = bus.dist[0]/total;
     bus.dist[1] = bus.dist[1]/total;
     bus.dist[2] = bus.dist[2]/total;
-    return bus
+    return bus;
   }
 
-  this.generateLengthScore = function (routesLayer, id) { console.log(routesLayer);
+  this.generateLengthScore = function (routesLayer, id) {
     var length = {
       count  : 0,
       dist   : {
-        non  : 0,
-        ded  : 0,
+        non  : 0.75,
+        ded  : 0.25,
       },
       cost   : 0,
     };
     routesLayer.eachLayer(function (route) {
       if (route.options.base.routeId == id) {
         length.count += route.options.base.length;
-        bus.dist[route.options.base.stopType] += 1;
       }
     });
-    bus.cost = 10000*bus.dist[0] + 500000*bus.dist[1] + 1000000*bus.dist[2];
-    var total = bus.dist[0] + bus.dist[1] + bus.dist[2];
-    bus.dist[0] = bus.dist[0]/total;
-    bus.dist[1] = bus.dist[1]/total;
-    bus.dist[2] = bus.dist[2]/total;
-    return bus
+    length.cost = 4000000*length.dist.ded;
+    return length;
   }
+
+  this.generateTimeScore = function (routesLayer, id) {
+    var loadTimePeak = 0;
+    var time = {
+      count  : 0,
+      dist   : {
+        move : 0,
+        load : 0,
+      },
+    };
+    routesLayer.eachLayer(function (route) {
+      if (route.options.base.routeId == id) {
+        time.count += route.options.base.halfCycleTimePeak;
+        loadTimePeak = route.options.base.loadingTime;
+      }
+    });
+    time.dist.move = (time.count-loadTimePeak)/time.count;
+    time.dist.load = loadTimePeak/time.count;
+    time.count = time.count/60;
+    return time;
+  }
+
+  this.generateVehiclesScore = function (routesLayer, id) { console.log(routesLayer);
+    var length = {
+      count  : 0,
+      dist   : {
+        non  : 0.75,
+        ded  : 0.25,
+      },
+      cost   : 0,
+    };
+    routesLayer.eachLayer(function (route) {
+      if (route.options.base.routeId == id) {
+        length.count += route.options.base.length;
+      }
+    });
+    length.cost = 4000000*length.dist.ded;
+    return length;
+  }
+
 
 });
 
