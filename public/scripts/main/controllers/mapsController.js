@@ -183,8 +183,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.updateRouteScorecard = function (routeId) {
     $scope.routeScore = {};
-    $scope.routeScore.bus = scorecardService.generateBusScore(stopsLayer, routeId);
+    $scope.routeScore.bus    = scorecardService.generateBusScore(stopsLayer, routeId);
     $scope.routeScore.length = scorecardService.generateLengthScore(routesLayer, routeId);
+    $scope.routeScore.time   = scorecardService.generateTimeScore(routesLayer, routeId);
     return 'foo';
   }
 

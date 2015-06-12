@@ -37,7 +37,7 @@ angular.module('coaxsFilters', [])
     } else if (input < 60) {
       return String('0:' + input);
     } else {
-      var minutes = input%60;
+      var minutes = Math.floor(input%60);
       var hours = Math.floor(input/60);
       return String(hours + ':' + minutes)
     }
