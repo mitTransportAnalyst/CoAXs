@@ -15,4 +15,17 @@ angular.module('coaxsFilters', [])
       return Object.keys(input).length;
     }
   };
+})
+
+.filter('toArray', function() { 
+
+  return function (obj) {
+    if (!(obj instanceof Object)) { return obj; }
+    return Object.keys(obj).map(function(k) {
+      var val = obj[k];
+      val._key = k;
+      return val;
+    })
+    return result;
+  }
 });

@@ -246,14 +246,14 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat    = "(key, variant) in variants[tabnav].all" 
+        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'" 
             ng-click     = "updateTargetFeature(variant.routeId)">
           <td>
             <i  class = "fa fa-square-o" 
-                ng-show="variants[tabnav].sel !== key" 
-                ng-click="setSelectedVariant(tabnav, key); $event.stopPropagation()"></i>
+                ng-show="variants[tabnav].sel !== variant._key" 
+                ng-click="setSelectedVariant(tabnav, variant._key); $event.stopPropagation()"></i>
             <i  class = "fa fa-check-square" 
-                ng-show="variants[tabnav].sel == key"
+                ng-show="variants[tabnav].sel == variant._key"
                 ng-click="setSelectedVariant(tabnav, null); $event.stopPropagation()"></i>
           </td>
           <td>{{ variant.name }}</td>
@@ -401,15 +401,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat    = "(key, variant) in combos.all" 
+        <tr ng-repeat    = "variant in combos.all | toArray | orderBy:'created'" 
             ng-click     = "updateTargetFeature(variant.routeId)">
           <td>
             <i  class = "fa fa-square-o" 
-                ng-if="combos.sel !== key" 
-                ng-click="updateRightRoutes(key)"></i>
+                ng-if="combos.sel !== variant._key" 
+                ng-click="updateRightRoutes(variant._key); combos.com=null"></i>
             <i  class = "fa fa-check-square" 
-                ng-if="combos.sel == key"
-                ng-click="updateRightRoutes()"></i>
+                ng-if="combos.sel == variant._key"
+                ng-click="updateRightRoutes(); combos.com=null"></i>
           </td>
           <td>{{ variant.name }}</td>
           <td>
@@ -452,15 +452,15 @@
               <small><i>None selected</i></small>
             </span>
           </td>
-          <td ng-show="scenarioCompare && combos.sel !== key">
+          <td ng-show="scenarioCompare && combos.sel !== variant._key">
             <i  class = "fa fa-circle-o" 
-                ng-if="combos.com !== key" 
-                ng-click="combos.com=key"></i>
+                ng-if="combos.com !== variant._key" 
+                ng-click="combos.com=variant._key"></i>
             <i  class = "fa fa-check-circle" 
-                ng-if="combos.com == key"
+                ng-if="combos.com == variant._key"
                 ng-click="combos.com=null"></i>
           </td>
-          <td ng-show="!scenarioCompare || combos.sel == key">
+          <td ng-show="!scenarioCompare || combos.sel == variant._key">
             <i class="fa fa-ban"></i>
           </td>
         </tr>

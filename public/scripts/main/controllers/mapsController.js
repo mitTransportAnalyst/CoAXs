@@ -82,7 +82,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       subwaysLayer = subways;
     });
 
-    loadService.getProposedRoutes(function(data) { console.log(data);
+    loadService.getProposedRoutes(function(data) {
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
@@ -124,6 +124,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.newVariant = function (tabnav, autoSet) {
     var uuid = supportService.generateUUID();
+    $scope.scenario[tabnav]['created'] = Date.now();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
     $scope.scenario[tabnav] = angular.copy(scenarioBase);
     if (autoSet) { $scope.setSelectedVariant(tabnav, uuid); };
@@ -151,8 +152,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.newCombo = function (name) {
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name : name,
-      sel  : {
+      name    : name,
+      created : Date.now(),
+      sel     : {
         'BH' : $scope.variants['BH'].sel,
         'HP' : $scope.variants['HP'].sel,
         'HD' : $scope.variants['HD'].sel,

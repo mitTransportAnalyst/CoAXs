@@ -81,11 +81,18 @@ coaxsApp.service('loadService', function ($http, supportService) {
     });
   }
 
-$http.get('/geojson/pois')
-.success(function (data, status) {
-  console.log(data);
-  console.log(status);
-})
+  this.getUsersPoints = function (cb) {
+    $http.get('/geojson/pois')
+    .success(function (data, status) {
+      if (status == 200) {
+        var allPoints = [];
+        for (var i=0; i<data.length; i++) {
+          allPoints.push(JSON.parse(data[i].POIs));
+        }
+        cb(allPoints);
+      }
+    })
+  }
 
 
 

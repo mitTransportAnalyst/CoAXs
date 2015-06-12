@@ -19,9 +19,9 @@ app.set('view engine', 'ejs');
 
 
 /// ROUTING /// 
-var google  = require('googleapis');
-var drive   = google.drive('v1');
-var API_KEY = 'AIzaSyCkTHklOTe_0N9MNBsctssdnZo3r0SYrSU';
+var http    = require('http');
+var request = require('request');
+var csv     = require('csv-streamify');
 
 app.get('/', function (req, res) {
   res.render('index.ejs', {
@@ -85,12 +85,15 @@ app.get('/geojson/proposed_stops', function (req, res) {
 })
 
 app.get('/geojson/pois', function (req, res) {
-  drive.files.get({
-    auth : API_KEY,
-    id   : '19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac',
-  }, function(response) {
-    console.log('drive response:', response);
-  });
+  var url = 'http://docs.google.com/spreadsheets/d/19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac/export?format=csv&id';
+  request(url)
+  .pipe(csv({
+    objectMode : true, 
+    columns    : true
+  }, function (err, doc) {
+    if (err) { res.status(500).send() }
+    else { res.status(200).send(doc) }
+  }));;
 })
 
 
