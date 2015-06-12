@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, rightService, supportService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, rightService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
@@ -178,6 +178,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.updateRightRoutes(comboId);
     $scope.combos.sel = comboId;
     $scope.comboName = null;
+  }
+
+
+  $scope.updateRouteScorecard = function (tabnav) {
+    $scope.routeScore = scorecardService.generateRouteScore();
   }
 
 
