@@ -31,7 +31,7 @@ angular.module('coaxsFilters', [])
 
 .filter('minuteConverter', function () {
   return function (input) {
-    input = Number(input);
+    input = Math.floor(Number(input));
     if (input < 10) {
       return String('0:0' + input);
     } else if (input < 60) {

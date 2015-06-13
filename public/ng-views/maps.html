@@ -348,10 +348,14 @@
           <td>
             <i  class = "fa fa-square-o" 
                 ng-show="variants[tabnav].sel !== variant._key" 
-                ng-click="setSelectedVariant(tabnav, variant._key); $event.stopPropagation()"></i>
+                ng-click="setSelectedVariant(tabnav, variant._key);
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav);
+                          $event.stopPropagation()"></i>
             <i  class = "fa fa-check-square" 
                 ng-show="variants[tabnav].sel == variant._key"
-                ng-click="setSelectedVariant(tabnav, null); $event.stopPropagation()"></i>
+                ng-click="setSelectedVariant(tabnav, null);
+                          updateRouteScorecard();
+                          $event.stopPropagation()"></i>
           </td>
           <td>{{ variant.name }}</td>
           <td>
