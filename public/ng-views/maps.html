@@ -313,7 +313,7 @@
 
     <h5 ng-show="variants[tabnav].sel">
       <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-            ng-click="updateRouteScorecard(scenario[tabnav].routeId); routeScorecard=true">
+            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=true">
         Route Scorecard
       </span>
 
