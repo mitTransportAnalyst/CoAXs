@@ -1,5 +1,42 @@
 coaxsApp.service('scorecardService', function () {
 
+  this.generateEmptyScore = function () {
+    var bus = {
+      count  : 0,
+      dist   : {
+        0    : 0,
+        1    : 0,
+        2    : 0,
+      },
+      cost   : 0,
+    };
+    var length = {
+      count  : 0,
+      dist   : {
+        non  : 0.75,
+        ded  : 0.25,
+      },
+      cost   : 0,
+    };
+    var time = {
+      count  : 0,
+      dist   : {
+        move : 0,
+        load : 0,
+      },
+    };
+    var vehicles = {
+      count  : 0,
+      cost   : 0,
+    };
+    return {
+      bus : bus,
+      length : length,
+      time : time,
+      vehicles : vehicles,
+    }
+  }
+
   this.generateBusScore = function (stopsLayer, stationType, id) {
     var bus = {
       count  : 0,
@@ -73,8 +110,8 @@ coaxsApp.service('scorecardService', function () {
       off  : 0,
     };
     var vehicles = {
-      count  : 20,
-      cost   : 450000,
+      count  : 0,
+      cost   : 0,
     };
     routesLayer.eachLayer(function (route) {
       if (route.options.base.routeId == id) {
@@ -86,6 +123,7 @@ coaxsApp.service('scorecardService', function () {
     vehicles.cost = 160*255*((6*vehicles.count)+(12*(cycleTime.off/frequencies.off)));
     return vehicles;
   }
+
 
 
 });

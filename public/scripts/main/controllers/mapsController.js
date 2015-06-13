@@ -181,16 +181,20 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  $scope.updateRouteScorecard = function (routeId, tabnav) { console.log($scope.scenario[tabnav]);
-    var frequencies = {
-      peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
-      off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
-    };
-    $scope.routeScore = {};
-    $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
-    $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
-    $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
-    $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+  $scope.updateRouteScorecard = function (routeId, tabnav) {
+    if (!routeId && !tabnav) {
+      $scope.routeScore = scorecardService.generateEmptyScore();
+    } else {
+      var frequencies = {
+        peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
+        off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
+      };
+      $scope.routeScore = {};
+      $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
+      $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
+      $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+    }
   }
 
 
