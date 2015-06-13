@@ -415,14 +415,14 @@
         <h3>
           {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
           <small>Peak</small>
-          <input type="range" min="1" max="30" ng-model="scenario[tabnav].peak.min" />
+          <input type="range" min="1" max="30" ng-model="scenario[tabnav].peak.min" ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
         </h3>
       </div>
       <div class="col-xs-6 text-center">
         <h3>
           {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
           <small>Off-Peak</small>
-          <input type="range" min="1" max="30" ng-model="scenario[tabnav].offpeak.min" />
+          <input type="range" min="1" max="30" ng-model="scenario[tabnav].offpeak.min" ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
         </h3>
       </div>
 
