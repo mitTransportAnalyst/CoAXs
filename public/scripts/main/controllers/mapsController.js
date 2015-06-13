@@ -181,12 +181,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  $scope.updateRouteScorecard = function (routeId) {
+  $scope.updateRouteScorecard = function (routeId, tabnav) {
+    var frequencies = {
+      peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
+      off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
+    };
     $scope.routeScore = {};
-    $scope.routeScore.bus    = scorecardService.generateBusScore(stopsLayer, routeId);
-    $scope.routeScore.length = scorecardService.generateLengthScore(routesLayer, routeId);
-    $scope.routeScore.time   = scorecardService.generateTimeScore(routesLayer, routeId);
-    return 'foo';
+    $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, routeId);
+    $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
+    $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
+    $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
   }
 
 

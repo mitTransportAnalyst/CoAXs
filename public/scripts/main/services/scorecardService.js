@@ -1,22 +1,5 @@
 coaxsApp.service('scorecardService', function () {
 
-  this.generateRouteScore = function () {
-
-
-
-    var vehicles = {
-      count  : 20,
-      cost   : 450000,
-    };
-
-    return {
-      bus      : bus,
-      length   : length,
-      time     : time,
-      vehicles : vehicles,
-    }
-  }
-
   this.generateBusScore = function (stopsLayer, id) {
     var bus = {
       count  : 0,
@@ -80,22 +63,24 @@ coaxsApp.service('scorecardService', function () {
     return time;
   }
 
-  this.generateVehiclesScore = function (routesLayer, id) { console.log(routesLayer);
-    var length = {
-      count  : 0,
-      dist   : {
-        non  : 0.75,
-        ded  : 0.25,
-      },
-      cost   : 0,
+  this.generateVehiclesScore = function (routesLayer, frequencies, id) { console.log(routesLayer);
+    var cycleTime = {
+      peak : 0,
+      off  : 0,
+    };
+    var vehicles = {
+      count  : 20,
+      cost   : 450000,
     };
     routesLayer.eachLayer(function (route) {
       if (route.options.base.routeId == id) {
-        length.count += route.options.base.length;
+        cycleTime.peak += route.options.base.halfCycleTimePeak;
+        cycleTime.off  += route.options.base.halfCycleTimeOffPeak;
       }
     });
-    length.cost = 4000000*length.dist.ded;
-    return length;
+    vehicles.count = Math.ceil(cycleTime.peak/frequencies.peak);
+    vehicles.cost = 160*255*((6*vehicles.count)+(12*(cycleTime.off/frequencies.off)));
+    return vehicles;
   }
 
 
