@@ -147,7 +147,17 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.setSelectedVariant = function (tabnav, uuid) {
     $scope.variants[tabnav].sel = uuid;
-    $scope.scenario[tabnav].routeId = uuid ? $scope.variants[tabnav].all[uuid].routeId : null;
+    if (uuid) {
+      $scope.scenario[tabnav].name        = $scope.variants[tabnav].all[uuid].name;
+      $scope.scenario[tabnav].station     = $scope.variants[tabnav].all[uuid].station;
+      $scope.scenario[tabnav].routeId     = $scope.variants[tabnav].all[uuid].routeId;
+      $scope.scenario[tabnav].peak.min    = $scope.variants[tabnav].all[uuid].peak.min;
+      $scope.scenario[tabnav].peak.sec    = $scope.variants[tabnav].all[uuid].peak.sec;
+      $scope.scenario[tabnav].offpeak.min = $scope.variants[tabnav].all[uuid].offpeak.min;
+      $scope.scenario[tabnav].offpeak.sec = $scope.variants[tabnav].all[uuid].offpeak.sec;
+    } else {
+      $scope.scenario[tabnav].routeId = null;
+    }
   }
 
   $scope.updateRightRoutes = function(comboId) {
