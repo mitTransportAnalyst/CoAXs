@@ -200,16 +200,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
       };
       $scope.routeScore = {};
-      $scope.$apply(function () {
-        $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
-        $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
-        $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
-        $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
-      });
+      $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
+      $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
+      $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
     }
   }
 
-
+  $scope.updateOffPeakRange = function (input) {
+    console.log(input);
+  }
 
 
 

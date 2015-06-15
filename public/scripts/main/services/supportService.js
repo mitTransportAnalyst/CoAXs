@@ -29,13 +29,13 @@ coaxsApp.service('supportService', function () {
   }
 
   // © Chris Veness, MIT-licensed, http://www.movable-type.co.uk/scripts/latlong.html#equirectangular
-  function distance(λ1,φ1,λ2,φ2) {
+  function distance(lambda1,phi1,lambda2,phi2) {
     var R = 3958.76; // miles
-    Δλ = (λ2 - λ1) * Math.PI / 180;
-    φ1 = φ1 * Math.PI / 180;
-    φ2 = φ2 * Math.PI / 180;
-    var x = Δλ * Math.cos((φ1+φ2)/2);
-    var y = (φ2-φ1);
+    difLambda = (lambda2 - lambda1) * Math.PI / 180;
+    phi1 = phi1 * Math.PI / 180;
+    phi2 = phi2 * Math.PI / 180;
+    var x = difLambda * Math.cos((phi1+phi2)/2);
+    var y = (phi2-phi1);
     var d = Math.sqrt(x*x + y*y);
     return R * d;
   };
