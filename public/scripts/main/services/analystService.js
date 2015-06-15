@@ -16,7 +16,7 @@ coaxsApp.service('analystService', function () {
         'lat' : marker.model.lat,
         'lng' : marker.model.lng
       })
-      .then(function (response) {
+      .then(function (response) { console.log(response);
         if (isoLayer) {
           isoLayer.redraw();
         } else {
