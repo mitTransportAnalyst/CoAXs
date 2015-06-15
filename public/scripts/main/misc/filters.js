@@ -48,8 +48,14 @@ angular.module('coaxsFilters', [])
   return function (input) {
     return Number(input)*100;
   }
-});
+})
 
+.filter('millionSuffix', function () {
+
+    return function (input) {
+      return Math.floor(input/1000000) + 'm'
+    }
+  });
 
 
 

@@ -137,6 +137,13 @@ label {
   margin-top : 0px;
 }
 
+.scorecardSub {
+  font-size: .8em;
+}
+
+.scorecardIcon {
+  font-size: 1em;
+}
 
 /*leaflet map*/
 .icon-off {
