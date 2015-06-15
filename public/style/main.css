@@ -96,6 +96,7 @@ nav div.section {
 }
 .topnav small {
   font-weight      : 900;
+  font-family      : sans-serif;
   text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
 }
 .dot-unselected {
