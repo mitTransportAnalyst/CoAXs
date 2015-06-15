@@ -11,24 +11,39 @@ coaxsApp.service('analystService', function () {
     var isoLayer = null
 
     this.dragendAction = function (marker, map) {
-      analyst
-      .singlePointRequest({
-        'lat' : marker.model.lat,
-        'lng' : marker.model.lng
-      })
-      .then(function (response) { console.log(response);
-        if (isoLayer) {
-          isoLayer.redraw();
-        } else {
-          isoLayer = response.tileLayer;
-          isoLayer
-          .addTo(map)
-          .bringToFront()
-        }
-      })
-      .catch(function (err) {
-        console.log(err)
-      })
+
+      if (false) {
+        analyst.singlePointRequest({
+          'lat' : marker.model.lat,
+          'lng' : marker.model.lng
+        })
+        .then(function (response) {
+          if (isoLayer) {
+            isoLayer.redraw();
+          } else {
+            isoLayer = response.tileLayer;
+            isoLayer
+            .addTo(map)
+            .bringToFront()
+          }
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+      }
+
+      if (true) {
+        analyst.vectorRequest({
+          'lat' : marker.model.lat,
+          'lng' : marker.model.lng
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+      }
     }
 });
 

@@ -7601,6 +7601,48 @@ var Analyst = (function () {
         };
       });
     }
+  }, {
+    key: 'vectorRequest',
+
+    /**
+     * Run a single point request and generate a tile layer.
+     *
+     * @param {LatLng} point
+     * @param {Object} options Options object.
+     * @return {Promise} Resolves with an object containing the tile layer and the results data.
+     * @example
+     * analyst
+     *   .vectorRequest(marker.getLatLng())
+     *   .then(function (response) {
+     *     console.log(response)
+     *   })
+     */
+
+    value: function vectorRequest(point) {
+      var _this = this;
+
+      var opts = arguments[1] === undefined ? {} : arguments[1];
+
+      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
+      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
+
+      var options = Object.assign({}, this.requestOptions, opts);
+      options.fromLat = options.toLat = point.lat;
+      options.fromLon = options.toLon = point.lng;
+
+      debug('making single point vector request to [' + point.lng + ', ' + point.lat + ']', options);
+      return post(this.apiUrl + '/single', {
+        graphId: this.graphId,
+        profile: this.profile,
+        options: options
+      }).then(function (data) {
+        debug('single point vector request successful');
+
+        return {
+          results: data,
+        };
+      });
+    }
   }]);
 
   return Analyst;
@@ -7636,7 +7678,7 @@ function post(url, data) {
     var req = _http2['default'].request(params, function (res) {
       var data = '';
       res.on('error', reject);
-      res.on('data', function (chunk) {
+      res.on('data', function (chunk) { console.log('foo'); console.log(chunk);
         data += chunk;
       });
       res.on('close', function () {
