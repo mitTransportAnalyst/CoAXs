@@ -526,10 +526,10 @@
           <td>
             <i  class = "fa fa-square-o" 
                 ng-if="combos.sel !== variant._key" 
-                ng-click="updateRightRoutes(variant._key); combos.com=null"></i>
+                ng-click="updateLeftRoutes(variant._key); combos.com=null"></i>
             <i  class = "fa fa-check-square" 
                 ng-if="combos.sel == variant._key"
-                ng-click="updateRightRoutes(); combos.com=null"></i>
+                ng-click="updateLeftRoutes(); combos.com=null"></i>
           </td>
           <td>{{ variant.name }}</td>
           <td>

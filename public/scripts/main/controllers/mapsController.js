@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, rightService, supportService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, leftService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
@@ -160,14 +160,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
-  $scope.updateRightRoutes = function(comboId) {
+  $scope.updateLeftRoutes = function(comboId) {
     if (comboId) {
-      rightService.updateRightRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+      leftService.updateLeftRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
         geoJsonRight = geoJson;
       });
       $scope.combos.sel = comboId;
     } else {
-      rightService.clearRightRoutes(geoJsonRight);
+      leftService.clearRightRoutes(geoJsonRight);
       $scope.combos.sel = null;
       geoJsonRight = null;
     }
@@ -185,7 +185,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         'CT' : $scope.variants['CT'].sel,
       }
     };
-    $scope.updateRightRoutes(comboId);
+    $scope.updateLeftRoutes(comboId);
     $scope.combos.sel = comboId;
     $scope.comboName = null;
   }

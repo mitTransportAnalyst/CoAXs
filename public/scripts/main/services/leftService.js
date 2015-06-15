@@ -1,6 +1,6 @@
-coaxsApp.service('rightService', function (leafletData) {
+coaxsApp.service('leftService', function (leafletData) {
 
-  this.updateRightRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
+  this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
     leafletData.getMap('map_left').then(function(map) {
       if (geoJsonRight) { map.removeLayer(geoJsonRight); }
       var geoJson = L.geoJson();
