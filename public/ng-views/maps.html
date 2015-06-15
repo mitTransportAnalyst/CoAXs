@@ -415,24 +415,28 @@
 
   <div class="col-xs-12 body" ng-show="createVar">
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
-      <div class="col-xs-6 text-center">
-        <h3>
-          {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
-          <small>Peak</small>
-          <input type="range" min="1" max="30" 
-                  ng-model="scenario[tabnav].peak.min"
-                  ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </h3>
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-6 text-center">
+          <h3 class="noTopMargin">
+            {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
+            <small>Peak</small>
+            <input type="range" min="1" max="30" 
+                    ng-model="scenario[tabnav].peak.min"
+                    ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+          </h3>
+        </div>
+        <div class="col-xs-6 text-center">
+          <h3 class="noTopMargin">
+            {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+            <small>Off-Peak</small>
+            <input type="range" min="1" max="30" 
+                    ng-model="scenario[tabnav].offpeak.min"
+                    ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+          </h3>
+        </div>
       </div>
-      <div class="col-xs-6 text-center">
-        <h3>
-          {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
-          <small>Off-Peak</small>
-          <input type="range" min="1" max="30" 
-                  ng-model="scenario[tabnav].offpeak.min"
-                  ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </h3>
-      </div>
+    </div>
 
       <div class="btn-group btn-group-justified">
         <label  class="btn btn-info" btn-radio="0"

@@ -133,6 +133,9 @@ label {
 .timeAdjust {
   border-radius    : 50%;
 }
+.noTopMargin {
+  margin-top : 0px;
+}
 
 
 /*leaflet map*/
