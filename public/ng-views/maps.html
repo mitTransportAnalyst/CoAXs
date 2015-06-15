@@ -1,12 +1,16 @@
-<div class="topnav right">
-  <div class="fa-stack pull-right">
+<div class="topnav">
+  <div class="fa-stack">
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
   </div>
 </div>
 
 
-<div class="topnav">
+<div class="topnav right">
+  <div class="fa-stack" ng-click="saveCombo=true">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-arrow-left fa-stack-1x fa-inverse"></i>
+  </div>
   <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
@@ -14,8 +18,8 @@
 
   <span ng-show="dotSelect">
     <span class="fa-stack" 
-          ng-click="tabnav='BH'; overview=true"
-          ng-mouseover="targetCorridor('BH')"
+          ng-click="targetCorridor('BH'); 
+                    tabnav='BH'; overview=true"
           ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
           style="color:#0071CA">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -25,8 +29,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="tabnav='HP'; overview=true"
-          ng-mouseover="targetCorridor('HP')"
+          ng-click="targetCorridor('HP'); 
+                    tabnav='HP'; overview=true"
           ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
           style="color:#B10086">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -36,8 +40,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="tabnav='HD'; overview=true"
-          ng-mouseover="targetCorridor('HD')"
+          ng-click="targetCorridor('HD'); 
+                    tabnav='HD'; overview=true"
           ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
           style="color:#CE5504">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -47,8 +51,8 @@
     </span>
 
     <span class="fa-stack" 
-          ng-click="tabnav='CT'; overview=true"
-          ng-mouseover="targetCorridor('CT')"
+          ng-click="targetCorridor('CT'); 
+                    tabnav='CT'; overview=true"
           ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
           style="color:#AD0101">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -57,14 +61,10 @@
       </i>
     </span>
   </span>
-  <div class="fa-stack pull-right" ng-click="saveCombo=true">
-    <i class="fa fa-stop fa-stack-2x"></i>
-    <i class="fa fa-arrow-right fa-stack-1x fa-inverse"></i>
-  </div>
 </div>
 
 
-<div class="topcol">
+<div class="topcol right">
   <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard">
     <h4>
       Scorecard
@@ -288,22 +288,22 @@
 
 
 
-<leaflet  center   = "center_left"
-          defaults = "defaults_left"
-          id       = "map_left"
-          tiles    = "tiles_left"
-          >
-</leaflet>
 <leaflet  center   = "center_right"
           defaults = "defaults_right"
-          id       = "map_right"
+          id       = "map_left"
           tiles    = "tiles_right"
           markers  = "markers_right"
           >
 </leaflet>
+<leaflet  center   = "center_left"
+          defaults = "defaults_left"
+          id       = "map_right"
+          tiles    = "tiles_left"
+          >
+</leaflet>
 
 
-<div class="basecol" ng-show="overview" style="max-height: 80%">
+<div class="basecol right" ng-show="overview" style="max-height: 80%">
   <h4 ng-click="overview=false; tabnav=null">
     Routes Overview
     <i class="fa fa-times-circle-o pull-right"></i>
@@ -477,7 +477,7 @@
 
 </div>
 
-<div class="basecol right" style="max-height: 80%">
+<div class="basecol" style="max-height: 80%">
   <h4 ng-click="combosView=!combosView">
     <span ng-show="!combos.sel">
       No scenario selected

@@ -69,14 +69,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
   // Right map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
-    leafletData.getMap('map_right').then(function(map) {
+    leafletData.getMap('map_left').then(function(map) {
       analystService.dragendAction(marker, map);
     });
   });
 
 
   // initialize imported data - MAP LEFT
-  leafletData.getMap('map_left').then(function (map) {
+  leafletData.getMap('map_right').then(function (map) {
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
@@ -107,7 +107,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
   // initialize imported data - MAP RIGHT
-  leafletData.getMap('map_right').then(function (map) {
+  leafletData.getMap('map_left').then(function (map) {
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;

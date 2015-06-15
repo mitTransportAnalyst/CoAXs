@@ -92,7 +92,7 @@ nav div.section {
 }
 .right {
   left             : 50%;
-  color            : rgb(50,50,50);
+  /*color            : rgb(50,50,50);*/
 }
 .topnav small {
   font-weight      : 900;

@@ -1,7 +1,7 @@
 coaxsApp.service('rightService', function (leafletData) {
 
   this.updateRightRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
-    leafletData.getMap('map_right').then(function(map) {
+    leafletData.getMap('map_left').then(function(map) {
       if (geoJsonRight) { map.removeLayer(geoJsonRight); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
@@ -31,7 +31,7 @@ coaxsApp.service('rightService', function (leafletData) {
   };
 
   this.clearRightRoutes = function (geoJsonRight) {
-    leafletData.getMap('map_right').then(function(map) {
+    leafletData.getMap('map_left').then(function(map) {
       map.removeLayer(geoJsonRight);
     })
   };

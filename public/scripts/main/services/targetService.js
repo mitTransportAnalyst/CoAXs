@@ -31,7 +31,7 @@ coaxsApp.service('targetService', function (leafletData) {
 	}
 
 	this.targetCorridor = function (routesLayer, id) {
-	  leafletData.getMap('map_left').then(function(map) {
+	  leafletData.getMap('map_right').then(function(map) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
 	      if (layer.options.base.corName == id || layer.options.base.routeId == id) {
