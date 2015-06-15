@@ -207,8 +207,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
-  $scope.updateOffPeakRange = function (input) {
-    console.log(input);
+  $scope.updateOffPeakRange = function (peakMin, tabnav) { console.log(peakMin, $scope.scenario[tabnav].offpeak.min);
+    if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
+      $scope.scenario[tabnav].offpeak.min = peakMin;
+    };
   }
 
 
