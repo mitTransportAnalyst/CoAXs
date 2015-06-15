@@ -112,7 +112,7 @@ nav div.section {
   bottom           : 0px;
   background-color : #000;
   color            : #FFF;
-  overflow-y       : scroll;
+  overflow-y       : hidden;
   overflow-x       : hidden;
 }
 .saveAlt {
