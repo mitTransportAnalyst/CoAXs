@@ -38,7 +38,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     })
     .then(function (response) {
       console.log('response.isochrones');
-      cb(deferred.resolve(response.isochrones));
+      cb(response);
     });
   }
 
