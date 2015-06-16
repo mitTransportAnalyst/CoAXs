@@ -204,15 +204,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
         off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
       };
-      $scope.routeScore = {};
-      $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
-      $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
-      $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
-      $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+      var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      var length   = scorecardService.generateLengthScore(routesLayer, routeId);
+      var time     = scorecardService.generateTimeScore(routesLayer, routeId);
+      var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+      $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
     }
   }
 
-  $scope.updateOffPeakRange = function (peakMin, tabnav) { console.log(peakMin, $scope.scenario[tabnav].offpeak.min);
+  $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
       $scope.scenario[tabnav].offpeak.min = peakMin;
     };
@@ -223,6 +223,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
     $scope.currentPOIUser = id;
   }
+
+
+
+
+
+
 
 
   $scope.test = function(foo) {
