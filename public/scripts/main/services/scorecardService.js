@@ -92,7 +92,7 @@ coaxsApp.service('scorecardService', function () {
     var time = {
       count  : 0,
       dist   : {
-        move : 0,
+        move : 0, 
         load : 0,
       },
     };

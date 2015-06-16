@@ -7603,21 +7603,7 @@ var Analyst = (function () {
     }
   }, {
     key: 'vectorRequest',
-
-    /**
-     * Run a single point request and generate a tile layer.
-     *
-     * @param {LatLng} point
-     * @param {Object} options Options object.
-     * @return {Promise} Resolves with an object containing the tile layer and the results data.
-     * @example
-     * analyst
-     *   .vectorRequest(marker.getLatLng())
-     *   .then(function (response) {
-     *     console.log(response)
-     *   })
-     */
-
+    
     value: function vectorRequest(point) {
       var _this = this;
 

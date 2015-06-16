@@ -27,9 +27,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // left globals
-  var subwaysLayer = null;
-  var stopsLayer = null;
-  var routesLayer = null;
+  var subwaysLayer  = null;
+  var stopsLayer    = null;
+  var routesLayer   = null;
+  var poiUserPoints = null;
 
   // right globals
   var geoJsonRight = null;
@@ -71,10 +72,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leafletData.getMap('map_left').then(function(map) {
       analystService.singlePointRequest(marker, map);
-      var promise = analystService.vectorRequest(marker);
-      promise.then(function (isochrones) {
-        console.log(isochrones);
-      });
+      // analystService.vectorRequest(marker, function (isochrones) {
+      //   console.log(isochrones)
+      // });
     });
   });
 
@@ -117,11 +117,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       subwaysLayer = subways;
     });
 
-    loadService.getUsersPoints(function (points) {
-      points.addTo(map);
+    loadService.getUsersPoints(function (points, poiUsers) {
+      $scope.poiUsers = poiUsers; console.log($scope.poiUsers);
+      poiUserPoints   = points;
+      poiUserPoints.addTo(map);
     })
   })
-
 
 
 
@@ -217,7 +218,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     };
   }
 
-
+  $scope.targetPOIUsers = function (id) { 
+    if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
+    else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
+    $scope.currentPOIUser = id;
+  }
 
 
   $scope.test = function(foo) {

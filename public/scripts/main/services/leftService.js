@@ -36,6 +36,16 @@ coaxsApp.service('leftService', function (leafletData) {
     })
   };
 
+  this.targetPOIUsers = function (poiUsers, id) {
+    poiUsers.eachLayer( function (layer) {
+      if (layer.options.userId == id) {
+        layer.setStyle({opacity : 1, fillOpacity : 1});
+      } else {
+        layer.setStyle({opacity : 0, fillOpacity : 0});
+      }
+    });
+  }
+
 });
 
 
