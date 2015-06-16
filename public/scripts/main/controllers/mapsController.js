@@ -204,17 +204,29 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
         off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
       };
+      console.log('DEBUG: Running updateRouteScorecard...');
+      console.log('DEBUG: Prior routeScore value is:', $scope.routeScore);
       var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      console.log('DEBUG: New value bus...', bus);
       var length   = scorecardService.generateLengthScore(routesLayer, routeId);
+      console.log('DEBUG: New value length...', length);
       var time     = scorecardService.generateTimeScore(routesLayer, routeId);
+      console.log('DEBUG: New value time...', time);
       var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+      console.log('DEBUG: New value vehicles...', vehicles);
       $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
+      console.log('DEBUG: New value total $scope.routeScore...', $scope.routeScore);
     }
   }
 
-  $scope.updateOffPeakVal = function (peakMin, tabnav) {
+  $scope.updateOffPeakVal = function (peakMin, tabnav) { 
+    console.log('DEBUG: Running updateOffPeakVal...');
+    console.log('DEBUG: peakMin', peakMin);
+    console.log('DEBUG: tabnav', tabnav);
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
+      console.log('DEBUG: Resetting offpeak.min to', peakMin, '...');
       $scope.scenario[tabnav].offpeak.min = peakMin;
+      console.log('DEBUG: New offpeak.min value is', $scope.scenario[tabnav].offpeak.min);
     };
   }
 
