@@ -7678,7 +7678,7 @@ function post(url, data) {
     var req = _http2['default'].request(params, function (res) {
       var data = '';
       res.on('error', reject);
-      res.on('data', function (chunk) { console.log('foo'); console.log(chunk);
+      res.on('data', function (chunk) { 
         data += chunk;
       });
       res.on('close', function () {

@@ -1,4 +1,6 @@
-coaxsApp.service('analystService', function () {
+coaxsApp.service('analystService', function (supportService) {
+
+    this.isochrones = null;
 
     var Analyst = window.Analyst;
     var analyst = new Analyst(window.L, {
@@ -10,40 +12,38 @@ coaxsApp.service('analystService', function () {
     });
     var isoLayer = null
 
-    this.dragendAction = function (marker, map) {
+    this.singlePointRequest = function (marker, map) {
+      analyst.singlePointRequest({
+        lat : marker.model.lat,
+        lng : marker.model.lng,
+      })
+      .then(function (response) {
+        if (isoLayer) {
+          isoLayer.redraw();
+        } else {
+          isoLayer = response.tileLayer;
+          isoLayer.addTo(map).bringToFront();
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+    }
 
-      if (false) {
-        analyst.singlePointRequest({
-          'lat' : marker.model.lat,
-          'lng' : marker.model.lng
+    this.vectorRequest = function (marker) {
+      analyst.vectorRequest({
+        lat : marker.model.lat,
+        lng : marker.model.lng,
+      })
+      .then(function (response) {
+        console.log('response.isochrones');
+        return $q(function(resolve, reject) {
+          resolve(response.isochrones);
         })
-        .then(function (response) {
-          if (isoLayer) {
-            isoLayer.redraw();
-          } else {
-            isoLayer = response.tileLayer;
-            isoLayer
-            .addTo(map)
-            .bringToFront()
-          }
-        })
-        .catch(function (err) {
-          console.log(err)
-        })
-      }
-
-      if (true) {
-        analyst.vectorRequest({
-          'lat' : marker.model.lat,
-          'lng' : marker.model.lng
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (err) {
-          console.log(err)
-        })
-      }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
     }
 });
 

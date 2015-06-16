@@ -67,10 +67,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       draggable : true,
     }
   };
-  // Right map listener
+  // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leafletData.getMap('map_left').then(function(map) {
-      analystService.dragendAction(marker, map);
+      analystService.singlePointRequest(marker, map);
+      var promise = analystService.vectorRequest(marker);
+      promise.then(function (isochrones) {
+        console.log(isochrones);
+      });
     });
   });
 
