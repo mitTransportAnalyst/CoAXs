@@ -1,6 +1,9 @@
 # CoAXs
 An interactive transit corridor “modifier/builder,” available as a web based tool and intended for use as an interactive, browser-based tool presented in an interactive transit exhibit.
 
+### View staging server online
+The latest pushes at the end of day from the master branch are available online at `http://coaxs-staging.herokuapp.com/#/maps`. Due to cross-origin request issues, please be sure that you are going to `http` and NOT `https`. If you type in the address without specifically designating `http`, Heroku will route you automatically to `https`, so please be aware of that.
+
 ### How to get this up and running
 ##### Node, npm, Bower
 You need Node installed on your computer. If you do not have it, go to https://nodejs.org/ and click the green button named "Install".
