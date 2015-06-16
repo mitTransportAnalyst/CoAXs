@@ -50,10 +50,10 @@ angular.module('coaxsFilters', [])
   }
 })
 
-.filter('millionSuffix', function () {
+.filter('decimalFilter', function () {
 
     return function (input) {
-      return Math.floor(input/1000000) + 'm'
+      return (input/1000000).toFixed(1) 
     }
   });
 
