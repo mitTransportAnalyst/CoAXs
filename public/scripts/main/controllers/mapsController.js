@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, rightService, supportService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, leftService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
@@ -27,9 +27,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // left globals
-  var subwaysLayer = null;
-  var stopsLayer = null;
-  var routesLayer = null;
+  var subwaysLayer  = null;
+  var stopsLayer    = null;
+  var routesLayer   = null;
+  var poiUserPoints = null;
 
   // right globals
   var geoJsonRight = null;
@@ -67,16 +68,19 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       draggable : true,
     }
   };
-  // Right map listener
+  // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
-    leafletData.getMap('map_right').then(function(map) {
-      analystService.dragendAction(marker, map);
+    leafletData.getMap('map_left').then(function(map) {
+      analystService.singlePointRequest(marker, map);
+      // analystService.vectorRequest(marker, function (isochrones) {
+      //   console.log(isochrones)
+      // });
     });
   });
 
 
   // initialize imported data - MAP LEFT
-  leafletData.getMap('map_left').then(function (map) {
+  leafletData.getMap('map_right').then(function (map) {
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
@@ -107,17 +111,18 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
   // initialize imported data - MAP RIGHT
-  leafletData.getMap('map_right').then(function (map) {
+  leafletData.getMap('map_left').then(function (map) {
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     });
 
-    loadService.getUsersPoints(function (points) {
-      points.addTo(map);
+    loadService.getUsersPoints(function (points, poiUsers) {
+      $scope.poiUsers = poiUsers; console.log($scope.poiUsers);
+      poiUserPoints   = points;
+      poiUserPoints.addTo(map);
     })
   })
-
 
 
 
@@ -160,14 +165,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
-  $scope.updateRightRoutes = function(comboId) {
+  $scope.updateLeftRoutes = function(comboId) {
     if (comboId) {
-      rightService.updateRightRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
+      leftService.updateLeftRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
         geoJsonRight = geoJson;
       });
       $scope.combos.sel = comboId;
     } else {
-      rightService.clearRightRoutes(geoJsonRight);
+      leftService.clearRightRoutes(geoJsonRight);
       $scope.combos.sel = null;
       geoJsonRight = null;
     }
@@ -185,7 +190,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         'CT' : $scope.variants['CT'].sel,
       }
     };
-    $scope.updateRightRoutes(comboId);
+    $scope.updateLeftRoutes(comboId);
     $scope.combos.sel = comboId;
     $scope.comboName = null;
   }
@@ -207,9 +212,17 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
+  $scope.updateOffPeakRange = function (peakMin, tabnav) { console.log(peakMin, $scope.scenario[tabnav].offpeak.min);
+    if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
+      $scope.scenario[tabnav].offpeak.min = peakMin;
+    };
+  }
 
-
-
+  $scope.targetPOIUsers = function (id) { 
+    if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
+    else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
+    $scope.currentPOIUser = id;
+  }
 
 
   $scope.test = function(foo) {

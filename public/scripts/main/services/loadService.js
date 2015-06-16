@@ -86,7 +86,9 @@ coaxsApp.service('loadService', function ($http, supportService) {
     .success(function (data, status) {
       if (status == 200) {
         var circles = [];
-        var geojsonMarkerOptions = {
+        var poiUsers = [];
+
+        var smallMarkerOptions = {
           radius      : 5,
           fillColor   : 'rgba(139,139,210,0.3)',
           color       : 'rgba(36,36,76,0.8)',
@@ -94,15 +96,28 @@ coaxsApp.service('loadService', function ($http, supportService) {
           opacity     : 1,
           fillOpacity : 0.8
         };
+        var bigMarkerOptions = {
+          radius      : 15,
+          fillColor   : 'rgba(139,139,210,0)',
+          weight      : 0,
+        };
 
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
+          var userId = data[i].Name[0] + data[i].Name[1]
+
+          smallMarkerOptions['userId'] = userId;
+          bigMarkerOptions['userId']   = userId;
+          
+          poiUsers.push({ name : userId, color : ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)});
           for (var n=0; n<pois.length; n++) {
-            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], geojsonMarkerOptions)
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions, {name: data[i].Name}));
+
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], bigMarkerOptions)
               .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
           }
         }
-        cb(L.layerGroup(circles));
+        cb(L.layerGroup(circles), poiUsers);
       }
     })
   }

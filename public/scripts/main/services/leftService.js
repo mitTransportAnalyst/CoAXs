@@ -1,7 +1,7 @@
-coaxsApp.service('rightService', function (leafletData) {
+coaxsApp.service('leftService', function (leafletData) {
 
-  this.updateRightRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
-    leafletData.getMap('map_right').then(function(map) {
+  this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
+    leafletData.getMap('map_left').then(function(map) {
       if (geoJsonRight) { map.removeLayer(geoJsonRight); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
@@ -31,10 +31,20 @@ coaxsApp.service('rightService', function (leafletData) {
   };
 
   this.clearRightRoutes = function (geoJsonRight) {
-    leafletData.getMap('map_right').then(function(map) {
+    leafletData.getMap('map_left').then(function(map) {
       map.removeLayer(geoJsonRight);
     })
   };
+
+  this.targetPOIUsers = function (poiUsers, id) {
+    poiUsers.eachLayer( function (layer) {
+      if (layer.options.userId == id) {
+        layer.setStyle({opacity : 1, fillOpacity : 1});
+      } else {
+        layer.setStyle({opacity : 0, fillOpacity : 0});
+      }
+    });
+  }
 
 });
 
