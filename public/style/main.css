@@ -136,7 +136,17 @@ label {
 .noTopMargin {
   margin-top : 0px;
 }
+<<<<<<< HEAD
+=======
 
+.scorecardSub {
+  font-size: .8em;
+}
+>>>>>>> origin/phil2
+
+.scorecardIcon {
+  font-size: 1em;
+}
 
 /*leaflet map*/
 .icon-off {

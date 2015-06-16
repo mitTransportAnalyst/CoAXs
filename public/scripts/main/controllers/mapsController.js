@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, leftService, supportService) {
+=======
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, rightService, supportService) {
+>>>>>>> origin/phil2
 
   // Management for current scenario
   var scenarioBase = {
@@ -204,6 +208,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
         off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
       };
+<<<<<<< HEAD
       var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
       var length   = scorecardService.generateLengthScore(routesLayer, routeId);
       var time     = scorecardService.generateTimeScore(routesLayer, routeId);
@@ -213,10 +218,22 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
+=======
+      $scope.routeScore = {};
+      $scope.routeScore.bus       = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      $scope.routeScore.length    = scorecardService.generateLengthScore(routesLayer, routeId);
+      $scope.routeScore.time      = scorecardService.generateTimeScore(routesLayer, routeId);
+      $scope.routeScore.vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+    }
+  }
+
+  $scope.updateOffPeakRange = function (peakMin, tabnav) { console.log(peakMin, $scope.scenario[tabnav].offpeak.min);
+>>>>>>> origin/phil2
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
       $scope.scenario[tabnav].offpeak.min = peakMin;
     };
   }
+<<<<<<< HEAD
 
   $scope.targetPOIUsers = function (id) { 
     if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
@@ -227,6 +244,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
 
 
+=======
+>>>>>>> origin/phil2
 
 
 

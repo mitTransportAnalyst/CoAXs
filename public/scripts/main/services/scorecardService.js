@@ -92,7 +92,11 @@ coaxsApp.service('scorecardService', function () {
     var time = {
       count  : 0,
       dist   : {
+<<<<<<< HEAD
         move : 0, 
+=======
+        move : 0,
+>>>>>>> origin/phil2
         load : 0,
       },
     };

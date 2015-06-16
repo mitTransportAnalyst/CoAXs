@@ -48,8 +48,19 @@ angular.module('coaxsFilters', [])
   return function (input) {
     return Number(input)*100;
   }
+<<<<<<< HEAD
 });
 
+=======
+})
+
+.filter('decimalFilter', function () {
+
+    return function (input) {
+      return (input/1000000).toFixed(1) 
+    }
+  });
+>>>>>>> origin/phil2
 
 
 

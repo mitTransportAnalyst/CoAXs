@@ -86,8 +86,11 @@ coaxsApp.service('loadService', function ($http, supportService) {
     .success(function (data, status) {
       if (status == 200) {
         var circles = [];
+<<<<<<< HEAD
         var poiUsers = [];
 
+=======
+>>>>>>> origin/phil2
         var smallMarkerOptions = {
           radius      : 5,
           fillColor   : 'rgba(139,139,210,0.3)',
@@ -111,13 +114,21 @@ coaxsApp.service('loadService', function ($http, supportService) {
           
           poiUsers.push({ name : userId, color : ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)});
           for (var n=0; n<pois.length; n++) {
+<<<<<<< HEAD
             circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions, {name: data[i].Name}));
+=======
+            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions));
+>>>>>>> origin/phil2
 
             circles.push(L.circleMarker([pois[n].lat, pois[n].lng], bigMarkerOptions)
               .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
           }
         }
+<<<<<<< HEAD
         cb(L.layerGroup(circles), poiUsers);
+=======
+        cb(L.layerGroup(circles));
+>>>>>>> origin/phil2
       }
     })
   }
