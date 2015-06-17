@@ -82,10 +82,20 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function (map) {
       var vectorIso = analystService.showVectorIsos('6900');
       console.log(vectorIso);
-      vectorIso.addTo(map);
-      // var x = L.multiPolyline(vectorIso.coordinates)
-      // console.log(x);
-      // x.toGeoJSON().addTo(map);
+      if (vectorIso) { 
+        var x = L.multiPolygon(vectorIso, {
+          stroke: true,
+          color: 'red',
+          weight: 5,
+          opacity: 1
+        })
+        console.log('1', x);
+        // x = x.toGeoJSON();
+        // console.log('2', x)
+        x = L.layerGroup(x);
+        console.log('3', x);
+        x = x.addTo(map); 
+      }
     })
   }
 

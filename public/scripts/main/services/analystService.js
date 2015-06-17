@@ -44,18 +44,15 @@ coaxsApp.service('analystService', function ($q, supportService) {
   }
 
   this.showVectorIsos = function(timeVal) {
-      if (isoLayer) { 
-        isoLayer.setOpacity(0);
-        console.log(isoLayer); };
-      return vectorIsos.worstCase
-
-      // var bestIsos = vectorIsos.worstCase.features; 
-      // var returnElement = null;
-      // for (var i=0; i<bestIsos.length; i++) {
-      //   if (bestIsos[i].properties.time == timeVal) {
-      //     return bestIsos[i].geometry;
-      //   }
-      // }
+    if (vectorIsos) {
+      if (isoLayer) { isoLayer.setOpacity(0); };
+      var isosArray = vectorIsos.worstCase.features
+      for (var i=0; i<isosArray.length; i++) {
+        if (isosArray[i].properties.time == timeVal) {
+          return isosArray[i].geometry.coordinates;
+        }
+      }
+    } else { return null }
   }
 
 });
