@@ -73,10 +73,21 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function(map) {
       analystService.singlePointRequest(marker, map);
       analystService.vectorRequest(marker, function (isochrones) {
-        console.log(isochrones)
+         console.log('vectorRequest complete.', isochrones);
       });
     });
   });
+
+  $scope.toggleVectorIsos = function () {
+    leafletData.getMap('map_left').then(function (map) {
+      var vectorIso = analystService.showVectorIsos('6900');
+      console.log(vectorIso);
+      vectorIso.addTo(map);
+      // var x = L.multiPolyline(vectorIso.coordinates)
+      // console.log(x);
+      // x.toGeoJSON().addTo(map);
+    })
+  }
 
 
   // initialize imported data - MAP LEFT
@@ -172,9 +183,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       });
       $scope.combos.sel = comboId;
     } else {
-      leftService.clearRightRoutes(geoJsonRight);
+      leafletData.getMap('map_left').then(function(map) { map.removeLayer(geoJsonRight); });
       $scope.combos.sel = null;
-      geoJsonRight = null;
+      geoJsonRight      = null;
     }
   };
 
@@ -223,8 +234,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
     $scope.currentPOIUser = id;
   }
-
-
 
 
 

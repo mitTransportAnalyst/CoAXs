@@ -30,11 +30,6 @@ coaxsApp.service('leftService', function (leafletData) {
     })
   };
 
-  this.clearRightRoutes = function (geoJsonRight) {
-    leafletData.getMap('map_left').then(function(map) {
-      map.removeLayer(geoJsonRight);
-    })
-  };
 
   this.targetPOIUsers = function (poiUsers, id) {
     poiUsers.eachLayer( function (layer) {

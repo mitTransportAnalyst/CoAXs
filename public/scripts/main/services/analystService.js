@@ -10,19 +10,20 @@ coaxsApp.service('analystService', function ($q, supportService) {
     graphId     : '0ebb30ab8664001407b0ad524b102bd4',
     showIso     : true
   });
-  var isoLayer = null
+  var isoLayer   = null;
+  var vectorIsos = null;
 
   this.singlePointRequest = function (marker, map) {
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
     })
-    .then(function (response) { console.log(response);
+    .then(function (response) {
       if (isoLayer) {
         isoLayer.redraw();
       } else {
         isoLayer = response.tileLayer;
-        isoLayer.addTo(map).bringToFront();
+        isoLayer.addTo(map);
       }
     })
     .catch(function (err) {
@@ -37,9 +38,24 @@ coaxsApp.service('analystService', function ($q, supportService) {
       lng : marker.model.lng,
     })
     .then(function (response) {
-      console.log('response.isochrones');
-      cb(response);
+      vectorIsos = response.isochrones;
+      cb(vectorIsos);
     });
+  }
+
+  this.showVectorIsos = function(timeVal) {
+      if (isoLayer) { 
+        isoLayer.setOpacity(0);
+        console.log(isoLayer); };
+      return vectorIsos.worstCase
+
+      // var bestIsos = vectorIsos.worstCase.features; 
+      // var returnElement = null;
+      // for (var i=0; i<bestIsos.length; i++) {
+      //   if (bestIsos[i].properties.time == timeVal) {
+      //     return bestIsos[i].geometry;
+      //   }
+      // }
   }
 
 });

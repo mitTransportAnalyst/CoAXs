@@ -7603,7 +7603,7 @@ var Analyst = (function () {
     }
   }, {
     key: 'vectorRequest',
-    
+
     value: function vectorRequest(point) {
       var _this = this;
 
@@ -7624,9 +7624,7 @@ var Analyst = (function () {
       }).then(function (data) {
         debug('single point vector request successful');
 
-        return {
-          results: data,
-        };
+        return data;
       });
     }
   }]);
