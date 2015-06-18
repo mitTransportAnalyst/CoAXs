@@ -58,7 +58,6 @@ coaxsApp.service('analystService', function ($q, supportService) {
             weight  : 5,
             opacity : 1
           }});
-          console.log('inside', currentIso);
           currentIso.addTo(map);
 
             return isosArray[i];

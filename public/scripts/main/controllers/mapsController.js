@@ -80,9 +80,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.toggleVectorIsos = function () {
     leafletData.getMap('map_left').then(function (map) {
-      var foo = analystService.showVectorIsos('6900');
+      var foo = analystService.showVectorIsos('6900', map);
       if (foo) {
-        console.log('outside', foo);
         // currentIso = L.geoJson(foo, {style:{
         //   stroke  : true,
         //   color   : 'red',
