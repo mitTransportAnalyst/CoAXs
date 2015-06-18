@@ -80,21 +80,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.toggleVectorIsos = function () {
     leafletData.getMap('map_left').then(function (map) {
-      var vectorIso = analystService.showVectorIsos('6900');
-      console.log(vectorIso);
-      if (vectorIso) { 
-        var x = L.multiPolygon(vectorIso, {
-          stroke: true,
-          color: 'red',
-          weight: 5,
-          opacity: 1
-        })
-        console.log('1', x);
-        // x = x.toGeoJSON();
-        // console.log('2', x)
-        x = L.layerGroup(x);
-        console.log('3', x);
-        x = x.addTo(map); 
+      var foo = analystService.showVectorIsos('6900');
+      if (foo) {
+        console.log('outside', foo);
+        // currentIso = L.geoJson(foo, {style:{
+        //   stroke  : true,
+        //   color   : 'red',
+        //   weight  : 5,
+        //   opacity : 1
+        // }});
+        // currentIso.addTo(map);
       }
     })
   }

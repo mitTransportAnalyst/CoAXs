@@ -12,6 +12,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
   });
   var isoLayer   = null;
   var vectorIsos = null;
+  var currentIso = null;
 
   this.singlePointRequest = function (marker, map) {
     analyst.singlePointRequest({
@@ -43,16 +44,29 @@ coaxsApp.service('analystService', function ($q, supportService) {
     });
   }
 
-  this.showVectorIsos = function(timeVal) {
+  this.showVectorIsos = function(timeVal, map) {
     if (vectorIsos) {
       if (isoLayer) { isoLayer.setOpacity(0); };
+      if (currentIso) {  map.removeLayer(currentIso);; };
       var isosArray = vectorIsos.worstCase.features
       for (var i=0; i<isosArray.length; i++) {
         if (isosArray[i].properties.time == timeVal) {
-          return isosArray[i].geometry.coordinates;
+
+          currentIso = L.geoJson(isosArray[i], {style:{
+            stroke  : true,
+            color   : 'red',
+            weight  : 5,
+            opacity : 1
+          }});
+          console.log('inside', currentIso);
+          currentIso.addTo(map);
+
+            return isosArray[i];
         }
       }
-    } else { return null }
+    } else { 
+      return null;
+    }
   }
 
 });
