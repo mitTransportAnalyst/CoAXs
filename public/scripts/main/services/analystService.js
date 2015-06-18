@@ -14,6 +14,11 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var vectorIsos = null;
   var currentIso = null;
 
+  this.resetAll = function (map) {
+    if (isoLayer)   { isoLayer.setOpacity(1); };
+    if (currentIso) { map.removeLayer(currentIso); };
+  }
+
   this.singlePointRequest = function (marker, map) {
     analyst.singlePointRequest({
       lat : marker.model.lat,
@@ -40,31 +45,29 @@ coaxsApp.service('analystService', function ($q, supportService) {
     })
     .then(function (response) {
       vectorIsos = response.isochrones;
-      cb(vectorIsos);
+      cb(true);
     });
   }
 
   this.showVectorIsos = function(timeVal, map) {
-    if (vectorIsos) {
-      if (isoLayer) { isoLayer.setOpacity(0); };
-      if (currentIso) {  map.removeLayer(currentIso);; };
-      var isosArray = vectorIsos.worstCase.features
-      for (var i=0; i<isosArray.length; i++) {
-        if (isosArray[i].properties.time == timeVal) {
+    if (isoLayer) { isoLayer.setOpacity(0); };
+    if (currentIso) { map.removeLayer(currentIso); };
 
-          currentIso = L.geoJson(isosArray[i], {style:{
-            stroke  : true,
-            color   : 'red',
-            weight  : 5,
-            opacity : 1
-          }});
-          currentIso.addTo(map);
+    var isosArray = vectorIsos.worstCase.features
+    for (var i=0; i<isosArray.length; i++) {
+      if (isosArray[i].properties.time == timeVal) {
 
-            return isosArray[i];
-        }
+        currentIso = L.geoJson(isosArray[i], {style:{
+          stroke      : true,
+          fillColor   : '#b2b2ff',
+          color       : '#4c4cff',
+          weight      : 1,
+          fillOpacity : 0.5,
+          opacity     : 1
+        }});
+        currentIso.addTo(map);
+        return isosArray[i];
       }
-    } else { 
-      return null;
     }
   }
 

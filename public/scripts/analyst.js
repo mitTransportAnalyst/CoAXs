@@ -7551,7 +7551,7 @@ var Analyst = (function () {
 
     value: function shapefiles() {
       debug('fetching available shapefiles');
-      return window.fetch(this.apiUrl + '/shapefiles').then(function (r) {
+      return get(this.apiUrl + '/shapefile').then(function (r) {
         return r.json();
       });
     }
@@ -7617,14 +7617,14 @@ var Analyst = (function () {
       options.fromLat = options.toLat = point.lat;
       options.fromLon = options.toLon = point.lng;
 
-      debug('making single point request to [' + point.lng + ', ' + point.lat + ']', options);
+      debug('Making Vector request to [' + point.lng + ', ' + point.lat + ']', options);
       return post(this.apiUrl + '/single', {
         // destinationPointsetId: this.shapefileId,
         graphId: this.graphId,
         profile: this.profile,
         options: options
       }).then(function (data) {
-        debug('single point request successful');
+        debug('Vector request successful');
         _this.key = data.key;
 
         return data;
@@ -7665,7 +7665,8 @@ function post(url, data) {
     var req = _http2['default'].request(params, function (res) {
       var data = '';
       res.on('error', reject);
-      res.on('data', function (chunk) { 
+      res.on('data', function (chunk) {
+        console.log(chunk);
         data += chunk;
       });
       res.on('close', function () {
@@ -7678,11 +7679,24 @@ function post(url, data) {
     req.end();
   });
 }
+
+function get(url) {
+  return new Promise(function (resolve, reject) {
+    _http2['default'].get(url, function (res) {
+      var data = '';
+      res.on('error', reject);
+      res.on('data', function (chunk) {
+        data += chunk;
+      });
+      res.on('close', function () {
+        resolve(JSON.parse(data));
+      });
+    }).on('error', reject);
+  });
+}
 module.exports = exports['default'];
 
 },{"debug":34,"http":7}]},{},[37])(37)
 });
-
-
 
 

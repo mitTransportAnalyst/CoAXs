@@ -71,25 +71,19 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leafletData.getMap('map_left').then(function(map) {
+      analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
-      analystService.vectorRequest(marker, function (isochrones) {
-         console.log('vectorRequest complete.', isochrones);
+      $scope.vectorRequestGo = false;
+      $scope.vectorRequestGo = analystService.vectorRequest(marker, function (result) {
+        $scope.vectorRequestGo = result;
+        console.log($scope.vectorRequestGo, 'ready');
       });
     });
   });
 
-  $scope.toggleVectorIsos = function () {
+  $scope.showVectorIsos = function (timeVal) {
     leafletData.getMap('map_left').then(function (map) {
-      var foo = analystService.showVectorIsos('6900', map);
-      if (foo) {
-        // currentIso = L.geoJson(foo, {style:{
-        //   stroke  : true,
-        //   color   : 'red',
-        //   weight  : 5,
-        //   opacity : 1
-        // }});
-        // currentIso.addTo(map);
-      }
+      if ($scope.vectorRequestGo) { analystService.showVectorIsos(timeVal, map); };
     })
   }
 
