@@ -56,17 +56,23 @@ coaxsApp.service('analystService', function ($q, supportService) {
     var isosArray = vectorIsos.worstCase.features
     for (var i=0; i<isosArray.length; i++) {
       if (isosArray[i].properties.time == timeVal) {
-
-        currentIso = L.geoJson(isosArray[i], {style:{
+        L.geoJson(isosArray[i], {style:{
           stroke      : true,
           fillColor   : '#b2b2ff',
           color       : '#4c4cff',
           weight      : 1,
           fillOpacity : 0.5,
           opacity     : 1
-        }});
-        currentIso.addTo(map);
-        return isosArray[i];
+        }}).addTo(map);
+      }
+      else if (isosArray[i].properties.time < timeVal) {
+        L.geoJson(isosArray[i], {style:{
+          stroke      : true,
+          fillColor   : 'rgba(0,0,0,0)',
+          color       : '#4c4cff',
+          weight      : 1,
+          opacity     : 1
+        }}).addTo(map);
       }
     }
   }
