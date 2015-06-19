@@ -22,8 +22,11 @@
   </span>
 
   <br>
-  <h4 ng-show="vectorRequestGo" ng-click="showVectorIsos(6900)">
+  <h4 ng-show="!loadProgress.vis" ng-click="showVectorIsos(24*foobar)">
     <i class="fa fa-cog"></i> Vector Isos
+    <input type="range" min="1" max="24" 
+        ng-model="foobar"
+        ng-click=""/>
   </h4>
 </div>
 
@@ -504,7 +507,7 @@
 <div class="basecol">
 <div class="alert alert-info" role="alert" ng-show="loadProgress.vis">
   <div class="progress-text">
-    <i class="fa fa-spinner fa-pulse"></i> Updating isochrones & vectors.
+    <i class="fa fa-spinner fa-pulse"></i> Updating isochrones and vectors.
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-info" role="progressbar" style="width:{{loadProgress.val}}%"></div>

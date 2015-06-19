@@ -75,9 +75,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
-      $scope.vectorRequestGo = false;
-      $scope.vectorRequestGo = analystService.vectorRequest(marker, function (result) {
-        $scope.$apply ( function () { $scope.vectorRequestGo = result; });
+      analystService.vectorRequest(marker, function (result) {
+        $scope.$apply ( function () {
+          $scope.loadProgress.vis = !result; console.log($scope.loadProgress.vis);
+        });
       });
     });
   });
@@ -86,14 +87,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.loadProgress = {vis:true, val:0};
     var runProgressBar = setInterval( function () {
       $scope.$apply( function () { 
-        $scope.loadProgress.vis = true;
         if ($scope.loadProgress.val > 98) {
           $scope.loadProgress.val = 100;
           clearInterval(runProgressBar);
-          $scope.loadProgress.vis = false;
-          setTimeout( function () {
-            
-          }, 100)
         } else {
           $scope.loadProgress.val += 1;
         }
@@ -102,9 +98,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  $scope.showVectorIsos = function (timeVal) {
+  $scope.showVectorIsos = function (timeVal) { console.log('timeVal', timeVal)
     leafletData.getMap('map_left').then(function (map) {
-      if ($scope.vectorRequestGo) { analystService.showVectorIsos(timeVal, map); };
+      if (!$scope.loadProgress.vis) { analystService.showVectorIsos(timeVal, map); };
     })
   }
 
