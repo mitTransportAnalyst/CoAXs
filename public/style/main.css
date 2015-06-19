@@ -129,6 +129,24 @@ label {
 .basecol .body, .topcol .body {
   background-color : rgb(50, 50, 50);
 }
+.basecol .alert {
+  border-radius: 0px;
+  border-width: 0px;
+  padding: 10px 10px 1px 10px;
+  overflow: hidden;
+  margin-bottom: 0px;
+}
+.basecol .alert .alert-info {
+  background-color: red;
+}
+.basecol .progress {
+  border-radius: 0px;
+  margin: 0px 0px 10px 0px;
+}
+.basecol .progress-text {
+  width:50%;
+  float:left
+}
 .timeAdjust {
   border-radius    : 50%;
 }
