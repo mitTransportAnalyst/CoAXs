@@ -58,8 +58,8 @@ coaxsApp.service('analystService', function ($q, supportService) {
     };
 
     var isosArray = vectorIsos.worstCase.features
-    for (var i=0; i<isosArray.length; i++) { console.log(isosArray[i].properties.time, timeVal);
-      if (isosArray[i].properties.time == timeVal) { console.log('fuck');
+    for (var i=0; i<isosArray.length; i++) { 
+      if (isosArray[i].properties.time == timeVal) { 
         currentIso = L.geoJson(isosArray[i], {style:{
           stroke      : true,
           fillColor   : '#b2b2ff',

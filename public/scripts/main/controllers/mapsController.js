@@ -98,7 +98,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  $scope.showVectorIsos = function (timeVal) { console.log(timeVal);
+  $scope.showVectorIsos = function (timeVal) { 
     leafletData.getMap('map_left').then(function (map) {
       if (!$scope.loadProgress.vis) { analystService.showVectorIsos(timeVal, map); };
     })
