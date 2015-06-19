@@ -21,13 +21,10 @@
     </span>
   </span>
 
-  <br>
-  <h4 ng-show="!loadProgress.vis" ng-click="showVectorIsos(24*foobar)">
-    <i class="fa fa-cog"></i> Vector Isos
-    <input type="range" min="1" max="24" 
-        ng-model="foobar"
-        ng-click=""/>
-  </h4>
+  <i class="fa fa-cog"></i> Vector Isos
+  <input type="range" class="pull-right" min="1" max="24" 
+      ng-model="foobar"
+      ng-click="showVectorIsos(300*foobar)"/>
 </div>
 
 

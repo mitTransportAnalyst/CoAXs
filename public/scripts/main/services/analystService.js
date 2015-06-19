@@ -50,27 +50,22 @@ coaxsApp.service('analystService', function ($q, supportService) {
   }
 
   this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { isoLayer.setOpacity(0); };
-    if (currentIso) { map.removeLayer(currentIso); };
+    if (isoLayer) { isoLayer.setOpacity(0) };
+    if (currentIso) { 
+      console.log('currentIso, map'); 
+      console.log(currentIso, map); 
+      map.removeLayer(currentIso); 
+    };
 
     var isosArray = vectorIsos.worstCase.features
-    for (var i=0; i<isosArray.length; i++) {
-      if (isosArray[i].properties.time == timeVal) {
-        L.geoJson(isosArray[i], {style:{
+    for (var i=0; i<isosArray.length; i++) { console.log(isosArray[i].properties.time, timeVal);
+      if (isosArray[i].properties.time == timeVal) { console.log('fuck');
+        currentIso = L.geoJson(isosArray[i], {style:{
           stroke      : true,
           fillColor   : '#b2b2ff',
           color       : '#4c4cff',
           weight      : 1,
           fillOpacity : 0.5,
-          opacity     : 1
-        }}).addTo(map);
-      }
-      else if (isosArray[i].properties.time < timeVal) {
-        L.geoJson(isosArray[i], {style:{
-          stroke      : true,
-          fillColor   : 'rgba(0,0,0,0)',
-          color       : '#4c4cff',
-          weight      : 1,
           opacity     : 1
         }}).addTo(map);
       }
