@@ -90,6 +90,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         if ($scope.loadProgress.val > 98) {
           $scope.loadProgress.val = 100;
           clearInterval(runProgressBar);
+          $scope.loadProgress.vis = false;
+          setTimeout( function () {
+            
+          }, 100)
         } else {
           $scope.loadProgress.val += 1;
         }
