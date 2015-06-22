@@ -32,14 +32,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   var routesLayer     = null;
   var poiUserPoints   = null;
   $scope.loadProgress = {vis:false, val:0};
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  $scope.vectorIsos   = {vis:false, val:12};
->>>>>>> master
-=======
-  $scope.vectorIsos   = {vis:false, val:12};
->>>>>>> master
 
   // right globals
   var geoJsonRight = null;
@@ -84,54 +76,25 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
       analystService.vectorRequest(marker, function (result) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         $scope.$apply ( function () {
           $scope.loadProgress.vis = !result;
         });
-=======
-        if (result) { $scope.$apply (function () { $scope.loadProgress.vis = false }) };
->>>>>>> master
-=======
-        if (result) { $scope.$apply (function () { $scope.loadProgress.vis = false }) };
->>>>>>> master
       });
     });
   });
 
   animateProgressBar = function () {
-<<<<<<< HEAD
-<<<<<<< HEAD
     $scope.loadProgress = {vis:true, val:0};
-=======
-    $scope.loadProgress = {vis:true, val:15};
->>>>>>> master
     var runProgressBar = setInterval( function () {
       $scope.$apply( function () { 
         if ($scope.loadProgress.val > 98) {
           $scope.loadProgress.val = 100;
-<<<<<<< HEAD
-=======
-    $scope.loadProgress = {vis:true, val:15};
-    var runProgressBar = setInterval( function () {
-      $scope.$apply( function () { 
-        if ($scope.loadProgress.val > 88) {
-          $scope.loadProgress.val = 90;
->>>>>>> master
           clearInterval(runProgressBar);
         } else {
           $scope.loadProgress.val += 1;
         }
       }); 
     }, 75)  
-=======
-          clearInterval(runProgressBar);
-        } else {
-          $scope.loadProgress.val += Math.floor(Math.random()*3);
-        }
-      }); 
-    }, 100)  
->>>>>>> master
   }
 
 
@@ -287,20 +250,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.currentPOIUser = id;
   }
 
-  $scope.vectorTimeVal_add      = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1; }
-  $scope.vectorTimeVal_subtract = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1; }
-
-  $scope.toggleShowVectorIsos = function () {
-    $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-<<<<<<< HEAD
-    analystService.resetAll();
-  }
-=======
-    leafletData.getMap('map_left').then(function(map) { analystService.resetAll(map); });
-  }
 
 
->>>>>>> master
+
+
 
   $scope.test = function(foo) {
     console.log('running test');
