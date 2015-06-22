@@ -1,6 +1,11 @@
 body { 
   word-wrap        : break-word;
   background-color : #F5F5F3;
+  -moz-user-select    : none; 
+  -webkit-user-select : none; 
+  -ms-user-select     : none; 
+  user-select         : none;
+  -o-user-select      : none;
 }
 
 
@@ -153,6 +158,11 @@ label {
   margin-top : 0px;
 }
 
+
+.isochroneSlider {
+  max-height : 33px;
+  overflow : hidden
+}
 
 /*leaflet map*/
 .icon-off {
