@@ -77,7 +77,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
       analystService.vectorRequest(marker, function (result) {
-        if (result) { $scope.$apply (function () { $scope.loadProgress.vis = false }) };
+        if (result) { 
+          $scope.loadProgress.val = 100;
+          setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
+        };
       });
     });
   });
@@ -93,7 +96,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
       }); 
-    }, 100)  
+    }, 200)  
   }
 
 

@@ -10315,6 +10315,7 @@ exports['default'] = Analyst;
 var getHostPortAndPath = new RegExp('^(.*)://([A-Za-z0-9-.]+)(:[0-9]+)?(.*)$');
 function post(url, data) {
   return new Promise(function (resolve, reject) {
+    updateProgressBar(); // FOR PROGRRESS BAR
     var _url$match = url.match(getHostPortAndPath);
 
     var _url$match2 = _slicedToArray(_url$match, 5);
@@ -10338,15 +10339,20 @@ function post(url, data) {
 
     debug('POST', params);
     var req = _http2['default'].request(params, function (res) {
+      updateProgressBar(); // FOR PROGRRESS BAR
       res.on('error', reject);
       res.pipe((0, _concatStream2['default'])(function (data) { 
+        updateProgressBar(); // FOR PROGRRESS BAR
         // console.log(data);
         resolve(JSON.parse(data));
+        updateProgressBar(); // FOR PROGRRESS BAR
       }));
     });
 
     req.on('error', reject);
+    updateProgressBar(); // FOR PROGRRESS BAR
     req.write(JSON.stringify(data));
+    updateProgressBar(); // FOR PROGRRESS BAR
     req.end();
   });
 }
@@ -10365,3 +10371,13 @@ module.exports = exports['default'];
 
 },{"concat-stream":34,"debug":48,"http":7}]},{},[51])(51)
 });
+
+
+function updateProgressBar() {
+  var appElement = document.querySelector('[ng-app=coaxsApp]');
+  var appScope = angular.element(appElement).scope().$$childHead;
+  if (appScope.loadProgress.val < 99) { appScope.loadProgress.val += 2; }
+}
+
+
+
