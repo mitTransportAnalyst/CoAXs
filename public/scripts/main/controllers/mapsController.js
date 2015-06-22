@@ -32,6 +32,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   var routesLayer     = null;
   var poiUserPoints   = null;
   $scope.loadProgress = {vis:false, val:0};
+  $scope.vectorIsos   = {vis:false, val:12};
 
   // right globals
   var geoJsonRight = null;
@@ -76,19 +77,17 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
       analystService.vectorRequest(marker, function (result) {
-        $scope.$apply ( function () {
-          $scope.loadProgress.vis = !result;
-        });
+        if (result) { $scope.$apply (function () { $scope.loadProgress.vis = false }) };
       });
     });
   });
 
   animateProgressBar = function () {
-    $scope.loadProgress = {vis:true, val:0};
+    $scope.loadProgress = {vis:true, val:15};
     var runProgressBar = setInterval( function () {
       $scope.$apply( function () { 
-        if ($scope.loadProgress.val > 98) {
-          $scope.loadProgress.val = 100;
+        if ($scope.loadProgress.val > 88) {
+          $scope.loadProgress.val = 90;
           clearInterval(runProgressBar);
         } else {
           $scope.loadProgress.val += 1;
@@ -250,8 +249,13 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.currentPOIUser = id;
   }
 
+  $scope.vectorTimeVal_add      = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1; }
+  $scope.vectorTimeVal_subtract = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1; }
 
-
+  $scope.toggleShowVectorIsos = function () {
+    $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
+    analystService.resetAll();
+  }
 
 
 

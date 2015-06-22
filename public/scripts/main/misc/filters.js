@@ -38,6 +38,7 @@ angular.module('coaxsFilters', [])
       return String('0:' + input);
     } else {
       var minutes = Math.floor(input%60);
+      if (minutes < 10) { minutes = String('0' + minutes); }
       var hours = Math.floor(input/60);
       return String(hours + ':' + minutes)
     }
@@ -47,6 +48,15 @@ angular.module('coaxsFilters', [])
 .filter('convertPercentage', function () {
   return function (input) {
     return Number(input)*100;
+  }
+})
+
+.filter('vectorTimeValFilter', function () {
+  return function (input) {
+    input = String(input);
+    if (input.length == 1) { return '00' + input }
+    if (input.length == 2) { return '0' + input }
+    if (input.length > 2) { return input }
   }
 });
 

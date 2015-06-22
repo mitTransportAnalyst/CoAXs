@@ -103,6 +103,9 @@ nav div.section {
   text-shadow      : 0px 0px 0px;
   font-size        : 0.75em;
 }
+.unselected {
+  opacity          : 0.35;
+}
 .dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
   opacity          : 0.75;
 }
@@ -128,6 +131,7 @@ label {
 }
 .basecol .body, .topcol .body {
   background-color : rgb(50, 50, 50);
+  overflow: hidden;
 }
 .basecol .alert {
   border-radius: 0px;
@@ -135,19 +139,12 @@ label {
   padding: 5px 10px 0px 10px;
   overflow: hidden;
   margin-bottom: 0px;
-  height: 30px;
-}
-.basecol .alert .alert-info {
-  background-color: red;
 }
 .basecol .progress {
   border-radius: 0px;
   margin: 0px 0px 10px 0px;
-}
-.basecol .progress-text {
-  font-size: small;
-  width: 50%;
-  float: left
+  overflow: hidden;
+  margin-bottom: 0px;
 }
 .timeAdjust {
   border-radius    : 50%;
