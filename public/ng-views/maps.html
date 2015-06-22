@@ -572,7 +572,7 @@
      
      <!-- <div class="col-xs-12"> -->
      <div class="basecol_serviceEditor col-md-3">
-      SERVICE FRQUENCY
+      <h5> SERVICE FRQUENCY </h5>
       <div class="row">
         <div class="col-xs-6 text-center">
           <h3 class="noTopMargin">
@@ -596,7 +596,7 @@
         </div>
       </div>
       <br>
-      PAYMENT METHOD
+      <h5> STATION TYPE </h5>
       <div class="btn-group btn-group-justified">
         <label  class="btn btn-info" btn-radio="0"
                 ng-model="scenario[tabnav].station" 
@@ -719,19 +719,19 @@
 
 <!--Point-of-Interest Acitvation--> 
 <div class="basecol_POI col-md-3 "> 
-PLACES <br>
+<h5 style="margin-bottom: 10px"> PLACES </h5>
  <div class="fa-stack fa-lg" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots">
     <!-- <i class="fa fa-stop fa-stack-2x"></i> -->
-    <i class="fa fa-users fa-stack-1x fa-inverse"></i>
+    <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
   </div>
-
+  <br>
   <span ng-show="poiUserDots">
     <span class="fa-stack" 
           ng-repeat="user in poiUsers track by $index" 
           ng-click="targetPOIUsers(user.name)" 
           ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"
           style="color:#{{ user.color }}">
-      <i class="fa fa-stop fa-stack-2x"></i>
+      <i class="fa fa-circle fa-stack-2x"></i>
       <i class="fa fa-stack-1x fa-inverse">
         <small>{{ user.name }}</small>
       </i>
@@ -741,12 +741,83 @@ PLACES <br>
 </div>
 <!--Destination & Time Filter--> 
 <div class="basecol_filter col-md-3 ">
-TRAVEL TIME 
- <input type="range" min="10" max="60"/>
-<br>
-DESTINATIONS
-</div>
 
+
+<h5> TRAVEL TIME </h5> 
+  <input type="range" min="10" max="60"  style="margin-bottom: 15px">
+
+<h5 style="margin-bottom: -15px"> DESTINATIONS </h5> 
+  <br>
+  <!-- <label class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-heartbeat"></i>
+           Jobs
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-heartbeat"></i> Healthcare
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+        <i class="fa fa-shopping-cart "></i>
+          Groceries
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+        <i class="fa fa-graduation-cap "></i>
+          K1-12
+  </label> -->
+
+  <label class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-briefcase fa-fw destinationIcon"></i>
+         <!--  <figcaption class="caption">Jobs</figcaption> -->
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
+        <!-- <figcaption class="caption">Healthcare</figcaption> -->
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+        <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
+        <!-- <figcaption class="caption">Groceries</figcaption> -->
+  </label>
+  <label  class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+        <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
+       <!--  <figcaption class="caption">K1-12</figcaption> -->
+  </label>
+
+<br>
+
+<h5 style="margin-bottom: -15px"> MODE </h5> 
+  <br>
+  <label class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-bus destinationIcon"></i>
+  </label>
+  <label class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-bicycle destinationIcon"></i>
+  </label>
+  <label class="btn iconContainer" btn-radio="1"
+                ng-model="" 
+                ng-click="">
+         <i class="fa fa-bicycle destinationIcon"></i>
+  </label>
+
+</div>
 <!--Scenario Table--> 
 
 <div class="basecol_scenarioTable">

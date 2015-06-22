@@ -4,6 +4,7 @@ body {
 }
 
 
+
 /*bs modification*/
 .btn {
   border-radius    : 50px;
@@ -110,6 +111,7 @@ nav div.section {
   opacity          : 0.75;
   font-size: 1.3em;
   }
+  
 .basecol {
   position         : absolute;
   width            : 25%;
@@ -129,19 +131,37 @@ nav div.section {
   font-size: .8em;
 }
 
+.iconContainer {
+  border-radius    : 10px;
+  border-color: yellow;
+  background-color : black;
+  border-width     : 1px;
+  color            : yellow;
+  margin-bottom: 0px;
+}
+
+.destinationIcon {
+  font-size: 1.7em;
+}
+
+.caption{
+  font-size: .6em;
+}
+
+
 .basecol_POI {
   position         : absolute;
   min-height: 18%;
   max-height: 18%;
   left             : 0%;
-  width            : 8%;
+  width            : 5%;
   bottom           : 0px;
   background-color : #000;
   color            : #FFF;
   opacity: .7;
   overflow-y       : hidden;
   overflow-x       : hidden;
-  border-right: 1px solid gray;
+  border-right: 0px solid gray;
     
 }
 
@@ -149,15 +169,15 @@ nav div.section {
   position         : absolute;
   min-height: 18%;
   max-height: 18%;
-  left             : 8.2%;
-  width            : 10%;
+  left             : 5.2%;
+  width            : 15%;
   bottom           : 0px;
   background-color : #000;
   color            : #FFF;
   opacity: .7;
   overflow-y       : hidden;
   overflow-x       : hidden;
-   border-right: 1px solid gray;
+   border-right: 0px solid gray;
 
 }
 
@@ -165,8 +185,8 @@ nav div.section {
   position         : absolute;
   min-height: 18%;
   max-height: 18%;
-  left             : 18.4%;
-  width            : 31.6%;
+  left             : 20.4%;
+  width            : 29.6%;
   bottom           : 0px;
   background-color : #000;
   color            : #FFF;
