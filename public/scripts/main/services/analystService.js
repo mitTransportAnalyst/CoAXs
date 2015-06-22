@@ -65,7 +65,8 @@ coaxsApp.service('analystService', function ($q, supportService) {
           weight      : 1,
           fillOpacity : 0.5,
           opacity     : 1
-        }}).addTo(map);
+        }});
+        currentIso.addTo(map);
       }
     }
   }

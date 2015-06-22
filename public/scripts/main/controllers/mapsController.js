@@ -86,14 +86,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.loadProgress = {vis:true, val:15};
     var runProgressBar = setInterval( function () {
       $scope.$apply( function () { 
-        if ($scope.loadProgress.val > 88) {
-          $scope.loadProgress.val = 90;
+        if ($scope.loadProgress.val > 98) {
+          $scope.loadProgress.val = 100;
           clearInterval(runProgressBar);
         } else {
-          $scope.loadProgress.val += 1;
+          $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
       }); 
-    }, 75)  
+    }, 100)  
   }
 
 
@@ -254,7 +254,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.toggleShowVectorIsos = function () {
     $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-    analystService.resetAll();
+    leafletData.getMap('map_left').then(function(map) { analystService.resetAll(map); });
   }
 
 
