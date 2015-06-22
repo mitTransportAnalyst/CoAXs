@@ -86,7 +86,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
   animateProgressBar = function () {
-    $scope.loadProgress = {vis:true, val:15};
+    $scope.loadProgress = {vis:true, val:0};
     var runProgressBar = setInterval( function () {
       $scope.$apply( function () { 
         if ($scope.loadProgress.val > 98) {

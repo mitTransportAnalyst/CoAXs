@@ -14,6 +14,13 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var vectorIsos = null;
   var currentIso = null;
 
+  var options = [{
+      "type"     : "remove-trip",
+      "agencyId" : "AGENCY ID",
+      "routeId"  : ["Route ID 1", "Route ID 2"],
+      "tripId"   : ["Trip ID 1", "Trip ID 2"]
+  }];
+
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
@@ -23,7 +30,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
-    })
+    }, options)
     .then(function (response) {
       if (isoLayer) {
         isoLayer.redraw();
