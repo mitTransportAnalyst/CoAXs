@@ -10109,7 +10109,7 @@ var LAYER_DEFAULTS = {};
 var REQUEST_DEFAULTS = {
   accessModes: 'WALK',
   egressModes: 'WALK',
-  date: new Date().toISOString().split('T')[0],
+  date: '2015-06-16', // new Date().toISOString().split('T')[0],
   fromTime: 25200,
   toTime: 32400,
   walkSpeed: 1.3333333333333333,
