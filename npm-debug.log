@@ -1,9 +1,15 @@
 0 info it worked if it ends with ok
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 1 verbose cli [ 'node', '/usr/local/bin/npm', 'start' ]
 2 info using npm@2.5.1
 3 info using node@v0.12.0
+=======
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'start' ]
+2 info using npm@2.7.4
+3 info using node@v0.12.2
+>>>>>>> master
 =======
 1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'start' ]
 2 info using npm@2.7.4
@@ -27,6 +33,7 @@
 9 verbose stack     at ChildProcess.emit (events.js:110:17)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 9 verbose stack     at maybeClose (child_process.js:1008:16)
 9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1080:5)
 10 verbose pkgid coaxs@
@@ -38,6 +45,8 @@
 =======
 =======
 >>>>>>> master
+=======
+>>>>>>> master
 9 verbose stack     at maybeClose (child_process.js:1015:16)
 9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
 10 verbose pkgid coaxs@
@@ -47,6 +56,9 @@
 14 error node v0.12.2
 15 error npm  v2.7.4
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 =======
 >>>>>>> master

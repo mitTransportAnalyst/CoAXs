@@ -52,9 +52,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
   this.showVectorIsos = function(timeVal, map) {
     if (isoLayer) { isoLayer.setOpacity(0) };
     if (currentIso) { 
+<<<<<<< HEAD
       console.log('currentIso, map'); 
       console.log(currentIso, map); 
 
+=======
+>>>>>>> master
       map.removeLayer(currentIso); 
     };
 
@@ -68,7 +71,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
           weight      : 1,
           fillOpacity : 0.5,
           opacity     : 1
+<<<<<<< HEAD
         }}).addTo(map);
+=======
+        }});
+        currentIso.addTo(map);
+>>>>>>> master
       }
     }
   }

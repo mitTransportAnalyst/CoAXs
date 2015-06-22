@@ -141,6 +141,12 @@ nav div.section {
 .unselected {
   opacity          : 0.35;
 }
+<<<<<<< HEAD
+>>>>>>> master
+=======
+.unselected {
+  opacity          : 0.35;
+}
 >>>>>>> master
 .dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
   opacity          : 0.75;
