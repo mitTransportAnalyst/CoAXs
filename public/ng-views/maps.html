@@ -246,7 +246,7 @@
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
             ng-show="!scenario[tabnav].name" 
-            style="cursor:not-allowed" disabled>
+            style="cursor:not-allowed">
             Save Variation
           </button>
           <button class="btn btn-savealt" type="button" 
@@ -512,14 +512,15 @@
       </span>
       <span style="width:70%" class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
         <i class="fa fa-minus-square" 
-              ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+            ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
         <span style="width:70%;display:inline-block">
           <input type="range" min="1" max="24" style="margin-top:12px"
             ng-model="vectorIsos.val"
+            ng-disabled="!showVectorIsosOn"
             ng-click="showVectorIsos(300*vectorIsos.val)"/>
         </span>
         <i class="fa fa-plus-square" 
-              ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+            ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
       </span>
       <span style="max-width:20%;display:inline-block" class="pull-right">
           <h6 ng-click="toggleShowVectorIsos()">

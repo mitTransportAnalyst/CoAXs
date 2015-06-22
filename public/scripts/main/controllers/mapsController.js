@@ -99,7 +99,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.showVectorIsos = function (timeVal) { 
     leafletData.getMap('map_left').then(function (map) {
-      if (!$scope.loadProgress.vis) { analystService.showVectorIsos(timeVal, map); };
+      if (!$scope.loadProgress.vis && $scope.showVectorIsosOn) { analystService.showVectorIsos(timeVal, map); };
     })
   }
 
@@ -249,12 +249,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.currentPOIUser = id;
   }
 
-  $scope.vectorTimeVal_add      = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1; }
-  $scope.vectorTimeVal_subtract = function () { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1; }
+  $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
+  $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
 
   $scope.toggleShowVectorIsos = function () {
     $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-    leafletData.getMap('map_left').then(function(map) { analystService.resetAll(map); });
+    leafletData.getMap('map_left').then(function (map) {
+      if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
+      if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
+    })
   }
 
 
