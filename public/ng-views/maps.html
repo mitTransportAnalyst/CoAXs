@@ -345,6 +345,7 @@
       </h5>
     </span>
 
+
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
@@ -358,7 +359,8 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      
+      <tbody style="height:150px;overflow-y:scroll">
 
         <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'" 
             ng-click     = "updateTargetFeature(variant.routeId)">
@@ -428,6 +430,7 @@
         </tr>
       </tbody>
     </table>
+
   </div>
 
   <div class="col-xs-12 body" ng-show="createVar">
