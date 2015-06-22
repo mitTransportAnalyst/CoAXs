@@ -27,10 +27,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // left globals
-  var subwaysLayer  = null;
-  var stopsLayer    = null;
-  var routesLayer   = null;
-  var poiUserPoints = null;
+  var subwaysLayer    = null;
+  var stopsLayer      = null;
+  var routesLayer     = null;
+  var poiUserPoints   = null;
+  $scope.loadProgress = {vis:false, val:0};
 
   // right globals
   var geoJsonRight = null;
@@ -70,13 +71,38 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
+    animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
+      analystService.resetAll(map);
       analystService.singlePointRequest(marker, map);
-      analystService.vectorRequest(marker, function (isochrones) {
-        console.log(isochrones)
+      analystService.vectorRequest(marker, function (result) {
+        $scope.$apply ( function () {
+          $scope.loadProgress.vis = !result;
+        });
       });
     });
   });
+
+  animateProgressBar = function () {
+    $scope.loadProgress = {vis:true, val:0};
+    var runProgressBar = setInterval( function () {
+      $scope.$apply( function () { 
+        if ($scope.loadProgress.val > 98) {
+          $scope.loadProgress.val = 100;
+          clearInterval(runProgressBar);
+        } else {
+          $scope.loadProgress.val += 1;
+        }
+      }); 
+    }, 75)  
+  }
+
+
+  $scope.showVectorIsos = function (timeVal) { 
+    leafletData.getMap('map_left').then(function (map) {
+      if (!$scope.loadProgress.vis) { analystService.showVectorIsos(timeVal, map); };
+    })
+  }
 
 
   // initialize imported data - MAP LEFT
@@ -172,9 +198,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       });
       $scope.combos.sel = comboId;
     } else {
-      leftService.clearRightRoutes(geoJsonRight);
+      leafletData.getMap('map_left').then(function(map) { map.removeLayer(geoJsonRight); });
       $scope.combos.sel = null;
-      geoJsonRight = null;
+      geoJsonRight      = null;
     }
   };
 
@@ -223,8 +249,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
     $scope.currentPOIUser = id;
   }
-
-
 
 
 

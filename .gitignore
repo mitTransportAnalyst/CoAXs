@@ -2,3 +2,16 @@
 node_modules
 bower_components
 build
+public/scripts/main/services/leftService.js
+
+public/style/main.css
+
+public/scripts/main/services/analystService.js
+
+public/scripts/main/controllers/mapsController.js
+
+public/scripts/analyst.js
+
+public/ng-views/maps.html
+
+public/scripts/main/services/leftService.js

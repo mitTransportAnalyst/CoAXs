@@ -6,6 +6,20 @@ body {
 
 
 /*bs modification*/
+
+.alert, .alert-info {
+  height: 20px;
+  margin-bottom: -3px;
+}
+
+.progress, .progress-bar {
+  height: 10px;
+}
+
+.progress-text {
+  margin: -10px;
+}
+
 .btn {
   border-radius    : 50px;
 }
