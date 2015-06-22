@@ -9,6 +9,21 @@ body {
 .btn {
   border-radius    : 50px;
 }
+
+.btn-info {
+  color: yellow;
+  background-color: black;
+  border-color: yellow;
+  border-width: 1px;
+}
+
+.btn-success {
+  color: black;
+  background-color: yellow;
+  border-color: yellow;
+}
+
+}
 .btn-default {
   border-radius    : 0px;
   background-color : rgba(0,0,0,1);
@@ -45,6 +60,7 @@ button {
 .fa .pull-right { 
   line-height: inherit;
 }
+
 
 /*navigation*/
 nav {
