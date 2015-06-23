@@ -9,32 +9,27 @@ coaxsApp.service('analystService', function ($q, supportService) {
     shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
     graphId        : '8a35783dd95ff1a52fc928e183e23340',
     showIso        : true,
-    requestOptions : { scenario : {} },
   });
 
   var all = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
 
-  analyst.requestOptions.scenario = {
-    'id'            : 0,
-    'description'   : 'Existing MBTA only. All proposed routes banned.',
-    'modifications' : [{
-      'type'      : 'remove-trip',
-      'agencyId'  : 'd802657',
-      'routeId'   : ['7cb27d8'],
-      'tripId'    : null
-    }]
+  var options = {
+    'scenario'      : {
+      'id'            : 0,
+      'description'   : 'Existing MBTA only. All proposed routes banned.',
+      'modifications' : [{
+        'type'      : 'remove-trip',
+        'agencyId'  : 'd802657',
+        'routeId'   : ['7cb27d8', '86d2825', 'a3e69c4', 'ea50129'],
+        'tripId'    : null
+      }]
+    }
   }
 
   var isoLayer   = null;
   var vectorIsos = null;
   var currentIso = null;
 
-  var options = [{
-      "type"     : "remove-trip",
-      "agencyId" : "AGENCY ID",
-      "routeId"  : ["Route ID 1", "Route ID 2"],
-      "tripId"   : ["Trip ID 1", "Trip ID 2"]
-  }];
 
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
@@ -45,7 +40,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
-    })
+    }, options)
     .then(function (response) {
       if (isoLayer) {
         isoLayer.redraw();
@@ -64,7 +59,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     analyst.vectorRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
-    })
+    }, options)
     .then(function (response) {
       vectorIsos = response.isochrones;
       cb(true);
@@ -82,8 +77,8 @@ coaxsApp.service('analystService', function ($q, supportService) {
       if (isosArray[i].properties.time == timeVal) { 
         currentIso = L.geoJson(isosArray[i], {style:{
           stroke      : true,
-          fillColor   : '#b2b2ff',
-          color       : '#4c4cff',
+          fillColor   : '#FDB813',
+          color       : '#F68B1F',
           weight      : 1,
           fillOpacity : 0.5,
           opacity     : 1
