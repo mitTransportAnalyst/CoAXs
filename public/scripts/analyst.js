@@ -10190,7 +10190,11 @@ var Analyst = (function () {
      */
 
     value: function updateSinglePointLayer() {
-      var url = '' + this.tileUrl + '/single/' + this.key + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+      var keyVals = null;
+      if (this.key1) { keyVals = this.key1 + '/' + this.key }
+      else { keyVals = this.key }
+
+      var url = '' + this.tileUrl + '/single/' + keyVals + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
 
       if (!this.singlePointLayer) {
         debug('creating single point layer with url: ' + url);
@@ -10238,10 +10242,10 @@ var Analyst = (function () {
      *   })
      */
 
-    value: function singlePointRequest(point) {
+    value: function singlePointRequest(point, key1) {
       var _this = this;
 
-      var opts = arguments[1] === undefined ? {} : arguments[1];
+      var opts = arguments[2] === undefined ? {} : arguments[2];
 
       if (!point)            return Promise.reject(new Error('Lat/lng point required.'));
       if (!this.shapefileId) return Promise.reject(new Error('Shapefile ID required'));
@@ -10260,6 +10264,8 @@ var Analyst = (function () {
       }).then(function (data) {
         debug('single point request successful');
         _this.key = data.key;
+
+        if (key1) { _this.key1 = key1 }
 
         return {
           tileLayer: _this.updateSinglePointLayer(),

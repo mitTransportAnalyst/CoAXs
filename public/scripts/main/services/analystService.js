@@ -11,9 +11,10 @@ coaxsApp.service('analystService', function ($q, supportService) {
     showIso        : true,
   });
 
-  var all = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
+  var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
 
-  var options = {
+  var optionsAll = [];
+  var optionCurrent = {
     'scenario'      : {
       'id'            : 0,
       'description'   : 'Existing MBTA only. All proposed routes banned.',
@@ -34,14 +35,18 @@ coaxsApp.service('analystService', function ($q, supportService) {
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
-  }
 
-  this.singlePointRequest = function (marker, map) {
+  }
+// 'fd440584-25fc-4bf7-bb38-c46c9d62223f'
+  this.singlePointRequest = function (marker, map, compareKey) {
+    if (!compareKey) { compareKey = null }
+
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
-    }, options)
-    .then(function (response) {
+    }, compareKey, optionCurrent)
+    .then(function (response) { 
+      console.log('response', response.results.key);
       if (isoLayer) {
         isoLayer.redraw();
       } else {
@@ -59,7 +64,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     analyst.vectorRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
-    }, options)
+    }, optionCurrent)
     .then(function (response) {
       vectorIsos = response.isochrones;
       cb(true);
@@ -80,7 +85,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
           fillColor   : '#FDB813',
           color       : '#F68B1F',
           weight      : 1,
-          fillOpacity : 0.5,
+          fillOpacity : 0.25,
           opacity     : 1
         }});
         currentIso.addTo(map);
