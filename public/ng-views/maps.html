@@ -355,7 +355,9 @@
           <th>Peak</th>
           <th>
             Off-Peak
-            <i class="fa fa-plus-circle pull-right" ng-click="createVar = !createVar"></i>
+          </th>
+          <th class="text-right">
+            Current
           </th>
         </tr>
       </thead>
@@ -394,6 +396,15 @@
           <td>
             {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }} 
           </td>
+          <td class="text-right">
+            <span ng-show="scenario[tabnav].routeId !== variant.routeId"
+                  ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
+              <i class="fa fa-circle-o"></i>
+            </span>
+            <span ng-show="scenario[tabnav].routeId == variant.routeId">
+              <i class="fa fa-caret-left"></i> Modifying <i class="fa fa-circle"></i>
+            </span>
+          </td>
         </tr>
       </tbody>
       <tbody>
@@ -418,11 +429,13 @@
           </td>
           <td>
             {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+          </td>
+          <td>
             <span class="badge pull-right" ng-click="createVar = !createVar">
-              <span ng-if="createVar">
+              <span ng-show="createVar">
                 <i class="fa fa-times"></i> Close
               </span>
-              <span ng-if="!createVar">
+              <span ng-show="!createVar">
                 <i class="fa fa-bookmark-o"></i> Modify
               </span>
             </span>

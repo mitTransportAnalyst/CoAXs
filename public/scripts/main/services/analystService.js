@@ -20,7 +20,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
       'modifications' : [{
         'type'      : 'remove-trip',
         'agencyId'  : 'd802657',
-        'routeId'   : ['7cb27d8', '86d2825', 'a3e69c4', 'ea50129'],
+        'routeId'   : [],
         'tripId'    : null
       }]
     }

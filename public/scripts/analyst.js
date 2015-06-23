@@ -10343,7 +10343,7 @@ function post(url, data) {
       res.on('error', reject);
       res.pipe((0, _concatStream2['default'])(function (data) { 
         updateProgressBar(); // FOR PROGRRESS BAR
-        console.log(data);
+        // console.log(data);
         resolve(JSON.parse(data));
         updateProgressBar(); // FOR PROGRRESS BAR
       }));
