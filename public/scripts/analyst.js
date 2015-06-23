@@ -10243,9 +10243,9 @@ var Analyst = (function () {
 
       var opts = arguments[1] === undefined ? {} : arguments[1];
 
-      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
+      if (!point)            return Promise.reject(new Error('Lat/lng point required.'));
       if (!this.shapefileId) return Promise.reject(new Error('Shapefile ID required'));
-      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
+      if (!this.graphId)     return Promise.reject(new Error('Graph ID required'));
 
       var options = Object.assign({}, this.requestOptions, opts);
       options.fromLat = options.toLat = point.lat;
