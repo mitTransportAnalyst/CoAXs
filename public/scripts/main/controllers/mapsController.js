@@ -181,6 +181,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       stops.addTo(map);
       stopsLayer = stops;
     });
+
+    setTimeout(runMarkerQuerys, 2000);
   });
 
   // initialize imported data - MAP RIGHT
