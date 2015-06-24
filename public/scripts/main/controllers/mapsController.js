@@ -106,13 +106,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return keepRoutes;
   }
 
-  getCompareKey = function () { console.log('xx', $scope.combos.all[$scope.combos.com]);
+  getCompareKey = function () {
     if ($scope.combos.com && $scope.scenarioCompare) {
-      if ($scope.combos.all[$scope.combos.com].compareKey) { return ($scope.combos.all[$scope.combos.com].compareKey) }
-      else { return undefined }
+      if ($scope.combos.all[$scope.combos.com].compareKey) { 
+        return ($scope.combos.all[$scope.combos.com].compareKey) ;
+      } else { 
+        return undefined;
+      }
     } 
     else if (!$scope.combos.com && $scope.scenarioCompare) { 
-      console.log('Returning existingMBTAKey');
       return existingMBTAKey;
     }
     else {
@@ -123,7 +125,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   addCompareKey = function (key) {
     if (!$scope.scenarioCompare) {
       if ($scope.combos.sel && !$scope.scenarioCompare) {
-        $scope.combos.all[$scope.combos.com].compareKey = key;
+        $scope.combos.all[$scope.combos.sel].compareKey = key;
       } else {
         existingMBTAKey = key;
       }
@@ -268,6 +270,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.updateLeftRoutes(comboId);
     $scope.combos.sel = comboId;
     $scope.comboName = null;
+    runMarkerQuerys();
   }
 
 
