@@ -43,10 +43,10 @@ coaxsApp.service('analystService', function ($q, supportService) {
     optionCurrent.scenario.modifications[0].routeId = allRoutes;
   }
 
-  this.singlePointRequest = function (marker, map, compareKey, cb) {
+  this.singlePointRequest = function (marker, map, compareKey, cb) { 
     analyst.singlePointRequest({
-      lat : marker.model.lat,
-      lng : marker.model.lng,
+      lat : marker.main.lat,
+      lng : marker.main.lng,
     }, compareKey, optionCurrent)
     .then(function (response) { 
       if (isoLayer) {
@@ -65,8 +65,8 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   this.vectorRequest = function (marker, cb) {
     analyst.vectorRequest({
-      lat : marker.model.lat,
-      lng : marker.model.lng,
+      lat : marker.main.lat,
+      lng : marker.main.lng,
     }, optionCurrent)
     .then(function (response) {
       vectorIsos = response.isochrones;

@@ -70,26 +70,28 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     leftLeafletMarker = marker;
-    runMarkerQuerys(marker);
+    $scope.markers_left.main = {
+      lat  : marker.model.lat,
+      lng  : marker.model.lng,
+      draggable : true
+    }
+    runMarkerQuerys();
   });
 
-  runMarkerQuerys = function (marker) {
-    if (!marker) { marker = leafletMarker; }
-    if (marker) {
-      animateProgressBar();
-      leafletData.getMap('map_left').then(function(map) {
-        analystService.resetAll(map, getKeepRoutes());
-        analystService.singlePointRequest(marker, map, getCompareKey(), function (key) {
-          addCompareKey(key);
-        });
-        analystService.vectorRequest(marker, function (result) {
-          if (result) { 
-            $scope.loadProgress.val = 100;
-            setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
-          };
-        });
+  runMarkerQuerys = function () {
+    animateProgressBar();
+    leafletData.getMap('map_left').then(function(map) {
+      analystService.resetAll(map, getKeepRoutes());
+      analystService.singlePointRequest($scope.markers_left, map, getCompareKey(), function (key) {
+        addCompareKey(key);
       });
-    }
+      analystService.vectorRequest($scope.markers_left, function (result) {
+        if (result) { 
+          $scope.loadProgress.val = 100;
+          setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
+        };
+      });
+    });
   }
 
   getKeepRoutes = function () {
@@ -119,10 +121,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   addCompareKey = function (key) {
-    if ($scope.combos.sel) {
-      console.log(add)
-    } else {
-      existingMBTAKey = key;
+    if (!$scope.scenarioCompare) {
+      if ($scope.combos.sel && !$scope.scenarioCompare) {
+        $scope.combos.all[$scope.combos.com].compareKey = key;
+      } else {
+        existingMBTAKey = key;
+      }
     }
   }
 
