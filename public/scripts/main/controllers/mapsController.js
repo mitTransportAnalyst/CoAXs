@@ -88,11 +88,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
         analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey) {
-          console.log('first SPR completed, received compareKey', compareKey);
           analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
           analystService.resetAll(map);
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
-            console.log('second SPR completed, received compareKey', key);
             $scope.loadProgress.val = 100;
             setTimeout(function () { $scope.$apply (function () { 
               $scope.loadProgress.vis = false;
