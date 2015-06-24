@@ -40,10 +40,10 @@ coaxsApp.service('analystService', function ($q, supportService) {
         if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 
       }
     } 
-    optionCurrent.scenario.modifications[0].routeId = allRoutes; console.log('keepRoutes' , allRoutes.length);
+    optionCurrent.scenario.modifications[0].routeId = allRoutes;
   }
 
-  this.singlePointRequest = function (marker, map, compareKey, cb) { 
+  this.singlePointRequest = function (marker, map, compareKey, cb) {
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,

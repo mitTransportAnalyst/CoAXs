@@ -65,30 +65,32 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.center_left.zoom = 11;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
-  $scope.markers_left  = {
-    main: {
-      lat       : $scope.center_left.lat,
-      lng       : $scope.center_left.lng,
-      draggable : true,
-    }
-  };
+  $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
+
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
-    // if (marker) {marker = {model : {lat: 42.3601, lng: 71.0589}}}
-    animateProgressBar();
-    leafletData.getMap('map_left').then(function(map) {
-      analystService.resetAll(map, getKeepRoutes());
-      analystService.singlePointRequest(marker, map, getCompareKey(), function (key) {
-        addCompareKey(key);
-      });
-      analystService.vectorRequest(marker, function (result) {
-        if (result) { 
-          $scope.loadProgress.val = 100;
-          setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
-        };
-      });
-    });
+    leftLeafletMarker = marker;
+    runMarkerQuerys(marker);
   });
+
+  runMarkerQuerys = function (marker) {
+    if (!marker) { marker = leafletMarker; }
+    if (marker) {
+      animateProgressBar();
+      leafletData.getMap('map_left').then(function(map) {
+        analystService.resetAll(map, getKeepRoutes());
+        analystService.singlePointRequest(marker, map, getCompareKey(), function (key) {
+          addCompareKey(key);
+        });
+        analystService.vectorRequest(marker, function (result) {
+          if (result) { 
+            $scope.loadProgress.val = 100;
+            setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
+          };
+        });
+      });
+    }
+  }
 
   getKeepRoutes = function () {
     var keepRoutes = [];
@@ -102,17 +104,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return keepRoutes;
   }
 
-  getCompareKey = function () {
+  getCompareKey = function () { console.log('xx', $scope.combos.all[$scope.combos.com]);
     if ($scope.combos.com && $scope.scenarioCompare) {
-      var selectedCorridors = $scope.combos.all[$scope.combos.com].sel;
-      console.log('$scope.combos.com && $scope.scenarioCompare');
+      if ($scope.combos.all[$scope.combos.com].compareKey) { return ($scope.combos.all[$scope.combos.com].compareKey) }
+      else { return undefined }
     } 
     else if (!$scope.combos.com && $scope.scenarioCompare) { 
-      console.log('NOT $scope.combos.com && $scope.scenarioCompare', existingMBTAKey);
+      console.log('Returning existingMBTAKey');
       return existingMBTAKey;
     }
     else {
-      console.log('return undef')
       return undefined;
     }
   }
@@ -307,7 +308,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.test = function(foo) {
     console.log('running test');
-    console.log(foo);
+    
+    // $scope.markers_left  = {};
+    // $scope.markers_left  = {
+    //   main: {
+    //     lat : 42.360543,
+    //     lng : -71.058169,
+    //     draggable : true,
+    //   }
+    // };
   }
 
 });
