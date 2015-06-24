@@ -109,6 +109,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   getCompareKey = function () {
     if ($scope.combos.com && $scope.scenarioCompare) {
       if ($scope.combos.all[$scope.combos.com].compareKey) { 
+        console.log('returning key for ', $scope.combos.all[$scope.combos.com]);
         return ($scope.combos.all[$scope.combos.com].compareKey) ;
       } else { 
         return undefined;
@@ -125,8 +126,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   addCompareKey = function (key) {
     if (!$scope.scenarioCompare) {
       if ($scope.combos.sel && !$scope.scenarioCompare) {
+        console.log('adding this to sel', key);
         $scope.combos.all[$scope.combos.sel].compareKey = key;
       } else {
+        console.log('adding this to mbta', key);
         existingMBTAKey = key;
       }
     }
