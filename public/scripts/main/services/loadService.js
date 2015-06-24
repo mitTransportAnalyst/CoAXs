@@ -13,7 +13,7 @@ coaxsApp.service('loadService', function ($http, supportService) {
           };
         },
         onEachFeature: function (feature, layer) {
-          layer.bindPopup('<b>' + feature.properties.LINE + ' Line</b> ' + feature.properties.ROUTE);
+          // layer.bindPopup('<b>' + feature.properties.LINE + ' Line</b> ' + feature.properties.ROUTE);
         }
       });
       cb(subwayRoutes);
