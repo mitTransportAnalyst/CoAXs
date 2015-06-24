@@ -78,61 +78,56 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     runMarkerQuerys();
   });
 
+
   runMarkerQuerys = function () {
+    var marker = $scope.markers_left.main
+
     animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
-      analystService.resetAll(map, getKeepRoutes());
-      analystService.singlePointRequest($scope.markers_left, map, getCompareKey(), function (key) {
-        addCompareKey(key);
-      });
-      analystService.vectorRequest($scope.markers_left, function (result) {
-        if (result) { 
-          $scope.loadProgress.val = 100;
-          setTimeout(function () { $scope.$apply (function () { $scope.loadProgress.vis = false }) }, 1000) 
-        };
-      });
+      
+      if ($scope.combos.com && $scope.scenarioCompare) {
+        analystService.resetAll(map, getKeepRoutes($scope.combos.com));
+        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (isoLayer, compareKey) {
+          analystService.resetAll(map, getKeepRoutes($scope.combos.sel));
+          analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
+            if (isoLayer) { isoLayer.redraw(); }
+            $scope.loadProgress.val = 100;
+            setTimeout(function () { $scope.$apply (function () { 
+              $scope.loadProgress.vis = false;
+              $scope.isochroneSliderOn = true; 
+            }) }, 1000) 
+          });
+        });
+      } else {
+        analystService.resetAll(map, getKeepRoutes($scope.combos.sel));
+        var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
+        analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
+          if (isoLayer) { isoLayer.redraw(); }
+          if (!$scope.combos.com && $scope.scenarioCompare) {  }
+        });
+        analystService.vectorRequest(marker, function (result) {
+          if (result) { 
+            $scope.loadProgress.val = 100;
+            setTimeout(function () { $scope.$apply (function () { 
+              $scope.loadProgress.vis = false;
+              $scope.isochroneSliderOn = true; 
+            }) }, 1000) 
+          };
+        });
+      }
     });
   }
 
-  getKeepRoutes = function () {
+  getKeepRoutes = function (selected) {
     var keepRoutes = [];
-    if ($scope.combos.sel) {
-      var selectedCorridors = $scope.combos.all[$scope.combos.sel].sel;
+    if ($scope.combos.all[selected]) {
+      var selectedCorridors = $scope.combos.all[selected].sel;
       for (corridor in selectedCorridors) {
         var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
         if (corridorData) { keepRoutes.push(corridorData.routeId); }
       }
     }
     return keepRoutes;
-  }
-
-  getCompareKey = function () {
-    if ($scope.combos.com && $scope.scenarioCompare) {
-      if ($scope.combos.all[$scope.combos.com].compareKey) { 
-        console.log('returning key for ', $scope.combos.all[$scope.combos.com]);
-        return ($scope.combos.all[$scope.combos.com].compareKey) ;
-      } else { 
-        return undefined;
-      }
-    } 
-    else if (!$scope.combos.com && $scope.scenarioCompare) { 
-      return existingMBTAKey;
-    }
-    else {
-      return undefined;
-    }
-  }
-
-  addCompareKey = function (key) {
-    if (!$scope.scenarioCompare) {
-      if ($scope.combos.sel && !$scope.scenarioCompare) {
-        console.log('adding this to sel', key);
-        $scope.combos.all[$scope.combos.sel].compareKey = key;
-      } else {
-        console.log('adding this to mbta', key);
-        existingMBTAKey = key;
-      }
-    }
   }
 
   animateProgressBar = function () {

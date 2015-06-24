@@ -45,17 +45,15 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   this.singlePointRequest = function (marker, map, compareKey, cb) { 
     analyst.singlePointRequest({
-      lat : marker.main.lat,
-      lng : marker.main.lng,
+      lat : marker.lat,
+      lng : marker.lng,
     }, compareKey, optionCurrent)
     .then(function (response) { 
-      if (isoLayer) {
-        isoLayer.redraw();
-      } else {
+      if (!isoLayer) {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      cb(response.results.key);
+      cb(isoLayer, response.results.key);
     })
     .catch(function (err) {
       console.log(err);
@@ -65,8 +63,8 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   this.vectorRequest = function (marker, cb) {
     analyst.vectorRequest({
-      lat : marker.main.lat,
-      lng : marker.main.lng,
+      lat : marker.lat,
+      lng : marker.lng,
     }, optionCurrent)
     .then(function (response) {
       vectorIsos = response.isochrones;
