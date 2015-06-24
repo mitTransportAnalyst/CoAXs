@@ -29,12 +29,13 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var currentIso = null;
 
 
-  this.resetAll = function (map, keepRoutes) {
+  this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
+  }
 
+  this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-    
     if (keepRoutes) {
       for (var i=0; i<allRoutes.length; i++) { 
         if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 

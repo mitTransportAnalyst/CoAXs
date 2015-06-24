@@ -86,9 +86,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function(map) {
       
       if ($scope.combos.com && $scope.scenarioCompare) {
-        analystService.resetAll(map, getKeepRoutes($scope.combos.com));
+        analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
         analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (isoLayer, compareKey) {
-          analystService.resetAll(map, getKeepRoutes($scope.combos.sel));
+          analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
+          analystService.resetAll(map);
           analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
             if (isoLayer) { isoLayer.redraw(); }
             $scope.loadProgress.val = 100;
@@ -99,7 +100,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           });
         });
       } else {
-        analystService.resetAll(map, getKeepRoutes($scope.combos.sel));
+        analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
+        analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
           if (isoLayer) { isoLayer.redraw(); }
