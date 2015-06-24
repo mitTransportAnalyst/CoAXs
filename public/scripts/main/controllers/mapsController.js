@@ -31,6 +31,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   var stopsLayer      = null;
   var routesLayer     = null;
   var poiUserPoints   = null;
+  var existingMBTAKey = 'a10fbead-b6cf-4a32-8135-2ea465bf7466';
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:12};
 
@@ -61,6 +62,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // Assembling right map
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.center_left   = angular.copy(center_global);
+  $scope.center_left.zoom = 11;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
   $scope.markers_left  = {
@@ -72,12 +74,13 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
-
-    // var keepRoutes = getKeepRoutes();
+    if (marker) {marker = {model : {lat: 42.3601, lng: 71.0589}}}
     animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map, getKeepRoutes());
-      analystService.singlePointRequest(marker, map);
+      analystService.singlePointRequest(marker, map, getCompareKey(), function (key) {
+        addCompareKey(key);
+      });
       analystService.vectorRequest(marker, function (result) {
         if (result) { 
           $scope.loadProgress.val = 100;
@@ -97,6 +100,28 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     }
     return keepRoutes;
+  }
+
+  getCompareKey = function () {
+    if ($scope.combos.com && $scope.scenarioCompare) {
+      var selectedCorridors = $scope.combos.all[$scope.combos.com].sel;
+      console.log('$scope.combos.com && $scope.scenarioCompare');
+    } 
+    else if (!$scope.combos.com && $scope.scenarioCompare) { 
+      console.log('NOT $scope.combos.com && $scope.scenarioCompare', existingMBTAKey);
+      return existingMBTAKey;
+    }
+    else {
+      return undefined;
+    }
+  }
+
+  addCompareKey = function (key) {
+    if ($scope.combos.sel) {
+      console.log(add)
+    } else {
+      existingMBTAKey = key;
+    }
   }
 
   animateProgressBar = function () {
@@ -214,6 +239,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       });
       $scope.combos.sel = comboId;
     } else {
+      console.log(geoJsonRight);
       leafletData.getMap('map_left').then(function(map) { map.removeLayer(geoJsonRight); });
       $scope.combos.sel = null;
       geoJsonRight      = null;
