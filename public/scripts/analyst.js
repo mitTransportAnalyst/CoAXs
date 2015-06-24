@@ -10189,12 +10189,14 @@ var Analyst = (function () {
      * analyst.updateSinglePointLayer().redraw()
      */
 
-    value: function updateSinglePointLayer() {
-      var keyVals = null;
-      if (this.key1) { keyVals = this.key1 + '/' + this.key }
-      else { keyVals = this.key }
+    value: function updateSinglePointLayer(key1, key2) {
+      if (key2 !== undefined) {
+        var keyVals = key2 + '/' + key1;
+      } else {
+        var keyVals = key1;
+      }
 
-      var url = '' + this.tileUrl + '/single/' + keyVals + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+      var url = this.tileUrl + '/single/' + keyVals + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
 
       if (!this.singlePointLayer) {
         debug('creating single point layer with url: ' + url);
@@ -10242,14 +10244,14 @@ var Analyst = (function () {
      *   })
      */
 
-    value: function singlePointRequest(point, key1) {
+    value: function singlePointRequest(point, compareKey) {
       var _this = this;
 
       var opts = arguments[2] === undefined ? {} : arguments[2];
 
-      if (!point)            return Promise.reject(new Error('Lat/lng point required.'));
+      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
       if (!this.shapefileId) return Promise.reject(new Error('Shapefile ID required'));
-      if (!this.graphId)     return Promise.reject(new Error('Graph ID required'));
+      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
 
       var options = Object.assign({}, this.requestOptions, opts);
       options.fromLat = options.toLat = point.lat;
@@ -10265,10 +10267,8 @@ var Analyst = (function () {
         debug('single point request successful');
         _this.key = data.key;
 
-        if (key1) { _this.key1 = key1 }
-
         return {
-          tileLayer: _this.updateSinglePointLayer(),
+          tileLayer: _this.updateSinglePointLayer(_this.key, compareKey),
           results: data
         };
       });
@@ -10344,12 +10344,11 @@ function post(url, data) {
     if (port !== undefined) params.port = port;
 
     debug('POST', params);
-    var req = _http2['default'].request(params, function (res) {
+    var req = _http2['default'].request(params, function (res) { 
       updateProgressBar(); // FOR PROGRRESS BAR
       res.on('error', reject);
       res.pipe((0, _concatStream2['default'])(function (data) { 
         updateProgressBar(); // FOR PROGRRESS BAR
-        // console.log(data);
         resolve(JSON.parse(data));
         updateProgressBar(); // FOR PROGRRESS BAR
       }));

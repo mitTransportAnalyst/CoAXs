@@ -71,10 +71,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   };
   // Left map listener
-  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
+  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
+
+    // var keepRoutes = getKeepRoutes();
     animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
-      analystService.resetAll(map);
+      analystService.resetAll(map, getKeepRoutes());
       analystService.singlePointRequest(marker, map);
       analystService.vectorRequest(marker, function (result) {
         if (result) { 
@@ -84,6 +86,18 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       });
     });
   });
+
+  getKeepRoutes = function () {
+    var keepRoutes = [];
+    if ($scope.combos.sel) {
+      var selectedCorridors = $scope.combos.all[$scope.combos.sel].sel;
+      for (corridor in selectedCorridors) {
+        var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
+        if (corridorData) { keepRoutes.push(corridorData.routeId); }
+      }
+    }
+    return keepRoutes;
+  }
 
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};

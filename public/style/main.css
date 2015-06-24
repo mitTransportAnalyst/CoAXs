@@ -8,7 +8,6 @@ body {
   -o-user-select      : none;
 }
 
-
 /*bs modification*/
 .btn {
   border-radius    : 0px;
@@ -161,7 +160,7 @@ label {
 
 .isochroneSlider {
   max-height : 33px;
-  overflow : hidden
+  overflow : hidden;
 }
 
 /*leaflet map*/

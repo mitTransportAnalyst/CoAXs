@@ -11,13 +11,10 @@ coaxsApp.service('analystService', function ($q, supportService) {
     showIso        : true,
   });
 
-  var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-
-  var optionsAll = [];
   var optionCurrent = {
     'scenario'      : {
       'id'            : 0,
-      'description'   : 'Existing MBTA only. All proposed routes banned.',
+      'description'   : 'Run from CoAXs SPA.',
       'modifications' : [{
         'type'      : 'remove-trip',
         'agencyId'  : 'd802657',
@@ -32,14 +29,23 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var currentIso = null;
 
 
-  this.resetAll = function (map) {
+  this.resetAll = function (map, keepRoutes) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
 
+    var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
+    
+    if (keepRoutes) {
+      for (var i=0; i<allRoutes.length; i++) { if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } }
+      optionCurrent.scenario.modifications[0].routeId = allRoutes;
+    } else {
+      optionCurrent.scenario.modifications[0].routeId = allRoutes;
+    }
+    console.log(optionCurrent.scenario.modifications[0].routeId);
   }
-// 'fd440584-25fc-4bf7-bb38-c46c9d62223f'
+
   this.singlePointRequest = function (marker, map, compareKey) {
-    if (!compareKey) { compareKey = null }
+      // compareKey = 'fd440584-25fc-4bf7-bb38-c46c9d62223f';
 
     analyst.singlePointRequest({
       lat : marker.model.lat,
