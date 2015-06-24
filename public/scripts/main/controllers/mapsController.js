@@ -74,7 +74,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
-    if (marker) {marker = {model : {lat: 42.3601, lng: 71.0589}}}
+    // if (marker) {marker = {model : {lat: 42.3601, lng: 71.0589}}}
     animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map, getKeepRoutes());
@@ -112,6 +112,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       return existingMBTAKey;
     }
     else {
+      console.log('return undef')
       return undefined;
     }
   }
@@ -239,7 +240,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       });
       $scope.combos.sel = comboId;
     } else {
-      console.log(geoJsonRight);
       leafletData.getMap('map_left').then(function(map) { map.removeLayer(geoJsonRight); });
       $scope.combos.sel = null;
       geoJsonRight      = null;

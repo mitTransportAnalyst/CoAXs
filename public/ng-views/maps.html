@@ -362,9 +362,9 @@
         </tr>
       </thead>
       
-      <tbody style="height:150px;overflow-y:scroll">
+      <tbody style="overflow-y:scroll">
 
-        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'" 
+        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
             ng-click     = "updateTargetFeature(variant.routeId)">
           <td>
             <i  class = "fa fa-square-o" 

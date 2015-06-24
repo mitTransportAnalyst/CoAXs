@@ -2,7 +2,7 @@ coaxsApp.service('leftService', function (leafletData) {
 
   this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
     leafletData.getMap('map_left').then(function(map) {
-      if (geoJsonRight) { map.removeLayer(geoJsonRight); }
+      if (geoJsonRight) { console.log('removing', geoJsonRight); map.removeLayer(geoJsonRight); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
         var currenCor   = layer.options.base.corName;

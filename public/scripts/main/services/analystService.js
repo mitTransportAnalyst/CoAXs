@@ -29,7 +29,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var currentIso = null;
 
 
-  this.resetAll = function (map, keepRoutes) { console.log('keepRoutes' , keepRoutes);
+  this.resetAll = function (map, keepRoutes) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
 
@@ -40,10 +40,10 @@ coaxsApp.service('analystService', function ($q, supportService) {
         if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 
       }
     } 
-    optionCurrent.scenario.modifications[0].routeId = allRoutes;
+    optionCurrent.scenario.modifications[0].routeId = allRoutes; console.log('keepRoutes' , allRoutes.length);
   }
 
-  this.singlePointRequest = function (marker, map, compareKey, cb) {
+  this.singlePointRequest = function (marker, map, compareKey, cb) { 
     analyst.singlePointRequest({
       lat : marker.model.lat,
       lng : marker.model.lng,
