@@ -35,26 +35,30 @@ coaxsApp.service('analystService', function ($q, supportService) {
   }
 
   this.modifyRoutes = function (keepRoutes) {
-    var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'b56b5fd', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-    if (keepRoutes) {
-      for (var i=0; i<allRoutes.length; i++) { 
-        if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 
-      }
-    } 
+    var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
+    // if (keepRoutes) {
+    //   for (var i=0; i<allRoutes.length; i++) { 
+    //     if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 
+    //   }
+    // } 
+    allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0 })
     optionCurrent.scenario.modifications[0].routeId = allRoutes;
   }
 
-  this.singlePointRequest = function (marker, map, compareKey, cb) { 
+  this.singlePointRequest = function (marker, map, compareKey, cb) {
     analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, compareKey, optionCurrent)
     .then(function (response) { 
-      if (!isoLayer) {
+      if (isoLayer) {
+        isoLayer.redraw(); 
+      }
+      else {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      cb(isoLayer, response.results.key);
+      cb(response.results.key);
     })
     .catch(function (err) {
       console.log(err);

@@ -87,11 +87,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
-        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (isoLayer, compareKey) {
-          analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
+        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey) {
+          console.log('first SPR completed, received compareKey', compareKey);
+          analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
           analystService.resetAll(map);
-          analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
-            if (isoLayer) { isoLayer.redraw(); }
+          analystService.singlePointRequest(marker, map, compareKey, function (key) {
+            console.log('second SPR completed, received compareKey', key);
             $scope.loadProgress.val = 100;
             setTimeout(function () { $scope.$apply (function () { 
               $scope.loadProgress.vis = false;
@@ -100,21 +101,19 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           });
         });
       } else {
-        analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
+        analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
-        analystService.singlePointRequest(marker, map, compareKey, function (isoLayer, key) {
-          if (isoLayer) { isoLayer.redraw(); }
-          if (!$scope.combos.com && $scope.scenarioCompare) {  }
-        });
-        analystService.vectorRequest(marker, function (result) {
-          if (result) { 
-            $scope.loadProgress.val = 100;
-            setTimeout(function () { $scope.$apply (function () { 
-              $scope.loadProgress.vis = false;
-              $scope.isochroneSliderOn = true; 
-            }) }, 1000) 
-          };
+        analystService.singlePointRequest(marker, map, compareKey, function (key) {
+          analystService.vectorRequest(marker, function (result) {
+            if (result) { 
+              $scope.loadProgress.val = 100;
+              setTimeout(function () { $scope.$apply (function () { 
+                $scope.loadProgress.vis = false;
+                $scope.isochroneSliderOn = true; 
+              }) }, 1000) 
+            };
+          });
         });
       }
     });
@@ -128,7 +127,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
         if (corridorData) { keepRoutes.push(corridorData.routeId); }
       }
-    }
+    };
     return keepRoutes;
   }
 
