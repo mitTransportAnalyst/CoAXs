@@ -203,7 +203,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
-    targetService.targetStops(stopsLayer, null, 0);
+    // targetService.targetStops(stopsLayer, null, 0);
   }
 
   $scope.updateTargetFeature = function (variant) { 

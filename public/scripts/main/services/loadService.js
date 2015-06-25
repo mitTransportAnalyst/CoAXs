@@ -1,4 +1,4 @@
-coaxsApp.service('loadService', function ($http, supportService) {
+coaxsApp.service('loadService', function ($http, targetService, supportService) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
@@ -42,12 +42,23 @@ coaxsApp.service('loadService', function ($http, supportService) {
               dashArray : 0,
             };
           },
+          onEachFeature: function (feature, layer) {
+            layer.on({click: function (e) {
+              var route = e.target.feature.properties;
+
+              var appElement = document.querySelector('[ng-app=coaxsApp]');
+              var appScope = angular.element(appElement).scope().$$childHead;
+
+              appScope.targetCorridor(route.corName);
+              appScope.tabnav = route.corName;
+              appScope.overview = true;
+            }});
+          },
           base: feature
         });
 
         geojsonList.push(routes[feature.routeId][feature.direction]);
       }
-
       cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
     });    
   }
