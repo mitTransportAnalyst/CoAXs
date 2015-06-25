@@ -186,7 +186,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       stopsLayer = stops;
     });
 
-    // setTimeout(runMarkerQuerys, 2000);
+    setTimeout(runMarkerQuerys, 2000);
   });
 
   // initialize imported data - MAP RIGHT
@@ -357,16 +357,30 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
 
   $scope.test = function(foo) {
-    console.log('running test');
-    
-    // $scope.markers_left  = {};
-    // $scope.markers_left  = {
-    //   main: {
-    //     lat : 42.360543,
-    //     lng : -71.058169,
-    //     draggable : true,
-    //   }
-    // };
+    window.confirm('OK to run auto create scenarios?');
+
+    var comboId = supportService.generateUUID();
+    $scope.combos.all[comboId] = {
+      name    : 'Baseline',
+      created : Date.now(),
+      sel     : {
+        'BH' : null,
+        'HP' : null,
+        'HD' : null,
+        'CT' : null,
+      }
+    };
+    var comboId = supportService.generateUUID();
+    $scope.combos.all[comboId] = {
+      name    : 'BH & HP Local',
+      created : Date.now(),
+      sel     : {
+        'BH' : $scope.variants['BH'].sel,
+        'HP' : $scope.variants['HP'].sel,
+        'HD' : $scope.variants['HD'].sel,
+        'CT' : $scope.variants['CT'].sel,
+      }
+    };
   }
 
 });
