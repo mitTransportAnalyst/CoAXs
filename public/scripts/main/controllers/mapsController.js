@@ -31,7 +31,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   var stopsLayer      = null;
   var routesLayer     = null;
   var poiUserPoints   = null;
-  var existingMBTAKey = 'a10fbead-b6cf-4a32-8135-2ea465bf7466';
+  var existingMBTAKey = null;
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:12};
 
@@ -103,6 +103,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key) {
+          if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
             if (result) { 
               $scope.loadProgress.val = 100;
