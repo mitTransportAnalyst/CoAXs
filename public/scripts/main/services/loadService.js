@@ -42,9 +42,6 @@ coaxsApp.service('loadService', function ($http, supportService) {
               dashArray : 0,
             };
           },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup('FOOBAR');
-          },
           base: feature
         });
 
