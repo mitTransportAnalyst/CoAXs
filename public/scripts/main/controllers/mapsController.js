@@ -140,7 +140,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
       }); 
-    }, 200)  
+    }, 250)  
   }
 
 
