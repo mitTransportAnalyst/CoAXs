@@ -103,6 +103,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           console.log(subjects);
+          d3Service.drawGraph(subjects.totpop);
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
             if (result) { 

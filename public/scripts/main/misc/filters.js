@@ -9,6 +9,17 @@ angular.module('coaxsFilters', [])
   };
 })
 
+.filter('avgWaitTime', function () {
+  return function(input) {
+    var min = Math.floor(input/2);
+    if (min < 10) { min = '0' + String(min) }
+    // var sec = input%2; console.log(sec);
+    var sec = Math.floor((input%2)*30);
+    if (sec < 10) { sec = '0' + String(sec) }
+    return min + ':' + sec
+  }
+})
+
 .filter('keyLength', function () {
   return function (input){
     if (angular.isObject(input)) {

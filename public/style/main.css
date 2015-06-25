@@ -156,6 +156,9 @@ label {
 .noTopMargin {
   margin-top : 0px;
 }
+.noBottomMargin {
+  margin-bottom : 0px;
+}
 
 
 .isochroneSlider {

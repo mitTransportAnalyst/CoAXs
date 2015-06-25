@@ -281,8 +281,8 @@
         <span ng-if="variant.all[variant.sel].station == 2">
           BRT station.
         </span>
-        Peak service operates at a {{ variant.all[variant.sel].peak.min }}:{{ variant.all[variant.sel].peak.sec | integerLength }} headway, while 
-        off-peak service operates at a {{ variant.all[variant.sel].offpeak.min }}:{{ variant.all[variant.sel].offpeak.sec | integerLength }} headway.
+        Peak service operates with an average wait time of {{ variant.all[variant.sel].peak.min | avgWaitTime }} minutes, while 
+        off-peak service operates with an average wait time of {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} minutes.
       </h6>
       <div class="input-group">
         <input type="text" class="form-control" ng-model="comboName" placeholder="Enter a name for this scenario...">
@@ -391,10 +391,10 @@
             </span>
           </td>
           <td>
-            {{ variant.peak.min }}:{{ variant.peak.sec | integerLength }} 
+            {{ variant.peak.min | avgWaitTime }}
           </td>
           <td>
-            {{ variant.offpeak.min }}:{{ variant.offpeak.sec | integerLength }} 
+            {{ variant.offpeak.min | avgWaitTime }}
           </td>
           <td class="text-right">
             <span ng-show="scenario[tabnav].routeId !== variant.routeId"
@@ -425,10 +425,10 @@
             </span>
           </td>
           <td>
-            {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} 
+            {{ scenario[tabnav].peak.min | avgWaitTime }}
           </td>
           <td>
-            {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
+            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
           </td>
           <td>
             <span class="badge pull-right" ng-click="createVar = !createVar">
@@ -450,25 +450,35 @@
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
     <div class="col-xs-12">
       <div class="row">
-        <div class="col-xs-6 text-center">
-          <h3 class="noTopMargin">
-            {{ scenario[tabnav].peak.min | integerLength }}:{{ scenario[tabnav].peak.sec | integerLength }} 
-            <small>Peak</small>
-            <input type="range" min="1" max="30" 
-                    ng-model="scenario[tabnav].peak.min"
-                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+        <div class="col-xs-4 text-right">
+          <h3 class="noTopMargin noBottomMargin">
+            {{ scenario[tabnav].peak.min | avgWaitTime }}
           </h3>
         </div>
-        <div class="col-xs-6 text-center">
-          <h3 class="noTopMargin">
-            {{ scenario[tabnav].offpeak.min | integerLength }}:{{ scenario[tabnav].offpeak.sec | integerLength }} 
-            <small>Off-Peak</small>
-            <input type="range" min="1" max="30" 
-                    ng-model="scenario[tabnav].offpeak.min"
-                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+        <div class="col-xs-4 text-center">
+          <h5 class="noTopMargin noBottomMargin">
+            Average Wait Time
+            <br><small><i class="fa fa-angle-double-left"></i> Peak Off-Peak <i class="fa fa-angle-double-right"></i></small>
+          </h5>
+        </div>
+        <div class="col-xs-4 text-left">
+          <h3 class="noTopMargin noBottomMargin">
+            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
           </h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <input type="range" min="1" max="30" 
+                  ng-model="scenario[tabnav].peak.min"
+                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+        </div>
+        <div class="col-xs-6">
+          <input type="range" min="1" max="30" 
+                  ng-model="scenario[tabnav].offpeak.min"
+                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
         </div>
       </div>
     </div>
