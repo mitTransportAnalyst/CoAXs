@@ -80,6 +80,19 @@
   </span>
 </div>
 
+<div class="topcol left">
+  <div class="topleft" style="background-color:#216C2A">
+    <h4>Scenario Scorecard</h4>
+    <div class="topinfo-body container">
+
+
+        <div class="svgDiv pull-right" style="height: 220px;">
+          <svg id="visualisation" width="350" height="200"></svg>
+        </div>
+
+    </div>
+  </div>
+</div>
 
 <div class="topcol right">
   <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard">
@@ -521,11 +534,9 @@
 </div>
 
 
-<div class="svgDiv" style="z-index:99999">
-  <svg id="visualisation" width="1000" height="500"></svg>
-</div>
 
 <div class="basecol">
+
   <div class="progress" ng-show="loadProgress.vis">
     <div class="progress-bar progress-bar-info progress-bar-striped active" 
           role="progressbar"  id="isosProgressBar"
@@ -534,7 +545,7 @@
     </div>
   </div>
 
-  <div class="row" style="background-color:blue" ng-show="!scenarioCompare && !loadProgress.vis">
+  <div class="row" ng-show="!scenarioCompare && !loadProgress.vis">
     <div class="col-xs-12 body pull-right isochroneSlider">
       <span style="width:15%;display:inline-block" class="pull-left">
         <h6>

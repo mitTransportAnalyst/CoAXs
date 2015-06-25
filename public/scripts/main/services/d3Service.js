@@ -2,14 +2,14 @@ coaxsApp.service('d3Service', function () {
 
   this.drawGraph = function (data) {
 
-    var vis = d3.select("#visualisation"),
-      WIDTH = 1000,
-      HEIGHT = 500,
+    var vis   = d3.select("#visualisation"),
+      WIDTH   = 350,
+      HEIGHT  = 200,
       MARGINS = {
-        top: 20,
-        right: 20,
-        bottom: 20,
-        left: 50
+        top    : 20,
+        right  : 20,
+        bottom : 20,
+        left   : 50
       },
       xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function (d) {
           return d.x;
@@ -60,9 +60,7 @@ coaxsApp.service('d3Service', function () {
 
   vis.append("svg:path")
     .attr("d", lineFunc(data))
-    .attr("stroke", "blue")
-    .attr("stroke-width", 2)
-    .attr("fill", "none");
+    .attr("class", "line")
 
   }
 

@@ -1,22 +1,19 @@
-.axis path, .axis line
-{
-    fill: none;
-    stroke: #777;
-    shape-rendering: crispEdges;
+.axis path, .axis line {
+  fill: none;
+  stroke: #FFF;
+  shape-rendering: crispEdges;
 }
 
-.axis text
-{
-    font-family: 'Arial';
-    font-size: 13px;
-}
-.tick
-{
-    stroke-dasharray: 1, 2;
-}
-.bar
-{
-    fill: FireBrick;
+.axis text {
+  font-family: 'Arial';
+  font-size: 10px;
+  fill: #FFF;
 }
 
-   
+.line {
+  fill: none;
+  stroke: #FFF;
+  stroke-width: 2px;
+}
+
+ 

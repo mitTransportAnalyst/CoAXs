@@ -53,12 +53,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      if (!compareKey) {
+      if (!compareKey) { console.log(response.results.data);
         var subjects = {
           workers_low  : 'smart_location_database.e_lowwagew',
           workers_med  : 'smart_location_database.e_medwagew',
           workers_high : 'smart_location_database.e_hiwagewk',
-          jobs         : 'smart_location_database.d2r_jobpop',
+          jobs_tot     : 'smart_location_database.emptot',
           hh_zerocar   : 'smart_location_database.autoown0',
           totpop       : 'smart_location_database.totpop10',
         }
