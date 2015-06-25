@@ -102,7 +102,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
-          console.log(subjects);
           d3Service.drawGraph(subjects.jobs_tot);
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
@@ -288,6 +287,43 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       var time     = scorecardService.generateTimeScore(routesLayer, routeId);
       var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
       $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
+    }
+  }
+
+  $scope.updateScenarioScorecard = function (id) {
+    if (!id) {
+      $scope.scenarioScore = scorecardService.generateEmptyScore();
+    } else {
+
+
+      var allCorKeys = $scope.combos.all[id].sel;
+      var busTot = {count: 0, cost: 0};
+      var lenTot = {count: 0, cost: 0};
+      var vehTot = {count: 0, cost: 0};
+
+      for (cor in allCorKeys) {
+        var selCor = $scope.variants[cor].all[allCorKeys[cor]];
+
+        if (selCor) {
+          var bus       = scorecardService.generateBusScore(stopsLayer, selCor.station, selCor.routeId);
+          busTot.count += bus.count;
+          busTot.cost  += bus.cost;
+
+          var length    = scorecardService.generateLengthScore(routesLayer, selCor.routeId);
+          lenTot.count += length.count;
+          lenTot.cost  += length.cost;
+          
+          var frequencies = {
+            peak : selCor.peak.min*60 + selCor.peak.sec,
+            off  : selCor.offpeak.min*60 + selCor.offpeak.sec,
+          };
+
+          var vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, selCor.routeId);
+          vehTot.count += vehicles.count;
+          vehTot.cost  += vehicles.cost;
+        }
+      }
+      $scope.scenarioScore = { bus: busTot, length: lenTot, vehicles: vehTot };
     }
   }
 

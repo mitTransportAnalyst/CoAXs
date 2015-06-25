@@ -81,12 +81,55 @@
 </div>
 
 <div class="topcol left">
-  <div class="topleft" style="background-color:#216C2A" >
+  <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
     <h4>Scenario Scorecard</h4>
     <div class="topinfo-body container" style="min-height:250px">
 
-        <div class="pull-left" style="margin-right: 350px;">
-          <h2>Foobar aklsjksdjklas dkljsalskj</h2>
+        <div class="pull-left" style="width: 100%; padding-right: 325px;">
+          <div class="row">
+            <div class="col-xs-5">
+              <h3>
+                <i class="fa fa-dot-circle-o"></i> {{ scenarioScore.bus.count }}
+                <h6>Bus Stops</h6>
+              </h3>
+            </div>
+            <div class="col-xs-6">
+              <h3>
+                <i class="fa fa-usd"></i> {{ scenarioScore.bus.cost/1000000 | number:2 }}M
+                <h6>All Stations</h6>
+              </h3>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-5">
+              <h3>
+                <i class="fa fa-road"></i> {{ scenarioScore.length.count | number:1 }}
+                <h6>Miles</h6>
+              </h3>
+            </div>
+            <div class="col-xs-6">
+              <h3>
+                <i class="fa fa-usd"></i> {{ scenarioScore.length.cost/1000000 | number:2 }}M
+                <h6>All Lanes</h6>
+              </h3>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-5">
+              <h3>
+                <i class="fa fa-bus"></i> {{ scenarioScore.vehicles.count }}
+                <h6>Vehicles</h6>
+              </h3>
+            </div>
+            <div class="col-xs-6">
+              <h3>
+                <i class="fa fa-usd"></i> {{ scenarioScore.vehicles.cost/1000000 | number:2 }}M
+                <h6>Operations</h6>
+              </h3>
+            </div>
+          </div>
         </div>
 
         <div style="height: 250px; position: absolute; right: 0px">
@@ -101,7 +144,7 @@
 <div class="topcol right">
   <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard">
     <h4>
-      Scorecard
+      Route Scorecard
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
     <div class="topinfo-body container">
@@ -607,7 +650,7 @@
       </span>
 
       <span class="pull-right">
-        <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard">
+        <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
           Scorecard
         </span>
 

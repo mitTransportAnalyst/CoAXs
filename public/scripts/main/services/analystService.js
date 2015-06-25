@@ -53,7 +53,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      if (!compareKey) { console.log(response.results.data);
+      if (!compareKey) { 
         var subjects = {
           workers_low  : 'smart_location_database.e_lowwagew',
           workers_med  : 'smart_location_database.e_medwagew',
