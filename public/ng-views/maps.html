@@ -81,13 +81,14 @@
 </div>
 
 <div class="topcol left">
-  <div class="topleft" style="background-color:#216C2A">
+  <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
     <h4>Scenario Scorecard</h4>
     <div class="topinfo-body container">
 
 
-        <div class="svgDiv pull-right" style="height: 220px;">
+        <div class="svgDiv pull-right" style="height: 250px;">
           <svg id="visualisation" width="350" height="200"></svg>
+          <center><h6>Here is a title</h6></center>
         </div>
 
     </div>
@@ -623,7 +624,7 @@
       </thead>
       <tbody>
         <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'" 
-            ng-click  = "updateTargetFeature(variant)">
+            ng-click  = "scenarioScorecard = !scenarioScorecard">
           <td>
             <i  class = "fa fa-square-o" 
                 ng-show="combos.sel !== variant._key" 

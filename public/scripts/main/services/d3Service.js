@@ -38,6 +38,7 @@ coaxsApp.service('d3Service', function () {
         .orient("left")
         .tickSubdivide(true);
 
+    vis.selectAll("*").remove();
 
     vis.append("svg:g")
       .attr("class", "x axis")
