@@ -202,12 +202,15 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
-    targetService.targetStops(stopsLayer, null);
+    targetService.targetStops(stopsLayer, null, 0);
   }
 
-  $scope.updateTargetFeature = function (routeId) {
+  $scope.updateTargetFeature = function (variant) { console.log(variant);
+    var routeId = variant ? variant.routeId : undefined
+    var station = variant ? variant.station : 0;
     targetService.targetCorridor(routesLayer, routeId);
-    targetService.targetStops(stopsLayer, routeId);
+    console.log(routeId);
+    targetService.targetStops(stopsLayer, routeId, station);
     if (routeId) {
       $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {

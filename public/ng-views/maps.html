@@ -192,7 +192,7 @@
         There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} path alternatives along this corridor. {{ variants[tabnav].all | keyLength }} variations, based off of these route path alternatives, have been created this session. They are: 
         <span ng-repeat="(key, variant) in variants[tabnav].all">
           <span class="badge"  style="color: #{{ targetFeature.properties.routeColor }}" 
-                ng-click="updateTargetFeature(variant.routeId)">
+                ng-click="updateTargetFeature(variant)">
             {{ variant.name }}
           </span>
         </span>
@@ -362,10 +362,10 @@
         </tr>
       </thead>
       
-      <tbody style="overflow-y:scroll">
+      <tbody>
 
         <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
-            ng-click     = "updateTargetFeature(variant.routeId)">
+            ng-click     = "updateTargetFeature(variant)">
           <td>
             <i  class = "fa fa-square-o" 
                 ng-show="variants[tabnav].sel !== variant._key" 
@@ -599,7 +599,7 @@
       </thead>
       <tbody>
         <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'" 
-            ng-click  = "updateTargetFeature(variant.routeId)">
+            ng-click  = "updateTargetFeature(variant)">
           <td>
             <i  class = "fa fa-square-o" 
                 ng-show="combos.sel !== variant._key" 

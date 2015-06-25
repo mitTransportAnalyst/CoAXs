@@ -1,6 +1,6 @@
 coaxsApp.service('targetService', function (leafletData) {
   
-  var stopicon_base = L.Icon.extend({
+  var stopicon_off = L.Icon.extend({
     options : {
       iconUrl      :     'public/imgs/stop.png',
       iconSize     :     [16, 18],
@@ -9,22 +9,24 @@ coaxsApp.service('targetService', function (leafletData) {
       className    :     'icon-off',
     }
   });
-  var stopicon_on = L.Icon.extend({
-    options : {
-      iconUrl      :     'public/imgs/stop.png',
-      iconSize     :     [16, 18],
-      iconAnchor   :     [8, 18],
-      popupAnchor  :     [0, -15],
-      className    :     'icon-on',
-    }
-  });
 
-	this.targetStops = function (stopsLayer, id) {
+
+	this.targetStops = function (stopsLayer, id, stationType) {
     stopsLayer.eachLayer(function (marker) {
       if (marker.options.base.stopId.includes(id)) {
+        var station = 'public/imgs/stop' + stationType + '.png';
+        var stopicon_on = L.Icon.extend({
+          options : {
+            iconUrl      :     station,
+            iconSize     :     [16, 18],
+            iconAnchor   :     [8, 18],
+            popupAnchor  :     [0, -15],
+            className    :     'icon-on',
+          }
+        });
         marker.setIcon(new stopicon_on());
       } else {
-        marker.setIcon(new stopicon_base());
+        marker.setIcon(new stopicon_off());
       }
     });
 	  return stopsLayer
