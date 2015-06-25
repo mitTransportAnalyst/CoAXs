@@ -64,7 +64,9 @@ coaxsApp.service('analystService', function ($q, supportService) {
         }
         for (key in subjects) {
           var id = subjects[key];
-          subjects[key] = response.results.data[id].pointEstimate.counts;
+          var tempArray = response.results.data[id].pointEstimate.counts;
+          for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] }
+          subjects[key] = tempArray.map(function(count, i) { return { x : i, y : count } })
         }
         cb(response.results.key, subjects);
       } else {
