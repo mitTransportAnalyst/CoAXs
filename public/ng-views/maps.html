@@ -1,5 +1,5 @@
 <div class="topnav">
-  <div class="fa-stack" ng-click="test()">
+  <div class="fa-stack" ng-click="managerView=true">
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
   </div>
@@ -81,7 +81,7 @@
 </div>
 
 <div class="topcol left">
-  <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
+  <div class="topleft" ng-show="scenarioScorecard">
     <h4>
       Scenario Scorecard
       <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard=false"></i>
@@ -140,6 +140,18 @@
           <center><h6>Accessibility to all Job Types</h6></center>
         </div>
 
+    </div>
+  </div>
+
+  <div class="topleft topinfo" ng-show="managerView">
+    <h4>
+      Manger Controls
+      <i class="fa fa-times-circle-o pull-right" ng-click="managerView=false"></i>
+    </h4>
+    <div class="topinfo-body container">
+      <h6>
+        Manage project view.
+      </h6>
     </div>
   </div>
 </div>
