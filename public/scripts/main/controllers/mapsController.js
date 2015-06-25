@@ -140,7 +140,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
       }); 
-    }, 250)  
+    }, 300)  
   }
 
 
@@ -182,7 +182,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       stopsLayer = stops;
     });
 
-    setTimeout(runMarkerQuerys, 2000);
+    // setTimeout(runMarkerQuerys, 2000);
   });
 
   // initialize imported data - MAP RIGHT

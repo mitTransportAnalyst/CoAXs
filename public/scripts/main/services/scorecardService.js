@@ -70,14 +70,24 @@ coaxsApp.service('scorecardService', function () {
     var length = {
       count  : 0,
       dist   : {
-        non  : 0.75,
-        ded  : 0.25,
+        non  : 0,
+        ded  : 0,
       },
       cost   : 0,
     };
 
     routesLayer.eachLayer(function (route) {
       if (route.options.base.routeId == id) {
+        console.log(route.options.base);
+        var base = route.options.base;
+        for (var i=0; i<base.priority.length; i++) {
+          var diff = base.priority[i][1] - base.priority[i][0];
+          length.dist.ded += base.length*diff;
+          length.dist.non += base.length-(base.length*diff);
+        }
+        var totalDist = length.dist.non + length.dist.ded;
+        length.dist.non = length.dist.non/totalDist;
+        length.dist.ded = length.dist.ded/totalDist;
         length.count += route.options.base.length;
       }
     });
