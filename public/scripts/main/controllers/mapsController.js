@@ -94,7 +94,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
             $scope.loadProgress.val = 100;
             setTimeout(function () { $scope.$apply (function () { 
               $scope.loadProgress.vis = false;
-              $scope.isochroneSliderOn = true; 
             }) }, 1000) 
           });
         });
@@ -109,7 +108,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
               $scope.loadProgress.val = 100;
               setTimeout(function () { $scope.$apply (function () { 
                 $scope.loadProgress.vis = false;
-                $scope.isochroneSliderOn = true; 
               }) }, 1000) 
             };
           });
