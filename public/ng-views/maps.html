@@ -602,11 +602,18 @@
       <span ng-show="!scenarioCompare">
         Select a scenario to perform a single point analysis.
       </span>
-      <span class="badge pull-right" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
-        Toggle Scenario Compare <i class="fa fa-toggle-on"></i>
-      </span>
-      <span class="badge pull-right" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
-        Toggle Scenario Compare <i class="fa fa-toggle-off"></i>
+
+      <span class="pull-right">
+        <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard">
+          Scorecard
+        </span>
+
+        <span class="badge" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
+          Toggle Compare <i class="fa fa-toggle-on"></i>
+        </span>
+        <span class="badge" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
+          Toggle Compare <i class="fa fa-toggle-off"></i>
+        </span>
       </span>
     </h5>
 
@@ -623,15 +630,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'" 
-            ng-click  = "scenarioScorecard = !scenarioScorecard">
+        <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'">
           <td>
             <i  class = "fa fa-square-o" 
                 ng-show="combos.sel !== variant._key" 
-                ng-click="updateLeftRoutes(variant._key); combos.com=null"></i>
+                ng-click="updateLeftRoutes(variant._key); combos.com=null; $event.stopPropagation()"></i>
             <i  class = "fa fa-check-square" 
                 ng-show="combos.sel == variant._key"
-                ng-click="updateLeftRoutes(); combos.com=null"></i>
+                ng-click="updateLeftRoutes(); combos.com=null; $event.stopPropagation()"></i>
           </td>
           <td>{{ variant.name }}</td>
           <td>
@@ -677,10 +683,10 @@
           <td ng-show="scenarioCompare && combos.sel !== variant._key">
             <i  class = "fa fa-circle-o" 
                 ng-show="combos.com !== variant._key" 
-                ng-click="combos.com=variant._key"></i>
+                ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
             <i  class = "fa fa-check-circle" 
                 ng-show="combos.com == variant._key"
-                ng-click="combos.com=null"></i>
+                ng-click="combos.com=null; $event.stopPropagation()"></i>
           </td>
           <td ng-show="!scenarioCompare || combos.sel == variant._key">
             <i class="fa fa-ban"></i>

@@ -24,6 +24,10 @@ body {
   cursor           : pointer;
   opacity          : 0.8;
 }
+.badgeScorecard {
+  color : #216C2A;
+  background-color: #FFF;
+}
 button {
   cursor           : pointer;
 }
