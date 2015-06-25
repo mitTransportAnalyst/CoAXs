@@ -101,7 +101,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
-        analystService.singlePointRequest(marker, map, compareKey, function (key) {
+        analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
+          console.log(subjects);
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
             if (result) { 

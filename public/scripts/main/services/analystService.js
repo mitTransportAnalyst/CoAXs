@@ -36,11 +36,6 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-    // if (keepRoutes) {
-    //   for (var i=0; i<allRoutes.length; i++) { 
-    //     if (allRoutes[i] in keepRoutes) { allRoutes.splice(i,1); } 
-    //   }
-    // } 
     allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0 })
     optionCurrent.scenario.modifications[0].routeId = allRoutes;
   }
@@ -58,7 +53,23 @@ coaxsApp.service('analystService', function ($q, supportService) {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      cb(response.results.key);
+      if (!compareKey) {
+        var subjects = {
+          workers_low  : 'smart_location_database.e_lowwagew',
+          workers_med  : 'smart_location_database.e_medwagew',
+          workers_high : 'smart_location_database.e_hiwagewk',
+          jobs         : 'smart_location_database.d2r_jobpop',
+          hh_zerocar   : 'smart_location_database.autoown0',
+          totpop       : 'smart_location_database.totpop10',
+        }
+        for (key in subjects) {
+          var id = subjects[key];
+          subjects[key] = response.results.data[id].pointEstimate.counts;
+        }
+        cb(response.results.key, subjects);
+      } else {
+        cb(response.results.key, null);
+      }
     })
     .catch(function (err) {
       console.log(err);
