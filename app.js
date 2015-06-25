@@ -2,8 +2,8 @@ var express = require('express');
 var app     = express();
 
 
-var morgan           = require('morgan');
-var bodyParser       = require('body-parser');
+var morgan     = require('morgan');
+var bodyParser = require('body-parser');
 
 
 app.use(morgan('dev'));
@@ -60,6 +60,23 @@ app.get('/geojson/proposed', function (req, res) {
     }
   };
   res.sendFile('proposed.geojson', options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+})
+
+app.get('/geojson/proposed_priority', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  res.sendFile('priority.geojson', options, function (err) {
     if (err) {
       console.log('sendFile error:', err);
       res.status(err.status).end();

@@ -158,7 +158,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       subwaysLayer = subways;
     });
 
-    loadService.getProposedRoutes(function(data) {
+    loadService.getProposedPriorityLanes(function (priorityLanes) {
+      priorityLanes.addTo(map);
+    })
+
+    loadService.getProposedRoutes(function (data) {
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 

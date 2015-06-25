@@ -20,6 +20,36 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     });    
   }
 
+  this.getProposedPriorityLanes = function (cb) {
+    $http.get('/geojson/proposed_priority')
+    .success(function (data, status) {
+      var geojsonList   = [];
+      var routes = {};
+
+      for (var i = 0; i < data.features.length; i++) {
+        var feature = data.features[i].properties;
+        feature['length'] = supportService.getLength(data.features[i].geometry);
+
+        if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
+        var color = '#' + feature.routeColor;
+        routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
+          style: function (feature) {
+            return {
+              color     : color,
+              weight    : 10,
+              opacity   : 0.1,
+              dashArray : 0,
+            };
+          },
+          base: feature
+        });
+
+        geojsonList.push(routes[feature.routeId][feature.direction]);
+      }
+      cb(L.layerGroup(geojsonList));
+    });
+  }
+
   this.getProposedRoutes = function (cb) {
     $http.get('/geojson/proposed')
     .success(function (data, status) {
