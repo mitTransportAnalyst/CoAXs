@@ -2,7 +2,7 @@ coaxsApp.service('d3Service', function () {
 
   this.drawGraph = function (data) {
 
-    var vis   = d3.select("#visualisation"),
+    var vis   = d3.select("#compPlot"),
       WIDTH   = 350,
       HEIGHT  = 200,
       MARGINS = {
@@ -43,12 +43,25 @@ coaxsApp.service('d3Service', function () {
     vis.append("svg:g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-      .call(xAxis);
+      .call(xAxis)
+        .append("text")
+        .attr("y", -7)
+        .attr("x", 190)
+        // .attr("dy", ".71em")
+        .style("text-anchor", "middle")
+        .text("Minutes");
 
     vis.append("svg:g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-      .call(yAxis);
+      .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 5)
+        .attr("x", -100)
+        .attr("dy", ".71em")
+        .style("text-anchor", "middle")
+        .text("Count");
 
     var lineFunc = d3.svg.line()
     .x(function (d) {
