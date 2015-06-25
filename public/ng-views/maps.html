@@ -82,7 +82,10 @@
 
 <div class="topcol left">
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
-    <h4>Scenario Scorecard</h4>
+    <h4>
+      Scenario Scorecard
+      <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard=false"></i>
+    </h4>
     <div class="topinfo-body container" style="min-height:250px">
 
         <div class="pull-left" style="width: 100%; padding-right: 325px;">
@@ -594,15 +597,15 @@
 
   <div class="row" ng-show="!scenarioCompare && !loadProgress.vis">
     <div class="col-xs-12 body pull-right isochroneSlider">
-      <span style="width:15%;display:inline-block" class="pull-left">
+      <span style="width:25%;display:inline-block" class="pull-left">
         <h6>
-          Isochrones
+          Travel Time Bounds
         </h6>
       </span>
-      <span style="width:70%" class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
+      <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
         <i class="fa fa-minus-square" 
             ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
-        <span style="width:70%;display:inline-block">
+        <span style="width:50%;display:inline-block">
           <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
             ng-model="vectorIsos.val"
             ng-disabled="!showVectorIsosOn"
@@ -611,7 +614,7 @@
         <i class="fa fa-plus-square" 
             ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
       </span>
-      <span style="max-width:20%;display:inline-block" class="pull-right">
+      <span style="max-width:30%;display:inline-block" class="pull-right">
           <h6 ng-click="toggleShowVectorIsos()">
             {{ vectorIsos.val*5 | minuteConverter }}
             <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
