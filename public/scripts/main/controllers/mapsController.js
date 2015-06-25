@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, loadService, targetService, scorecardService, leftService, supportService) {
+coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
   // Management for current scenario
   var scenarioBase = {
