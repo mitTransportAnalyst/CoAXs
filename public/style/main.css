@@ -193,7 +193,7 @@ nav div.section {
 
 .basecol_POI {
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 28%;
   left             : 0%;
   width            : 4%;
@@ -210,7 +210,7 @@ nav div.section {
 
 .basecol_filter {
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 38%;
   left             : 4.2%;
   width            : 13%;
@@ -226,7 +226,7 @@ nav div.section {
 
 .basecol_scenarioTable {
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 38%;
   left             : 17.4%;
   width            : 32.6%;
@@ -240,7 +240,7 @@ nav div.section {
 
 .basecol_routeSelector{
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 38%;
   left             : 50.2%;
   width            : 2.5%;
@@ -255,10 +255,10 @@ nav div.section {
 
 .basecol_routeTable{
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 38%;
   left             : 52.9%;
-  width            : 23.4%;
+  width            : 24.4%;
   bottom           : 0px;
   background-color : yellow;
   color            : black;
@@ -269,10 +269,10 @@ nav div.section {
 
 .basecol_serviceEditor {
   position         : absolute;
-  min-height: 22%;
+  min-height: 23%;
   max-height: 38%;
-  left             : 76.5%;
-  width            : 23.5%;
+  left             : 77.5%;
+  width            : 22.5%;
   bottom           : 0px;
   background-color : yellow;
   color            : black;
