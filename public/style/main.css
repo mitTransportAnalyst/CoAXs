@@ -43,7 +43,7 @@ body {
   cursor           : pointer;
   opacity          : 1;
   margin-left      : 5px;
-  font-size        : 1.4em;
+  font-size        : 1.2em;
 }
 
 /* Reduce SVG size in buttons */
@@ -66,6 +66,11 @@ button {
 .btn-savealt {
   background-color : #1fa67a;
 }
+
+.input-group-btn {
+  font-size: 1em;
+}
+
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
   color            : #FFF;
   border-left-width: 0px;
@@ -159,10 +164,10 @@ nav div.section {
 /* BOTTOM-UP CONTROL PANEL MODULES */
 
 .controlModules {
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 .table{
-  font-size: .9em;
+  font-size: .8em;
 }
 
 .iconContainer {
@@ -173,12 +178,12 @@ nav div.section {
   color            : black;
   margin-bottom: 0px;
   opacity: 1;
-  padding: 5px;
+  padding: 4px;
 
 }
 
 .destinationIcon {
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 .caption{
@@ -188,7 +193,7 @@ nav div.section {
 
 .basecol_POI {
   position         : absolute;
-  min-height: 20%;
+  min-height: 22%;
   max-height: 28%;
   left             : 0%;
   width            : 4%;
@@ -205,7 +210,7 @@ nav div.section {
 
 .basecol_filter {
   position         : absolute;
-  min-height: 20%;
+  min-height: 22%;
   max-height: 38%;
   left             : 4.2%;
   width            : 13%;
@@ -221,7 +226,7 @@ nav div.section {
 
 .basecol_scenarioTable {
   position         : absolute;
-  min-height: 20%;
+  min-height: 22%;
   max-height: 38%;
   left             : 17.4%;
   width            : 32.6%;
@@ -235,8 +240,8 @@ nav div.section {
 
 .basecol_routeSelector{
   position         : absolute;
-  min-height: 20%;
-  max-height: 18%;
+  min-height: 22%;
+  max-height: 38%;
   left             : 50.2%;
   width            : 2.5%;
   bottom           : 0px;
@@ -250,10 +255,10 @@ nav div.section {
 
 .basecol_routeTable{
   position         : absolute;
-  min-height: 20%;
+  min-height: 22%;
   max-height: 38%;
   left             : 52.9%;
-  width            : 26.4%;
+  width            : 23.4%;
   bottom           : 0px;
   background-color : yellow;
   color            : black;
@@ -264,10 +269,10 @@ nav div.section {
 
 .basecol_serviceEditor {
   position         : absolute;
-  min-height: 20%;
-  max-height: 18%;
-  left             : 79.5%;
-  width            : 20.5%;
+  min-height: 22%;
+  max-height: 38%;
+  left             : 76.5%;
+  width            : 23.5%;
   bottom           : 0px;
   background-color : yellow;
   color            : black;
@@ -304,6 +309,7 @@ label {
   overflow: hidden;
   margin-bottom: 0px;
 }
+
 .timeAdjust {
   border-radius    : 50%;
 }
@@ -316,10 +322,11 @@ label {
 
 
 .isochroneSlider {
-  height : 20px;
-  width: 350px;
-  overflow : hidden;
-  margin-bottom: 15px
+  height : 30px;
+  width: 300px;
+  overflow : auto;
+  margin-bottom: 15px;
+  border-color: yellow;
 }
 
 /*leaflet map*/

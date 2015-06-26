@@ -23,15 +23,15 @@
 </div>
 
 
-<!-- <div class="topnav right">
+<div class="topnav right">
   <div class="fa-stack" ng-click="saveCombo=true">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-arrow-left fa-stack-1x fa-inverse"></i>
   </div>
-  <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
+  <!-- <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-  </div>
+  </div> -->
 
   <span ng-show="dotSelect">
     <span class="fa-stack" 
@@ -78,7 +78,7 @@
       </i>
     </span>
   </span>
-</div> -->
+</div>
 
 <div class="topcol left">
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
@@ -157,7 +157,7 @@
 </div>
 
 <div class="topcol right">
-  <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard">
+  <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard" >
     <h4>
       Route Scorecard
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
@@ -333,6 +333,8 @@
       </div>
     </div>
   </div>
+</div> 
+  <div class="topcol left">
   <div class="topleft saveAlt" ng-show="saveCombo">
     <h4>
       Save this scenario alternative
@@ -376,7 +378,8 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+
 
 
 
@@ -466,21 +469,21 @@
   
   <div class="col-xs-12 body">
 
-    <h5 ng-show="variants[tabnav].sel">
+    <h6 ng-show="variants[tabnav].sel">
       <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=true">
+            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
         Route Scorecard
       </span>
 
       <span style="font-size: 1em">
         {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
       </span>
-    </h5>
+    </h6>
 
     <span ng-show="!variants[tabnav].sel" style="color:red">
-      <h5>
+      <h6>
         <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
-      </h5>
+      </h6>
     </span>
 
 
@@ -585,7 +588,7 @@
   </div>
 </div>
   <div class="basecol_serviceEditor col-md-3">
-   <h5> SERVICE FRQUENCY </h5>
+   <h5> AVG WAIT TIME </h5>
   <!-- <div class="col-xs-12 body" ng-show="createVar"> -->
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
     <div class="col-xs-12">
@@ -596,8 +599,8 @@
           </h3>
         </div>
         <div class="col-xs-4 text-center">
-          <h5 class="noTopMargin noBottomMargin">
-            Average Wait Time
+<!--           <h5 class="noTopMargin noBottomMargin">
+ -->         
             <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
           </h5>
         </div>
@@ -621,8 +624,8 @@
                             updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
         </div>
       </div>
-    </div>
-
+    
+      <h5> STATION TYPE </h5>
       <div class="btn-group btn-group-justified">
         <label  class="btn btn-info" btn-radio="0"
                 ng-model="scenario[tabnav].station" 
@@ -681,6 +684,7 @@
 
 </div>
 
+
 <!--DESTINATION & TIME FILTER --> 
 <div class="basecol_filter col-md-3 ">
 
@@ -692,12 +696,12 @@
     </div>
   </div>
   <h5 style="margin-bottom: -7px">
-    MAX TRAVEL TIME: 
+    TRAVEL TIME: 
    <span ng-click="toggleShowVectorIsos()">
             {{ vectorIsos.val*5 | minuteConverter }}
             <span class="badge">
             <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
-            <i class="fa fa-eye-slash fa" ng-show="!showVectorIsosOn"></i>
+            <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
             </span>
     </span>
   <h5>
@@ -729,7 +733,7 @@
       </span> -->
     </div>
 
-<h5 style="margin-bottom: -25px"> DESTINATIONS </h5> 
+<h5 style="margin-bottom: -20px"> DESTINATIONS </h4> 
   <br>
   <label class="btn iconContainer" btn-radio="1"
                 ng-model="" 
@@ -755,10 +759,10 @@
         <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
        <!--  <figcaption class="caption">K1-12</figcaption> -->
   </label>
-
+</h5>
 <br>
 
-<h5 style="margin-bottom: -25px"> MODE </h5> 
+<h5 style="margin-bottom: -20px"> MODE </h4> 
   <br>
   <label class="btn iconContainer" btn-radio="1"
                 ng-model="" 
@@ -780,7 +784,7 @@
                 ng-click="">
          <i class="fa fa-ship destinationIcon"></i>
   </label>
-
+</h5>
 </div>
 
 
@@ -788,7 +792,7 @@
 <div class="basecol_scenarioTable">
   <div class="col-xs-12 body">
 
-  <h4 ng-click="combosView=!combosView">
+  <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
     <span ng-show="!combos.sel">
       Existing MBTA System
     </span>
@@ -805,18 +809,13 @@
     </span>
       <!-- <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
       <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i> -->
-  </h4>
+  </h6>
   </div>
 
   <div class="col-xs-12 body">
   <!-- <div class="col-xs-12 body" ng-show="combosView"> -->
-    <h5>
-      <span ng-show="scenarioCompare">
-        Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
-      </span>
-      <span ng-show="!scenarioCompare">
-        Select a scenario to perform a single point analysis.
-      </span>
+    <h6>
+   
 
       <span class="pull-right">
         <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
@@ -829,11 +828,22 @@
         <span class="badge" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
           Toggle Compare <i class="fa fa-toggle-off"></i>
         </span>
+        <span class="badge pull-right" ng-click="saveCombo=!saveCombo">
+          <i class="fa fa-cloud-upload"> </i> Create Scenario
+        </span>
+
       </span>
-    </h5>
+        <span ng-show="scenarioCompare">
+        Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
+      </span>
+      <span ng-show="!scenarioCompare">
+        Select a scenario to perform a single point analysis.
+      </span>
+
+    </h6>
 
     <table class="table table-condensed table-hover">
-      <thead>
+      <thead style="font-size: .8em">
         <tr>
           <th><i class="fa fa-check-square"></i></th>
           <th>Name</th>
