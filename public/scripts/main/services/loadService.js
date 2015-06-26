@@ -117,9 +117,9 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
         var poiUsers = [];
 
         var smallMarkerOptions = {
-          radius      : 5,
-          fillColor   : 'rgba(139,139,210,0.3)',
-          color       : 'rgba(36,36,76,0.8)',
+          radius      : 10,
+          fillColor   : 'yellow',
+          color       : 'null',
           weight      : 1,
           opacity     : 1,
           fillOpacity : 0.8
