@@ -1,5 +1,7 @@
+// this module handles front end filters which are piped through "|" bars between double brackets
 angular.module('coaxsFilters', [])
 
+// this just makes values all 2 characters long (and does not control for numbers greater than 100, because we do not run into them)
 .filter('integerLength', function () {
   return function (input) {
     if (input < 10) {
@@ -9,6 +11,8 @@ angular.module('coaxsFilters', [])
   };
 })
 
+
+// this converts minute values in half for the purpose of getting avg wait times (and converts fractions into seconds)
 .filter('avgWaitTime', function () {
   return function(input) {
     var min = Math.floor(input/2);
@@ -20,6 +24,7 @@ angular.module('coaxsFilters', [])
   }
 })
 
+// gives you the length of the array of the key values
 .filter('keyLength', function () {
   return function (input){
     if (angular.isObject(input)) {
@@ -28,6 +33,7 @@ angular.module('coaxsFilters', [])
   };
 })
 
+// take and object and return an array of its keys
 .filter('toArray', function () { 
   return function (input) {
     if (!(input instanceof Object)) { return input; }
@@ -40,6 +46,7 @@ angular.module('coaxsFilters', [])
   }
 })
 
+// standardize minutes so that they all have the same number of characters in hh:mm format
 .filter('minuteConverter', function () {
   return function (input) {
     input = Math.floor(Number(input));
@@ -56,12 +63,14 @@ angular.module('coaxsFilters', [])
   }
 })
 
+// convert a decimal to a percentage
 .filter('convertPercentage', function () {
   return function (input) {
     return Number(input)*100;
   }
 })
 
+// standardize input lengths
 .filter('vectorTimeValFilter', function () {
   return function (input) {
     input = String(input);

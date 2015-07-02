@@ -120,6 +120,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     });
   }
 
+  // filter for routes that match with the desired corridor
   getKeepRoutes = function (selected) {
     var keepRoutes = [];
     if ($scope.combos.all[selected]) {
@@ -132,13 +133,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return keepRoutes;
   }
 
+  // handles logic for progress bar loading view 
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
     var runProgressBar = setInterval( function () {
-      $scope.$apply( function () { 
+      $scope.$apply(function () { 
         if ($scope.loadProgress.val > 98) {
           $scope.loadProgress.val = 100;
-          clearInterval(runProgressBar);
+          clearInterval(runProgressBar); // kill the animation bar process loop
         } else {
           $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
@@ -146,7 +148,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }, 300)  
   }
 
-
+  // toggle the vectos isos for the left map
   $scope.showVectorIsos = function (timeVal) { 
     leafletData.getMap('map_left').then(function (map) {
       if (!$scope.loadProgress.vis && $scope.showVectorIsosOn) { analystService.showVectorIsos(timeVal, map); };
@@ -154,24 +156,29 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-  // initialize imported data - MAP LEFT
+  // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
+    // get mbta existing subway information
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     });
 
+    // get priority portions (do this first so it renders beneath other content)
     loadService.getProposedPriorityLanes(function (priorityLanes) {
       priorityLanes.addTo(map);
     })
 
+    // now pull the proposed routes
     loadService.getProposedRoutes(function (data) {
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
+      // rbind routes to scope
       $scope.routes = data.geoJsons;
       var routes = data.geoJsons;
 
+      // iterate through routes and set the default scenario values
       for (var key in routes) {
         var tabnavAlt = routes[key][0].options.base.corName;
         $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
@@ -184,21 +191,24 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       }
     });
 
+    // place stops over routes plots on map
     loadService.getProposedStops(function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
     });
 
+    // kick start the first SPA request
     setTimeout(runMarkerQuerys, 2000);
   });
 
-  // initialize imported data - MAP RIGHT
+  // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     });
 
+    // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
       $scope.poiUsers = poiUsers;
       poiUserPoints   = points;
@@ -207,12 +217,13 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   })
 
 
-
+  // highlight a corridor, all routes within
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
     // targetService.targetStops(stopsLayer, null, 0);
   }
 
+  // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) { 
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
@@ -225,6 +236,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
+  // create a new route variant based off of existing scenario settings
   $scope.newVariant = function (tabnav, autoSet) {
     var uuid = supportService.generateUUID();
     $scope.scenario[tabnav]['created'] = Date.now();
@@ -234,6 +246,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return uuid;
   }
 
+  // take a selected variant and set that to current (able to be loaded as total scenario)
   $scope.setSelectedVariant = function (tabnav, uuid) {
     $scope.variants[tabnav].sel = uuid;
     if (uuid) {
@@ -249,6 +262,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
+  // set left default scenario to examine (for SPA or compare)
   $scope.updateLeftRoutes = function(comboId) {
     if (comboId) {
       leftService.updateLeftRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
@@ -262,6 +276,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   };
 
+  // create a new total scenario to send over to the left map
   $scope.newCombo = function (name) {
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
@@ -280,7 +295,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     runMarkerQuerys();
   }
 
-
+  // how we update the scorecard on the right side, also bound to events like range slider
   $scope.updateRouteScorecard = function (routeId, tabnav) {
     if (!routeId && !tabnav) {
       $scope.routeScore = scorecardService.generateEmptyScore();
@@ -297,6 +312,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
+  // updates on new selected scenario combo
   $scope.updateScenarioScorecard = function (id) {
     if (!id) {
       $scope.scenarioScore = scorecardService.generateEmptyScore();
@@ -334,21 +350,25 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   }
 
+  // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) { 
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
       $scope.scenario[tabnav].offpeak.min = peakMin;
     };
   }
 
+  // this is to iterate through and highlight only certain user's points (if null then all shown)
   $scope.targetPOIUsers = function (id) { 
     if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
     $scope.currentPOIUser = id;
   }
 
+  // holdover from before we had the range slider, still keeping around just inc ase we need again
   $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
   $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
 
+  // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
     $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
     leafletData.getMap('map_left').then(function (map) {
@@ -358,7 +378,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 
-
+  // just boiler for now, ignore this - i use it to debug, currently we are using it for the manager auto create scenario tool bound to hamburger menu
   $scope.test = function(foo) {
     window.confirm('OK to run auto create scenarios?');
 

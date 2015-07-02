@@ -1,3 +1,4 @@
+// handler for all things on the left screen
 coaxsApp.service('leftService', function (leafletData) {
 
   this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
