@@ -1,6 +1,7 @@
 // handler for all things on the left screen
 coaxsApp.service('leftService', function (leafletData) {
 
+  // updates the selected scenario combo's associated routes
   this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
     leafletData.getMap('map_left').then(function(map) {
       if (geoJsonRight) { map.removeLayer(geoJsonRight); }
@@ -31,9 +32,9 @@ coaxsApp.service('leftService', function (leafletData) {
     })
   };
 
-
+  // executes the user poi highlight updates
   this.targetPOIUsers = function (poiUsers, id) {
-    poiUsers.eachLayer( function (layer) {
+    poiUsers.eachLayer(function (layer) {
       if (layer.options.userId == id) {
         layer.setStyle({opacity : 1, fillOpacity : 1});
       } else {

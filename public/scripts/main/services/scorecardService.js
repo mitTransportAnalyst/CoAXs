@@ -1,5 +1,6 @@
 coaxsApp.service('scorecardService', function () {
 
+  // return an empty score card set of values
   this.generateEmptyScore = function () {
     var bus = {
       count  : 0,
