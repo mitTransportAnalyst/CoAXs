@@ -79,12 +79,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   });
 
 
+  // what calls the SPA analysis and updates and tile and map components
   runMarkerQuerys = function () {
     var marker = $scope.markers_left.main
 
-    animateProgressBar();
+    animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
       
+      // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
         analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey) {
@@ -93,22 +95,23 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
             $scope.loadProgress.val = 100;
             setTimeout(function () { $scope.$apply (function () { 
-              $scope.loadProgress.vis = false;
+              $scope.loadProgress.vis = false; // terminate progress bar viewport
             }) }, 1000) 
           });
         });
+      // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
       } else {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.resetAll(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
-          d3Service.drawGraph(subjects.jobs_tot);
+          d3Service.drawGraph(subjects.jobs_tot); // draws svg of jobs access, etc.
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
             if (result) { 
               $scope.loadProgress.val = 100;
               setTimeout(function () { $scope.$apply (function () { 
-                $scope.loadProgress.vis = false;
+                $scope.loadProgress.vis = false; // terminate progress bar viewport
               }) }, 1000) 
             };
           });
