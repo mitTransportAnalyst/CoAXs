@@ -1,3 +1,4 @@
+// handy tools go here (a sort of misc function holder)
 coaxsApp.service('supportService', function () {
 
   this.generateUUID = function () {

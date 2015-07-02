@@ -1,3 +1,4 @@
+// crunches score for each component (row) of scorecard, should be self explanatory
 coaxsApp.service('scorecardService', function () {
 
   // return an empty score card set of values
