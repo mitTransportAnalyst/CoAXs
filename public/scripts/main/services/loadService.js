@@ -1,3 +1,6 @@
+// all of these have been explained in main controller, this is simple the services portion and each function 
+// roughly shares the same name
+// here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
 coaxsApp.service('loadService', function ($http, targetService, supportService) {
 
   this.getExisting = function (cb) {
@@ -109,6 +112,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     });
   }
 
+  // update map with phil's spread sheet points
   this.getUsersPoints = function (cb) {
     $http.get('/geojson/pois')
     .success(function (data, status) {
