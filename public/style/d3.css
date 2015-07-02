@@ -1,3 +1,5 @@
+/* stylings for d3 svg graph */
+
 .axis path, .axis line {
   fill: none;
   stroke: #FFF;
