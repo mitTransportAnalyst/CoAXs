@@ -33,6 +33,7 @@ app.post('/posttest', function (req, res) {
   console.log("POST TEST", req);
 });
 
+// return existing mbta lines
 app.get('/geojson/existing', function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/existing/',
@@ -50,6 +51,7 @@ app.get('/geojson/existing', function (req, res) {
   });
 })
 
+// return proposed bus lines
 app.get('/geojson/proposed', function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/proposed/',
@@ -67,6 +69,7 @@ app.get('/geojson/proposed', function (req, res) {
   });
 })
 
+// return portions of proposed lines that are priority
 app.get('/geojson/proposed_priority', function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/proposed/',
@@ -84,6 +87,7 @@ app.get('/geojson/proposed_priority', function (req, res) {
   });
 })
 
+// return geojson of proposed bus stops
 app.get('/geojson/proposed_stops', function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/proposed/',
@@ -101,6 +105,7 @@ app.get('/geojson/proposed_stops', function (req, res) {
   });
 })
 
+// gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)
 app.get('/geojson/pois', function (req, res) {
   var url = 'http://docs.google.com/spreadsheets/d/19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac/export?format=csv&id';
   request(url)
@@ -114,7 +119,7 @@ app.get('/geojson/pois', function (req, res) {
 })
 
 
-
+// this is how the app is actually started up, the port can be specified either in command line or will default to 3000
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
   var port = server.address().port;

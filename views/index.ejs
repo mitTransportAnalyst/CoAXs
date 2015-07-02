@@ -29,10 +29,12 @@
   <script src="/bower_components/ui-router/release/angular-ui-router.min.js"></script>
   <script src="/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
 
+  <!-- main css and js for page (instantiates the router) -->
   <link rel="stylesheet" href="/public/style/main.css"> 
   <link rel="stylesheet" href="/public/style/slider.css"> 
   <script src="/public/scripts/main.js"></script>
 
+  <!-- loading up all the services, filters and controllers for angular -->
   <script src="/public/scripts/main/misc/filters.js"></script>
   <script src="/public/scripts/main/services/analystService.js"></script>
   <script src="/public/scripts/main/services/d3Service.js"></script>
@@ -49,7 +51,8 @@
 <body ng-app="coaxsApp">
 
   <div>
-   <div ui-view></div>
+    <!-- router for angular (all views rendered in here) -->
+    <div ui-view></div>
   </div>
 
 
