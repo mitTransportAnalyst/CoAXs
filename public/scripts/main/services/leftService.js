@@ -33,8 +33,8 @@ coaxsApp.service('leftService', function (leafletData) {
   };
 
   // executes the user poi highlight updates
-  this.targetPOIUsers = function (poiUsers, id) {
-    poiUsers.eachLayer(function (layer) {
+  this.targetPOIUsers = function (poiUsersCircles, id) {
+    poiUsersCircles.eachLayer(function (layer) {
       if (layer.options.userId == id) {
         layer.setStyle({opacity : 1, fillOpacity : 1});
       } else {
