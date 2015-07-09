@@ -84,7 +84,9 @@ button {
 .fa .pull-right { 
   line-height: inherit;
 }
-
+i.fa {
+  cursor: pointer;
+}
 /*navigation*/
 nav {
   position         : absolute;

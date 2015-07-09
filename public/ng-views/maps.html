@@ -670,7 +670,7 @@
   </div>
   <br>
   <span ng-show="poiUserDots">
-    <span class="fa-stack" 
+    <span class="fa-stack userDot" 
           ng-repeat="user in poiUsers track by $index" 
           ng-click="targetPOIUsers(user.name)" 
           ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"

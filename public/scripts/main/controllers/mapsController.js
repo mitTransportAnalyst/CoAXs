@@ -200,6 +200,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       $scope.poiUsers = poiUsers;
       poiUserPoints   = points;
       poiUserPoints.addTo(map);
+
     })
   })
 
@@ -337,11 +338,31 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     };
   }
 
+
   $scope.targetPOIUsers = function (id) { 
-    if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
-    else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
+    //console.log("controller detects clicked on of:" +" "+ id);
+    if (id) { leftService.targetPOIUsers(poiUserPoints, id); console.log("controller detects clicked on of:" +" "+ id); }
+    else { 
+      poiUserPoints.eachLayer( function (marker) { 
+        console.log("marker in controller", marker);
+        var icon = marker.options.icon.options.iconUrl;
+        //console.log("icon URL at controller"+" "+icon);
+          var icon_on = L.Icon.extend({
+            options : {
+              iconUrl      : icon,
+              iconSize     : [25, 25],
+              iconAnchor   : [8, 18],
+              popupAnchor  : [0, -15],
+              opacity      : 1,
+              className    : 'icon-on'
+            }
+          });
+        marker.setIcon(new icon_on());
+      });  
+    }
     $scope.currentPOIUser = id;
-  }
+  };
+
 
   $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
   $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
@@ -351,8 +372,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function (map) {
       if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
       if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
-    })
-  }
+    });
+  };
 
 
 

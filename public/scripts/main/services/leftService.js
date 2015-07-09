@@ -23,23 +23,75 @@ coaxsApp.service('leftService', function (leafletData) {
           color  : '#' + layer.feature.properties.routeColor,
           weight : 1,
         });
-      })
+      });
 
       geoJson.addTo(map);
       cb(geoJson);
-    })
+    });
   };
 
+   
+  // OLD VERSION (PRE-DAY IN THE LIFE)
+  // this.targetPOIUsers = function (poiUsers, id) {
+  //   poiUsers.eachLayer( function (layer) {
+  //     if (layer.options.userId == id) {
+  //       layer.setStyle({opacity : 1, fillOpacity : 1});
+  //     } else {
+  //       layer.setStyle({opacity : 0, fillOpacity : 0});
+      
+  //     }
+  //   });
+  // }
 
-  this.targetPOIUsers = function (poiUsers, id) {
-    poiUsers.eachLayer( function (layer) {
-      if (layer.options.userId == id) {
-        layer.setStyle({opacity : 1, fillOpacity : 1});
+
+    this.targetPOIUsers = function (poiUserPoints, id) {
+      console.log("leftService receives clicked id" +" "+ id);
+      //console.log(JSON.stringify(poiUsers));
+      console.log("userPoints", poiUserPoints);
+      poiUserPoints.eachLayer( function (marker) {
+        console.log("marker", marker);
+        console.log("marker.options", marker.options.icon.options.userId);
+
+        if (marker.userId == id)
+        
+         {
+          var icon = marker.options.icon.options.iconUrl;
+         //console.log("icon URL at leftService" + " " +icon);
+          var icon_on = L.Icon.extend({
+          options : {
+            iconUrl      : icon,
+            iconSize     : [25, 25],
+            iconAnchor   : [8, 18],
+            popupAnchor  : [0, -15],
+            opacity      : 1,
+            className    : 'icon-on'
+          }
+        });
+        marker.setIcon(new icon_on());
       } else {
-        layer.setStyle({opacity : 0, fillOpacity : 0});
-      }
-    });
-  }
+
+          var icon = marker.options.icon.options.iconUrl;
+          var icon_off = L.Icon.extend({
+          options : {
+            iconUrl      : icon,
+            iconSize     : [10, 10],
+            iconAnchor   : [8, 18],
+            popupAnchor  : [0, -15],
+            opacity      : 1,
+            className    : 'icon-on',
+          }
+          });   
+
+        marker.setIcon(new icon_off());    
+        //marker.options.icon.options.className = 'icon-off';
+        }
+      });
+    //console.log("leftService clicked");
+    }
+
+
+
+
 
 });
 

@@ -113,8 +113,12 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     $http.get('/geojson/pois')
     .success(function (data, status) {
       if (status == 200) {
+       
         var circles = [];
         var poiUsers = [];
+        var homeIcons = [];
+
+        // var iconColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)
 
         var smallMarkerOptions = {
           radius      : 10,
@@ -124,28 +128,76 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
           opacity     : 1,
           fillOpacity : 0.8
         };
+        
+        // Invisible Marker underlay for tooltip activation
         var bigMarkerOptions = {
           radius      : 15,
           fillColor   : 'rgba(139,139,210,0)',
           weight      : 0,
         };
 
+        
+        // POI Marker Class Setup
+        var iconStyle = L.Icon.extend({
+          options : {
+            iconSize     : [25, 25],
+            iconAnchor   : [8, 18],
+            popupAnchor  : [0, -15],
+            opacity: 1,
+            className    : 'icon-on',
+            userId       : 'null'
+          }
+        });
+
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
-          var userId = data[i].Name[0] + data[i].Name[1]
+          var userId = data[i].Name[0] + data[i].Name[1];
 
-          smallMarkerOptions['userId'] = userId;
-          bigMarkerOptions['userId']   = userId;
-          
-          poiUsers.push({ name : userId, color : ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)});
+          // smallMarkerOptions['userId'] = userId;
+          // bigMarkerOptions['userId']   = userId;
+          //homeIcon['userId']         = userId;
+
+          //console.log("user id from loadService" + " " + homeIcon.options.userId);   
+          //console.log(bigMarkerOptions);    
+                 
+          poiUsers.push({ 
+            name : userId, 
+            color : ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)
+          });
+  
           for (var n=0; n<pois.length; n++) {
-            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions, {name: data[i].Name}));
+            // MIXED Markers + Circles approach 
+            // if (pois[n].poiTag == "home") {
+            // circles.push(L.marker([pois[n].lat, pois[n].lng], {icon: homeIcon}, {name: data[i].Name}));
+            // } else {
+            // circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions, {name: data[i].Name}));
+            // }
+            // circles.push(L.circleMarker([pois[n].lat, pois[n].lng], bigMarkerOptions)   // field for for tooltip hoover
+            //   .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
 
-            circles.push(L.circleMarker([pois[n].lat, pois[n].lng], bigMarkerOptions)
-              .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
+            if (pois[n].poiTag == "home") {
+              var icon = new iconStyle({iconUrl: 'public/imgs/home_icon.svg'});
+            }
+            else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
+              var icon = new iconStyle({iconUrl: 'public/imgs/heart.svg'});  
+            }
+            else {
+              var icon = new iconStyle({iconUrl: 'public/imgs/shopping_cart.svg'});
+              
+            }
+            var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
+            marker['userId'] = userId;
+            circles.push(marker);
+          
           }
         }
-        cb(L.layerGroup(circles), poiUsers);
+        //console.log(poiUsers);
+        //console.log(bigMarkerOptions);
+        //console.log(JSON.stringify(circles));
+        var iconLayers = L.layerGroup(circles);
+        //console.log(JSON.stringify(allLayers));
+        //console.log(iconLayers);
+        cb(iconLayers, poiUsers);        
       }
     })
   }
@@ -156,9 +208,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
 
 
 
-
-
-
+// [{"lat":42.34154398944031,"lng":-71.06918334960938,"poiTag":"family","timeTag":"mid-day","modeTag":"bicycle"},{"lat":42.33722984357811,"lng":-71.048583984375,"poiTag":"work","timeTag":"morning or afternoon","modeTag":"car"}]
 
 
 
