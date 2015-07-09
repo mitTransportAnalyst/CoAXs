@@ -39,11 +39,22 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   var geoJsonRight = null;
 
 
-  // Angular Leaflet Directiive - base components
+  // Angular Leaflet Directive - base components
   var defaults_global = {
+    minZoom: 9,
+    maxZoom: 15,
     scrollWheelZoom    : true,
     zoomControl        : false,
     attributionControl : false,
+  };
+  var maxBounds_global =  {
+    northEast: {
+      lat: 41.36,
+      lng: -71.8
+      },
+    southWest: {
+      lat: 43.36,
+      lng:-70.3}
   };
   var tiles_global = {
       name: 'CartoDB Light',
@@ -57,10 +68,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   };
   // Assembling left map
   $scope.defaults_right  = angular.copy(defaults_global);
+  $scope.maxBounds_right  = angular.copy(maxBounds_global);
   $scope.center_right    = angular.copy(center_global);
   $scope.tiles_right     = angular.copy(tiles_global);
   // Assembling right map
   $scope.defaults_left = angular.copy(defaults_global);
+  $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
   $scope.center_left.zoom = 11;
   $scope.tiles_left    = angular.copy(tiles_global);
@@ -68,7 +81,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
 
   // Left map listener
-  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
+  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leftLeafletMarker = marker;
     $scope.markers_left.main = {
       lat  : marker.model.lat,
@@ -85,7 +98,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
     animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
-      
+
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
@@ -94,9 +107,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           analystService.resetAll(map);
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
             $scope.loadProgress.val = 100;
-            setTimeout(function () { $scope.$apply (function () { 
+            setTimeout(function () { $scope.$apply (function () {
               $scope.loadProgress.vis = false; // terminate progress bar viewport
-            }) }, 1000) 
+            }) }, 1000)
           });
         });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
@@ -108,11 +121,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           d3Service.drawGraph(subjects.jobs_tot); // draws svg of jobs access, etc.
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, function (result) {
-            if (result) { 
+            if (result) {
               $scope.loadProgress.val = 100;
-              setTimeout(function () { $scope.$apply (function () { 
+              setTimeout(function () { $scope.$apply (function () {
                 $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 1000) 
+              }) }, 1000)
             };
           });
         });
@@ -133,23 +146,23 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     return keepRoutes;
   }
 
-  // handles logic for progress bar loading view 
+  // handles logic for progress bar loading view
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
     var runProgressBar = setInterval( function () {
-      $scope.$apply(function () { 
+      $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
           $scope.loadProgress.val = 100;
           clearInterval(runProgressBar); // kill the animation bar process loop
         } else {
           $scope.loadProgress.val += Math.floor(Math.random()*3);
         }
-      }); 
-    }, 300)  
+      });
+    }, 300)
   }
 
   // toggle the vectos isos for the left map
-  $scope.showVectorIsos = function (timeVal) { 
+  $scope.showVectorIsos = function (timeVal) {
     leafletData.getMap('map_left').then(function (map) {
       if (!$scope.loadProgress.vis && $scope.showVectorIsosOn) { analystService.showVectorIsos(timeVal, map); };
     })
@@ -224,7 +237,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // update a specific route within a corridor
-  $scope.updateTargetFeature = function (variant) { 
+  $scope.updateTargetFeature = function (variant) {
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
     targetService.targetCorridor(routesLayer, routeId);
@@ -335,7 +348,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           var length    = scorecardService.generateLengthScore(routesLayer, selCor.routeId);
           lenTot.count += length.count;
           lenTot.cost  += length.cost;
-          
+
           var frequencies = {
             peak : selCor.peak.min*60 + selCor.peak.sec,
             off  : selCor.offpeak.min*60 + selCor.offpeak.sec,
@@ -351,14 +364,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // this is to control against having offpeak val lower than peak val
-  $scope.updateOffPeakVal = function (peakMin, tabnav) { 
+  $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
       $scope.scenario[tabnav].offpeak.min = peakMin;
     };
   }
 
   // this is to iterate through and highlight only certain user's points (if null then all shown)
-  $scope.targetPOIUsers = function (id) { 
+  $scope.targetPOIUsers = function (id) {
     if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
     $scope.currentPOIUser = id;
@@ -407,6 +420,3 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
 });
-
-
-
