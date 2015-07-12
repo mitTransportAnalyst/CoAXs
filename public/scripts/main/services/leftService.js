@@ -50,10 +50,8 @@ coaxsApp.service('leftService', function (leafletData) {
       console.log("userPoints", poiUserPoints);
       poiUserPoints.eachLayer( function (marker) {
         console.log("marker", marker);
-        console.log("marker.options", marker.options.icon.options.userId);
 
-        if (marker.userId == id)
-        
+        if (marker.userId == id)        
          {
           var icon = marker.options.icon.options.iconUrl;
          //console.log("icon URL at leftService" + " " +icon);
@@ -74,10 +72,10 @@ coaxsApp.service('leftService', function (leafletData) {
           var icon_off = L.Icon.extend({
           options : {
             iconUrl      : icon,
-            iconSize     : [10, 10],
+            iconSize     : [25, 25],
             iconAnchor   : [8, 18],
             popupAnchor  : [0, -15],
-            opacity      : 1,
+            opacity      : .3,
             className    : 'icon-on',
           }
           });   
