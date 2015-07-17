@@ -1,3 +1,4 @@
+// this handles interactions with the analyst.js library, read the library's readme for further examples and details
 coaxsApp.service('analystService', function ($q, supportService) {
 
   this.isochrones = null;
@@ -24,22 +25,25 @@ coaxsApp.service('analystService', function ($q, supportService) {
     }
   }
 
+  // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
   var vectorIsos = null;
   var currentIso = null;
 
-
+  // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
   }
 
+  // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
     allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0 })
     optionCurrent.scenario.modifications[0].routeId = allRoutes;
   }
 
+  // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
     analyst.singlePointRequest({
       lat : marker.lat,
@@ -78,7 +82,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     });
   }
 
-
+  // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, cb) {
     analyst.vectorRequest({
       lat : marker.lat,
@@ -90,6 +94,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     });
   }
 
+  // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
     if (isoLayer) { isoLayer.setOpacity(0) };
     if (currentIso) { 

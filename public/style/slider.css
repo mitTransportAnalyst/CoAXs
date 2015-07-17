@@ -1,3 +1,4 @@
+/* this css is exclusively to customize the range sliders so that they can look consistent across browsers */
 
 input[type=range] {
   -webkit-appearance: none;

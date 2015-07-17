@@ -10,7 +10,7 @@ coaxsApp.service('targetService', function (leafletData) {
     }
   });
 
-
+  // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType) {
     stopsLayer.eachLayer(function (marker) {
       if (marker.options.base.stopId.includes(id)) {
@@ -32,6 +32,8 @@ coaxsApp.service('targetService', function (leafletData) {
 	  return stopsLayer
 	}
 
+  // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
+  // pans to the bounds of that site, as well
 	this.targetCorridor = function (routesLayer, id) {
 	  leafletData.getMap('map_right').then(function(map) {
 	    var tempBounds = null;
@@ -48,6 +50,7 @@ coaxsApp.service('targetService', function (leafletData) {
 	  return routesLayer
 	}
 
+  // updates the target feature data and provides an object with its alternative as well
   this.newTargetFeature = function (routeId, routesLayer) {
     var properties = null;
     var alternatives = [];
