@@ -76,7 +76,7 @@ coaxsApp.service('leftService', function (leafletData) {
             iconAnchor   : [8, 18],
             popupAnchor  : [0, -15],
             opacity      : .3,
-            className    : 'icon-on',
+            className    : 'icon-off',
           }
           });   
 
