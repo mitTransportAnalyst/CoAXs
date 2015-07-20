@@ -89,6 +89,8 @@ button {
 i.fa {
   cursor: pointer;
 }
+
+
 /*navigation*/
 nav {
   position         : absolute;
@@ -165,121 +167,30 @@ nav div.section {
   overflow-x       : hidden;
 }
 
-/* BOTTOM-UP CONTROL PANEL MODULES */
-
-/*.controlModules {
-  font-size: 1.2em;
-}
-.table{
-  font-size: .8em;
-}*/
-
-.iconContainer {
-  border-radius    : 10px;
-  background-color : yellow;
-  border-color: black;
-  border-width     : 1px;
-  color            : black;
-  margin-bottom: 0px;
-  opacity: 1;
-  padding: 4px;
+/* in app navigation */
+.bottomNav {
+  position: absolute;
+  background-color: #d3d3d3;
+  bottom: 0px; 
+  height: 25%;
+  min-height: 150px;
+  overflow: hidden;
 }
 
-.basecol_POI {
-  position         : absolute;
-  min-height: 23%;
-  max-height: 28%;
-  left             : 0%;
-  width            : 4%;
-  bottom           : 0px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-  overflow-y       : hidden;
-  overflow-x       : hidden;
-  border-right: 0px solid gray;
-  text-align: center;
+.bottomNav .colBody {
+  height: 100px;
+  background-color: red;
 }
 
-.basecol_filter {
-  position         : absolute;
-  min-height: 23%;
-  max-height: 38%;
-  left             : 4.2%;
-  width            : 13%;
-  bottom           : 0px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-  overflow-y       : hidden;
-  overflow-x       : hidden;
-   border-right: 0px solid gray;
+.colBody .colHead {
+  height: 20px;
+  background-color: #696969;
 }
-
-.basecol_scenarioTable {
-  position         : absolute;
-  min-height: 23%;
-  max-height: 38%;
-  left             : 17.4%;
-  width            : 32.6%;
-  bottom           : 0px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-  overflow-y       : hidden;
-  overflow-x       : hidden;
-}
-
-.basecol_routeSelector{
-  position         : absolute;
-  min-height: 23%;
-  max-height: 38%;
-  left             : 50.2%;
-  width            : 2.5%;
-  bottom           : 0px;
-  font-size        : 1.2em;
-  padding: 5px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-  text-align: center;
-}
-
-.basecol_routeTable{
-  position         : absolute;
-  min-height: 23%;
-  max-height: 23%;
-  left             : 52.9%;
-  width            : 24.4%;
-  bottom           : 0px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-  overflow-y       : scroll;
-  overflow-x       : hidden;
-}
-
-.basecol_serviceEditor {
-  position         : absolute;
-  min-height: 23%;
-  max-height: 38%;
-  left             : 77.5%;
-  width            : 22.5%;
-  bottom           : 0px;
-  background-color : yellow;
-  color            : black;
-  opacity: .8;
-}
-
-/* End of BOTTOM-UP CONTROL PANEL MODULES */
 
 .saveAlt {
   background-color : #1fa67a;
   overflow         : hidden;
 }
-/*label {
-  font-weight      : 300;
-}*/
 .basecol h1, .topcol h1, .basecol h2, .topcol h2, .basecol h3, .topcol h3, .basecol h4, .topcol h4, .basecol h5, .topcol h5, .basecol h6, .topcol h6 {
   padding-left     : 10px;
   padding-right    : 10px;

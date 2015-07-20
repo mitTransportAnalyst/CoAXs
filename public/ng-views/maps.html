@@ -1,5 +1,5 @@
 
-<!--SCENARIO MANAGER MENU -->
+<!-- hamburger menu topleft -->
 
 <div class="topnav">
   <div class="fa-stack" ng-click="managerView=true">
@@ -10,7 +10,7 @@
 
 
 
-<!--SCENARIO SCORECARD -->
+<!-- upper views -->
 
 <div class="topcol left">
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
@@ -71,7 +71,6 @@
         <svg id="compPlot" width="350" height="200"></svg>
         <center><h6>Accessibility to all Job Types</h6></center>
       </div>
-
     </div>
   </div>
 
@@ -88,13 +87,7 @@
   </div>
 </div>
 
-
-
-
 <div class="topcol right">
-
-<!--ROUTE SCORECARD -->
-
   <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard" >
     <h4>
       Route Scorecard
@@ -345,458 +338,458 @@
 
 
 
-<div class="newControlPanel">
+<div class="bottomNav">
 
-<!--CONTROL PANEL - 1. POI MARKER ACTIVATION --> 
-
-<div class="basecol_POI col-md-3"> 
-  <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
+  <!--CONTROL PANEL - 1. POI MARKER ACTIVATION --> 
+  <div class="colBody" style="width:20%">
+    <div class="colHead">
+      <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
+      </div>
+    </div>
+    <br>
+    <span ng-show="poiUserDots">
+      <span class="fa-stack userDot" 
+            ng-repeat="user in poiUsers track by $index" 
+            ng-click="targetPOIUsers(user.name)" 
+            ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"
+            style="color:#{{ user.color }}">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-stack-1x fa-inverse">
+          <small>{{ user.name }}</small>
+        </i>
+      </span>
+    <span>
   </div>
-  <br>
-  <span ng-show="poiUserDots">
-    <span class="fa-stack userDot" 
-          ng-repeat="user in poiUsers track by $index" 
-          ng-click="targetPOIUsers(user.name)" 
-          ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"
-          style="color:#{{ user.color }}">
+
+
+  <!--CONTROL PANEL - 2. DESTINATION & TIME FILTER --> 
+  <div class="colHead" style="width:20%"> 
+    <div class="progress" ng-show="loadProgress.vis">
+      <div class="progress-bar progress-bar-info progress-bar-striped active" 
+            role="progressbar"  id="isosProgressBar"
+            style="width:{{loadProgress.val}}%">
+        {{loadProgress.val}}%
+      </div>
+    </div>
+    <h5 style="margin-bottom: -7px">
+      TRAVEL TIME: 
+      <span ng-click="toggleShowVectorIsos()">
+              {{ vectorIsos.val*5 | minuteConverter }}
+              <span class="badge">
+              <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
+              <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
+              </span>
+      </span>
+    <h5>
+
+    <div class="isochroneSlider">
+      <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
+        <i class="fa fa-minus-square" 
+            ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+        <span style="width:50%;display:inline-block">
+          <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
+            ng-model="vectorIsos.val"
+            ng-disabled="!showVectorIsosOn"
+            ng-click="showVectorIsos(300*vectorIsos.val)"/>
+        </span>
+        <i class="fa fa-plus-square" 
+            ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+      </span>
+    </div>
+
+    <h5 style="margin-bottom: -20px"> DESTINATIONS </h5> 
+      <br>
+      <label class="btn iconContainer">
+             <i class="fa fa-briefcase fa-fw destinationIcon"></i>
+      </label>
+      <label  class="btn iconContainer">
+             <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
+      </label>
+      <label  class="btn iconContainer">
+            <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
+      </label>
+      <label  class="btn iconContainer">
+            <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
+      </label>
+    </h5>
+    <br>
+
+    <h5 style="margin-bottom: -20px"> MODE </h4> 
+      <br>
+      <label class="btn iconContainer">
+             <i class="fa fa-bus destinationIcon"></i>
+      </label>
+      <label class="btn iconContainer">
+             <i class="fa fa-bicycle destinationIcon"></i>
+      </label>
+      <label class="btn iconContainer">
+             <i class="fa fa-child destinationIcon"></i>
+      </label>
+      <label class="btn iconContainer">
+             <i class="fa fa-ship destinationIcon"></i>
+      </label>
+    </h5>
+  </div>
+
+
+  <!--CONTROL PANEL - 3. SCENARIO TABLE MODULE --> 
+
+  <div class="basecol_scenarioTable">
+    <div class="col-xs-12 body">
+      <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
+        <span ng-show="!combos.sel">
+          Existing MBTA System
+        </span>
+        <span ng-show="combos.sel">
+          Scenario {{ combos.all[combos.sel].name }}
+          <span ng-show="scenarioCompare">
+            <span ng-show="combos.com">
+              Compared with {{ combos.all[combos.com].name }}
+            </span>
+            <span ng-show="!combos.com">
+              Compared with Baseline MBTA System
+            </span>
+          </span>
+        </span>
+      </h6>
+    </div>
+
+    <div class="col-xs-12 body">
+      <h6>
+        <span class="pull-right">
+          <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
+            Scorecard
+          </span>
+          <span class="badge" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
+            Toggle Compare <i class="fa fa-toggle-on"></i>
+          </span>
+          <span class="badge" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
+            Toggle Compare <i class="fa fa-toggle-off"></i>
+          </span>
+          <span class="badge pull-right" ng-click="saveCombo=!saveCombo">
+            <i class="fa fa-cloud-upload"> </i> Create Scenario
+          </span>
+        </span>
+          <span ng-show="scenarioCompare">
+          Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
+          </span>
+          <span ng-show="!scenarioCompare">
+          Select a scenario to perform a single point analysis.
+          </span>
+      </h6>
+
+      <table class="table table-condensed table-hover">
+        <thead style="font-size: .8em">
+          <tr>
+            <th><i class="fa fa-check-square"></i></th>
+            <th>Name</th>
+            <th>Blue Hill</th>
+            <th>Hyde Park</th>
+            <th>Harvard-Dudley</th>
+            <th>Sullivan-Dudley</th>
+            <th><i class="fa fa-arrows-h"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'">
+            <td>
+              <i  class = "fa fa-square-o" 
+                  ng-show="combos.sel !== variant._key" 
+                  ng-click="updateLeftRoutes(variant._key); combos.com=null; $event.stopPropagation()"></i>
+              <i  class = "fa fa-check-square" 
+                  ng-show="combos.sel == variant._key"
+                  ng-click="updateLeftRoutes(); combos.com=null; $event.stopPropagation()"></i>
+            </td>
+            <td>{{ variant.name }}</td>
+            <td>
+              <span class="text-success" ng-show="variant.sel['BH']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['BH']">
+                <i class="fa fa-times"></i>
+                <small><i>None selected</i></small>
+              </span>
+            </td>
+            <td>
+              <span class="text-success" ng-if="variant.sel['HP']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-if="!variant.sel['HP']">
+                <i class="fa fa-times"></i>
+                <small><i>None selected</i></small>
+              </span>
+            </td>
+            <td>
+              <span class="text-success" ng-if="variant.sel['HD']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-if="!variant.sel['HD']">
+                <i class="fa fa-times"></i>
+                <small><i>None selected</i></small>
+              </span>
+            </td>
+            <td>
+              <span class="text-success" ng-if="variant.sel['CT']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-if="!variant.sel['CT']">
+                <i class="fa fa-times"></i>
+                <small><i>None selected</i></small>
+              </span>
+            </td>
+            <td ng-show="scenarioCompare && combos.sel !== variant._key">
+              <i  class = "fa fa-circle-o" 
+                  ng-show="combos.com !== variant._key" 
+                  ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
+              <i  class = "fa fa-check-circle" 
+                  ng-show="combos.com == variant._key"
+                  ng-click="combos.com=null; $event.stopPropagation()"></i>
+            </td>
+            <td ng-show="!scenarioCompare || combos.sel == variant._key">
+              <i class="fa fa-ban"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!--CONTROL PANEL - 4. ROUTE SELECTOR MODULE--> 
+
+  <div class="basecol_routeSelector col-md-2" >
+    <span>
+      <div class="fa-stack ">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
+      </div> 
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="targetCorridor('BH'); 
+                    tabnav='BH'; overview=true"
+          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+          style="color:#0071CA">
       <i class="fa fa-circle fa-stack-2x"></i>
       <i class="fa fa-stack-1x fa-inverse">
-        <small>{{ user.name }}</small>
+        <small>BH</small>
       </i>
     </span>
-  <span>
-</div>
 
-
-<!--CONTROL PANEL - 2. DESTINATION & TIME FILTER --> 
-
-<div class="basecol_filter col-md-3 ">
-  <div class="progress" ng-show="loadProgress.vis">
-    <div class="progress-bar progress-bar-info progress-bar-striped active" 
-          role="progressbar"  id="isosProgressBar"
-          style="width:{{loadProgress.val}}%">
-      {{loadProgress.val}}%
-    </div>
-  </div>
-  <h5 style="margin-bottom: -7px">
-    TRAVEL TIME: 
-    <span ng-click="toggleShowVectorIsos()">
-            {{ vectorIsos.val*5 | minuteConverter }}
-            <span class="badge">
-            <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
-            <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
-            </span>
-    </span>
-  <h5>
-
-  <div class="isochroneSlider">
-    <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
-      <i class="fa fa-minus-square" 
-          ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
-      <span style="width:50%;display:inline-block">
-        <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
-          ng-model="vectorIsos.val"
-          ng-disabled="!showVectorIsosOn"
-          ng-click="showVectorIsos(300*vectorIsos.val)"/>
-      </span>
-      <i class="fa fa-plus-square" 
-          ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
-    </span>
-  </div>
-
-  <h5 style="margin-bottom: -20px"> DESTINATIONS </h5> 
-    <br>
-    <label class="btn iconContainer">
-           <i class="fa fa-briefcase fa-fw destinationIcon"></i>
-    </label>
-    <label  class="btn iconContainer">
-           <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
-    </label>
-    <label  class="btn iconContainer">
-          <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
-    </label>
-    <label  class="btn iconContainer">
-          <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
-    </label>
-  </h5>
-  <br>
-
-  <h5 style="margin-bottom: -20px"> MODE </h4> 
-    <br>
-    <label class="btn iconContainer">
-           <i class="fa fa-bus destinationIcon"></i>
-    </label>
-    <label class="btn iconContainer">
-           <i class="fa fa-bicycle destinationIcon"></i>
-    </label>
-    <label class="btn iconContainer">
-           <i class="fa fa-child destinationIcon"></i>
-    </label>
-    <label class="btn iconContainer">
-           <i class="fa fa-ship destinationIcon"></i>
-    </label>
-  </h5>
-</div>
-
-
-<!--CONTROL PANEL - 3. SCENARIO TABLE MODULE --> 
-
-<div class="basecol_scenarioTable">
-  <div class="col-xs-12 body">
-    <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
-      <span ng-show="!combos.sel">
-        Existing MBTA System
-      </span>
-      <span ng-show="combos.sel">
-        Scenario {{ combos.all[combos.sel].name }}
-        <span ng-show="scenarioCompare">
-          <span ng-show="combos.com">
-            Compared with {{ combos.all[combos.com].name }}
-          </span>
-          <span ng-show="!combos.com">
-            Compared with Baseline MBTA System
-          </span>
-        </span>
-      </span>
-    </h6>
-  </div>
-
-  <div class="col-xs-12 body">
-    <h6>
-      <span class="pull-right">
-        <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
-          Scorecard
-        </span>
-        <span class="badge" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
-          Toggle Compare <i class="fa fa-toggle-on"></i>
-        </span>
-        <span class="badge" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
-          Toggle Compare <i class="fa fa-toggle-off"></i>
-        </span>
-        <span class="badge pull-right" ng-click="saveCombo=!saveCombo">
-          <i class="fa fa-cloud-upload"> </i> Create Scenario
-        </span>
-      </span>
-        <span ng-show="scenarioCompare">
-        Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
-        </span>
-        <span ng-show="!scenarioCompare">
-        Select a scenario to perform a single point analysis.
-        </span>
-    </h6>
-
-    <table class="table table-condensed table-hover">
-      <thead style="font-size: .8em">
-        <tr>
-          <th><i class="fa fa-check-square"></i></th>
-          <th>Name</th>
-          <th>Blue Hill</th>
-          <th>Hyde Park</th>
-          <th>Harvard-Dudley</th>
-          <th>Sullivan-Dudley</th>
-          <th><i class="fa fa-arrows-h"></i></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat = "variant in combos.all | toArray | orderBy:'created'">
-          <td>
-            <i  class = "fa fa-square-o" 
-                ng-show="combos.sel !== variant._key" 
-                ng-click="updateLeftRoutes(variant._key); combos.com=null; $event.stopPropagation()"></i>
-            <i  class = "fa fa-check-square" 
-                ng-show="combos.sel == variant._key"
-                ng-click="updateLeftRoutes(); combos.com=null; $event.stopPropagation()"></i>
-          </td>
-          <td>{{ variant.name }}</td>
-          <td>
-            <span class="text-success" ng-show="variant.sel['BH']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-show="!variant.sel['BH']">
-              <i class="fa fa-times"></i>
-              <small><i>None selected</i></small>
-            </span>
-          </td>
-          <td>
-            <span class="text-success" ng-if="variant.sel['HP']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-if="!variant.sel['HP']">
-              <i class="fa fa-times"></i>
-              <small><i>None selected</i></small>
-            </span>
-          </td>
-          <td>
-            <span class="text-success" ng-if="variant.sel['HD']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-if="!variant.sel['HD']">
-              <i class="fa fa-times"></i>
-              <small><i>None selected</i></small>
-            </span>
-          </td>
-          <td>
-            <span class="text-success" ng-if="variant.sel['CT']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-if="!variant.sel['CT']">
-              <i class="fa fa-times"></i>
-              <small><i>None selected</i></small>
-            </span>
-          </td>
-          <td ng-show="scenarioCompare && combos.sel !== variant._key">
-            <i  class = "fa fa-circle-o" 
-                ng-show="combos.com !== variant._key" 
-                ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
-            <i  class = "fa fa-check-circle" 
-                ng-show="combos.com == variant._key"
-                ng-click="combos.com=null; $event.stopPropagation()"></i>
-          </td>
-          <td ng-show="!scenarioCompare || combos.sel == variant._key">
-            <i class="fa fa-ban"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-<!--CONTROL PANEL - 4. ROUTE SELECTOR MODULE--> 
-
-<div class="basecol_routeSelector col-md-2" >
-  <span>
-    <div class="fa-stack ">
+    <span class="fa-stack" 
+          ng-click="targetCorridor('HP'); 
+                    tabnav='HP'; overview=true"
+          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+          style="color:#B10086">
       <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-    </div> 
-  </span>
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('BH'); 
-                  tabnav='BH'; overview=true"
-        ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
-        style="color:#0071CA">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>BH</small>
-    </i>
-  </span>
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('HP'); 
-                  tabnav='HP'; overview=true"
-        ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
-        style="color:#B10086">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <large>HP</small>
-    </i>
-  </span>
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('HD'); 
-                  tabnav='HD'; overview=true"
-        ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
-        style="color:#CE5504">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>HD</small>
-    </i>
-  </span>
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('CT'); 
-                  tabnav='CT'; overview=true"
-        ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
-        style="color:#AD0101">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>CT</small>
-    </i>
-  </span> 
-</div>  
-
-
-<!--CONTROL PANEL - 5. ROUTE TABLE MODULE--> 
-
-<div class="basecol_routeTable"> 
-  <div class="col-xs-12 body">
-    <h6 ng-show="variants[tabnav].sel">
-      <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
-        Route Scorecard
-      </span>
-
-      <span style="font-size: 1em">
-        {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
-      </span>
-    </h6>
-
-    <span ng-show="!variants[tabnav].sel" style="color:red">
-      <h6>
-        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
-      </h6>
+      <i class="fa fa-stack-1x fa-inverse">
+        <large>HP</small>
+      </i>
     </span>
 
-    <table class="table table-condensed table-hover">
-      <thead>
-        <tr>
-          <th><i class="fa fa-check-square"></i></th>
-          <th>Name</th>
-          <th>Station Type</th>
-          <th>Peak</th>
-          <th>
-            Off-Peak
-          </th>
-        </tr>
-      </thead>
-      
-      <tbody>
-        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
-            ng-click     = "updateTargetFeature(variant)">
-          <td>
-            <i  class = "fa fa-square-o" 
-                ng-show="variants[tabnav].sel !== variant._key" 
-                ng-click="setSelectedVariant(tabnav, variant._key);
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav);
-                          $event.stopPropagation()"></i>
-            <i  class = "fa fa-check-square" 
-                ng-show="variants[tabnav].sel == variant._key"
-                ng-click="setSelectedVariant(tabnav, null);
-                          updateRouteScorecard();
-                          $event.stopPropagation()"></i>
-          </td>
-          <td>{{ variant.name }}</td>
-          <td>
-            <span ng-if="variant.station == 0">
-              Standard 
-            </span>
-            <span ng-if="variant.station == 1">
-              Raised Platform  
-            </span>
-            <span ng-if="variant.station == 2">
-              BRT Station 
-            </span>
-          </td>
-          <td>
-            {{ variant.peak.min | avgWaitTime }}
-          </td>
-          <td>
-            {{ variant.offpeak.min | avgWaitTime }}
-          </td>
-          <td class="text-right">
-            <span ng-show="scenario[tabnav].routeId !== variant.routeId"
-                  ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
-              <i class="fa fa-circle-o"></i>
-            </span>
-            <span ng-show="scenario[tabnav].routeId == variant.routeId">
-              <i class="fa fa-circle"></i>
-            </span>
-          </td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td>
-            <i class="fa fa-sliders"></i>
-          </td>
-          <td><b>Current Scenario</b></td>
-          <td>
-            <span ng-if="scenario[tabnav].station == 0">
-              Standard 
-            </span>
-            <span ng-if="scenario[tabnav].station == 1">
-              Raised Platform  
-            </span>
-            <span ng-if="scenario[tabnav].station == 2">
-              BRT Station 
-            </span>
-          </td>
-          <td>
-            {{ scenario[tabnav].peak.min | avgWaitTime }}
-          </td>
-          <td>
-            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <span class="fa-stack" 
+          ng-click="targetCorridor('HD'); 
+                    tabnav='HD'; overview=true"
+          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+          style="color:#CE5504">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>HD</small>
+      </i>
+    </span>
+
+    <span class="fa-stack" 
+          ng-click="targetCorridor('CT'); 
+                    tabnav='CT'; overview=true"
+          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+          style="color:#AD0101">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-stack-1x fa-inverse">
+        <small>CT</small>
+      </i>
+    </span> 
+  </div>  
+
+
+  <!--CONTROL PANEL - 5. ROUTE TABLE MODULE--> 
+
+  <div class="basecol_routeTable"> 
+    <div class="col-xs-12 body">
+      <h6 ng-show="variants[tabnav].sel">
+        <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
+              ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
+          Route Scorecard
+        </span>
+
+        <span style="font-size: 1em">
+          {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
+        </span>
+      </h6>
+
+      <span ng-show="!variants[tabnav].sel" style="color:red">
+        <h6>
+          <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
+        </h6>
+      </span>
+
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th><i class="fa fa-check-square"></i></th>
+            <th>Name</th>
+            <th>Station Type</th>
+            <th>Peak</th>
+            <th>
+              Off-Peak
+            </th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
+              ng-click     = "updateTargetFeature(variant)">
+            <td>
+              <i  class = "fa fa-square-o" 
+                  ng-show="variants[tabnav].sel !== variant._key" 
+                  ng-click="setSelectedVariant(tabnav, variant._key);
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav);
+                            $event.stopPropagation()"></i>
+              <i  class = "fa fa-check-square" 
+                  ng-show="variants[tabnav].sel == variant._key"
+                  ng-click="setSelectedVariant(tabnav, null);
+                            updateRouteScorecard();
+                            $event.stopPropagation()"></i>
+            </td>
+            <td>{{ variant.name }}</td>
+            <td>
+              <span ng-if="variant.station == 0">
+                Standard 
+              </span>
+              <span ng-if="variant.station == 1">
+                Raised Platform  
+              </span>
+              <span ng-if="variant.station == 2">
+                BRT Station 
+              </span>
+            </td>
+            <td>
+              {{ variant.peak.min | avgWaitTime }}
+            </td>
+            <td>
+              {{ variant.offpeak.min | avgWaitTime }}
+            </td>
+            <td class="text-right">
+              <span ng-show="scenario[tabnav].routeId !== variant.routeId"
+                    ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
+                <i class="fa fa-circle-o"></i>
+              </span>
+              <span ng-show="scenario[tabnav].routeId == variant.routeId">
+                <i class="fa fa-circle"></i>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>
+              <i class="fa fa-sliders"></i>
+            </td>
+            <td><b>Current Scenario</b></td>
+            <td>
+              <span ng-if="scenario[tabnav].station == 0">
+                Standard 
+              </span>
+              <span ng-if="scenario[tabnav].station == 1">
+                Raised Platform  
+              </span>
+              <span ng-if="scenario[tabnav].station == 2">
+                BRT Station 
+              </span>
+            </td>
+            <td>
+              {{ scenario[tabnav].peak.min | avgWaitTime }}
+            </td>
+            <td>
+              {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
 
-<!--CONTROL PANEL - 6. ROUTE EDITOR MODULE--> 
+  <!--CONTROL PANEL - 6. ROUTE EDITOR MODULE--> 
 
-<div class="basecol_serviceEditor col-md-3">
-  <h5> AVG WAIT TIME </h5>
-  <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-4 text-right">
-          <h3 class="noTopMargin noBottomMargin">
-            {{ scenario[tabnav].peak.min | avgWaitTime }}
-          </h3>
+  <div class="basecol_serviceEditor col-md-3">
+    <h5> AVG WAIT TIME </h5>
+    <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
+      <div class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-4 text-right">
+            <h3 class="noTopMargin noBottomMargin">
+              {{ scenario[tabnav].peak.min | avgWaitTime }}
+            </h3>
+          </div>
+          <div class="col-xs-4 text-center">
+              <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
+          </div>
+          <div class="col-xs-4 text-left">
+            <h3 class="noTopMargin noBottomMargin">
+              {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+            </h3>
+          </div>
         </div>
-        <div class="col-xs-4 text-center">
-            <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
+        <div class="row">
+          <div class="col-xs-6">
+            <input type="range" min="1" max="30" value="5"
+                    ng-model="scenario[tabnav].peak.min"
+                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+          </div>
+          <div class="col-xs-6">
+            <input type="range" min="1" max="30" value="10"
+                    ng-model="scenario[tabnav].offpeak.min"
+                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+          </div>
         </div>
-        <div class="col-xs-4 text-left">
-          <h3 class="noTopMargin noBottomMargin">
-            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          </h3>
+      
+        <h5> STATION TYPE </h5>
+        <div class="btn-group btn-group-justified">
+          <label  class="btn btn-info" btn-radio="0"
+                  ng-model="scenario[tabnav].station" 
+                  ng-click="scenario[tabnav].station=0;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            <img class="stationIcons" src="public/imgs/pole_black_yellow.svg">
+            Normal
+          </label>
+          <label  class="btn btn-info" btn-radio="1"
+                  ng-model="scenario[tabnav].station" 
+                  ng-click="scenario[tabnav].station=1;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            <img class="stationIcons" src="public/imgs/platform_black_yellow.svg">
+            Platform
+          </label>
+          <label  class="btn btn-info" btn-radio="2"
+                  ng-model="scenario[tabnav].station" 
+                  ng-click="scenario[tabnav].station=2;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            <img class="stationIcons" src="public/imgs/brt_black_yellow.svg">
+            BRT
+          </label>
+          <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
+            <i class="fa fa-cloud-upload"></i> Save
+          </label>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="5"
-                  ng-model="scenario[tabnav].peak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="10"
-                  ng-model="scenario[tabnav].offpeak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-      </div>
-    
-      <h5> STATION TYPE </h5>
-      <div class="btn-group btn-group-justified">
-        <label  class="btn btn-info" btn-radio="0"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=0;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/pole_black_yellow.svg">
-          Normal
-        </label>
-        <label  class="btn btn-info" btn-radio="1"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=1;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/platform_black_yellow.svg">
-          Platform
-        </label>
-        <label  class="btn btn-info" btn-radio="2"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=2;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/brt_black_yellow.svg">
-          BRT
-        </label>
-        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
-          <i class="fa fa-cloud-upload"></i> Save
-        </label>
       </div>
     </div>
   </div>
-</div>
 
 </div>
