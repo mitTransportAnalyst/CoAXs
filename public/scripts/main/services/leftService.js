@@ -43,7 +43,7 @@ coaxsApp.service('leftService', function (leafletData) {
   //   });
   // }
 
-
+  // UPDATED VERSION FOR ACCOMODATING MULTIPLE ICON TYPES
     this.targetPOIUsers = function (poiUserPoints, id) {
       console.log("leftService receives clicked id" +" "+ id);
       //console.log(JSON.stringify(poiUsers));
@@ -51,8 +51,7 @@ coaxsApp.service('leftService', function (leafletData) {
       poiUserPoints.eachLayer( function (marker) {
         console.log("marker", marker);
 
-        if (marker.userId == id)        
-         {
+      if (marker.userId == id) {
           var icon = marker.options.icon.options.iconUrl;
          //console.log("icon URL at leftService" + " " +icon);
           var icon_on = L.Icon.extend({
@@ -67,7 +66,6 @@ coaxsApp.service('leftService', function (leafletData) {
         });
         marker.setIcon(new icon_on());
       } else {
-
           var icon = marker.options.icon.options.iconUrl;
           var icon_off = L.Icon.extend({
           options : {
@@ -79,18 +77,10 @@ coaxsApp.service('leftService', function (leafletData) {
             className    : 'icon-off',
           }
           });   
-
         marker.setIcon(new icon_off());    
-        //marker.options.icon.options.className = 'icon-off';
         }
       });
-    //console.log("leftService clicked");
     }
-
-
-
-
-
 });
 
 

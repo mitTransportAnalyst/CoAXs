@@ -3,6 +3,9 @@
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
   </div>
+
+<!--RELOCATED BELOW LINES TO "ROUTE EDITOR MODULE"-->
+
   <!-- <div class="fa-stack fa-lg" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots">
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-users fa-stack-1x fa-inverse"></i>
@@ -458,9 +461,11 @@
 
 <!--END OF ROUTE SELECTOR MODULE--> 
 
+
 <!--ROUTE TABLE MODULE--> 
 
-<div class="basecol_routeTable"  >
+<div class="basecol_routeTable"  > 
+
 <!-- <div class="basecol right" ng-show="overview" style="max-height: 80%">
   <h4 ng-click="overview=false; tabnav=null">
     Routes Overview
@@ -587,14 +592,14 @@
 
   </div>
 </div>
-
+<!--End of ROUTE TABLE MODULE-->
 
 <!--ROUTE EDITOR MODULE--> 
 
-  <div class="basecol_serviceEditor col-md-3">
-   <h5> AVG WAIT TIME </h5>
+<div class="basecol_serviceEditor col-md-3">
+  <h5> AVG WAIT TIME </h5>
   <!-- <div class="col-xs-12 body" ng-show="createVar"> -->
-    <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
+  <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
     <div class="col-xs-12">
       <div class="row">
         <div class="col-xs-4 text-right">
@@ -660,17 +665,18 @@
   </div>
 
 </div>
-
+<!--END of ROUTE EDITOR MODULE--> 
 
 <div class="controlModules">
 
+
 <!--POI MARKER ACTIVATION --> 
+
 <div class="basecol_POI col-md-3 "> 
 <!-- <h5 style="margin-bottom: 10px"> PLACES </h5> -->
- <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
+  <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
-
   </div>
   <br>
   <span ng-show="poiUserDots">
@@ -687,10 +693,10 @@
   <span>
 
 </div>
+<!--End of POI MARKER ACTIVATION --> 
 
 
 <!--DESTINATION & TIME FILTER --> 
-
 
 <div class="basecol_filter col-md-3 ">
 
@@ -703,7 +709,7 @@
   </div>
   <h5 style="margin-bottom: -7px">
     TRAVEL TIME: 
-   <span ng-click="toggleShowVectorIsos()">
+    <span ng-click="toggleShowVectorIsos()">
             {{ vectorIsos.val*5 | minuteConverter }}
             <span class="badge">
             <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
@@ -730,6 +736,8 @@
       </span>
       
       <span style="max-width:30%" class="pull-right">
+      
+      <!-- RELOCATED to "TRAVEL TIME" ABOVE -->
       <!-- <span style="max-width:30%;display:inline-block" class="pull-right">
           <h6 ng-click="toggleShowVectorIsos()">
             {{ vectorIsos.val*5 | minuteConverter }}
@@ -739,90 +747,90 @@
       </span> -->
     </div>
 
-<h5 style="margin-bottom: -20px"> DESTINATIONS </h4> 
+  <h5 style="margin-bottom: -20px"> DESTINATIONS </h4> 
+    <br>
+    <label class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-briefcase fa-fw destinationIcon"></i>
+           <!--  <figcaption class="caption">Jobs</figcaption> -->
+    </label>
+    <label  class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
+          <!-- <figcaption class="caption">Healthcare</figcaption> -->
+    </label>
+    <label  class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+          <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
+          <!-- <figcaption class="caption">Groceries</figcaption> -->
+    </label>
+    <label  class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+          <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
+         <!--  <figcaption class="caption">K1-12</figcaption> -->
+    </label>
+  </h5>
   <br>
-  <label class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-briefcase fa-fw destinationIcon"></i>
-         <!--  <figcaption class="caption">Jobs</figcaption> -->
-  </label>
-  <label  class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
-        <!-- <figcaption class="caption">Healthcare</figcaption> -->
-  </label>
-  <label  class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-        <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
-        <!-- <figcaption class="caption">Groceries</figcaption> -->
-  </label>
-  <label  class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-        <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
-       <!--  <figcaption class="caption">K1-12</figcaption> -->
-  </label>
-</h5>
-<br>
 
-<h5 style="margin-bottom: -20px"> MODE </h4> 
-  <br>
-  <label class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-bus destinationIcon"></i>
-  </label>
-  <label class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-bicycle destinationIcon"></i>
-  </label>
-  <label class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-child destinationIcon"></i>
-  </label>
-  <label class="btn iconContainer" btn-radio="1"
-                ng-model="" 
-                ng-click="">
-         <i class="fa fa-ship destinationIcon"></i>
-  </label>
-</h5>
+  <h5 style="margin-bottom: -20px"> MODE </h4> 
+    <br>
+    <label class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-bus destinationIcon"></i>
+    </label>
+    <label class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-bicycle destinationIcon"></i>
+    </label>
+    <label class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-child destinationIcon"></i>
+    </label>
+    <label class="btn iconContainer" btn-radio="1"
+                  ng-model="" 
+                  ng-click="">
+           <i class="fa fa-ship destinationIcon"></i>
+    </label>
+  </h5>
 </div>
+<!--End of DESTINATION & TIME FILTER --> 
 
+
+<!--SCENARIO TABLE MODULE --> 
 
 
 <div class="basecol_scenarioTable">
   <div class="col-xs-12 body">
-
-  <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
-    <span ng-show="!combos.sel">
-      Existing MBTA System
-    </span>
-    <span ng-show="combos.sel">
-      Scenario {{ combos.all[combos.sel].name }}
-      <span ng-show="scenarioCompare">
-        <span ng-show="combos.com">
-          Compared with {{ combos.all[combos.com].name }}
-        </span>
-        <span ng-show="!combos.com">
-          Compared with Baseline MBTA System
+    <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
+      <span ng-show="!combos.sel">
+        Existing MBTA System
+      </span>
+      <span ng-show="combos.sel">
+        Scenario {{ combos.all[combos.sel].name }}
+        <span ng-show="scenarioCompare">
+          <span ng-show="combos.com">
+            Compared with {{ combos.all[combos.com].name }}
+          </span>
+          <span ng-show="!combos.com">
+            Compared with Baseline MBTA System
+          </span>
         </span>
       </span>
-    </span>
-      <!-- <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
-      <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i> -->
-  </h6>
+        <!-- <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
+        <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i> -->
+    </h6>
   </div>
 
   <div class="col-xs-12 body">
   <!-- <div class="col-xs-12 body" ng-show="combosView"> -->
     <h6>
-   
-
       <span class="pull-right">
         <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
           Scorecard
@@ -845,7 +853,6 @@
       <span ng-show="!scenarioCompare">
         Select a scenario to perform a single point analysis.
       </span>
-
     </h6>
 
     <table class="table table-condensed table-hover">
@@ -927,6 +934,6 @@
     </table>
   </div>
 
-
+<!--END of SCENARIO TABLE MODULE -->
 
 

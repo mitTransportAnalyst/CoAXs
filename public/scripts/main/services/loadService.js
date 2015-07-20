@@ -157,10 +157,10 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
           var pois = JSON.parse(data[i].POIs);
           var userId = data[i].Name[0] + data[i].Name[1];
 
+          // SAVE for Tooltip Activation 
           // smallMarkerOptions['userId'] = userId;
           // bigMarkerOptions['userId']   = userId;
-          //homeIcon['userId']         = userId;
-
+          
           //console.log("user id from loadService" + " " + homeIcon.options.userId);   
           //console.log(bigMarkerOptions);    
                  
@@ -170,7 +170,8 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
           });
   
           for (var n=0; n<pois.length; n++) {
-            // MIXED Markers + Circles approach 
+
+            // SAVE for Tooltip Activation 
             // if (pois[n].poiTag == "home") {
             // circles.push(L.marker([pois[n].lat, pois[n].lng], {icon: homeIcon}, {name: data[i].Name}));
             // } else {
@@ -212,7 +213,6 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
 
 
 
-// [{"lat":42.34154398944031,"lng":-71.06918334960938,"poiTag":"family","timeTag":"mid-day","modeTag":"bicycle"},{"lat":42.33722984357811,"lng":-71.048583984375,"poiTag":"work","timeTag":"morning or afternoon","modeTag":"car"}]
 
 
 
