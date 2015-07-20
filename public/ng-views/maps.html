@@ -1,3 +1,6 @@
+
+<!--SCENARIO MANAGER MENU -->
+
 <div class="topnav">
   <div class="fa-stack" ng-click="managerView=true">
     <i class="fa fa-stop fa-stack-2x"></i>
@@ -6,53 +9,8 @@
 </div>
 
 
-<div class="topnav right">
-  <span ng-show="dotSelect">
-    <span class="fa-stack" 
-          ng-click="targetCorridor('BH'); 
-                    tabnav='BH'; overview=true"
-          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
-          style="color:#0071CA">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>BH</small>
-      </i>
-    </span>
 
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HP'); 
-                    tabnav='HP'; overview=true"
-          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
-          style="color:#B10086">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>HP</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HD'); 
-                    tabnav='HD'; overview=true"
-          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
-          style="color:#CE5504">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>HD</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('CT'); 
-                    tabnav='CT'; overview=true"
-          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
-          style="color:#AD0101">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>CT</small>
-      </i>
-    </span>
-  </span>
-</div>
+<!--SCENARIO SCORECARD -->
 
 <div class="topcol left">
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
@@ -130,7 +88,13 @@
   </div>
 </div>
 
+
+
+
 <div class="topcol right">
+
+<!--ROUTE SCORECARD -->
+
   <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard" >
     <h4>
       Route Scorecard
@@ -227,6 +191,9 @@
     </div>
   </div>
 
+
+  <!--ROUTE INFO PROMPT-->
+
   <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show="targetFeature.properties">
     <h4>
       {{ targetFeature.properties.varName }} allignment
@@ -261,9 +228,11 @@
         <i class="fa fa-check"></i>
         Path selected
       </button>
-
     </div>
   </div>
+
+
+  <!--SAVE-ROUTE PROMPT-->
 
   <div class="topleft saveAlt" ng-show="saveAlt">
     <h4>
@@ -308,6 +277,9 @@
     </div>
   </div>
 </div>
+
+
+<!--SAVE-SCENARIO PROMPT-->
 
 <div class="topcol left">
   <div class="topleft saveAlt" ng-show="saveCombo">
@@ -372,241 +344,12 @@
 </leaflet>
 
 
-<!--CONTROL PANEL ROUTE SELECTOR MODULE--> 
 
-<div class="basecol_routeSelector col-md-2" >
-  <span>
-    <div class="fa-stack ">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-    </div> 
-  </span>
+<div class="newControlPanel">
 
-  <span class="fa-stack" 
-        ng-click="targetCorridor('BH'); 
-                  tabnav='BH'; overview=true"
-        ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
-        style="color:#0071CA">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>BH</small>
-    </i>
-  </span>
+<!--CONTROL PANEL - 1. POI MARKER ACTIVATION --> 
 
-  <span class="fa-stack" 
-        ng-click="targetCorridor('HP'); 
-                  tabnav='HP'; overview=true"
-        ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
-        style="color:#B10086">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <large>HP</small>
-    </i>
-  </span>
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('HD'); 
-                  tabnav='HD'; overview=true"
-        ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
-        style="color:#CE5504">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>HD</small>
-    </i>
-  </span>r
-
-  <span class="fa-stack" 
-        ng-click="targetCorridor('CT'); 
-                  tabnav='CT'; overview=true"
-        ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
-        style="color:#AD0101">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-stack-1x fa-inverse">
-      <small>CT</small>
-    </i>
-  </span> 
-</div>  
-
-
-<!--ROUTE TABLE MODULE--> 
-
-<div class="basecol_routeTable"  > 
-  <div class="col-xs-12 body">
-    <h6 ng-show="variants[tabnav].sel">
-      <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
-        Route Scorecard
-      </span>
-
-      <span style="font-size: 1em">
-        {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
-      </span>
-    </h6>
-
-    <span ng-show="!variants[tabnav].sel" style="color:red">
-      <h6>
-        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
-      </h6>
-    </span>
-
-    <table class="table table-condensed table-hover">
-      <thead>
-        <tr>
-          <th><i class="fa fa-check-square"></i></th>
-          <th>Name</th>
-          <th>Station Type</th>
-          <th>Peak</th>
-          <th>
-            Off-Peak
-          </th>
-        </tr>
-      </thead>
-      
-      <tbody>
-        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
-            ng-click     = "updateTargetFeature(variant)">
-          <td>
-            <i  class = "fa fa-square-o" 
-                ng-show="variants[tabnav].sel !== variant._key" 
-                ng-click="setSelectedVariant(tabnav, variant._key);
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav);
-                          $event.stopPropagation()"></i>
-            <i  class = "fa fa-check-square" 
-                ng-show="variants[tabnav].sel == variant._key"
-                ng-click="setSelectedVariant(tabnav, null);
-                          updateRouteScorecard();
-                          $event.stopPropagation()"></i>
-          </td>
-          <td>{{ variant.name }}</td>
-          <td>
-            <span ng-if="variant.station == 0">
-              Standard 
-            </span>
-            <span ng-if="variant.station == 1">
-              Raised Platform  
-            </span>
-            <span ng-if="variant.station == 2">
-              BRT Station 
-            </span>
-          </td>
-          <td>
-            {{ variant.peak.min | avgWaitTime }}
-          </td>
-          <td>
-            {{ variant.offpeak.min | avgWaitTime }}
-          </td>
-          <td class="text-right">
-            <span ng-show="scenario[tabnav].routeId !== variant.routeId"
-                  ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
-              <i class="fa fa-circle-o"></i>
-            </span>
-            <span ng-show="scenario[tabnav].routeId == variant.routeId">
-              <i class="fa fa-circle"></i>
-            </span>
-          </td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td>
-            <i class="fa fa-sliders"></i>
-          </td>
-          <td><b>Current Scenario</b></td>
-          <td>
-            <span ng-if="scenario[tabnav].station == 0">
-              Standard 
-            </span>
-            <span ng-if="scenario[tabnav].station == 1">
-              Raised Platform  
-            </span>
-            <span ng-if="scenario[tabnav].station == 2">
-              BRT Station 
-            </span>
-          </td>
-          <td>
-            {{ scenario[tabnav].peak.min | avgWaitTime }}
-          </td>
-          <td>
-            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-<!--ROUTE EDITOR MODULE--> 
-
-<div class="basecol_serviceEditor col-md-3">
-  <h5> AVG WAIT TIME </h5>
-  <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-4 text-right">
-          <h3 class="noTopMargin noBottomMargin">
-            {{ scenario[tabnav].peak.min | avgWaitTime }}
-          </h3>
-        </div>
-        <div class="col-xs-4 text-center">
-            <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
-        </div>
-        <div class="col-xs-4 text-left">
-          <h3 class="noTopMargin noBottomMargin">
-            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          </h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="5"
-                  ng-model="scenario[tabnav].peak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="10"
-                  ng-model="scenario[tabnav].offpeak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-      </div>
-    
-      <h5> STATION TYPE </h5>
-      <div class="btn-group btn-group-justified">
-        <label  class="btn btn-info" btn-radio="0"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=0;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/pole_black_yellow.svg">
-          Normal
-        </label>
-        <label  class="btn btn-info" btn-radio="1"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=1;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/platform_black_yellow.svg">
-          Platform
-        </label>
-        <label  class="btn btn-info" btn-radio="2"
-                ng-model="scenario[tabnav].station" 
-                ng-click="scenario[tabnav].station=2;
-                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-          <img class="stationIcons" src="public/imgs/brt_black_yellow.svg">
-          BRT
-        </label>
-        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
-          <i class="fa fa-cloud-upload"></i> Save
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!--POI MARKER ACTIVATION --> 
-
-<div class="basecol_POI col-md-3 "> 
+<div class="basecol_POI col-md-3"> 
   <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
@@ -627,7 +370,7 @@
 </div>
 
 
-<!--DESTINATION & TIME FILTER --> 
+<!--CONTROL PANEL - 2. DESTINATION & TIME FILTER --> 
 
 <div class="basecol_filter col-md-3 ">
   <div class="progress" ng-show="loadProgress.vis">
@@ -698,7 +441,7 @@
 </div>
 
 
-<!--SCENARIO TABLE MODULE --> 
+<!--CONTROL PANEL - 3. SCENARIO TABLE MODULE --> 
 
 <div class="basecol_scenarioTable">
   <div class="col-xs-12 body">
@@ -825,3 +568,235 @@
 </div>
 
 
+<!--CONTROL PANEL - 4. ROUTE SELECTOR MODULE--> 
+
+<div class="basecol_routeSelector col-md-2" >
+  <span>
+    <div class="fa-stack ">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
+    </div> 
+  </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('BH'); 
+                  tabnav='BH'; overview=true"
+        ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+        style="color:#0071CA">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>BH</small>
+    </i>
+  </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('HP'); 
+                  tabnav='HP'; overview=true"
+        ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+        style="color:#B10086">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <large>HP</small>
+    </i>
+  </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('HD'); 
+                  tabnav='HD'; overview=true"
+        ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+        style="color:#CE5504">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>HD</small>
+    </i>
+  </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('CT'); 
+                  tabnav='CT'; overview=true"
+        ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+        style="color:#AD0101">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>CT</small>
+    </i>
+  </span> 
+</div>  
+
+
+<!--CONTROL PANEL - 5. ROUTE TABLE MODULE--> 
+
+<div class="basecol_routeTable"> 
+  <div class="col-xs-12 body">
+    <h6 ng-show="variants[tabnav].sel">
+      <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
+            ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
+        Route Scorecard
+      </span>
+
+      <span style="font-size: 1em">
+        {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
+      </span>
+    </h6>
+
+    <span ng-show="!variants[tabnav].sel" style="color:red">
+      <h6>
+        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
+      </h6>
+    </span>
+
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th><i class="fa fa-check-square"></i></th>
+          <th>Name</th>
+          <th>Station Type</th>
+          <th>Peak</th>
+          <th>
+            Off-Peak
+          </th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
+            ng-click     = "updateTargetFeature(variant)">
+          <td>
+            <i  class = "fa fa-square-o" 
+                ng-show="variants[tabnav].sel !== variant._key" 
+                ng-click="setSelectedVariant(tabnav, variant._key);
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav);
+                          $event.stopPropagation()"></i>
+            <i  class = "fa fa-check-square" 
+                ng-show="variants[tabnav].sel == variant._key"
+                ng-click="setSelectedVariant(tabnav, null);
+                          updateRouteScorecard();
+                          $event.stopPropagation()"></i>
+          </td>
+          <td>{{ variant.name }}</td>
+          <td>
+            <span ng-if="variant.station == 0">
+              Standard 
+            </span>
+            <span ng-if="variant.station == 1">
+              Raised Platform  
+            </span>
+            <span ng-if="variant.station == 2">
+              BRT Station 
+            </span>
+          </td>
+          <td>
+            {{ variant.peak.min | avgWaitTime }}
+          </td>
+          <td>
+            {{ variant.offpeak.min | avgWaitTime }}
+          </td>
+          <td class="text-right">
+            <span ng-show="scenario[tabnav].routeId !== variant.routeId"
+                  ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
+              <i class="fa fa-circle-o"></i>
+            </span>
+            <span ng-show="scenario[tabnav].routeId == variant.routeId">
+              <i class="fa fa-circle"></i>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td>
+            <i class="fa fa-sliders"></i>
+          </td>
+          <td><b>Current Scenario</b></td>
+          <td>
+            <span ng-if="scenario[tabnav].station == 0">
+              Standard 
+            </span>
+            <span ng-if="scenario[tabnav].station == 1">
+              Raised Platform  
+            </span>
+            <span ng-if="scenario[tabnav].station == 2">
+              BRT Station 
+            </span>
+          </td>
+          <td>
+            {{ scenario[tabnav].peak.min | avgWaitTime }}
+          </td>
+          <td>
+            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!--CONTROL PANEL - 6. ROUTE EDITOR MODULE--> 
+
+<div class="basecol_serviceEditor col-md-3">
+  <h5> AVG WAIT TIME </h5>
+  <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-4 text-right">
+          <h3 class="noTopMargin noBottomMargin">
+            {{ scenario[tabnav].peak.min | avgWaitTime }}
+          </h3>
+        </div>
+        <div class="col-xs-4 text-center">
+            <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
+        </div>
+        <div class="col-xs-4 text-left">
+          <h3 class="noTopMargin noBottomMargin">
+            {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+          </h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <input type="range" min="1" max="30" value="5"
+                  ng-model="scenario[tabnav].peak.min"
+                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+        </div>
+        <div class="col-xs-6">
+          <input type="range" min="1" max="30" value="10"
+                  ng-model="scenario[tabnav].offpeak.min"
+                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+        </div>
+      </div>
+    
+      <h5> STATION TYPE </h5>
+      <div class="btn-group btn-group-justified">
+        <label  class="btn btn-info" btn-radio="0"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=0;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          <img class="stationIcons" src="public/imgs/pole_black_yellow.svg">
+          Normal
+        </label>
+        <label  class="btn btn-info" btn-radio="1"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=1;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          <img class="stationIcons" src="public/imgs/platform_black_yellow.svg">
+          Platform
+        </label>
+        <label  class="btn btn-info" btn-radio="2"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=2;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          <img class="stationIcons" src="public/imgs/brt_black_yellow.svg">
+          BRT
+        </label>
+        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
+          <i class="fa fa-cloud-upload"></i> Save
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
