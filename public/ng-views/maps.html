@@ -3,39 +3,10 @@
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
   </div>
-
-<!--RELOCATED BELOW LINES TO "ROUTE EDITOR MODULE"-->
-
-  <!-- <div class="fa-stack fa-lg" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots">
-    <i class="fa fa-stop fa-stack-2x"></i>
-    <i class="fa fa-users fa-stack-1x fa-inverse"></i>
-  </div>
-
-  <span ng-show="poiUserDots">
-    <span class="fa-stack" 
-          ng-repeat="user in poiUsers track by $index" 
-          ng-click="targetPOIUsers(user.name)" 
-          ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"
-          style="color:#{{ user.color }}">
-      <i class="fa fa-stop fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>{{ user.name }}</small>
-      </i>
-    </span>
-  </span> -->
 </div>
 
 
-<!-- <div class="topnav right">
-  <div class="fa-stack" ng-click="saveCombo=true">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-arrow-left fa-stack-1x fa-inverse"></i>
-  </div> -->
-  <!-- <div class="fa-stack fa-lg" ng-click="dotSelect = !dotSelect; updateTargetFeature(); overview=false; tabnav=null">
-    <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-  </div> -->
-
+<div class="topnav right">
   <span ng-show="dotSelect">
     <span class="fa-stack" 
           ng-click="targetCorridor('BH'); 
@@ -91,57 +62,57 @@
     </h4>
     <div class="topinfo-body container" style="min-height:250px">
 
-        <div class="pull-left" style="width: 100%; padding-right: 325px;">
-          <div class="row">
-            <div class="col-xs-5">
-              <h3>
-                <i class="fa fa-dot-circle-o"></i> {{ scenarioScore.bus.count }}
-                <h6>Bus Stops</h6>
-              </h3>
-            </div>
-            <div class="col-xs-6">
-              <h3>
-                <i class="fa fa-usd"></i> {{ scenarioScore.bus.cost/1000000 | number:2 }}M
-                <h6>All Stations</h6>
-              </h3>
-            </div>
+      <div class="pull-left" style="width: 100%; padding-right: 325px;">
+        <div class="row">
+          <div class="col-xs-5">
+            <h3>
+              <i class="fa fa-dot-circle-o"></i> {{ scenarioScore.bus.count }}
+              <h6>Bus Stops</h6>
+            </h3>
           </div>
-
-          <div class="row">
-            <div class="col-xs-5">
-              <h3>
-                <i class="fa fa-road"></i> {{ scenarioScore.length.count | number:1 }}
-                <h6>Miles</h6>
-              </h3>
-            </div>
-            <div class="col-xs-6">
-              <h3>
-                <i class="fa fa-usd"></i> {{ scenarioScore.length.cost/1000000 | number:2 }}M
-                <h6>All Lanes</h6>
-              </h3>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-5">
-              <h3>
-                <i class="fa fa-bus"></i> {{ scenarioScore.vehicles.count }}
-                <h6>Vehicles</h6>
-              </h3>
-            </div>
-            <div class="col-xs-6">
-              <h3>
-                <i class="fa fa-usd"></i> {{ scenarioScore.vehicles.cost/1000000 | number:2 }}M
-                <h6>Operations</h6>
-              </h3>
-            </div>
+          <div class="col-xs-6">
+            <h3>
+              <i class="fa fa-usd"></i> {{ scenarioScore.bus.cost/1000000 | number:2 }}M
+              <h6>All Stations</h6>
+            </h3>
           </div>
         </div>
 
-        <div style="height: 250px; position: absolute; right: 0px">
-          <svg id="compPlot" width="350" height="200"></svg>
-          <center><h6>Accessibility to all Job Types</h6></center>
+        <div class="row">
+          <div class="col-xs-5">
+            <h3>
+              <i class="fa fa-road"></i> {{ scenarioScore.length.count | number:1 }}
+              <h6>Miles</h6>
+            </h3>
+          </div>
+          <div class="col-xs-6">
+            <h3>
+              <i class="fa fa-usd"></i> {{ scenarioScore.length.cost/1000000 | number:2 }}M
+              <h6>All Lanes</h6>
+            </h3>
+          </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-5">
+            <h3>
+              <i class="fa fa-bus"></i> {{ scenarioScore.vehicles.count }}
+              <h6>Vehicles</h6>
+            </h3>
+          </div>
+          <div class="col-xs-6">
+            <h3>
+              <i class="fa fa-usd"></i> {{ scenarioScore.vehicles.cost/1000000 | number:2 }}M
+              <h6>Operations</h6>
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 250px; position: absolute; right: 0px">
+        <svg id="compPlot" width="350" height="200"></svg>
+        <center><h6>Accessibility to all Job Types</h6></center>
+      </div>
 
     </div>
   </div>
@@ -336,8 +307,9 @@
       </div>
     </div>
   </div>
-</div> 
-  <div class="topcol left">
+</div>
+
+<div class="topcol left">
   <div class="topleft saveAlt" ng-show="saveCombo">
     <h4>
       Save this scenario alternative
@@ -381,8 +353,7 @@
       </div>
     </div>
   </div>
-  </div>
-
+</div>
 
 
 
@@ -405,75 +376,62 @@
 
 <div class="basecol_routeSelector col-md-2" >
   <span>
-  <div class="fa-stack ">
+    <div class="fa-stack ">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
+    </div> 
+  </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('BH'); 
+                  tabnav='BH'; overview=true"
+        ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
+        style="color:#0071CA">
     <i class="fa fa-circle fa-stack-2x"></i>
-    <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-  </div> 
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>BH</small>
+    </i>
   </span>
 
-  <!-- <span ng-show="dotSelect"> -->
-  <span>
-    <span class="fa-stack" 
-          ng-click="targetCorridor('BH'); 
-                    tabnav='BH'; overview=true"
-          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
-          style="color:#0071CA">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>BH</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HP'); 
-                    tabnav='HP'; overview=true"
-          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
-          style="color:#B10086">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <large>HP</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HD'); 
-                    tabnav='HD'; overview=true"
-          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
-          style="color:#CE5504">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>HD</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('CT'); 
-                    tabnav='CT'; overview=true"
-          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
-          style="color:#AD0101">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>CT</small>
-      </i>
-    </span>
+  <span class="fa-stack" 
+        ng-click="targetCorridor('HP'); 
+                  tabnav='HP'; overview=true"
+        ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
+        style="color:#B10086">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <large>HP</small>
+    </i>
   </span>
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('HD'); 
+                  tabnav='HD'; overview=true"
+        ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
+        style="color:#CE5504">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>HD</small>
+    </i>
+  </span>r
+
+  <span class="fa-stack" 
+        ng-click="targetCorridor('CT'); 
+                  tabnav='CT'; overview=true"
+        ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
+        style="color:#AD0101">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-stack-1x fa-inverse">
+      <small>CT</small>
+    </i>
+  </span> 
 </div>  
-
-<!--END OF ROUTE SELECTOR MODULE--> 
 
 
 <!--ROUTE TABLE MODULE--> 
 
 <div class="basecol_routeTable"  > 
-
-<!-- <div class="basecol right" ng-show="overview" style="max-height: 80%">
-  <h4 ng-click="overview=false; tabnav=null">
-    Routes Overview
-    <i class="fa fa-times-circle-o pull-right"></i>
-  </h4> -->
-  
   <div class="col-xs-12 body">
-
     <h6 ng-show="variants[tabnav].sel">
       <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
             ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
@@ -491,7 +449,6 @@
       </h6>
     </span>
 
-
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
@@ -502,14 +459,10 @@
           <th>
             Off-Peak
           </th>
-          <th class="text-right">
-            Modifying
-          </th>
         </tr>
       </thead>
       
       <tbody>
-
         <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
             ng-click     = "updateTargetFeature(variant)">
           <td>
@@ -576,29 +529,17 @@
           <td>
             {{ scenario[tabnav].offpeak.min | avgWaitTime }}
           </td>
-          <td>
-            <!-- <span class="badge pull-right" ng-click="createVar = !createVar">
-              <span ng-show="createVar">
-                <i class="fa fa-times"></i> Close
-              </span>
-              <span ng-show="!createVar">
-                <i class="fa fa-bookmark-o"></i> Modify
-              </span>
-            </span> -->
-          </td>
         </tr>
       </tbody>
     </table>
-
   </div>
 </div>
-<!--End of ROUTE TABLE MODULE-->
+
 
 <!--ROUTE EDITOR MODULE--> 
 
 <div class="basecol_serviceEditor col-md-3">
   <h5> AVG WAIT TIME </h5>
-  <!-- <div class="col-xs-12 body" ng-show="createVar"> -->
   <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
     <div class="col-xs-12">
       <div class="row">
@@ -608,10 +549,7 @@
           </h3>
         </div>
         <div class="col-xs-4 text-center">
-<!--           <h5 class="noTopMargin noBottomMargin">
- -->         
             <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
-          </h5>
         </div>
         <div class="col-xs-4 text-left">
           <h3 class="noTopMargin noBottomMargin">
@@ -663,17 +601,12 @@
       </div>
     </div>
   </div>
-
 </div>
-<!--END of ROUTE EDITOR MODULE--> 
-
-<div class="controlModules">
 
 
 <!--POI MARKER ACTIVATION --> 
 
 <div class="basecol_POI col-md-3 "> 
-<!-- <h5 style="margin-bottom: 10px"> PLACES </h5> -->
   <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
@@ -691,15 +624,12 @@
       </i>
     </span>
   <span>
-
 </div>
-<!--End of POI MARKER ACTIVATION --> 
 
 
 <!--DESTINATION & TIME FILTER --> 
 
 <div class="basecol_filter col-md-3 ">
-
   <div class="progress" ng-show="loadProgress.vis">
     <div class="progress-bar progress-bar-info progress-bar-striped active" 
           role="progressbar"  id="isosProgressBar"
@@ -718,93 +648,57 @@
     </span>
   <h5>
 
-<div class="isochroneSlider">
-
-<!-- <div class="col-xs-12 body pull-right isochroneSlider">
- -->
-      <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
-        <i class="fa fa-minus-square" 
-            ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
-        <span style="width:50%;display:inline-block">
-          <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
-            ng-model="vectorIsos.val"
-            ng-disabled="!showVectorIsosOn"
-            ng-click="showVectorIsos(300*vectorIsos.val)"/>
-        </span>
-        <i class="fa fa-plus-square" 
-            ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+  <div class="isochroneSlider">
+    <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
+      <i class="fa fa-minus-square" 
+          ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+      <span style="width:50%;display:inline-block">
+        <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
+          ng-model="vectorIsos.val"
+          ng-disabled="!showVectorIsosOn"
+          ng-click="showVectorIsos(300*vectorIsos.val)"/>
       </span>
-      
-      <span style="max-width:30%" class="pull-right">
-      
-      <!-- RELOCATED to "TRAVEL TIME" ABOVE -->
-      <!-- <span style="max-width:30%;display:inline-block" class="pull-right">
-          <h6 ng-click="toggleShowVectorIsos()">
-            {{ vectorIsos.val*5 | minuteConverter }}
-            <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
-            <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
-          </h6>
-      </span> -->
-    </div>
+      <i class="fa fa-plus-square" 
+          ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+    </span>
+  </div>
 
-  <h5 style="margin-bottom: -20px"> DESTINATIONS </h4> 
+  <h5 style="margin-bottom: -20px"> DESTINATIONS </h5> 
     <br>
-    <label class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label class="btn iconContainer">
            <i class="fa fa-briefcase fa-fw destinationIcon"></i>
-           <!--  <figcaption class="caption">Jobs</figcaption> -->
     </label>
-    <label  class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label  class="btn iconContainer">
            <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
-          <!-- <figcaption class="caption">Healthcare</figcaption> -->
     </label>
-    <label  class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label  class="btn iconContainer">
           <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
-          <!-- <figcaption class="caption">Groceries</figcaption> -->
     </label>
-    <label  class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label  class="btn iconContainer">
           <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
-         <!--  <figcaption class="caption">K1-12</figcaption> -->
     </label>
   </h5>
   <br>
 
   <h5 style="margin-bottom: -20px"> MODE </h4> 
     <br>
-    <label class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label class="btn iconContainer">
            <i class="fa fa-bus destinationIcon"></i>
     </label>
-    <label class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label class="btn iconContainer">
            <i class="fa fa-bicycle destinationIcon"></i>
     </label>
-    <label class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label class="btn iconContainer">
            <i class="fa fa-child destinationIcon"></i>
     </label>
-    <label class="btn iconContainer" btn-radio="1"
-                  ng-model="" 
-                  ng-click="">
+    <label class="btn iconContainer">
            <i class="fa fa-ship destinationIcon"></i>
     </label>
   </h5>
 </div>
-<!--End of DESTINATION & TIME FILTER --> 
 
 
 <!--SCENARIO TABLE MODULE --> 
-
 
 <div class="basecol_scenarioTable">
   <div class="col-xs-12 body">
@@ -823,19 +717,15 @@
           </span>
         </span>
       </span>
-        <!-- <i class="fa fa-angle-double-up pull-right" ng-show="!combosView"></i>
-        <i class="fa fa-angle-double-down pull-right" ng-show="combosView"></i> -->
     </h6>
   </div>
 
   <div class="col-xs-12 body">
-  <!-- <div class="col-xs-12 body" ng-show="combosView"> -->
     <h6>
       <span class="pull-right">
         <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
           Scorecard
         </span>
-
         <span class="badge" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
           Toggle Compare <i class="fa fa-toggle-on"></i>
         </span>
@@ -845,14 +735,13 @@
         <span class="badge pull-right" ng-click="saveCombo=!saveCombo">
           <i class="fa fa-cloud-upload"> </i> Create Scenario
         </span>
-
       </span>
         <span ng-show="scenarioCompare">
         Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
-      </span>
-      <span ng-show="!scenarioCompare">
+        </span>
+        <span ng-show="!scenarioCompare">
         Select a scenario to perform a single point analysis.
-      </span>
+        </span>
     </h6>
 
     <table class="table table-condensed table-hover">
@@ -933,7 +822,6 @@
       </tbody>
     </table>
   </div>
-
-<!--END of SCENARIO TABLE MODULE -->
+</div>
 
 
