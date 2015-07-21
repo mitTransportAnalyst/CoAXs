@@ -48,12 +48,6 @@ body {
   font-size        : 1.2em;
 }
 
-/* Reduce SVG size in buttons */
-.stationIcons {
-  height:15px;
-  margin-bottom: 4px;
-}
-
 .badgeScorecard {
   color : #216C2A;
   background-color: #FFF;
@@ -81,7 +75,7 @@ button {
   color            : #FFF;
 }
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: rgb(75, 75, 75);
+  background-color: rgb(220, 220, 220);
 }
 .fa .pull-right { 
   line-height: inherit;
@@ -177,6 +171,7 @@ nav div.section {
   top: 0px;
   height: 10px;
   z-index: 100;
+  background-color: #ff7f7f;
 }
 
 .bottomNav {
@@ -186,6 +181,19 @@ nav div.section {
   height: 25%;
   min-height: 150px;
   overflow: hidden;
+  padding-top: 28px;
+}
+
+.colBody .colHead {
+  height: 28px;
+  line-height: 28px;
+  background-color: #696969;
+  position: absolute;;
+  top: 0px;
+  width: inherit;
+  text-align: center;
+  color: white;
+  cursor: pointer;
 }
 
 .bottomNav .colBody {
@@ -193,20 +201,14 @@ nav div.section {
   float: left;
   overflow-x: hidden;
   overflow-y: scroll;
+  cursor: pointer;
 }
 
-.bottomNav:not(:first-child) .colBody {
+.bottomNav:not(:first-child) .colHead, .bottomNav:not(:first-child) .colBody {
   border: 0px solid #d3d3d3;
   border-right-width: 1px;
 }
 
-.colBody .colHead {
-  height: 28px;
-  line-height: 28px;
-  background-color: #696969;
-  text-align: center;
-  color: white;
-}
 
 .colBody .subHead {
   height: 15px;
@@ -216,10 +218,15 @@ nav div.section {
   text-align: center;
   font-size: 0.75em;
   color: white;
+  cursor: pointer;
+}
+
+.bottomNav .table {
+  font-size: 0.75em;
 }
 
 .bottomNav .isosRange {
-  margin: 0px 0px -5px 0px;
+  margin: 2px 0px -2px 0px;
 }
 
 
