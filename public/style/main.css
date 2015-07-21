@@ -230,6 +230,19 @@ nav div.section {
   padding: 7px 0px 7px 0px;
 }
 
+.colBody .scenariosTable {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.scenariosTable .scenario {
+  float: left;
+  max-width: 75px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-right: 3px;
+}
+
 
 
 .saveAlt {
