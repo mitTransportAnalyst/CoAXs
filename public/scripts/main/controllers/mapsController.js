@@ -1,8 +1,7 @@
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
-  document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 235 + 'px';
-  document.getElementById('rightDynamic1').style.width = ((window.innerWidth/2) - 35)/2 + 'px';
-  document.getElementById('rightDynamic2').style.width = ((window.innerWidth/2) - 35)/2 + 'px';
+  document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
+  document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35) + 'px';
 
   // Management for current scenario
   var scenarioBase = {
