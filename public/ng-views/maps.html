@@ -343,26 +343,24 @@
 </leaflet>
 
 
+<!-- 1 poi markers --> 
+<div class="leftNav">
+  <div class="badge" ng-click="targetPOIUsers(user.name)">
+        <i class="fa fa-user"></i><br> All
+  </div>
+  <div class="badge" 
+        ng-repeat="user in poiUsers track by $index" 
+        ng-click="targetPOIUsers(user.name)" 
+        ng-class="user.name == currentPOIUser ? '' : 'unselected'">
+        <i class="fa fa-user"></i><br> {{ user.name }}
+  </div>
+</div>
+
 
 <div class="bottomNav">
 
-  <!-- 1 poi markers --> 
-  <div class="colBody text-center" style="width:35px">
-    <div class="colHead">
-      <div class="fa-stack" ng-click="targetPOIUsers()">
-        <i class="fa fa-users"></i>
-      </div>
-    </div>
-    <div class="smallColVal" 
-          ng-repeat="user in poiUsers track by $index" 
-          ng-click="targetPOIUsers(user.name)" 
-          ng-class="user.name == currentPOIUser ? '' : 'unselected'">
-          {{ user.name }}
-    </div>
-  </div>
-
-  <!-- destination and time filters --> 
-  <div class="colBody" style="width:150px"> 
+  <!-- 2 destination and time filters --> 
+  <div class="colBody" style="width:235px"> 
     <div class="colHead">
       <i class="fa fa-clock-o"></i> Travel Time
     </div>
@@ -670,69 +668,63 @@
 
 
   <!-- 6 route editor module --> 
-  <div class="basecol_serviceEditor col-md-3">
-    <h5> AVG WAIT TIME </h5>
-    <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
-      <div class="col-xs-12">
-        <div class="row">
-          <div class="col-xs-4 text-right">
-            <h3 class="noTopMargin noBottomMargin">
-              {{ scenario[tabnav].peak.min | avgWaitTime }}
-            </h3>
-          </div>
-          <div class="col-xs-4 text-center">
-              <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
-          </div>
-          <div class="col-xs-4 text-left">
-            <h3 class="noTopMargin noBottomMargin">
-              {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-            </h3>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-6">
-            <input type="range" min="1" max="30" value="5"
-                    ng-model="scenario[tabnav].peak.min"
-                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-          </div>
-          <div class="col-xs-6">
-            <input type="range" min="1" max="30" value="10"
-                    ng-model="scenario[tabnav].offpeak.min"
-                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-          </div>
-        </div>
-      
-        <h5> STATION TYPE </h5>
-        <div class="btn-group btn-group-justified">
-          <label  class="btn btn-info" btn-radio="0"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=0;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            <img class="stationIcons" src="public/imgs/pole_black_yellow.svg">
-            Normal
-          </label>
-          <label  class="btn btn-info" btn-radio="1"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=1;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            <img class="stationIcons" src="public/imgs/platform_black_yellow.svg">
-            Platform
-          </label>
-          <label  class="btn btn-info" btn-radio="2"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=2;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            <img class="stationIcons" src="public/imgs/brt_black_yellow.svg">
-            BRT
-          </label>
-          <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
-            <i class="fa fa-cloud-upload"></i> Save
-          </label>
-        </div>
+  <div class="colBody" id="rightDynamic2">
+    <div class="colHead">
+      <i class="fa fa-pencil-square-o"></i> Target Route Customization
+    </div>
+
+    <div class="subHead">
+      Average Wait Time
+    </div>
+
+
+    <input type="range" min="1" max="30" value="5" class="isosRange"
+                ng-model="scenario[tabnav].peak.min"
+                ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+    <h4 class="text-center">
+      {{ scenario[tabnav].peak.min | avgWaitTime }}
+      <small>Peak</small>
+    </h4>
+
+    <input type="range" min="1" max="30" value="10" class="isosRange"
+                ng-model="scenario[tabnav].offpeak.min"
+                ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>    
+    <h4 class="text-center">
+      {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+      <small>Off-Peak</small>
+    </h4>
+
+    <div class="bottomFixed">
+      <div class="subHead">
+        Station Type
+      </div>
+
+      <div class="btn-group btn-group-justified">
+        <label  class="btn btn-info" btn-radio="0"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=0;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          Normal
+        </label>
+        <label  class="btn btn-info" btn-radio="1"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=1;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          Platform
+        </label>
+        <label  class="btn btn-info" btn-radio="2"
+                ng-model="scenario[tabnav].station" 
+                ng-click="scenario[tabnav].station=2;
+                          updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+          BRT
+        </label>
+        <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
+          <i class="fa fa-cloud-upload"></i> Save
+        </label>
       </div>
     </div>
   </div>
-
 </div>
+
