@@ -343,13 +343,20 @@
           >
 </leaflet>
 
+<!--PROGRESS BAR --> 
 
+  <div class="progress" ng-show="loadProgress.vis">
+    <div class="progress-bar progress-bar-info progress-bar-striped active" 
+          role="progressbar"  id="isosProgressBar"
+          style="width:{{loadProgress.val}}%">
+      {{loadProgress.val}}%
+    </div>
+  </div>
 
-<div class="newControlPanel">
 
 <!--CONTROL PANEL - 1. POI MARKER ACTIVATION --> 
 
-<div class="basecol_POI col-md-3"> 
+<div class="controlPanel basecol_POI"> 
   <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
@@ -372,15 +379,8 @@
 
 <!--CONTROL PANEL - 2. DESTINATION & TIME FILTER --> 
 
-<div class="basecol_filter col-md-3 ">
-  <div class="progress" ng-show="loadProgress.vis">
-    <div class="progress-bar progress-bar-info progress-bar-striped active" 
-          role="progressbar"  id="isosProgressBar"
-          style="width:{{loadProgress.val}}%">
-      {{loadProgress.val}}%
-    </div>
-  </div>
-  <h5 style="margin-bottom: -7px">
+<div class="controlPanel basecol_filter container ">
+  <h6 style="margin-bottom: -7px">
     TRAVEL TIME: 
     <span ng-click="toggleShowVectorIsos()">
             {{ vectorIsos.val*5 | minuteConverter }}
@@ -389,7 +389,7 @@
             <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
             </span>
     </span>
-  <h5>
+  <h6>
 
   <div class="isochroneSlider">
     <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
@@ -405,8 +405,8 @@
           ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
     </span>
   </div>
-
-  <h5 style="margin-bottom: -20px"> DESTINATIONS </h5> 
+  
+  <h6 style="margin-bottom: -15px"> DESTINATIONS </h6> 
     <br>
     <label class="btn iconContainer">
            <i class="fa fa-briefcase fa-fw destinationIcon"></i>
@@ -423,7 +423,7 @@
   </h5>
   <br>
 
-  <h5 style="margin-bottom: -20px"> MODE </h4> 
+  <h6 style="margin-bottom: -15px"> MODE </h6> 
     <br>
     <label class="btn iconContainer">
            <i class="fa fa-bus destinationIcon"></i>
@@ -443,7 +443,7 @@
 
 <!--CONTROL PANEL - 3. SCENARIO TABLE MODULE --> 
 
-<div class="basecol_scenarioTable">
+<div class="controlPanel basecol_scenarioTable">
   <div class="col-xs-12 body">
     <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
       <span ng-show="!combos.sel">
@@ -469,26 +469,30 @@
         <span class="badge badgeScorecard" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
           Scorecard
         </span>
+
         <span class="badge" ng-show="scenarioCompare" ng-click="scenarioCompare=false; combos.com=null">
           Toggle Compare <i class="fa fa-toggle-on"></i>
         </span>
+        
         <span class="badge" ng-show="!scenarioCompare" ng-click="scenarioCompare=true">
           Toggle Compare <i class="fa fa-toggle-off"></i>
         </span>
+        
         <span class="badge pull-right" ng-click="saveCombo=!saveCombo">
-          <i class="fa fa-cloud-upload"> </i> Create Scenario
+          <i class="fa fa-cloud-upload"> </i> Save Scenario
         </span>
       </span>
-        <span ng-show="scenarioCompare">
+        
+      <span ng-show="scenarioCompare">
         Click right <i class="fa fa-circle-o"></i> to compare. Leave all blank for baseline.
-        </span>
-        <span ng-show="!scenarioCompare">
+      </span>
+      <span ng-show="!scenarioCompare">
         Select a scenario to perform a single point analysis.
-        </span>
+      </span>
     </h6>
 
     <table class="table table-condensed table-hover">
-      <thead style="font-size: .8em">
+      <thead>
         <tr>
           <th><i class="fa fa-check-square"></i></th>
           <th>Name</th>
@@ -570,7 +574,7 @@
 
 <!--CONTROL PANEL - 4. ROUTE SELECTOR MODULE--> 
 
-<div class="basecol_routeSelector col-md-2" >
+<div class="controlPanel basecol_routeSelector" >
   <span>
     <div class="fa-stack ">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -626,7 +630,7 @@
 
 <!--CONTROL PANEL - 5. ROUTE TABLE MODULE--> 
 
-<div class="basecol_routeTable"> 
+<div class="controlPanel basecol_routeTable"> 
   <div class="col-xs-12 body">
     <h6 ng-show="variants[tabnav].sel">
       <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
@@ -634,7 +638,7 @@
         Route Scorecard
       </span>
 
-      <span style="font-size: 1em">
+      <span>
         {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
       </span>
     </h6>
@@ -734,43 +738,45 @@
 
 <!--CONTROL PANEL - 6. ROUTE EDITOR MODULE--> 
 
-<div class="basecol_serviceEditor col-md-3">
-  <h5> AVG WAIT TIME </h5>
-  <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-4 text-right">
-          <h3 class="noTopMargin noBottomMargin">
+<div class="controlPanel basecol_serviceEditor container">
+  <h6> AVG WAIT TIME </h6> 
+  <div class="serviceLabel">Peak</div>
+  <div class="row">
+    <div class="col-lg-4">
+      <h3 class="noTopMargin noBottomMargin">
             {{ scenario[tabnav].peak.min | avgWaitTime }}
-          </h3>
-        </div>
-        <div class="col-xs-4 text-center">
-            <br><small><i class="fa fa-angle-double-left"></i> Peak &nbsp;&nbsp;&nbsp; Off-Peak <i class="fa fa-angle-double-right"></i></small>
-        </div>
-        <div class="col-xs-4 text-left">
-          <h3 class="noTopMargin noBottomMargin">
+      </h3>
+    </div>
+    <div class="col-lg-8">
+      <div class="serviceFrequency">
+        <input type="range" min="1" max="30" value="5"  class="input-sm"
+                    ng-model="scenario[tabnav].peak.min"
+                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+      </div>                 
+    </div>
+  </div>  
+  <div class="serviceLabel">Off-Peak</div>
+  <div class="row">
+    <div class="col-lg-4">
+      <h3 class="noTopMargin noBottomMargin">
             {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          </h3>
-        </div>
+      </h3>
+    </div>
+    <div class="col-lg-8">
+      <div class="serviceFrequency">
+        <input type="range" min="1" max="30" value="10" class="input-sm"
+                    ng-model="scenario[tabnav].offpeak.min"
+                    ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
       </div>
-      <div class="row">
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="5"
-                  ng-model="scenario[tabnav].peak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-        <div class="col-xs-6">
-          <input type="range" min="1" max="30" value="10"
-                  ng-model="scenario[tabnav].offpeak.min"
-                  ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        </div>
-      </div>
-    
-      <h5> STATION TYPE </h5>
-      <div class="btn-group btn-group-justified">
-        <label  class="btn btn-info" btn-radio="0"
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+    <h6> STATION TYPE </h6>
+    <div class="btn-group btn-group-justified">
+        <label  class="btn btn-info" btn-radio="0" 
                 ng-model="scenario[tabnav].station" 
                 ng-click="scenario[tabnav].station=0;
                           updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
@@ -799,4 +805,4 @@
   </div>
 </div>
 
-</div>
+
