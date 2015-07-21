@@ -1,9 +1,5 @@
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
-  document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 185 + 'px';
-  document.getElementById('rightDynamic1').style.width = ((window.innerWidth/2) - 35)/2 + 'px';
-  // document.getElementById('rightDynamic2').style.width = ((window.innerWidth/2) - 35)/2 + 'px';
-
   // Management for current scenario
   var scenarioBase = {
     name     : null,
@@ -29,7 +25,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     com : null,
     all : {},
   }
-  $scope.tabnav = 'BH';
 
   // left globals
   var subwaysLayer    = null;

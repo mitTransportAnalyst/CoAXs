@@ -45,8 +45,19 @@ body {
   cursor           : pointer;
   opacity          : 1;
   margin-left      : 5px;
+  font-size        : 1.2em;
 }
 
+/* Reduce SVG size in buttons */
+.stationIcons {
+  height:15px;
+  margin-bottom: 4px;
+}
+
+.badgeScorecard {
+  color : #216C2A;
+  background-color: #FFF;
+}
 button {
   cursor           : pointer;
 }
@@ -58,6 +69,9 @@ button {
   background-color : #1fa67a;
 }
 
+.input-group-btn {
+  font-size: 1em;
+}
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
   color            : #FFF;
@@ -67,7 +81,7 @@ button {
   color            : #FFF;
 }
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: rgb(220, 220, 220);
+  background-color: rgb(75, 75, 75);
 }
 .fa .pull-right { 
   line-height: inherit;
@@ -75,8 +89,6 @@ button {
 i.fa {
   cursor: pointer;
 }
-
-
 /*navigation*/
 nav {
   position         : absolute;
@@ -118,6 +130,7 @@ nav div.section {
   padding          : 10px;
   z-index          : 100;
   cursor           : pointer;
+  font-size        : 1.5em;
 /*    width            : 50%;*/
   float            : left;
   text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
@@ -131,96 +144,166 @@ nav div.section {
   font-family      : sans-serif;
   text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
 }
+.dot-unselected {
+  opacity          : 0.35;
+  text-shadow      : 0px 0px 0px;
+  font-size        : 1em;
+}
 .unselected {
   opacity          : 0.35;
 }
-.unselected.active, .unselected.focus, .unselected.hover, .unselected:active, .unselected:focus, .unselected:hover {
+.dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
   opacity          : 0.75;
 }
-
-/* in app navigation */
-.progress {
-  border-radius: 0px;
-  margin: 0px 0px 0px 0px;
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  top: 0px;
-  height: 10px;
-  z-index: 100;
-  background-color: #ff7f7f;
+.basecol {
+  position         : absolute;
+  width            : 50%;
+  bottom           : 0px;
+  background-color : #000;
+  color            : #FFF;
+  overflow-y       : hidden;
+  overflow-x       : hidden;
 }
 
-.bottomNav {
-  position: absolute;
-  background-color: #d3d3d3;
-  bottom: 0px; 
-  height: 25%;
-  min-height: 150px;
-  overflow: hidden;
-  padding-top: 28px;
+/* BOTTOM-UP CONTROL PANEL MODULES */
+
+/*.controlModules {
+  font-size: 1.2em;
+}
+.table{
+  font-size: .8em;
+}*/
+
+.iconContainer {
+  border-radius    : 10px;
+  background-color : yellow;
+  border-color: black;
+  border-width     : 1px;
+  color            : black;
+  margin-bottom: 0px;
+  opacity: 1;
+  padding: 4px;
 }
 
-.colBody .colHead {
-  height: 28px;
-  line-height: 28px;
-  background-color: #696969;
-  position: absolute;;
-  top: 0px;
-  width: inherit;
+.basecol_POI {
+  position         : absolute;
+  min-height: 23%;
+  max-height: 28%;
+  left             : 0%;
+  width            : 4%;
+  bottom           : 0px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+  overflow-y       : hidden;
+  overflow-x       : hidden;
+  border-right: 0px solid gray;
   text-align: center;
-  color: white;
-  cursor: pointer;
 }
 
-.bottomNav .colBody {
-  height: 100%;
-  float: left;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  cursor: pointer;
+.basecol_filter {
+  position         : absolute;
+  min-height: 23%;
+  max-height: 38%;
+  left             : 4.2%;
+  width            : 13%;
+  bottom           : 0px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+  overflow-y       : hidden;
+  overflow-x       : hidden;
+   border-right: 0px solid gray;
 }
 
-.bottomNav:not(:first-child) .colHead {
-  border: 0px solid #7e7e7e;
-  border-right-width: 1px;
-}
-.bottomNav:not(:first-child) .colBody {
-  border: 0px solid #d3d3d3;
-  border-right-width: 1px;
-}
-
-
-.colBody .subHead {
-  height: 15px;
-  overflow: hidden;
-  line-height: 15px;
-  background-color: #b4b4b4;
-  text-align: center;
-  font-size: 0.75em;
-  color: white;
-  cursor: pointer;
+.basecol_scenarioTable {
+  position         : absolute;
+  min-height: 23%;
+  max-height: 38%;
+  left             : 17.4%;
+  width            : 32.6%;
+  bottom           : 0px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+  overflow-y       : hidden;
+  overflow-x       : hidden;
 }
 
-.bottomNav .table {
-  font-size: 0.75em;
-}
-
-.bottomNav .isosRange {
-  margin: 2px 0px -2px 0px;
-}
-
-.smallColVal {
-  width: 100%;
-  height: 25%;
+.basecol_routeSelector{
+  position         : absolute;
+  min-height: 23%;
+  max-height: 38%;
+  left             : 50.2%;
+  width            : 2.5%;
+  bottom           : 0px;
+  font-size        : 1.2em;
   padding: 5px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+  text-align: center;
 }
 
+.basecol_routeTable{
+  position         : absolute;
+  min-height: 23%;
+  max-height: 23%;
+  left             : 52.9%;
+  width            : 24.4%;
+  bottom           : 0px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+  overflow-y       : scroll;
+  overflow-x       : hidden;
+}
 
+.basecol_serviceEditor {
+  position         : absolute;
+  min-height: 23%;
+  max-height: 38%;
+  left             : 77.5%;
+  width            : 22.5%;
+  bottom           : 0px;
+  background-color : yellow;
+  color            : black;
+  opacity: .8;
+}
+
+/* End of BOTTOM-UP CONTROL PANEL MODULES */
 
 .saveAlt {
   background-color : #1fa67a;
   overflow         : hidden;
+}
+/*label {
+  font-weight      : 300;
+}*/
+.basecol h1, .topcol h1, .basecol h2, .topcol h2, .basecol h3, .topcol h3, .basecol h4, .topcol h4, .basecol h5, .topcol h5, .basecol h6, .topcol h6 {
+  padding-left     : 10px;
+  padding-right    : 10px;
+}
+.basecol .body, .topcol .body {
+  background-color : rgb(50, 50, 50);
+  overflow: hidden;
+}
+.basecol .alert {
+  border-radius: 0px;
+  border-width: 0px;
+  padding: 5px 10px 0px 10px;
+  overflow: hidden;
+  margin-bottom: 0px;
+}
+.basecol .progress {
+  border-radius: 0px;
+  margin: 0px 0px 10px 0px;
+  overflow: hidden;
+  margin-bottom: 0px;
+}
+
+.timeAdjust {
+  border-radius    : 50%;
 }
 .noTopMargin {
   margin-top : 0px;
@@ -229,6 +312,13 @@ nav div.section {
   margin-bottom : 0px;
 }
 
+.isochroneSlider {
+  height : 30px;
+  width: 300px;
+  overflow : auto;
+  margin-bottom: 15px;
+  border-color: yellow;
+}
 
 /*leaflet map*/
 .icon-off {
@@ -241,7 +331,7 @@ nav div.section {
 
 /*maps*/
 .angular-leaflet-map {
-  height           : 75.5%;
+  height           : 100%;
   width            : 50%;
   position         : absolute;
 }
