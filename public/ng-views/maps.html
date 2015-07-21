@@ -353,12 +353,12 @@
         <i class="fa fa-users"></i>
       </div>
     </div>
-    <span class="userDot" 
+    <div class="smallColVal" 
           ng-repeat="user in poiUsers track by $index" 
           ng-click="targetPOIUsers(user.name)" 
-          ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'">
-          <small>{{ user.name }}</small>
-    </span>
+          ng-class="user.name == currentPOIUser ? '' : 'unselected'">
+          {{ user.name }}
+    </div>
   </div>
 
   <!-- destination and time filters --> 
@@ -409,7 +409,7 @@
 
 
   <!-- 3 scenario table module --> 
-  <div class="colBody" style="width:36%"> 
+  <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="combosView=!combosView">
       <i class="fa fa-binoculars"></i>
       <span ng-show="!combos.sel">Existing MBTA System</span>
@@ -520,62 +520,40 @@
         </tr>
       </tbody>
     </table>
-    
   </div>
 
 
   <!-- 4 route selector module --> 
-  <div class="colBody" style="width:15%"> 
-    <span>
-      <div class="fa-stack ">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-bus fa-stack-1x fa-inverse"></i>
-      </div> 
-    </span>
+  <div class="colBody text-center" style="width:35px"> 
+    <div class="colHead">
+      <div class="fa-stack" ng-click="targetPOIUsers()">
+        <i class="fa fa-bus"></i>
+      </div>
+    </div>
+      
+    <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
+          ng-click="targetCorridor('BH'); tabnav='BH'; overview=true"
+          ng-class="tabnav !== 'BH' ? 'unselected' : ''">
+          BH
+    </div>
 
-    <span class="fa-stack" 
-          ng-click="targetCorridor('BH'); 
-                    tabnav='BH'; overview=true"
-          ng-class="tabnav !== 'BH' ? 'dot-unselected' : ''"
-          style="color:#0071CA">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>BH</small>
-      </i>
-    </span>
-
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HP'); 
-                    tabnav='HP'; overview=true"
-          ng-class="tabnav !== 'HP' ? 'dot-unselected' : ''"
-          style="color:#B10086">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
+    <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
+          ng-click="targetCorridor('HP'); tabnav='HP'; overview=true"
+          ng-class="tabnav !== 'HP' ? 'unselected' : ''">
         <large>HP</small>
-      </i>
-    </span>
+    </div>
 
-    <span class="fa-stack" 
-          ng-click="targetCorridor('HD'); 
-                    tabnav='HD'; overview=true"
-          ng-class="tabnav !== 'HD' ? 'dot-unselected' : ''"
-          style="color:#CE5504">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>HD</small>
-      </i>
-    </span>
+    <div class="smallColVal" style="color:#FFF;background-color:#CE5504;"
+          ng-click="targetCorridor('HD'); tabnav='HD'; overview=true"
+          ng-class="tabnav !== 'HD' ? 'unselected' : ''">
+          HD
+    </div>
 
-    <span class="fa-stack" 
-          ng-click="targetCorridor('CT'); 
-                    tabnav='CT'; overview=true"
-          ng-class="tabnav !== 'CT' ? 'dot-unselected' : ''"
-          style="color:#AD0101">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-stack-1x fa-inverse">
-        <small>CT</small>
-      </i>
-    </span> 
+    <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
+          ng-click="targetCorridor('CT'); tabnav='CT'; overview=true"
+          ng-class="tabnav !== 'CT' ? 'unselected' : ''">
+          CT
+    </div> 
   </div>  
 
 

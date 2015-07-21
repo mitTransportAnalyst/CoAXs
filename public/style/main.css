@@ -48,10 +48,6 @@ body {
   font-size        : 1.2em;
 }
 
-.badgeScorecard {
-  color : #216C2A;
-  background-color: #FFF;
-}
 button {
   cursor           : pointer;
 }
@@ -140,25 +136,11 @@ nav div.section {
   font-family      : sans-serif;
   text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
 }
-.dot-unselected {
-  opacity          : 0.35;
-  text-shadow      : 0px 0px 0px;
-  font-size        : 1em;
-}
 .unselected {
   opacity          : 0.35;
 }
-.dot-unselected.active, .dot-unselected.focus, .dot-unselected.hover, .dot-unselected:active, .dot-unselected:focus, .dot-unselected:hover {
+.unselected.active, .unselected.focus, .unselected.hover, .unselected:active, .unselected:focus, .unselected:hover {
   opacity          : 0.75;
-}
-.basecol {
-  position         : absolute;
-  width            : 50%;
-  bottom           : 0px;
-  background-color : #000;
-  color            : #FFF;
-  overflow-y       : hidden;
-  overflow-x       : hidden;
 }
 
 /* in app navigation */
@@ -204,7 +186,11 @@ nav div.section {
   cursor: pointer;
 }
 
-.bottomNav:not(:first-child) .colHead, .bottomNav:not(:first-child) .colBody {
+.bottomNav:not(:first-child) .colHead {
+  border: 0px solid #7e7e7e;
+  border-right-width: 1px;
+}
+.bottomNav:not(:first-child) .colBody {
   border: 0px solid #d3d3d3;
   border-right-width: 1px;
 }
@@ -229,30 +215,17 @@ nav div.section {
   margin: 2px 0px -2px 0px;
 }
 
+.smallColVal {
+  width: 100%;
+  height: 25%;
+  line-height: 200%
+}
+
 
 
 .saveAlt {
   background-color : #1fa67a;
   overflow         : hidden;
-}
-.basecol h1, .topcol h1, .basecol h2, .topcol h2, .basecol h3, .topcol h3, .basecol h4, .topcol h4, .basecol h5, .topcol h5, .basecol h6, .topcol h6 {
-  padding-left     : 10px;
-  padding-right    : 10px;
-}
-.basecol .body, .topcol .body {
-  background-color : rgb(50, 50, 50);
-  overflow: hidden;
-}
-.basecol .alert {
-  border-radius: 0px;
-  border-width: 0px;
-  padding: 5px 10px 0px 10px;
-  overflow: hidden;
-  margin-bottom: 0px;
-}
-
-.timeAdjust {
-  border-radius    : 50%;
 }
 .noTopMargin {
   margin-top : 0px;
@@ -273,7 +246,7 @@ nav div.section {
 
 /*maps*/
 .angular-leaflet-map {
-  height           : 100%;
+  height           : 75.5%;
   width            : 50%;
   position         : absolute;
 }
