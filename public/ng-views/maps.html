@@ -560,17 +560,27 @@
   <!-- 5 route table module --> 
   <div class="colBody" id="rightDynamic1">
     <div class="colHead">
-        <span ng-show="variants[tabnav].sel">
-          <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-                ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
-                Route Scorecard
-          </span>
-          {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
+      <span ng-show="variants[tabnav].sel">
+        {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
       </span>
 
       <span ng-show="!variants[tabnav].sel">
-        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
+        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }} corridor
       </span>
+    </div>
+
+    <div class="subHead" ng-show="variants[tabnav].sel"
+          style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }};
+                  padding-right: 5px"
+          ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">
+      <span class="pull-right">
+            View Scorecard
+      </span>
+      {{ variants[tabnav].all[variants[tabnav].sel].name }} selected.
+    </div>
+
+    <div class="subHead" ng-show="!variants[tabnav].sel">
+      This route will be exluded from model right.
     </div>
 
       <table class="table table-condensed table-hover">
@@ -578,24 +588,23 @@
           <tr>
             <th><i class="fa fa-check-square"></i></th>
             <th>Name</th>
-            <th>Station Type</th>
+            <th>Station</th>
             <th>Peak</th>
-            <th>
-              Off-Peak
-            </th>
+            <th>Off-Peak</th>
+            <th>Modifying</th>
           </tr>
         </thead>
         
         <tbody>
-          <tr ng-repeat    = "variant in variants[tabnav].all | toArray | orderBy:'created'"
-              ng-click     = "updateTargetFeature(variant)">
+          <tr ng-repeat="variant in variants[tabnav].all | toArray | orderBy:'created'"
+              ng-click="updateTargetFeature(variant)">
             <td>
-              <i  class = "fa fa-square-o" 
+              <i class="fa fa-square-o" 
                   ng-show="variants[tabnav].sel !== variant._key" 
                   ng-click="setSelectedVariant(tabnav, variant._key);
                             updateRouteScorecard(scenario[tabnav].routeId, tabnav);
                             $event.stopPropagation()"></i>
-              <i  class = "fa fa-check-square" 
+              <i class="fa fa-check-square" 
                   ng-show="variants[tabnav].sel == variant._key"
                   ng-click="setSelectedVariant(tabnav, null);
                             updateRouteScorecard();
@@ -635,7 +644,7 @@
             <td>
               <i class="fa fa-sliders"></i>
             </td>
-            <td><b>Current Scenario</b></td>
+            <td><b>Current</b></td>
             <td>
               <span ng-if="scenario[tabnav].station == 0">
                 Standard 
