@@ -168,6 +168,17 @@ nav div.section {
 }
 
 /* in app navigation */
+.progress {
+  border-radius: 0px;
+  margin: 0px 0px 0px 0px;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  height: 10px;
+  z-index: 100;
+}
+
 .bottomNav {
   position: absolute;
   background-color: #d3d3d3;
@@ -178,14 +189,40 @@ nav div.section {
 }
 
 .bottomNav .colBody {
-  height: 100px;
-  background-color: red;
+  height: 100%;
+  float: left;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.bottomNav:not(:first-child) .colBody {
+  border: 0px solid #d3d3d3;
+  border-right-width: 1px;
 }
 
 .colBody .colHead {
-  height: 20px;
+  height: 28px;
+  line-height: 28px;
   background-color: #696969;
+  text-align: center;
+  color: white;
 }
+
+.colBody .subHead {
+  height: 15px;
+  overflow: hidden;
+  line-height: 15px;
+  background-color: #b4b4b4;
+  text-align: center;
+  font-size: 0.75em;
+  color: white;
+}
+
+.bottomNav .isosRange {
+  margin: 0px 0px -5px 0px;
+}
+
+
 
 .saveAlt {
   background-color : #1fa67a;
@@ -206,12 +243,6 @@ nav div.section {
   overflow: hidden;
   margin-bottom: 0px;
 }
-.basecol .progress {
-  border-radius: 0px;
-  margin: 0px 0px 10px 0px;
-  overflow: hidden;
-  margin-bottom: 0px;
-}
 
 .timeAdjust {
   border-radius    : 50%;
@@ -223,13 +254,6 @@ nav div.section {
   margin-bottom : 0px;
 }
 
-.isochroneSlider {
-  height : 30px;
-  width: 300px;
-  overflow : auto;
-  margin-bottom: 15px;
-  border-color: yellow;
-}
 
 /*leaflet map*/
 .icon-off {

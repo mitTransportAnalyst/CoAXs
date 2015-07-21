@@ -1,6 +1,12 @@
+<!-- progress bar -->
+<div class="progress" ng-show="loadProgress.vis">
+  <div class="progress-bar progress-bar-info progress-bar-striped active" 
+        role="progressbar"  id="isosProgressBar"
+        style="width:{{loadProgress.val}}%">
+  </div>
+</div>
 
 <!-- hamburger menu topleft -->
-
 <div class="topnav">
   <div class="fa-stack" ng-click="managerView=true">
     <i class="fa fa-stop fa-stack-2x"></i>
@@ -340,103 +346,81 @@
 
 <div class="bottomNav">
 
-  <!--CONTROL PANEL - 1. POI MARKER ACTIVATION --> 
-  <div class="colBody" style="width:20%">
+  <!-- 1 poi markers --> 
+  <div class="colBody text-center" style="width:35px">
     <div class="colHead">
-      <div class="fa-stack" ng-click="targetPOIUsers(); poiUserDots = !poiUserDots" style="margin-bottom: 8px">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-users fa-stack-1x fa-inverse destinationIcon iconContainer"></i>
+      <div class="fa-stack" ng-click="targetPOIUsers()">
+        <i class="fa fa-users"></i>
       </div>
     </div>
-    <br>
-    <span ng-show="poiUserDots">
-      <span class="fa-stack userDot" 
-            ng-repeat="user in poiUsers track by $index" 
-            ng-click="targetPOIUsers(user.name)" 
-            ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'"
-            style="color:#{{ user.color }}">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-stack-1x fa-inverse">
-          <small>{{ user.name }}</small>
-        </i>
+    <span class="userDot" 
+          ng-repeat="user in poiUsers track by $index" 
+          ng-click="targetPOIUsers(user.name)" 
+          ng-class="user.name == currentPOIUser ? '' : 'dot-unselected'">
+          {{ user.name }}
+    </span>
+  </div>
+
+  <!-- destination and time filters --> 
+  <div class="colBody" style="width:15%"> 
+    <div class="colHead">
+      <i class="fa fa-clock-o"></i> Travel Time
+    <div>
+
+    <div class="subHead" ng-click="toggleShowVectorIsos()">
+      Toggle time vectors
+      <span ng-show="showVectorIsosOn">
+        <i class="fa fa-eye"></i> On
       </span>
-    <span>
+      <span ng-show="!showVectorIsosOn">
+        <i class="fa fa-eye-slash"></i> Off
+      </span>
+    </div>
+
+    <span ng-class="showVectorIsosOn ? '' : 'unselected'">
+      <input type="range" min="1" max="24" class="isosRange"
+        ng-model="vectorIsos.val"
+        ng-disabled="!showVectorIsosOn"
+        ng-click="showVectorIsos(300*vectorIsos.val)"/>
+      <i class="fa fa-minus-square" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+      {{ vectorIsos.val*5 | minuteConverter }} hours
+      <i class="fa fa-plus-square" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+    </span>
+
+
+    <h5>Destinations</h5>
+      <label class="btn iconContainer">
+        <i class="fa fa-briefcase"></i>
+      </label>
+      <label  class="btn iconContainer">
+        <i class="fa fa-heartbeat"></i>
+      </label>
+      <label  class="btn iconContainer">
+        <i class="fa fa-shopping-cart"></i>
+      </label>
+      <label  class="btn iconContainer">
+        <i class="fa fa-graduation-cap"></i>
+      </label>
+    <br>
+
+    <h5>Mode</h5>
+      <label class="btn iconContainer">
+        <i class="fa fa-bus"></i>
+      </label>
+      <label class="btn iconContainer">
+        <i class="fa fa-bicycle"></i>
+      </label>
+      <label class="btn iconContainer">
+        <i class="fa fa-child"></i>
+      </label>
+      <label class="btn iconContainer">
+        <i class="fa fa-ship"></i>
+      </label>
   </div>
 
 
-  <!--CONTROL PANEL - 2. DESTINATION & TIME FILTER --> 
-  <div class="colHead" style="width:20%"> 
-    <div class="progress" ng-show="loadProgress.vis">
-      <div class="progress-bar progress-bar-info progress-bar-striped active" 
-            role="progressbar"  id="isosProgressBar"
-            style="width:{{loadProgress.val}}%">
-        {{loadProgress.val}}%
-      </div>
-    </div>
-    <h5 style="margin-bottom: -7px">
-      TRAVEL TIME: 
-      <span ng-click="toggleShowVectorIsos()">
-              {{ vectorIsos.val*5 | minuteConverter }}
-              <span class="badge">
-              <i class="fa fa-eye" ng-show="showVectorIsosOn"></i>
-              <i class="fa fa-eye-slash" ng-show="!showVectorIsosOn"></i>
-              </span>
-      </span>
-    <h5>
-
-    <div class="isochroneSlider">
-      <span class="text-center" ng-class="showVectorIsosOn ? '' : 'unselected'">
-        <i class="fa fa-minus-square" 
-            ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
-        <span style="width:50%;display:inline-block">
-          <input type="range" min="1" max="24" class="isosRangeBar" style="top:10px; margin-top:8px; margin-bottom:-4px"
-            ng-model="vectorIsos.val"
-            ng-disabled="!showVectorIsosOn"
-            ng-click="showVectorIsos(300*vectorIsos.val)"/>
-        </span>
-        <i class="fa fa-plus-square" 
-            ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
-      </span>
-    </div>
-
-    <h5 style="margin-bottom: -20px"> DESTINATIONS </h5> 
-      <br>
-      <label class="btn iconContainer">
-             <i class="fa fa-briefcase fa-fw destinationIcon"></i>
-      </label>
-      <label  class="btn iconContainer">
-             <i class="fa fa-heartbeat fa-fw destinationIcon"></i>
-      </label>
-      <label  class="btn iconContainer">
-            <i class="fa fa-shopping-cart fa-fw destinationIcon"></i>
-      </label>
-      <label  class="btn iconContainer">
-            <i class="fa fa-graduation-cap fa-fw destinationIcon"></i>
-      </label>
-    </h5>
-    <br>
-
-    <h5 style="margin-bottom: -20px"> MODE </h4> 
-      <br>
-      <label class="btn iconContainer">
-             <i class="fa fa-bus destinationIcon"></i>
-      </label>
-      <label class="btn iconContainer">
-             <i class="fa fa-bicycle destinationIcon"></i>
-      </label>
-      <label class="btn iconContainer">
-             <i class="fa fa-child destinationIcon"></i>
-      </label>
-      <label class="btn iconContainer">
-             <i class="fa fa-ship destinationIcon"></i>
-      </label>
-    </h5>
-  </div>
-
-
-  <!--CONTROL PANEL - 3. SCENARIO TABLE MODULE --> 
-
-  <div class="basecol_scenarioTable">
+  <!-- 3 scenario table module --> 
+  <div class="colBody" style="width:15%"> 
     <div class="col-xs-12 body">
       <h6 style="margin-bottom: -5px; color: red;" ng-click="combosView=!combosView">
         <span ng-show="!combos.sel">
@@ -561,9 +545,8 @@
   </div>
 
 
-  <!--CONTROL PANEL - 4. ROUTE SELECTOR MODULE--> 
-
-  <div class="basecol_routeSelector col-md-2" >
+  <!-- 4 route selector module --> 
+  <div class="colBody" style="width:15%"> 
     <span>
       <div class="fa-stack ">
         <i class="fa fa-circle fa-stack-2x"></i>
@@ -617,8 +600,7 @@
   </div>  
 
 
-  <!--CONTROL PANEL - 5. ROUTE TABLE MODULE--> 
-
+  <!-- 5 route table module --> 
   <div class="basecol_routeTable"> 
     <div class="col-xs-12 body">
       <h6 ng-show="variants[tabnav].sel">
@@ -725,8 +707,7 @@
   </div>
 
 
-  <!--CONTROL PANEL - 6. ROUTE EDITOR MODULE--> 
-
+  <!-- 6 route editor module --> 
   <div class="basecol_serviceEditor col-md-3">
     <h5> AVG WAIT TIME </h5>
     <div class="row" style="border-bottom-width:0px;border-bottom-style:solid">
