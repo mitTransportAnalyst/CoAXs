@@ -534,48 +534,44 @@
     <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
           ng-click="targetCorridor('BH'); tabnav='BH'; overview=true"
           ng-class="tabnav !== 'BH' ? 'unselected' : ''">
-          BH
+          <p>BH</small>
     </div>
 
     <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
           ng-click="targetCorridor('HP'); tabnav='HP'; overview=true"
           ng-class="tabnav !== 'HP' ? 'unselected' : ''">
-        <large>HP</small>
+          <p>HP</small>
     </div>
 
     <div class="smallColVal" style="color:#FFF;background-color:#CE5504;"
           ng-click="targetCorridor('HD'); tabnav='HD'; overview=true"
           ng-class="tabnav !== 'HD' ? 'unselected' : ''">
-          HD
+          <p>HD</small>
     </div>
 
     <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
           ng-click="targetCorridor('CT'); tabnav='CT'; overview=true"
           ng-class="tabnav !== 'CT' ? 'unselected' : ''">
-          CT
+          <p>CT</p>
     </div> 
   </div>  
 
 
   <!-- 5 route table module --> 
-  <div class="basecol_routeTable"> 
-    <div class="col-xs-12 body">
-      <h6 ng-show="variants[tabnav].sel">
-        <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
-              ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
-          Route Scorecard
-        </span>
-
-        <span style="font-size: 1em">
+  <div class="colBody" id="rightDynamic1">
+    <div class="colHead">
+        <span ng-show="variants[tabnav].sel">
+          <span class="badge pull-right" style="color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}"
+                ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard">       
+                Route Scorecard
+          </span>
           {{ variants[tabnav].all[variants[tabnav].sel].name }} has been selected as the {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant.
-        </span>
-      </h6>
-
-      <span ng-show="!variants[tabnav].sel" style="color:red">
-        <h6>
-          <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
-        </h6>
       </span>
+
+      <span ng-show="!variants[tabnav].sel">
+        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }}. <small>This route will be exluded from model right.</small>
+      </span>
+    </div>
 
       <table class="table table-condensed table-hover">
         <thead>
@@ -660,8 +656,8 @@
           </tr>
         </tbody>
       </table>
-    </div>
   </div>
+
 
 
   <!-- 6 route editor module --> 
