@@ -45,7 +45,6 @@ body {
   cursor           : pointer;
   opacity          : 1;
   margin-left      : 5px;
-  font-size        : 1.2em;
 }
 
 button {
@@ -59,9 +58,6 @@ button {
   background-color : #1fa67a;
 }
 
-.input-group-btn {
-  font-size: 1em;
-}
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
   color            : #FFF;
@@ -122,7 +118,6 @@ nav div.section {
   padding          : 10px;
   z-index          : 100;
   cursor           : pointer;
-  font-size        : 1.5em;
 /*    width            : 50%;*/
   float            : left;
   text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
