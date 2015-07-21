@@ -160,6 +160,7 @@ nav div.section {
   height:100%; 
   width:100%;
   display: table;
+  overflow-y: hidden;
 }
 
 
@@ -225,10 +226,8 @@ nav div.section {
   margin: 2px 0px -2px 0px;
 }
 
-.smallColVal {
-  width: 100%;
-  height: 25%;
-  padding: 5px;
+.colBody .smallColVal {
+  padding: 7px 0px 7px 0px;
 }
 
 
