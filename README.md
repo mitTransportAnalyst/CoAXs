@@ -1,6 +1,9 @@
 # CoAXs
 An interactive transit corridor “modifier/builder,” available as a web based tool and intended for use as an interactive, browser-based tool presented in an interactive transit exhibit.
 
+##### Warnings
+Note to users: There are scroll bar issues present. Also, recorded issues of `post` fails on retrieving large geoJSONs. For usability, make sure you are running Mozilla FF (latest version). Also, since we have yet to custom remove the scroll bar issue - if you are running a Windows OS, use https://userstyles.org/styles/5449/scrollbar-hidden-hide-scrollbars-totally to deal with the scroll bar situation.
+
 ### View staging server online
 The latest pushes at the end of day from the master branch are available online at `http://coaxs-staging.herokuapp.com/#/maps`. Due to cross-origin request issues, please be sure that you are going to `http` and NOT `https`. If you type in the address without specifically designating `http`, Heroku will route you automatically to `https`, so please be aware of that.
 
