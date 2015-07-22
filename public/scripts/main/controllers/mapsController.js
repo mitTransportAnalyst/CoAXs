@@ -377,37 +377,14 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     };
   }
 
-  // this is to iterate through and highlight only certain user's points (if null then all shown)
-  // Updated to assign icons based on different POI categories
-  $scope.targetPOIUsers = function (id) { 
-    //console.log("controller detects clicked on of:" +" "+ id);
-    if (id) { leftService.targetPOIUsers(poiUserPoints, id); console.log("controller detects clicked on of:" +" "+ id); }
-    else { 
-      poiUserPoints.eachLayer( function (marker) { 
-        console.log("marker in controller", marker);
-        var icon = marker.options.icon.options.iconUrl;
-        //console.log("icon URL at controller"+" "+icon);
-          var icon_on = L.Icon.extend({
-            options : {
-              iconUrl      : icon,
-              iconSize     : [25, 25],
-              iconAnchor   : [8, 18],
-              popupAnchor  : [0, -15],
-              opacity      : 1,
-              className    : 'icon-on'
-            }
-          });
-        marker.setIcon(new icon_on());
-      });  
+  $scope.targetPOIUsers = function (id) {
+    if (id) { 
+      leftService.targetPOIUsers(poiUserPoints, id); 
+    } else { 
+      poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) });
+      $scope.currentPOIUser = null;
     }
-    $scope.currentPOIUser = id;
   };
-// Original Version Below Replaced with the version above with different POI icon assignment 
-//   $scope.targetPOIUsers = function (id) {
-//     if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
-//     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
-
-
 
   // holdover from before we had the range slider, still keeping around just inc ase we need again
   $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}

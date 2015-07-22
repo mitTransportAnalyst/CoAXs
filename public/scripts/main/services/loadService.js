@@ -144,7 +144,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
         // POI Marker Class Setup
         var iconStyle = L.Icon.extend({
           options : {
-            iconSize     : [25, 25],
+            iconSize     : [16, 16],
             iconAnchor   : [8, 18],
             popupAnchor  : [0, -15],
             opacity: 1,
