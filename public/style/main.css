@@ -216,8 +216,10 @@ nav div.section {
 }
 
 .colBody .bottomFixed {
+  position:absolute;
   bottom: 0px; 
-  width: 100%;
+  width: inherit;
+  z-index: 90;
 }
 
 .bottomNav:not(:first-child) .colHead {
@@ -262,6 +264,7 @@ nav div.section {
   max-width: 100px;
   height: inherit;
   white-space: nowrap;
+  z-index: 9;
 }
 
 .scenariosTable .selected {

@@ -437,7 +437,7 @@
     <div class="showToggle" ng-show="visibleTabs.scenarios">
 
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
-        <div class="scenario">
+        <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);">
           <div>ID</div>
           <div><i class="fa fa-stop" style="color:#0071CA"  tooltip="Blue Hill"></i></div>
           <div><i class="fa fa-stop" style="color:#B10086"  tooltip="Hyde Park"></i></div>
@@ -446,6 +446,7 @@
           <div><i class="fa fa-arrows-h"></i></div>
         </div>
 
+        <div style="width:22px;height:100%;float:left;"></div>
 
         <div class="scenario" 
               ng-class="combos.sel == variant._key ? 'selected' : ''"
