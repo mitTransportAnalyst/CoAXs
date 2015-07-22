@@ -181,6 +181,7 @@ nav div.section {
   color: white;
   white-space: nowrap;
   box-shadow: 0px 5px 3px rgba(0,0,0,0.25);
+  z-index: 99;
 }
 
 .colBody .subHead {
@@ -206,7 +207,7 @@ nav div.section {
 
 .colBody .bottomFixed {
   bottom: 0px; 
-  position: absolute
+  width: 100%;
 }
 
 .bottomNav:not(:first-child) .colHead {
@@ -233,6 +234,7 @@ nav div.section {
 
 .colBody .showToggle {
   height: inherit;
+  width: inherit;
   padding: inherit;
   overflow: hidden;
 }
@@ -254,16 +256,6 @@ nav div.section {
 
 .scenariosTable .selected {
   background-color: blue !important;
-}
-
-.scenario .bottomFixed {
-  margin: 0px -3px 0px -3px;
-  overflow: hidden;
-  width: 100%;
-}
-.bottomFixed .subHead {
-  width: inherit;
-  padding: 0px;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 
