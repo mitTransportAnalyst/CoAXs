@@ -446,78 +446,79 @@
           <div><i class="fa fa-arrows-h"></i></div>
         </div>
 
-        <div style="width:22px;height:100%;float:left;"></div>
+        <div style="height:100%;width:10000px;overflow-y:scroll;overflow-x:scroll;">
+          <div style="width:22px;height:100%;float:left;"></div>
+          <div class="scenario" style="display: inline-block;white-space:nowrap;"
+                ng-class="combos.sel == variant._key ? 'selected' : ''"
+                ng-repeat="variant in combos.all | toArray | orderBy:'created'">
 
-        <div class="scenario" 
-              ng-class="combos.sel == variant._key ? 'selected' : ''"
-              ng-repeat="variant in combos.all | toArray | orderBy:'created'">
-
-          <div>
-            <span ng-show="combos.sel !== variant._key" 
-                ng-click="updateLeftRoutes(variant._key); combos.com=null;">
-              <small>{{ variant.name }}</small>
-            </span>
-            <span ng-show="combos.sel == variant._key"
-                ng-click="updateLeftRoutes(); combos.com=null;">
-              <small><b>{{ variant.name }}</b></small>
-            </span>
-          </div>
-          <div>
-            <span class="text-success" ng-show="variant.sel['BH']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-show="!variant.sel['BH']">
-              <i class="fa fa-times"></i>
-              <small><i>None</i></small>
-            </span>
-          </div>
-          <div>
-            <span class="text-success" ng-show="variant.sel['HP']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-show="!variant.sel['HP']">
-              <i class="fa fa-times"></i>
-              <small><i>None</i></small>
-            </span>
-          </div>
-          <div>
-            <span class="text-success" ng-show="variant.sel['HD']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-show="!variant.sel['HD']">
-              <i class="fa fa-times"></i>
-              <small><i>None</i></small>
-            </span>
-          </div>
-          <div>
-            <span class="text-success" ng-show="variant.sel['CT']">
-              <i class="fa fa-check"></i>
-              <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
-            </span>
-            <span class="text-danger" ng-show="!variant.sel['CT']">
-              <i class="fa fa-times"></i>
-              <small><i>None</i></small>
-            </span>
-          </div>
+            <div>
+              <span ng-show="combos.sel !== variant._key" 
+                  ng-click="updateLeftRoutes(variant._key); combos.com=null;">
+                <small>{{ variant.name }}</small>
+              </span>
+              <span ng-show="combos.sel == variant._key"
+                  ng-click="updateLeftRoutes(); combos.com=null;">
+                <small><b>{{ variant.name }}</b></small>
+              </span>
+            </div>
+            <div>
+              <span class="text-success" ng-show="variant.sel['BH']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['BH']">
+                <i class="fa fa-times"></i>
+                <small><i>None</i></small>
+              </span>
+            </div>
+            <div>
+              <span class="text-success" ng-show="variant.sel['HP']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['HP']">
+                <i class="fa fa-times"></i>
+                <small><i>None</i></small>
+              </span>
+            </div>
+            <div>
+              <span class="text-success" ng-show="variant.sel['HD']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['HD']">
+                <i class="fa fa-times"></i>
+                <small><i>None</i></small>
+              </span>
+            </div>
+            <div>
+              <span class="text-success" ng-show="variant.sel['CT']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['CT']">
+                <i class="fa fa-times"></i>
+                <small><i>None</i></small>
+              </span>
+            </div>
 
 
-          <div class="text-center">
-            <span ng-show="scenarioCompare && combos.sel !== variant._key">
-              <i  class = "fa fa-circle-o" 
-                  ng-show="combos.com !== variant._key" 
-                  ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
-              <i  class = "fa fa-check-circle" 
-                  ng-show="combos.com == variant._key"
-                  ng-click="combos.com=null; $event.stopPropagation()"></i>
-            </span>
-            <span ng-show="scenarioCompare && combos.sel == variant._key">
-              <i class="fa fa-ban"></i>
-            </span>
-          </div>
+            <div class="text-center">
+              <span ng-show="scenarioCompare && combos.sel !== variant._key">
+                <i  class = "fa fa-circle-o" 
+                    ng-show="combos.com !== variant._key" 
+                    ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
+                <i  class = "fa fa-check-circle" 
+                    ng-show="combos.com == variant._key"
+                    ng-click="combos.com=null; $event.stopPropagation()"></i>
+              </span>
+              <span ng-show="scenarioCompare && combos.sel == variant._key">
+                <i class="fa fa-ban"></i>
+              </span>
+            </div>
 
+          </div>
         </div>
       </div>
 
