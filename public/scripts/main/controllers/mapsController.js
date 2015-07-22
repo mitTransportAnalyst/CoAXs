@@ -423,7 +423,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   // just boiler for now, ignore this - i use it to debug, currently we are using it for the manager auto create scenario tool bound to hamburger menu
   $scope.test = function(foo) {
-    window.confirm('OK to run auto create scenarios?');
+    // window.confirm('OK to run auto create scenarios?');
 
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {

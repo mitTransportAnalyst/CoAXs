@@ -39,13 +39,12 @@ angular.module('coaxsFilters', [])
 // take and object and return an array of its keys
 .filter('toArray', function () { 
   return function (input) {
-    if (!(input instanceof Object)) { return input; }
+    if (!(input instanceof Object)) { console.log('f'); return input; }
     return Object.keys(input).map(function(k) {
       var val = input[k];
       val._key = k;
       return val;
-    })
-    return result;
+    });
   }
 })
 
