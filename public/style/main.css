@@ -20,7 +20,11 @@ body {
 button {
   cursor           : pointer;
 }
-
+.badge {
+  background-color: #FFF;
+  color: #5D5D5D;
+  cursor: pointer;
+}
 .form-control {
   border-width     : 0px;
   border-radius    : 0px;
@@ -72,6 +76,11 @@ nav div.section {
   z-index          : 100;
   width            : 50%;
 }
+.topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .topleft {
   width            : 100%;
   overflow         : hidden;

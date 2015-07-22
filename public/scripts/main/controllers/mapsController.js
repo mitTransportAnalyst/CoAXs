@@ -40,7 +40,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.vectorIsos   = {vis:false, val:12};
 
   // right globals
-  var geoJsonRight = null;
+  var geoJsonLeft = null;
 
 
   // Angular Leaflet Directive - base components
@@ -283,14 +283,16 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   // set left default scenario to examine (for SPA or compare)
   $scope.updateLeftRoutes = function(comboId) {
     if (comboId) {
-      leftService.updateLeftRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonRight, function(geoJson) {
-        geoJsonRight = geoJson;
+      leftService.updateLeftRoutes($scope.combos.all[comboId], $scope.variants, routesLayer, geoJsonLeft, function(geoJson) {
+        geoJsonLeft = geoJson;
       });
       $scope.combos.sel = comboId;
     } else {
-      leafletData.getMap('map_left').then(function(map) { map.removeLayer(geoJsonRight); });
-      $scope.combos.sel = null;
-      geoJsonRight      = null;
+      leafletData.getMap('map_left').then(function(map) { 
+        map.removeLayer(geoJsonLeft); 
+        $scope.combos.sel = null;
+        geoJsonLeft = null;
+      });
     }
   };
 

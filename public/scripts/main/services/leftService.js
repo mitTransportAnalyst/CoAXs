@@ -1,8 +1,8 @@
 coaxsApp.service('leftService', function (leafletData) {
 
-  this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonRight, cb) {
+  this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonLeft, cb) {
     leafletData.getMap('map_left').then(function(map) {
-      if (geoJsonRight) { map.removeLayer(geoJsonRight); }
+      if (geoJsonLeft) { console.log('foo', geoJsonLeft); map.removeLayer(geoJsonLeft); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
         var currenCor   = layer.options.base.corName;
@@ -23,11 +23,11 @@ coaxsApp.service('leftService', function (leafletData) {
           color  : '#' + layer.feature.properties.routeColor,
           weight : 1,
         });
-      });
+      })
 
       geoJson.addTo(map);
       cb(geoJson);
-    });
+    })
   };
 
    
