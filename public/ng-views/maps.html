@@ -382,8 +382,8 @@
         </span>
       </div>
 
-      <div class="text-center">
-        <span ng-class="showVectorIsosOn ? '' : 'unselected'">
+      <div class="text-center" style="padding: 0px 8px 0px 8px">
+        <span ng-class="showVectorIsosOn ? '' : 'unselected'" >
           <input type="range" min="1" max="24" class="isosRange"
             ng-model="vectorIsos.val"
             ng-disabled="!showVectorIsosOn"
@@ -635,7 +635,7 @@
       </div>
     </div>
       
-    <div class="showToggle" ng-show="visibleTabs.routes">
+    <div class="showToggle" ng-show="visibleTabs.routes" style="background-color: rgba(255,165,0,0.5)">
       <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
             ng-click="targetCorridor('BH'); tabnav='BH'; overview=true"
             ng-class="tabnav !== 'BH' ? 'unselected' : ''">
