@@ -231,18 +231,39 @@ nav div.section {
   padding: 7px 0px 7px 0px;
 }
 
-.colBody .scenariosTable {
-  overflow-x: scroll;
+.colBody .showToggle {
+  height: inherit;
+  padding: inherit;
   overflow: hidden;
 }
 
+.colBody .scenariosTable {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: inherit;
+}
+
 .scenariosTable .scenario {
+  padding: 0px 3px 0px 3px;
+  position: relative;
   float: left;
   max-width: 100px;
-  overflow: hidden;
+  height: inherit;
   white-space: nowrap;
-  margin-right: 3px;
-  padding: 0px 3px 0px 3px;
+}
+
+.scenariosTable .selected {
+  background-color: blue !important;
+}
+
+.scenario .bottomFixed {
+  margin: 0px -3px 0px -3px;
+  overflow: hidden;
+  width: 100%;
+}
+.bottomFixed .subHead {
+  width: inherit;
+  padding: 0px;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 
