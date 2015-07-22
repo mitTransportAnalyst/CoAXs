@@ -1,5 +1,14 @@
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
+  // Control Panel Dynamic Sizing
+  
+  
+  var tableWidth = ((window.innerWidth/2) - 40)*0.6 + 'px';
+  $scope.tableWidth = tableWidth;
+
+  var editorWidth = ((window.innerWidth/2) - 40)*0.4 + 'px';
+  $scope.editorWidth = editorWidth;
+
   // Management for current scenario
   var scenarioBase = {
     name     : null,
@@ -226,6 +235,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       $scope.poiUsers = poiUsers;
       poiUserPoints   = points;
       poiUserPoints.addTo(map);
+
     })
   })
 
@@ -371,11 +381,36 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   }
 
   // this is to iterate through and highlight only certain user's points (if null then all shown)
-  $scope.targetPOIUsers = function (id) {
-    if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
-    else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
+  // Updated to assign icons based on different POI categories
+  $scope.targetPOIUsers = function (id) { 
+    //console.log("controller detects clicked on of:" +" "+ id);
+    if (id) { leftService.targetPOIUsers(poiUserPoints, id); console.log("controller detects clicked on of:" +" "+ id); }
+    else { 
+      poiUserPoints.eachLayer( function (marker) { 
+        console.log("marker in controller", marker);
+        var icon = marker.options.icon.options.iconUrl;
+        //console.log("icon URL at controller"+" "+icon);
+          var icon_on = L.Icon.extend({
+            options : {
+              iconUrl      : icon,
+              iconSize     : [25, 25],
+              iconAnchor   : [8, 18],
+              popupAnchor  : [0, -15],
+              opacity      : 1,
+              className    : 'icon-on'
+            }
+          });
+        marker.setIcon(new icon_on());
+      });  
+    }
     $scope.currentPOIUser = id;
-  }
+  };
+// Original Version Below Replaced with the version above with different POI icon assignment 
+//   $scope.targetPOIUsers = function (id) {
+//     if (id) { leftService.targetPOIUsers(poiUserPoints, id); }
+//     else { poiUserPoints.eachLayer( function (layer) { layer.setStyle({opacity : 1, fillOpacity : 1}); }) }
+
+
 
   // holdover from before we had the range slider, still keeping around just inc ase we need again
   $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
@@ -387,8 +422,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     leafletData.getMap('map_left').then(function (map) {
       if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
       if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
-    })
-  }
+    });
+  };
 
 
   // just boiler for now, ignore this - i use it to debug, currently we are using it for the manager auto create scenario tool bound to hamburger menu

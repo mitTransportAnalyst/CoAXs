@@ -12,8 +12,24 @@ body {
 
 /*bs modification*/
 .btn {
-  border-radius    : 0px;
+  /*border-radius    : 0px;*/
+  border-radius    : 50px;
+  font-size: 1em;
 }
+
+.btn-info {
+  color: black;
+  background-color: yellow;
+  border-color: black;
+  border-width: 1px;
+}
+
+.btn-success {
+  color: black;
+  background-color: yellow;
+  border-color: black;
+}
+
 .btn-default {
   border-radius    : 0px;
   background-color : rgba(0,0,0,1);
@@ -24,8 +40,20 @@ body {
   background-color : #FFF;
   color            : rgb(50, 50, 50);
   cursor           : pointer;
-  opacity          : 0.8;
+  opacity          : 1;
+  color            : black;
+  cursor           : pointer;
+  opacity          : 1;
+  margin-left      : 3px;
+  font-size        : 1em;
 }
+
+/* Reduce SVG size in buttons */
+.stationIcons {
+  height:15px;
+  margin-bottom: 4px;
+}
+
 .badgeScorecard {
   color : #216C2A;
   background-color: #FFF;
@@ -40,6 +68,11 @@ button {
 .btn-savealt {
   background-color : #1fa67a;
 }
+
+.input-group-btn {
+  font-size: 1em;
+}
+
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
   color            : #FFF;
   border-left-width: 0px;
@@ -53,7 +86,9 @@ button {
 .fa .pull-right { 
   line-height: inherit;
 }
-
+i.fa {
+  cursor: pointer;
+}
 /*navigation*/
 nav {
   position         : absolute;
@@ -96,6 +131,7 @@ nav div.section {
   z-index          : 100;
   cursor           : pointer;
   font-size        : 1.5em;
+/*    width            : 50%;*/
   float            : left;
   text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
 }
@@ -111,7 +147,7 @@ nav div.section {
 .dot-unselected {
   opacity          : 0.35;
   text-shadow      : 0px 0px 0px;
-  font-size        : 0.75em;
+  font-size        : 1em;
 }
 .unselected {
   opacity          : 0.35;
@@ -128,13 +164,154 @@ nav div.section {
   overflow-y       : hidden;
   overflow-x       : hidden;
 }
+
+/* BOTTOM-UP CONTROL PANEL MODULES */
+
+.table{
+  font-size: .7em;
+}
+
+.controlPanel {
+  position         : absolute;
+  min-height       : 200px;
+  height           : 25%;
+  bottom           : 0px;
+  overflow         : hidden;
+  background-color : yellow;
+  color            : black;
+  padding-top      : 26px;
+}
+
+.controlPanel .content {
+  height: 100%;
+  float: left;
+  overflow-x: hidden;
+  overflow-y: auto;
+  cursor: pointer;
+  text-align: center;
+  }
+
+.content .header {
+  position: absolute;
+  text-align: center;
+  top: 0px;
+  height: 26px;
+  width: inherit;
+  line-height: 26px;
+  background-color: gray;
+  color: white;
+}
+
+.content .subHeader {
+  text-align: left;
+  text-indent: 5px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  background-color: gray;
+  }
+
+.content .subHeaderClickable {
+  text-align: center ;
+  text-indent: 5px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+ 
+  background-color: blue;
+  }
+
+.content .sliders {
+  float: left;
+
+}
+
+
+/*.travelPref {
+  left             : 3.3%;
+  width            : 14%;
+}
+
+.scenarios {
+  left             : 17.4%;
+  width            : 32.6%;
+}
+
+.scenarios .dashboard {
+  left             : 17.4%;
+  width            : 32.6%;
+}*/
+
+/*.iconContainer {
+  border-radius    : 9px;
+  background-color : yellow;
+  border-color: black;
+  border-width     : 1px;
+  color            : black;
+  margin-bottom: 0px;
+  opacity: 1;
+  padding: 4px;
+}*/
+
+/*.basecol_filter {
+  left             : 3.2%;
+  width            : 14%;
+  padding-left     : 1%;
+}*/
+
+/*.basecol_scenarioTable {
+  left             : 17.4%;
+  width            : 32.6%;
+}*/
+
+/*.basecol_routeSelector{
+  left             : 50.2%;
+  width            : 2.5%;
+  text-align: center;
+}
+
+.basecol_routeTable{
+  left             : 52.9%;
+  width            : 24.4%;
+}
+
+.basecol_serviceEditor {
+  left             : 77.5%;
+  width            : 22.5%;
+  padding-left     : 1%;
+  padding-right    : 1%;
+}*/
+
+.serviceLabel {
+  font-size: .8em;
+  margin-top: 0px;
+  margin-bottom: -5px;
+}
+
+.content .dashboard {
+  float: inherit;
+  margin-right: 5px;
+}
+
+.content .serviceFrequency > input {
+  min-width: 20px;
+  max-width: 60%;
+  height: 0px;
+  margin-top : 7px;
+ }
+
+
+
+/* End of BOTTOM-UP CONTROL PANEL MODULES */
+
 .saveAlt {
   background-color : #1fa67a;
   overflow         : hidden;
 }
-label {
+/*label {
   font-weight      : 300;
-}
+}*/
+
 .basecol h1, .topcol h1, .basecol h2, .topcol h2, .basecol h3, .topcol h3, .basecol h4, .topcol h4, .basecol h5, .topcol h5, .basecol h6, .topcol h6 {
   padding-left     : 10px;
   padding-right    : 10px;
@@ -150,12 +327,16 @@ label {
   overflow: hidden;
   margin-bottom: 0px;
 }
-.basecol .progress {
-  border-radius: 0px;
-  margin: 0px 0px 10px 0px;
-  overflow: hidden;
-  margin-bottom: 0px;
+
+
+.progress {
+  z-index: 100;
+  position   : absolute;
+  left: 0%;
+  top: 68.5%;
+  width: 50%;
 }
+
 .timeAdjust {
   border-radius    : 50%;
 }
@@ -166,10 +347,8 @@ label {
   margin-bottom : 0px;
 }
 
-
 .isochroneSlider {
-  max-height : 33px;
-  overflow : hidden;
+
 }
 
 /*leaflet map*/
@@ -183,7 +362,7 @@ label {
 
 /*maps*/
 .angular-leaflet-map {
-  height           : 100%;
+  height           : 72%;
   width            : 50%;
   position         : absolute;
 }
