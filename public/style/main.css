@@ -173,17 +173,76 @@ nav div.section {
 
 .controlPanel {
   position         : absolute;
-  min-height       : 28%;
-  max-height       : 28%;
+  min-height       : 200px;
+  height           : 25%;
   bottom           : 0px;
-  overflow-y       : auto;
-  overflow-x       : hidden;
+  overflow         : hidden;
   background-color : yellow;
   color            : black;
-  opacity          : 1;
+  padding-top      : 26px;
 }
 
-.iconContainer {
+.controlPanel .content {
+  height: 100%;
+  float: left;
+  overflow-x: hidden;
+  overflow-y: auto;
+  cursor: pointer;
+  text-align: center;
+  }
+
+.content .header {
+  position: absolute;
+  text-align: center;
+  top: 0px;
+  height: 26px;
+  width: inherit;
+  line-height: 26px;
+  background-color: gray;
+  color: white;
+}
+
+.content .subHeader {
+  text-align: left;
+  text-indent: 5px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  background-color: gray;
+  }
+
+.content .subHeaderClickable {
+  text-align: center ;
+  text-indent: 5px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+ 
+  background-color: blue;
+  }
+
+.content .sliders {
+  float: left;
+
+}
+
+
+/*.travelPref {
+  left             : 3.3%;
+  width            : 14%;
+}
+
+.scenarios {
+  left             : 17.4%;
+  width            : 32.6%;
+}
+
+.scenarios .dashboard {
+  left             : 17.4%;
+  width            : 32.6%;
+}*/
+
+/*.iconContainer {
   border-radius    : 9px;
   background-color : yellow;
   border-color: black;
@@ -192,26 +251,20 @@ nav div.section {
   margin-bottom: 0px;
   opacity: 1;
   padding: 4px;
-}
+}*/
 
-.basecol_POI {
-  left             : 0%;
-  width            : 3%;
-  text-align: center;
-
-}
-.basecol_filter {
+/*.basecol_filter {
   left             : 3.2%;
   width            : 14%;
   padding-left     : 1%;
-}
+}*/
 
-.basecol_scenarioTable {
+/*.basecol_scenarioTable {
   left             : 17.4%;
   width            : 32.6%;
-}
+}*/
 
-.basecol_routeSelector{
+/*.basecol_routeSelector{
   left             : 50.2%;
   width            : 2.5%;
   text-align: center;
@@ -227,20 +280,24 @@ nav div.section {
   width            : 22.5%;
   padding-left     : 1%;
   padding-right    : 1%;
-}
+}*/
 
 .serviceLabel {
   font-size: .8em;
-  margin-top: -5px;
+  margin-top: 0px;
   margin-bottom: -5px;
 }
 
-.serviceFrequency > input {
-  min-width: 40px;
-  max-width: 100%;
+.content .dashboard {
+  float: inherit;
+  margin-right: 5px;
+}
+
+.content .serviceFrequency > input {
+  min-width: 20px;
+  max-width: 60%;
   height: 0px;
-  margin-top : 0px;
-  margin-bottom : 0px;
+  margin-top : 7px;
  }
 
 
@@ -276,7 +333,7 @@ nav div.section {
   z-index: 100;
   position   : absolute;
   left: 0%;
-  top: 69%;
+  top: 68.5%;
   width: 50%;
 }
 
@@ -291,11 +348,7 @@ nav div.section {
 }
 
 .isochroneSlider {
-  height : 25px;
-  width: 150%;
-  overflow : auto;
-  margin-bottom: 15px;
-  border-color: yellow;
+
 }
 
 /*leaflet map*/

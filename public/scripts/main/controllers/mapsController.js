@@ -1,5 +1,14 @@
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
+  // Control Panel Dynamic Sizing
+  
+  
+  var tableWidth = ((window.innerWidth/2) - 40)*0.6 + 'px';
+  $scope.tableWidth = tableWidth;
+
+  var editorWidth = ((window.innerWidth/2) - 40)*0.4 + 'px';
+  $scope.editorWidth = editorWidth;
+
   // Management for current scenario
   var scenarioBase = {
     name     : null,
