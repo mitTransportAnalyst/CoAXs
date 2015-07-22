@@ -448,11 +448,12 @@
 
         <div style="height:100%;width:10000px;overflow-y:scroll;overflow-x:scroll;">
           <div style="width:22px;height:100%;float:left;"></div>
-          <div class="scenario" style="display: inline-block;white-space:nowrap;"
+          
+          <div class="scenario" style="display:inline-block;white-space:nowrap;"
                 ng-class="combos.sel == variant._key ? 'selected' : ''"
                 ng-repeat="variant in combos.all | toArray | orderBy:'created'">
 
-            <div>
+            <div class="subHead">
               <span ng-show="combos.sel !== variant._key" 
                   ng-click="updateLeftRoutes(variant._key); combos.com=null;">
                 <small>{{ variant.name }}</small>

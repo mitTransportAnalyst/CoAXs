@@ -265,10 +265,16 @@ nav div.section {
   height: inherit;
   white-space: nowrap;
   z-index: 9;
+  overflow: hidden;
+}
+
+.scenario .subHead {
+  margin:0px -3px 0px -3px;
+  background-color: rgba(255,165,0,0.5)
 }
 
 .scenariosTable .selected {
-  background-color: orange !important;
+  background-color: rgba(255,165,0,0.5) !important;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 
