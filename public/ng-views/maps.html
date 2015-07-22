@@ -440,7 +440,7 @@
               ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
               Scorecard
         </span>
-        <span class="pull-right">
+        <span>
           <span ng-show="scenarioCompare" 
                 ng-click="scenarioCompare=false; combos.com=null">
                 Compare Scenarios <i class="fa fa-toggle-on"></i>
@@ -450,7 +450,7 @@
                 Compare Scenarios <i class="fa fa-toggle-off"></i>
           </span>
         </span>
-        <span ng-click="saveCombo=!saveCombo">
+        <span class="pull-right" ng-click="saveCombo=!saveCombo">
               <i class="fa fa-cloud-upload"> </i> New Scenario
         </span>
       </div>
