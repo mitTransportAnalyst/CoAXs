@@ -458,7 +458,7 @@
             </span>
             <span ng-show="combos.sel == variant._key"
                 ng-click="updateLeftRoutes(); combos.com=null; $event.stopPropagation()">
-              <small>{{ variant.name }}</small>
+              <small><b>{{ variant.name }}</b></small>
             </span>
           </div>
           <div>
@@ -503,7 +503,7 @@
           </div>
 
 
-          <div>
+          <div class="text-center">
             <span ng-show="scenarioCompare && combos.sel !== variant._key">
               <i  class = "fa fa-circle-o" 
                   ng-show="combos.com !== variant._key" 
@@ -512,8 +512,7 @@
                   ng-show="combos.com == variant._key"
                   ng-click="combos.com=null; $event.stopPropagation()"></i>
             </span>
-
-            <span ng-show="!scenarioCompare || combos.sel == variant._key">
+            <span ng-show="scenarioCompare && combos.sel == variant._key">
               <i class="fa fa-ban"></i>
             </span>
           </div>

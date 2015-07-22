@@ -3,6 +3,7 @@
 body { 
   word-wrap        : break-word;
   background-color : #F5F5F3;
+  color: #4D4D4D;
   -moz-user-select    : none; 
   -webkit-user-select : none; 
   -ms-user-select     : none; 
@@ -255,7 +256,7 @@ nav div.section {
 }
 
 .scenariosTable .selected {
-  background-color: blue !important;
+  background-color: orange !important;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 
