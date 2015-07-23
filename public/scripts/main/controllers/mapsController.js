@@ -98,7 +98,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   // what calls the SPA analysis and updates and tile and map components
   runMarkerQuerys = function () {
-    var marker = $scope.markers_left.main
+    $scope.showVectorIsosOn = false;
+    var marker = angular.copy($scope.markers_left.main);
 
     animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
@@ -106,7 +107,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
-        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey, compareSubjects) {
+        analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) {
           analystService.vectorRequest(marker, true, function (result) {
             if (result) { $scope.loadProgress.val += 10; };
           });
@@ -115,7 +116,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           analystService.resetAll(map);
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
             $scope.loadProgress.val += 10;
-            analystService.vectorRequest(marker, true, function (result) {
+            analystService.vectorRequest(marker, false, function (result) {
               if (result) {
                 $scope.loadProgress.val = 100;
                 setTimeout(function () { $scope.$apply (function () {

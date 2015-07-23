@@ -38,6 +38,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
+    if (compareIso) { map.removeLayer(compareIso); };
   }
 
   // filter through and remove routes that we don't want banned on each scenario SPA call
@@ -89,6 +90,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, compareTrue, cb) {
+    console.log(marker);
     analyst.vectorRequest({
       lat : marker.lat,
       lng : marker.lng,
@@ -106,7 +108,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
 
-    var isosArray = vectorIsos.worstCase.features
+    var isosArray = vectorIsos.worstCase.features;
     for (var i=0; i<isosArray.length; i++) { 
       if (isosArray[i].properties.time == timeVal) { 
         currentIso = L.geoJson(isosArray[i], {
@@ -123,21 +125,23 @@ coaxsApp.service('analystService', function ($q, supportService) {
       }
     }
 
-    var isosArray = vecComIsos.worstCase.features
-    for (var i=0; i<isosArray.length; i++) { 
-      if (isosArray[i].properties.time == timeVal) { 
-        compareIso = L.geoJson(isosArray[i], {
-          style: {
-            stroke      : true,
-            fillColor   : '#89cff0',
-            color       : '#45b3e7',
-            weight      : 1,
-            fillOpacity : 0.25,
-            opacity     : 1
-          }
-        });
-        compareIso.addTo(map);
-      }
+    if (vecComIsos) {
+      var isosArray = vecComIsos.worstCase.features;
+      for (var i=0; i<isosArray.length; i++) { 
+        if (isosArray[i].properties.time == timeVal) { 
+          compareIso = L.geoJson(isosArray[i], {
+            style: {
+              stroke      : true,
+              fillColor   : '#89cff0',
+              color       : '#45b3e7',
+              weight      : 1,
+              fillOpacity : 0.25,
+              opacity     : 1
+            }
+          });
+          compareIso.addTo(map);
+        }
+      }  
     }
   }
 
