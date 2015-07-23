@@ -61,13 +61,9 @@ coaxsApp.service('analystService', function ($q, supportService) {
   };
 
   this.modifyDwellMods = function (keepRoutes) {
-    var dwell10 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
+    var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
     var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
-    var dwell30 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
-
-    console.log('1', dwell10);
-    console.log('2', dwell20);
-    console.log('3', dwell30);
+    var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
 
     var dwellMod = {
       type: "adjust-dwell-time",
@@ -76,6 +72,18 @@ coaxsApp.service('analystService', function ($q, supportService) {
       tripId: null,
       stopId: null,
       dwellTime: 30,
+    };
+    if (dwell10.length > 0) {
+      dwellMod.routeId = dwell10; dwellMod.dwellTime = 10;
+      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
+    };
+    if (dwell20.length > 0) {
+      dwellMod.routeId = dwell20; dwellMod.dwellTime = 20;
+      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
+    };
+    if (dwell30.length > 0) {
+      dwellMod.routeId = dwell30; dwellMod.dwellTime = 30;
+      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
     };
   };
 
