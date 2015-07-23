@@ -13,14 +13,14 @@ coaxsApp.service('analystService', function ($q, supportService) {
   });
 
   var optionCurrent = {
-    'scenario'      : {
-      'id'            : 0,
-      'description'   : 'Run from CoAXs SPA.',
-      'modifications' : [{
-        'type'      : 'remove-trip',
-        'agencyId'  : 'd802657',
-        'routeId'   : [],
-        'tripId'    : null
+    scenario      : {
+      id            : 0,
+      description   : 'Run from CoAXs SPA.',
+      modifications : [{
+        type      : 'remove-trip',
+        agencyId  : 'd802657',
+        routeId   : [],
+        tripId    : null
       }]
     }
   }
@@ -50,8 +50,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
   // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-    allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0 })
+    allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0; })
     optionCurrent.scenario.modifications[0].routeId = allRoutes;
+  }
+
+  this.modifyDwell = function () {
+
   }
 
   // actually run the SPA and handle results from library
