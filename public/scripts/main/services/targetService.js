@@ -13,7 +13,7 @@ coaxsApp.service('targetService', function (leafletData) {
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType) { 
     stopsLayer.eachLayer(function (marker) {
-      if (marker.options.base.stopId.includes(id)) {console.log('we in', stopsLayer, id, stationType);
+      if (marker.options.base.stopId.includes(id)) {
         var station = 'public/imgs/stop' + stationType + '.png';
         var stopicon_on = L.Icon.extend({
           options : {
