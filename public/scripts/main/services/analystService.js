@@ -41,6 +41,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
     if (compareIso) { map.removeLayer(compareIso); };
   }
 
+  this.killCompareIso = function () {
+    if (compareIso) { map.removeLayer(compareIso); };
+    vecComIsos = false;
+    compareIso = null;
+  }
+
   // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
@@ -90,7 +96,6 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, compareTrue, cb) {
-    console.log(marker);
     analyst.vectorRequest({
       lat : marker.lat,
       lng : marker.lng,

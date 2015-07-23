@@ -130,6 +130,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       } else {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.resetAll(map);
+        analystService.killCompareIso();
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           d3Service.drawGraph(subjects.jobs_tot); // draws svg of jobs access, etc.
