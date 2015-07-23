@@ -83,41 +83,12 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     });    
   }
 
-  this.getTStops = function (cb) {
-    $http.get('/geojson/t_stops')
+  this.getStops = function (url, cb) {
+    $http.get(url)
     .success(function (data, status) {
 
       var stopList = [];
-      var stopicon = L.Icon.extend({
-        options : {
-          iconUrl      : 'public/imgs/stop.png',
-          iconSize     : [16, 18],
-          iconAnchor   : [8, 18],
-          popupAnchor  : [0, -15],
-          className    : 'icon-on',
-        }
-      });
-      console.log(data.features);
-      for (var i=0; i<data.features.length; i++) {
-        var stop = data.features[i];
-        stopList.push(L.marker([stop.geometry.coordinates[0][1], stop.geometry.coordinates[0][0]], {
-          'icon'        : new stopicon(),
-          'riseOnHover' : true,
-          'base'        : stop.properties,
-        }))
-      }
-
-      var stopsLayer = L.layerGroup(stopList);
-      cb(stopsLayer);
-    });
-  };
-
-  this.getProposedStops = function (cb) {
-    $http.get('/geojson/proposed_stops')
-    .success(function (data, status) {
-
-      var stopList = [];
-      var stopicon = L.Icon.extend({
+      var stopIconBase = L.Icon.extend({
         options : {
           iconUrl      : 'public/imgs/stop.png',
           iconSize     : [16, 18],
@@ -128,9 +99,9 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
       });
 
       for (var i=0; i<data.features.length; i++) {
-        var stop = data.features[i];
+        var stop = data.features[i]; 
         stopList.push(L.marker([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], {
-          'icon'        : new stopicon(),
+          'icon'        : new stopIconBase(),
           'riseOnHover' : true,
           'base'        : stop.properties,
         }))

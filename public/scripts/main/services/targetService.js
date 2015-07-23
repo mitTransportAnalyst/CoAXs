@@ -29,7 +29,7 @@ coaxsApp.service('targetService', function (leafletData) {
         marker.setIcon(new stopicon_off());
       }
     });
-	  return stopsLayer
+	  return stopsLayer;
 	}
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)

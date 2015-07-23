@@ -227,13 +227,25 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     });
 
     // place stops over routes plots on map
-    loadService.getTStops(function (stops) {
-      stops.addTo(map);
-      stopsLayer = stops;
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      // stops.addTo(map);
+      // stops.eachLayer(function (marker) {
+      //   var station = 'public/imgs/stop' + stationType + '.png';
+      //   var stopicon_on = L.Icon.extend({
+      //     options : {
+      //       iconUrl      :     station,
+      //       iconSize     :     [16, 18],
+      //       iconAnchor   :     [8, 18],
+      //       popupAnchor  :     [0, -15],
+      //       className    :     'icon-on',
+      //     }
+      //   });
+      //   marker.setIcon(new stopicon_on());
+      // });
     });
 
     // place stops over routes plots on map
-    loadService.getProposedStops(function (stops) {
+    loadService.getStops('/geojson/proposed_stops', function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
     });
