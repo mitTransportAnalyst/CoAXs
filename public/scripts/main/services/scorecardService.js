@@ -80,7 +80,6 @@ coaxsApp.service('scorecardService', function () {
 
     routesLayer.eachLayer(function (route) {
       if (route.options.base.routeId == id) {
-        console.log(route.options.base);
         var base = route.options.base;
         for (var i=0; i<base.priority.length; i++) {
           var diff = base.priority[i][1] - base.priority[i][0];

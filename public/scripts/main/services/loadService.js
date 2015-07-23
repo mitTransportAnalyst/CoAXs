@@ -160,9 +160,6 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
           // SAVE for Tooltip Activation 
           // smallMarkerOptions['userId'] = userId;
           // bigMarkerOptions['userId']   = userId;
-          
-          //console.log("user id from loadService" + " " + homeIcon.options.userId);   
-          //console.log(bigMarkerOptions);    
                  
           poiUsers.push({ 
             name : userId, 
@@ -196,12 +193,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
           
           }
         }
-        //console.log(poiUsers);
-        //console.log(bigMarkerOptions);
-        //console.log(JSON.stringify(circles));
         var iconLayers = L.layerGroup(circles);
-        //console.log(JSON.stringify(allLayers));
-        //console.log(iconLayers);
         cb(iconLayers, poiUsers);        
       }
     })

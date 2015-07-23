@@ -106,14 +106,23 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
         analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
-        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey) {
+        analystService.singlePointRequest($scope.markers_left.main, map, undefined, function (compareKey, compareSubjects) {
+          analystService.vectorRequest(marker, true, function (result) {
+            if (result) { $scope.loadProgress.val += 10; };
+          });
+
           analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
           analystService.resetAll(map);
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
-            $scope.loadProgress.val = 100;
-            setTimeout(function () { $scope.$apply (function () {
-              $scope.loadProgress.vis = false; // terminate progress bar viewport
-            }) }, 1000)
+            $scope.loadProgress.val += 10;
+            analystService.vectorRequest(marker, true, function (result) {
+              if (result) {
+                $scope.loadProgress.val = 100;
+                setTimeout(function () { $scope.$apply (function () {
+                  $scope.loadProgress.vis = false; // terminate progress bar viewport
+                }) }, 1000);
+              };
+            });
           });
         });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
@@ -124,7 +133,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           d3Service.drawGraph(subjects.jobs_tot); // draws svg of jobs access, etc.
           if (!$scope.combos.sel) { existingMBTAKey = key }
-          analystService.vectorRequest(marker, function (result) {
+          analystService.vectorRequest(marker, false, function (result) {
             if (result) {
               $scope.loadProgress.val = 100;
               setTimeout(function () { $scope.$apply (function () {
@@ -384,7 +393,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     }
   };
 
-  // holdover from before we had the range slider, still keeping around just inc ase we need again
+  // holdover from before we had the range slider, still keeping around just incase we need again
   $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
   $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
 

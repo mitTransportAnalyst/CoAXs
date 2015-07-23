@@ -27,8 +27,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
 
   // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
+
   var vectorIsos = null;
+  var vecComIsos = null;
+  
   var currentIso = null;
+  var compareIso = null;
 
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map) {
@@ -52,20 +56,21 @@ coaxsApp.service('analystService', function ($q, supportService) {
     .then(function (response) { 
       if (isoLayer) {
         isoLayer.redraw(); 
-      }
-      else {
+      } else {
         isoLayer = response.tileLayer;
         isoLayer.addTo(map);
       }
-      if (!compareKey) { 
-        var subjects = {
-          workers_low  : 'smart_location_database.e_lowwagew',
-          workers_med  : 'smart_location_database.e_medwagew',
-          workers_high : 'smart_location_database.e_hiwagewk',
-          jobs_tot     : 'smart_location_database.emptot',
-          hh_zerocar   : 'smart_location_database.autoown0',
-          totpop       : 'smart_location_database.totpop10',
-        }
+
+      var subjects = {
+        workers_low  : 'smart_location_database.e_lowwagew',
+        workers_med  : 'smart_location_database.e_medwagew',
+        workers_high : 'smart_location_database.e_hiwagewk',
+        jobs_tot     : 'smart_location_database.emptot',
+        hh_zerocar   : 'smart_location_database.autoown0',
+        totpop       : 'smart_location_database.totpop10',
+      };
+
+      if (!compareKey && subjects) { 
         for (key in subjects) {
           var id = subjects[key];
           var tempArray = response.results.data[id].pointEstimate.counts;
@@ -83,13 +88,14 @@ coaxsApp.service('analystService', function ($q, supportService) {
   }
 
   // explicitly run request for vector isochrones
-  this.vectorRequest = function (marker, cb) {
+  this.vectorRequest = function (marker, compareTrue, cb) {
     analyst.vectorRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, optionCurrent)
     .then(function (response) {
-      vectorIsos = response.isochrones;
+      if (compareTrue) { vecComIsos = response.isochrones; }
+      else { vectorIsos = response.isochrones; }
       cb(true);
     });
   }
@@ -97,22 +103,40 @@ coaxsApp.service('analystService', function ($q, supportService) {
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
     if (isoLayer) { isoLayer.setOpacity(0) };
-    if (currentIso) { 
-      map.removeLayer(currentIso); 
-    };
+    if (currentIso) { map.removeLayer(currentIso); };
+    if (compareIso) { map.removeLayer(compareIso); };
 
     var isosArray = vectorIsos.worstCase.features
     for (var i=0; i<isosArray.length; i++) { 
       if (isosArray[i].properties.time == timeVal) { 
-        currentIso = L.geoJson(isosArray[i], {style:{
-          stroke      : true,
-          fillColor   : '#FDB813',
-          color       : '#F68B1F',
-          weight      : 1,
-          fillOpacity : 0.25,
-          opacity     : 1
-        }});
+        currentIso = L.geoJson(isosArray[i], {
+          style: {
+            stroke      : true,
+            fillColor   : '#FDB813',
+            color       : '#F68B1F',
+            weight      : 1,
+            fillOpacity : 0.25,
+            opacity     : 1
+          }
+        });
         currentIso.addTo(map);
+      }
+    }
+
+    var isosArray = vecComIsos.worstCase.features
+    for (var i=0; i<isosArray.length; i++) { 
+      if (isosArray[i].properties.time == timeVal) { 
+        compareIso = L.geoJson(isosArray[i], {
+          style: {
+            stroke      : true,
+            fillColor   : '#89cff0',
+            color       : '#45b3e7',
+            weight      : 1,
+            fillOpacity : 0.25,
+            opacity     : 1
+          }
+        });
+        compareIso.addTo(map);
       }
     }
   }

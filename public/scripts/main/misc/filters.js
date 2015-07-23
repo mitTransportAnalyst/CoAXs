@@ -19,7 +19,6 @@ angular.module('coaxsFilters', [])
   return function(input) {
     var min = Math.floor(input/2);    
     if (min < 10) { min = '0' + String(min) }
-    // var sec = input%2; console.log(sec);
     var sec = Math.floor((input%2)*30);
     if (sec < 10) { sec = '0' + String(sec) }
     if (!min) { sec = '00', min = "00"}         
@@ -39,7 +38,7 @@ angular.module('coaxsFilters', [])
 // take and object and return an array of its keys
 .filter('toArray', function () { 
   return function (input) {
-    if (!(input instanceof Object)) { console.log('f'); return input; }
+    if (!(input instanceof Object)) { return input; }
     return Object.keys(input).map(function(k) {
       var val = input[k];
       val._key = k;

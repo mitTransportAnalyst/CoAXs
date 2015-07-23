@@ -2,7 +2,7 @@ coaxsApp.service('leftService', function (leafletData) {
 
   this.updateLeftRoutes = function (combo, variants, routesLayer, geoJsonLeft, cb) {
     leafletData.getMap('map_left').then(function(map) {
-      if (geoJsonLeft) { console.log('foo', geoJsonLeft); map.removeLayer(geoJsonLeft); }
+      if (geoJsonLeft) { map.removeLayer(geoJsonLeft); }
       var geoJson = L.geoJson();
       routesLayer.eachLayer(function (layer) {
         var currenCor   = layer.options.base.corName;
@@ -32,7 +32,7 @@ coaxsApp.service('leftService', function (leafletData) {
 
 
   this.targetPOIUsers = function (poiUsers, id) {
-    poiUsers.eachLayer( function (layer) { console.log(layer)
+    poiUsers.eachLayer( function (layer) { 
       if (layer.userId == id) { layer.setOpacity(1); } 
       else { layer.setOpacity(0); }
     });
