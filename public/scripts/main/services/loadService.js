@@ -144,10 +144,9 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
         // POI Marker Class Setup
         var iconStyle = L.Icon.extend({
           options : {
-            iconSize     : [16, 16],
+            iconSize     : [22, 22],
             iconAnchor   : [8, 18],
             popupAnchor  : [0, -15],
-            opacity: 1,
             className    : 'icon-on',
             userId       : 'null'
           }
@@ -178,13 +177,13 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
             //   .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
 
             if (pois[n].poiTag == "home") {
-              var icon = new iconStyle({iconUrl: 'public/imgs/home_icon.svg'});
+              var icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
             }
             else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
-              var icon = new iconStyle({iconUrl: 'public/imgs/heart.svg'});  
+              var icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
-              var icon = new iconStyle({iconUrl: 'public/imgs/shopping_cart.svg'});
+              var icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
               
             }
             var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
