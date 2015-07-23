@@ -16,9 +16,12 @@ coaxsApp.service('analystService', function ($q, supportService) {
     scenario      : {
       id            : 0,
       description   : 'Run from CoAXs SPA.',
-      modifications : []
-    }
+      modifications : [],
+    },
   }
+
+  var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
+  var agencyId = 'd802657';
 
   // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
@@ -29,44 +32,52 @@ coaxsApp.service('analystService', function ($q, supportService) {
   var currentIso = null;
   var compareIso = null;
 
+
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
     optionCurrent.scenario.modifications = []; // empty contents of the modifications list entirely
-  }
+  };
 
   this.killCompareIso = function (map) {
     if (compareIso) { map.removeLayer(compareIso); };
     vecComIsos = false;
     compareIso = null;
-  }
+  };
 
   // filter through and remove routes that we don't want banned on each scenario SPA call
-  this.modifyRoutes = function (keepRoutes) {
-    var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-    allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 1; })
+  this.modifyRoutes = function (keepRoutes) { 
+    keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
+    var rmRoutes = allRoutes.filter(function (route) { return keepRoutes.indexOf(route) < 0; });
     var routesMod = {
       type      : 'remove-trip',
-      agencyId  : 'd802657',
-      routeId   : allRoutes,
+      agencyId  : agencyId,
+      routeId   : rmRoutes,
       tripId    : null,
-    }
+    };
     optionCurrent.scenario.modifications.push(routesMod);
-  }
+  };
 
-  this.modifyDwellMods = function () {
-    this.removeDwellMods();
+  this.modifyDwellMods = function (keepRoutes) {
+    var dwell10 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
+    var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
+    var dwell30 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
+
+    console.log('1', dwell10);
+    console.log('2', dwell20);
+    console.log('3', dwell30);
+
     var dwellMod = {
       type: "adjust-dwell-time",
-      agencyId: "AGENCY ID",
+      agencyId: agencyId,
       routeId: [],
-      tripId: [],
-      stopId: [],
-      dwellTime: 30
-    }
-  }
+      tripId: null,
+      stopId: null,
+      dwellTime: 30,
+    };
+  };
 
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
@@ -106,7 +117,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     .catch(function (err) {
       console.log(err);
     });
-  }
+  };
 
   // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, compareTrue, cb) {
@@ -119,7 +130,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
       else { vectorIsos = response.isochrones; }
       cb(true);
     });
-  }
+  };
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
@@ -162,7 +173,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
         }
       }  
     }
-  }
+  };
 
 });
 

@@ -108,21 +108,26 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     $scope.showVectorIsosOn = false;
     var marker = angular.copy($scope.markers_left.main);
 
+    this.runPrep = function (map, comboItem) {
+      analystService.resetAll(map);
+      analystService.modifyRoutes(getKeepRoutes(comboItem));
+      analystService.modifyDwellMods(getKeepRoutes(comboItem));
+    };
+
     animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
 
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
-        analystService.modifyRoutes(getKeepRoutes($scope.combos.com));
+        this.runPrep(map, $scope.combos.com);
         analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) {
           analystService.vectorRequest(marker, true, function (result) {
-            if (result) { $scope.loadProgress.val += 10; };
+            if (result) { $scope.loadProgress.val += 5; };
           });
 
-          analystService.resetAll(map);
-          analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
+          this.runPrep(map, $scope.combos.sel);
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
-            $scope.loadProgress.val += 10;
+            $scope.loadProgress.val += 5;
             analystService.vectorRequest(marker, false, function (result) {
               if (result) {
                 $scope.loadProgress.val = 100;
@@ -135,8 +140,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
       } else {
-        analystService.resetAll(map);
-        analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
+        this.runPrep(map, $scope.combos.sel);
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
@@ -162,7 +166,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       var selectedCorridors = $scope.combos.all[selected].sel;
       for (corridor in selectedCorridors) {
         var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
-        if (corridorData) { keepRoutes.push(corridorData.routeId); }
+        if (corridorData) { keepRoutes.push(corridorData); }
       }
     };
     return keepRoutes;
