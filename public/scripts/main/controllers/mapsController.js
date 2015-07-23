@@ -1,7 +1,14 @@
 coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
-  document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
-  document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35) + 'px';
+  var runScreenSetUp = function () {
+    if (window.innerHeight < 680 || window.innerWidth < 1280) {
+      alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
+    }
+    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
+    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35) + 'px';
+  };
+  runScreenSetUp();
+  window.onresize = function(event) { runScreenSetUp(); };
 
   // Management for current scenario
   var scenarioBase = {

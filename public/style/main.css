@@ -9,6 +9,8 @@ body {
   -ms-user-select     : none; 
   user-select         : none;
   -o-user-select      : none;
+  min-height: 680;
+  min-width: 1280;
 }
 
 /*bs modification*/
