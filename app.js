@@ -87,6 +87,24 @@ app.get('/geojson/proposed_priority', function (req, res) {
   });
 })
 
+// return geojson of existing t stops
+app.get('/geojson/t_stops', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  res.sendFile('stations.geojson', options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+})
+
 // return geojson of proposed bus stops
 app.get('/geojson/proposed_stops', function (req, res) {
   var options = {
