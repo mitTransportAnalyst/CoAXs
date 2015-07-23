@@ -2,7 +2,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
   var runScreenSetUp = function () {
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
-      alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
+      // alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
     document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
     document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35) + 'px';
@@ -224,6 +224,12 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
           $scope.setSelectedVariant(tabnavAlt, uuid);
         }
       }
+    });
+
+    // place stops over routes plots on map
+    loadService.getTStops(function (stops) {
+      stops.addTo(map);
+      stopsLayer = stops;
     });
 
     // place stops over routes plots on map
