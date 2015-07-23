@@ -41,7 +41,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     if (compareIso) { map.removeLayer(compareIso); };
   }
 
-  this.killCompareIso = function () {
+  this.killCompareIso = function (map) {
     if (compareIso) { map.removeLayer(compareIso); };
     vecComIsos = false;
     compareIso = null;
