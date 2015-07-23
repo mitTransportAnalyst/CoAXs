@@ -13,12 +13,11 @@ body {
 
 /*bs modification*/
 .btn {
-  border-radius    : 0px;
-  font-size: 1em;
+  border-radius: 0px;
 }
 
 button {
-  cursor           : pointer;
+  cursor: pointer;
 }
 .badge {
   background-color: #FFF;

@@ -695,89 +695,91 @@
       <div class="subHead" ng-show="!variants[tabnav].sel">
         This route will be exluded from model right.
       </div>
-
-      <table class="table table-condensed table-hover">
-        <thead>
-          <tr>
-            <th><i class="fa fa-check-square"></i></th>
-            <th>Name</th>
-            <th>Station</th>
-            <th>Peak</th>
-            <th>Off-Peak</th>
-            <th>Modifying</th>
-          </tr>
-        </thead>
-        
-        <tbody>
-          <tr ng-repeat="variant in variants[tabnav].all | toArray | orderBy:'created'"
-              ng-click="updateTargetFeature(variant)">
-            <td>
-              <i class="fa fa-square-o" 
-                  ng-show="variants[tabnav].sel !== variant._key" 
-                  ng-click="setSelectedVariant(tabnav, variant._key);
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav);
-                            $event.stopPropagation()"></i>
-              <i class="fa fa-check-square" 
-                  ng-show="variants[tabnav].sel == variant._key"
-                  ng-click="setSelectedVariant(tabnav, null);
-                            updateRouteScorecard();
-                            $event.stopPropagation()"></i>
-            </td>
-            <td>{{ variant.name }}</td>
-            <td>
-              <span ng-if="variant.station == 0">
-                Standard 
-              </span>
-              <span ng-if="variant.station == 1">
-                Raised Platform  
-              </span>
-              <span ng-if="variant.station == 2">
-                BRT Station 
-              </span>
-            </td>
-            <td>
-              {{ variant.peak.min | avgWaitTime }}
-            </td>
-            <td>
-              {{ variant.offpeak.min | avgWaitTime }}
-            </td>
-            <td class="text-right">
-              <span ng-show="scenario[tabnav].routeId !== variant.routeId"
-                    ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
-                <i class="fa fa-circle-o"></i>
-              </span>
-              <span ng-show="scenario[tabnav].routeId == variant.routeId">
-                <i class="fa fa-circle"></i>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr>
-            <td>
-              <i class="fa fa-sliders"></i>
-            </td>
-            <td><b>Current</b></td>
-            <td>
-              <span ng-if="scenario[tabnav].station == 0">
-                Standard 
-              </span>
-              <span ng-if="scenario[tabnav].station == 1">
-                Raised Platform  
-              </span>
-              <span ng-if="scenario[tabnav].station == 2">
-                BRT Station 
-              </span>
-            </td>
-            <td>
-              {{ scenario[tabnav].peak.min | avgWaitTime }}
-            </td>
-            <td>
-              {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    
+      <div style="height: 100%; overflow-y: scroll">
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <th><i class="fa fa-check-square"></i></th>
+              <th>Name</th>
+              <th>Station</th>
+              <th>Peak</th>
+              <th>Off-Peak</th>
+              <th>Modifying</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr ng-repeat="variant in variants[tabnav].all | toArray | orderBy:'created'"
+                ng-click="updateTargetFeature(variant)">
+              <td>
+                <i class="fa fa-square-o" 
+                    ng-show="variants[tabnav].sel !== variant._key" 
+                    ng-click="setSelectedVariant(tabnav, variant._key);
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav);
+                              $event.stopPropagation()"></i>
+                <i class="fa fa-check-square" 
+                    ng-show="variants[tabnav].sel == variant._key"
+                    ng-click="setSelectedVariant(tabnav, null);
+                              updateRouteScorecard();
+                              $event.stopPropagation()"></i>
+              </td>
+              <td>{{ variant.name }}</td>
+              <td>
+                <span ng-if="variant.station == 0">
+                  Standard 
+                </span>
+                <span ng-if="variant.station == 1">
+                  Raised Platform  
+                </span>
+                <span ng-if="variant.station == 2">
+                  BRT Station 
+                </span>
+              </td>
+              <td>
+                {{ variant.peak.min | avgWaitTime }}
+              </td>
+              <td>
+                {{ variant.offpeak.min | avgWaitTime }}
+              </td>
+              <td class="text-right">
+                <span ng-show="scenario[tabnav].routeId !== variant.routeId"
+                      ng-click="scenario[tabnav].routeId = variant.routeId; createVar=true">
+                  <i class="fa fa-circle-o"></i>
+                </span>
+                <span ng-show="scenario[tabnav].routeId == variant.routeId">
+                  <i class="fa fa-circle"></i>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td>
+                <i class="fa fa-sliders"></i>
+              </td>
+              <td><b>Current</b></td>
+              <td>
+                <span ng-if="scenario[tabnav].station == 0">
+                  Standard 
+                </span>
+                <span ng-if="scenario[tabnav].station == 1">
+                  Raised Platform  
+                </span>
+                <span ng-if="scenario[tabnav].station == 2">
+                  BRT Station 
+                </span>
+              </td>
+              <td>
+                {{ scenario[tabnav].peak.min | avgWaitTime }}
+              </td>
+              <td>
+                {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

@@ -337,8 +337,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     if (!id) {
       $scope.scenarioScore = scorecardService.generateEmptyScore();
     } else {
-
-
       var allCorKeys = $scope.combos.all[id].sel;
       var busTot = {count: 0, cost: 0};
       var lenTot = {count: 0, cost: 0};
