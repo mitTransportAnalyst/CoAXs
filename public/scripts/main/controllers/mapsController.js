@@ -140,7 +140,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
-          d3Service.drawGraph(subjects.jobs_tot); // draws svg of jobs access, etc.
+          if (subjects) { d3Service.drawGraph(subjects.jobs_tot); } // draws svg of jobs access, etc.
           if (!$scope.combos.sel) { existingMBTAKey = key }
           analystService.vectorRequest(marker, false, function (result) {
             if (result) {
