@@ -119,8 +119,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
             if (result) { $scope.loadProgress.val += 10; };
           });
 
-          analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
           analystService.resetAll(map);
+          analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
           analystService.singlePointRequest(marker, map, compareKey, function (key) {
             $scope.loadProgress.val += 10;
             analystService.vectorRequest(marker, false, function (result) {
@@ -135,8 +135,8 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
       } else {
-        analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.resetAll(map);
+        analystService.modifyRoutes(getKeepRoutes($scope.combos.sel));
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {

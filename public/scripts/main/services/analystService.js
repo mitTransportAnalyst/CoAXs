@@ -16,12 +16,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     scenario      : {
       id            : 0,
       description   : 'Run from CoAXs SPA.',
-      modifications : [{
-        type      : 'remove-trip',
-        agencyId  : 'd802657',
-        routeId   : [],
-        tripId    : null
-      }]
+      modifications : []
     }
   }
 
@@ -39,6 +34,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
+    optionCurrent.scenario.modifications = [];
   }
 
   this.killCompareIso = function (map) {
@@ -51,11 +47,30 @@ coaxsApp.service('analystService', function ($q, supportService) {
   this.modifyRoutes = function (keepRoutes) {
     var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
     allRoutes = allRoutes.filter(function(route) { return keepRoutes.indexOf(route) < 0; })
-    optionCurrent.scenario.modifications[0].routeId = allRoutes;
+    var routesMod = {
+      type      : 'remove-trip',
+      agencyId  : 'd802657',
+      routeId   : allRoutes,
+      tripId    : null
+    }
+    optionCurrent.scenario.modifications.push(routesMod);
   }
 
-  this.modifyDwell = function () {
+  this.removeDwellMods = function () {
+    var justRoutes = optionCurrent.scenario.modifications[0]
+    optionCurrent.scenario.modifications = [justRoutes];
+  }
 
+  this.modifyDwellMods = function () {
+    this.removeDwellMods();
+    var dwellMod = {
+      type: "adjust-dwell-time",
+      agencyId: "AGENCY ID",
+      routeId: [],
+      tripId: [],
+      stopId: [],
+      dwellTime: 30
+    }
   }
 
   // actually run the SPA and handle results from library
