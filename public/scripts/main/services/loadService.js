@@ -99,7 +99,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
       });
 
       for (var i=0; i<data.features.length; i++) {
-        var stop = data.features[i]; 
+        var stop = data.features[i];
         stopList.push(L.marker([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], {
           'icon'        : new stopIconBase(),
           'riseOnHover' : true,
