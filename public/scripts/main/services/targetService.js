@@ -11,7 +11,7 @@ coaxsApp.service('targetService', function (leafletData) {
   });
 
   // highlight the stops of a specific route
-	this.targetStops = function (stopsLayer, id, stationType, routeColor) { console.log(routeColor);
+	this.targetStops = function (stopsLayer, id, stationType, routeColor) {
     var stopTypeSizes = {0: 80, 1: 120, 2: 160};
 
     stopsLayer.eachLayer(function (circle) {

@@ -100,7 +100,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       lat  : marker.model.lat,
       lng  : marker.model.lng,
       draggable : true
-    }
+    };
     runMarkerQuerys();
   });
 
@@ -210,28 +210,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       priorityLanes.addTo(map);
     })
 
-    // now pull the proposed routes
-    loadService.getProposedRoutes(function (data) {
-      routesLayer = data.layerGroup;
-      routesLayer.addTo(map);
-
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
-
-      // iterate through routes and set the default scenario values
-      for (var key in routes) {
-        var tabnavAlt = routes[key][0].options.base.corName;
-        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
-        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
-        $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
-        var uuid = $scope.newVariant(tabnavAlt, false);
-        if (routes[key][0].options.base.default || routes[key][1].options.base.default) {
-          $scope.setSelectedVariant(tabnavAlt, uuid);
-        }
-      }
-    });
-
     // place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = {0: 60, 1: 90, 2: 120};
@@ -257,6 +235,27 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     loadService.getStops('/geojson/proposed_stops', function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
+    });
+
+    // now pull the proposed routes
+    loadService.getProposedRoutes(function (data) {
+      routesLayer = data.layerGroup;
+      routesLayer.addTo(map);
+
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
+
+      // iterate through routes and set the default scenario values
+      for (var key in routes) {
+        var tabnavAlt = routes[key][0].options.base.corName;
+        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
+        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
+        $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
+
+        var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
+        $scope.newVariant(tabnavAlt, isDefault);
+      };
     });
 
     // kick start the first SPA request
@@ -305,8 +304,10 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     var uuid = supportService.generateUUID();
     $scope.scenario[tabnav]['created'] = Date.now();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
-    $scope.scenario[tabnav] = angular.copy(scenarioBase);
-    if (autoSet) { $scope.setSelectedVariant(tabnav, uuid); };
+    if (autoSet) { 
+      $scope.scenario[tabnav] = angular.copy(scenarioBase);
+      $scope.setSelectedVariant(tabnav, uuid); 
+    };
     return uuid;
   }
 
