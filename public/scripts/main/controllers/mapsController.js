@@ -111,9 +111,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     var marker = angular.copy($scope.markers_left.main);
 
     this.runPrep = function (map, comboItem) {
+      var toKeep = getKeepRoutes(comboItem);
       analystService.resetAll(map);
-      analystService.modifyRoutes(getKeepRoutes(comboItem));
-      analystService.modifyDwellMods(getKeepRoutes(comboItem));
+      analystService.modifyRoutes(toKeep);
+      analystService.modifyDwells(toKeep);
+      analystService.modifyFrequencies(toKeep);
     };
 
     animateProgressBar(); // start the progress bar

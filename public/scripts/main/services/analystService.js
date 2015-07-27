@@ -60,13 +60,13 @@ coaxsApp.service('analystService', function ($q, supportService) {
     optionCurrent.scenario.modifications.push(routesMod);
   };
 
-  this.modifyDwellMods = function (keepRoutes) {
+  this.modifyDwells = function (keepRoutes) {
     var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
     var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
     var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
 
     var dwellMod = {
-      type: "adjust-dwell-time",
+      type: 'adjust-dwell-time',
       agencyId: agencyId,
       routeId: [],
       tripId: null,
@@ -86,6 +86,25 @@ coaxsApp.service('analystService', function ($q, supportService) {
       optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
     };
   };
+
+  this.modifyFrequencies = function (keepRoutes) {
+    keepRoutes = keepRoutes.map(function (route) { 
+      return {
+        routeId: route.routeId,
+        frequency: route.peak.min * 60 + route.peak.sec
+      };
+    });
+
+    keepRoutes.forEach(function (route) {
+      optionCurrent.scenario.modifications.push({
+        type: 'adjust-headway',
+        agencyId: agencyId,
+        routeId: [route.routeId],
+        tripId: null,
+        headway: route.frequency,
+      });
+    });
+  }
 
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
