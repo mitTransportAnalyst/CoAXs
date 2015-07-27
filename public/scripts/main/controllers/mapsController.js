@@ -169,6 +169,11 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     });
   }
 
+  $scope.drawGraph = function (data) {
+    console.log(data);
+    d3Service.drawGraph(data.data);
+  }
+
   // filter for routes that match with the desired corridor
   getKeepRoutes = function (selected) {
     var keepRoutes = [];

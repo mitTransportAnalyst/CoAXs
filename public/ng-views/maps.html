@@ -76,13 +76,26 @@
       <div style="height: 250px; position: absolute; right: 0px">
         <svg id="compPlot" width="350" height="200"></svg>
         <center>
-          <h6>Accessibility to {{ scenarioScore.graphData.sel.verbose }}</h6>
-          <select class="form-control" ng-model="scenarioScore.graphData.all">
-            <option ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
-                    value="{{ id }}">
-              {{ dataVal.verbose }}
-            </option>
-          </select>
+
+          <!-- Split button -->
+          <div class="btn-group" dropdown>
+            <button id="split-button" type="button" class="btn btn-success"
+                    ng-click="drawGraph(scenarioScore.graphData.sel)">
+              Rerun with {{ scenarioScore.graphData.sel.verbose }}
+            </button>
+            <button type="button" class="btn btn-success" dropdown-toggle>
+              <span class="caret"></span>
+              <span class="sr-only">Split button!</span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
+              <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
+                  ng-click="scenarioScore.graphData.sel = dataVal"
+                  value="{{ id }}">
+                <a href="">{{ dataVal.verbose }}</a>
+              </li>
+            </ul>
+          </div>
+
         </center>
       </div>
     </div>

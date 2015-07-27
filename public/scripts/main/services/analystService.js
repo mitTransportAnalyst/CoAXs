@@ -150,8 +150,9 @@ coaxsApp.service('analystService', function ($q, supportService) {
       if (!compareKey && subjects) { 
         for (key in subjects) {
           var id = subjects[key].id;
-          var tempArray = response.results.data[id].pointEstimate.counts;
+          var tempArray = response.results.data[id].pointEstimate.sums;
           for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] }
+          console.log(tempArray);
           subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } })
         }
         cb(response.results.key, subjects);
