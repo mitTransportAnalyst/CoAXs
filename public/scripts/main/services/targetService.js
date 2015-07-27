@@ -2,10 +2,10 @@ coaxsApp.service('targetService', function (leafletData) {
   
   var stopicon_off = L.Icon.extend({
     options : {
-      iconUrl      :     'public/imgs/stop.png',
-      iconSize     :     [16, 18],
-      iconAnchor   :     [8, 18],
-      popupAnchor  :     [0, -15],
+      iconUrl      :     'public/imgs/icon.png',
+      iconSize     :     [0, 0],
+      iconAnchor   :     [6, 6],
+      popupAnchor  :     [0, 0],
       className    :     'icon-off',
     }
   });
@@ -13,14 +13,22 @@ coaxsApp.service('targetService', function (leafletData) {
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType) { 
     stopsLayer.eachLayer(function (marker) {
+      
+      var stationColor = [];
+      if (marker.options.base.corId == 1) { stationColor = "CT"}
+      if (marker.options.base.corId == 3) { stationColor = "HD"}  
+      if (marker.options.base.corId == 4) { stationColor = "HP"}  
+      if (marker.options.base.corId == 2) { stationColor = "BH"}  
+
       if (marker.options.base.stopId.includes(id)) {
-        var station = 'public/imgs/stop' + stationType + '.png';
+       
+        var station = 'public/imgs/icon' + stationType + stationColor + '.png';
         var stopicon_on = L.Icon.extend({
           options : {
             iconUrl      :     station,
-            iconSize     :     [16, 18],
-            iconAnchor   :     [8, 18],
-            popupAnchor  :     [0, -15],
+            iconSize     :     [12, 12],
+            iconAnchor   :     [6, 6],
+            popupAnchor  :     [0, 0],
             className    :     'icon-on',
           }
         });

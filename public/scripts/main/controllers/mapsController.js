@@ -234,12 +234,26 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     loadService.getStops('/geojson/t_stops', function (stops) {
       stops.eachLayer(function (marker) {
         var stationType = marker.options.base.stopType;
-        var station = 'public/imgs/stop' + stationType + '.png';
+        
+
+        //Iterator for matching MBTA line color 
+        String.prototype.inList=function(list){
+           return ( list.indexOf(this.toString()) != -1)
+        }
+        var stationColor = []; 
+        var color = marker.options.base.line;
+          if (color.inList(["GREEN","BLUE","RED", "ORANGE", "SILVER"])) {
+            stationColor = marker.options.base.line;
+          }
+          else
+           {stationColor = "HUB"}
+
+        var station = 'public/imgs/icon' + stationType + stationColor + '.png';
         var stopicon_on = L.Icon.extend({
           options : {
             iconUrl     : station,
-            iconSize    : [12, 13.5],
-            iconAnchor  : [6, 13.5],
+            iconSize    : [12, 12],
+            iconAnchor  : [6, 6],
             popupAnchor : [0, -15],
             className   : 'icon-on',
           }
