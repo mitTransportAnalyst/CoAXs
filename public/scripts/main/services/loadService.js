@@ -63,6 +63,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
             };
           },
           onEachFeature: function (feature, layer) {
+            // per anson's request that when you click on a route it brings up the routes data, this is a hacky solution
             layer.on({click: function (e) {
               var route = e.target.feature.properties;
 
