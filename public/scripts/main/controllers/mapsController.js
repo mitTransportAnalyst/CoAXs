@@ -290,8 +290,9 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.updateTargetFeature = function (variant) {
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
+    var routeColor = $scope.routes[variant.routeId][0].options.base.routeColor;
     targetService.targetCorridor(routesLayer, routeId);
-    targetService.targetStops(stopsLayer, routeId, station);
+    targetService.targetStops(stopsLayer, routeId, station, routeColor);
     if (routeId) {
       $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {

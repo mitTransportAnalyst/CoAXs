@@ -11,22 +11,24 @@ coaxsApp.service('targetService', function (leafletData) {
   });
 
   // highlight the stops of a specific route
-	this.targetStops = function (stopsLayer, id, stationType) { 
+	this.targetStops = function (stopsLayer, id, stationType, routeColor) { console.log(routeColor);
     var stopTypeSizes = {0: 80, 1: 120, 2: 160};
 
     stopsLayer.eachLayer(function (circle) {
-      if (circle.options.base.stopId.includes(id)) {
+      if (circle.options.base.routeId == id) {
 
-        var stationColor = 'red',
-            stationLatLng = [circle._latlng.lat, circle._latlng.lng],
-            stationStop = stopTypeSizes[circle.options.base.stopType]; console.log(circle.options.base);
+        var stationLatLng = [circle._latlng.lat, circle._latlng.lng],
+            stationStop = stopTypeSizes[stationType]; 
 
         circle.setStyle({
-          stroke: false,
-          fillColor: stationColor,
+          stroke: true,
+          weight: 2,
+          color: '#FFF',
+          opacity: 1.0,
+          fillColor: '#' + routeColor,
           fillOpacity: 1.0,
-        });console.log(circle.getRadius());
-        circle.setRadius(stationStop); console.log(circle.getRadius());
+        });
+        circle.setRadius(stationStop);
       } else {
         circle.setStyle({stroke: false, fillOpacity: 0.0});
         circle.setRadius(0);
