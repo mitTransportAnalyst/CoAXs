@@ -147,7 +147,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           if (subjects) { d3Service.drawGraph(subjects.jobs_tot); } // draws svg of jobs access, etc.
-          if (!$scope.combos.sel) { existingMBTAKey = key }
+          if (!$scope.combos.sel) { existingMBTAKey = key }; 
           analystService.vectorRequest(marker, false, function (result) {
             if (result) {
               $scope.loadProgress.val = 100;
@@ -260,7 +260,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     });
 
     // kick start the first SPA request
-    setTimeout(runMarkerQuerys, 2000);
+    // setTimeout(runMarkerQuerys, 2000);
   });
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
@@ -290,7 +290,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.updateTargetFeature = function (variant) {
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
-    var routeColor = $scope.routes[variant.routeId][0].options.base.routeColor;
+    var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
     targetService.targetCorridor(routesLayer, routeId);
     targetService.targetStops(stopsLayer, routeId, station, routeColor);
     if (routeId) {
