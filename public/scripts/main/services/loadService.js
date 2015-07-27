@@ -88,24 +88,15 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     .success(function (data, status) {
 
       var stopList = [];
-      var stopIconBase = L.Icon.extend({
-        options : {
-          iconUrl      : 'public/imgs/stop.png',
-          iconSize     : [16, 18],
-          iconAnchor   : [8, 18],
-          popupAnchor  : [0, -15],
-          className    : 'icon-off',
-        }
-      });
 
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
-        stopList.push(L.marker([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], {
-          'icon'        : new stopIconBase(),
-          'riseOnHover' : true,
-          'base'        : stop.properties,
-        }))
-      }
+        stopList.push(L.circle([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], 0, {
+          stroke: false,
+          fillOpacity: 0.0,
+          base: stop.properties
+        }));
+      };
 
       var stopsLayer = L.layerGroup(stopList);
       cb(stopsLayer);

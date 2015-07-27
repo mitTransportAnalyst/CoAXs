@@ -12,21 +12,24 @@ coaxsApp.service('targetService', function (leafletData) {
 
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType) { 
-    stopsLayer.eachLayer(function (marker) {
-      if (marker.options.base.stopId.includes(id)) {
-        var station = 'public/imgs/stop' + stationType + '.png';
-        var stopicon_on = L.Icon.extend({
-          options : {
-            iconUrl      :     station,
-            iconSize     :     [16, 18],
-            iconAnchor   :     [8, 18],
-            popupAnchor  :     [0, -15],
-            className    :     'icon-on',
-          }
-        });
-        marker.setIcon(new stopicon_on());
+    var stopTypeSizes = {0: 80, 1: 120, 2: 160};
+
+    stopsLayer.eachLayer(function (circle) {
+      if (circle.options.base.stopId.includes(id)) {
+
+        var stationColor = 'red',
+            stationLatLng = [circle._latlng.lat, circle._latlng.lng],
+            stationStop = stopTypeSizes[circle.options.base.stopType]; console.log(circle.options.base);
+
+        circle.setStyle({
+          stroke: false,
+          fillColor: stationColor,
+          fillOpacity: 1.0,
+        });console.log(circle.getRadius());
+        circle.setRadius(stationStop); console.log(circle.getRadius());
       } else {
-        marker.setIcon(new stopicon_off());
+        circle.setStyle({stroke: false, fillOpacity: 0.0});
+        circle.setRadius(0);
       }
     });
 	  return stopsLayer;

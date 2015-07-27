@@ -38,11 +38,13 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
   $scope.tabnav = 'BH';
 
   // left globals
-  var subwaysLayer    = null;
-  var stopsLayer      = null;
-  var routesLayer     = null;
-  var poiUserPoints   = null;
-  var existingMBTAKey = null;
+  var subwaysLayer    = null,
+      subStopsLayer   = null,
+      stopsLayer      = null,
+      routesLayer     = null,
+      poiUserPoints   = null,
+      existingMBTAKey = null;
+
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:12};
 
@@ -232,22 +234,23 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = {0: 60, 1: 90, 2: 120};
+      var circleList = [];
+
       stops.eachLayer(function (marker) {
-        var stationType = marker.options.base.stopType;
-        var station = 'public/imgs/stop' + stationType + '.png';
-        var stopicon_on = L.Icon.extend({
-          options : {
-            iconUrl     : station,
-            iconSize    : [12, 13.5],
-            iconAnchor  : [6, 13.5],
-            popupAnchor : [0, -15],
-            className   : 'icon-on',
-          }
-        });
-        marker.setIcon(new stopicon_on());
-        marker.setOpacity(0.9);
+        var stationColor = marker.options.base.line,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            stationStop = stopTypeSizes[marker.options.base.stopType];
+
+        circleList.push(L.circle(stationLatLng, stationStop, {
+          stroke: false,
+          fillColor: stationColor,
+          fillOpacity: 1.0,
+        }));
       });
-      stops.addTo(map);
+
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
     });
 
     // place stops over routes plots on map
