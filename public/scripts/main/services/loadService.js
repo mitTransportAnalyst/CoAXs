@@ -57,9 +57,9 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
-              color     : color,
-              weight    : 3,
-              opacity   : 0.1,
+              color: color,
+              weight: 3,
+              opacity: 0.1,
             };
           },
           onEachFeature: function (feature, layer) {
@@ -92,6 +92,12 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
 
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
+
+        if (stop.properties.stopId) {
+          var stopId = stop.properties.stopId;
+          stop.properties['routeId'] = stopId.substr(stopId.indexOf('rte-')+4);
+        }
+
         stopList.push(L.circle([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], 0, {
           stroke: false,
           fillOpacity: 0.0,
