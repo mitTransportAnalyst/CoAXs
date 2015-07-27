@@ -26,7 +26,7 @@
     </h4>
     <div class="topinfo-body container" style="min-height:250px">
 
-      <div class="pull-left" style="width: 100%; padding-right: 325px;">
+      <div class="pull-left" style="width: 100%; padding-right: 310px;">
         <div class="row">
           <div class="col-xs-5">
             <h3>
@@ -75,7 +75,15 @@
 
       <div style="height: 250px; position: absolute; right: 0px">
         <svg id="compPlot" width="350" height="200"></svg>
-        <center><h6>Accessibility to all Job Types</h6></center>
+        <center>
+          <h6>Accessibility to {{ scenarioScore.graphData.sel.verbose }}</h6>
+          <select class="form-control" ng-model="scenarioScore.graphData.all">
+            <option ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
+                    value="{{ id }}">
+              {{ dataVal.verbose }}
+            </option>
+          </select>
+        </center>
       </div>
     </div>
   </div>

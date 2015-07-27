@@ -121,20 +121,38 @@ coaxsApp.service('analystService', function ($q, supportService) {
       }
 
       var subjects = {
-        workers_low  : 'smart_location_database.e_lowwagew',
-        workers_med  : 'smart_location_database.e_medwagew',
-        workers_high : 'smart_location_database.e_hiwagewk',
-        jobs_tot     : 'smart_location_database.emptot',
-        hh_zerocar   : 'smart_location_database.autoown0',
-        totpop       : 'smart_location_database.totpop10',
+        workers_low  : {
+          id: 'smart_location_database.e_lowwagew',
+          verbose: 'Low Wage Workers',
+        },
+        workers_med  : {
+          id: 'smart_location_database.e_medwagew',
+          verbose: 'Median Wage Workers',
+        },
+        workers_high : {
+          id: 'smart_location_database.e_hiwagewk',
+          verbose: 'High Wage Workers',
+        },
+        jobs_tot     : {
+          id: 'smart_location_database.emptot',
+          verbose: 'Total Jobs',
+        },
+        hh_zerocar   : {
+          id: 'smart_location_database.autoown0',
+          verbose: 'Zero-car Households',
+        },
+        totpop       : {
+          id: 'smart_location_database.totpop10',
+          verbose: 'Total Population',
+        },
       };
 
       if (!compareKey && subjects) { 
         for (key in subjects) {
-          var id = subjects[key];
+          var id = subjects[key].id;
           var tempArray = response.results.data[id].pointEstimate.counts;
           for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] }
-          subjects[key] = tempArray.map(function(count, i) { return { x : i, y : count } })
+          subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } })
         }
         cb(response.results.key, subjects);
       } else {
