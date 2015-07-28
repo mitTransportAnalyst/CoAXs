@@ -149,7 +149,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           if (subjects) { 
-            $scope.updateScenarioScorecard($scope.combos.sel);
+            if (!$scope.scenarioScore) { updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
               all: subjects,
               sel: subjects.jobs_tot
