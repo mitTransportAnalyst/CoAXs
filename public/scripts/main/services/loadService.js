@@ -112,7 +112,7 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
 
   // update map with phil's spread sheet points
   this.getUsersPoints = function (cb) {
-    $http.get('/geojson/pois')
+    $http.get('/pois')
     .success(function (data, status) {
       if (status == 200) {
        
