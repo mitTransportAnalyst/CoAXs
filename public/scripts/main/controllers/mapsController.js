@@ -223,33 +223,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       priorityLanes.addTo(map);
     })
 
-    // place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = {0: 60, 1: 90, 2: 120};
-      var circleList = [];
-
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.line,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            stationStop = stopTypeSizes[marker.options.base.stopType];
-
-        circleList.push(L.circle(stationLatLng, stationStop, {
-          stroke: false,
-          fillColor: stationColor,
-          fillOpacity: 1.0,
-        }));
-      });
-
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
-
-    // place stops over routes plots on map
-    loadService.getStops('/geojson/proposed_stops', function (stops) {
-      stops.addTo(map);
-      stopsLayer = stops;
-    });
-
     // now pull the proposed routes
     loadService.getProposedRoutes(function (data) {
       routesLayer = data.layerGroup;
@@ -279,8 +252,32 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       };
     });
 
-    // kick start the first SPA request
-    // setTimeout(runMarkerQuerys, 2000);
+    // place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = {0: 60, 1: 90, 2: 120};
+      var circleList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.line,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            stationStop = stopTypeSizes[marker.options.base.stopType];
+
+        circleList.push(L.circle(stationLatLng, stationStop, {
+          stroke: false,
+          fillColor: stationColor,
+          fillOpacity: 1.0,
+        }));
+      });
+
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
+
+    // place stops over routes plots on map
+    loadService.getStops('/geojson/proposed_stops', function (stops) {
+      stops.addTo(map);
+      stopsLayer = stops;
+    });
   });
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
