@@ -316,8 +316,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
                   if (result) {
                     data[i]['isochrones'] = isochrones.worstCase.features;
                     i += 1;
-                    if (i < data.length-9) { poiUpdateSequence(); }
+                    if (i < data.length) { poiUpdateSequence(); }
                     else {  
+                      data = JSON.stringify(data);
                       loadService.updateLocationCache(data, function (result) {
                         if (result) { console.log('fini'); }
                       })

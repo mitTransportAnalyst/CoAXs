@@ -7,8 +7,10 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
 
-app.use(morgan('dev'));
-app.use( bodyParser.json() );   
+
+app.use(morgan('dev'));  
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 app.use('/public', express.static(__dirname + '/public')); // set up ejs static file management
@@ -58,7 +60,7 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
-app.post('/cachedLocs', function (req, res) {
+app.post('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
   var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs2.json'
   fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
     if (err) {
