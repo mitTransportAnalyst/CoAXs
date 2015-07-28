@@ -33,17 +33,26 @@ app.post('/posttest', function (req, res) {
   console.log("POST TEST", req);
 });
 
-// return existing mbta lines
-app.get('/geojson/existing', function (req, res) {
+var fileNames = {
+  existing: 'lines.geojson',
+  proposed: 'proposed.geojson',
+  proposed_priority: 'priority.geojson',
+  t_stops: 'stations.geojson',
+  proposed_stops: 'stops.geojson',
+
+}
+
+app.get('/geojson/:fileId', function (req, res) {
   var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/existing/',
+    'root'     : __dirname + '/public/routes/shapefiles/mapApp/',
     'dotfiles' : 'deny',
     'headers'  : {
         'x-timestamp' : Date.now(),
         'x-sent'      : true
     }
   };
-  res.sendFile('lines.geojson', options, function (err) {
+  var file = fileNames[req.params.fileId];
+  res.sendFile(file, options, function (err) {
     if (err) {
       console.log('sendFile error:', err);
       res.status(err.status).end();
@@ -51,80 +60,9 @@ app.get('/geojson/existing', function (req, res) {
   });
 })
 
-// return proposed bus lines
-app.get('/geojson/proposed', function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
-  };
-  res.sendFile('proposed.geojson', options, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
-})
-
-// return portions of proposed lines that are priority
-app.get('/geojson/proposed_priority', function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
-  };
-  res.sendFile('priority.geojson', options, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
-})
-
-// return geojson of existing t stops
-app.get('/geojson/t_stops', function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
-  };
-  res.sendFile('stations.geojson', options, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
-})
-
-// return geojson of proposed bus stops
-app.get('/geojson/proposed_stops', function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/proposed/',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
-  };
-  res.sendFile('stops.geojson', options, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
-})
 
 // gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)
-app.get('/geojson/pois', function (req, res) {
+app.get('/pois', function (req, res) {
   var url = 'http://docs.google.com/spreadsheets/d/19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac/export?format=csv&id';
   request(url)
   .pipe(csv({
@@ -135,6 +73,9 @@ app.get('/geojson/pois', function (req, res) {
     else { res.status(200).send(doc) }
   }));;
 })
+
+
+
 
 
 // this is how the app is actually started up, the port can be specified either in command line or will default to 3000
