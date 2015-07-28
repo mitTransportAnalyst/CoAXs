@@ -2,7 +2,7 @@
 coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
-  this.drawGraph = function (data) {console.log('running', data);
+  this.drawGraph = function (data) {
 
     var vis   = d3.select("#compPlot"),
       WIDTH   = 350,

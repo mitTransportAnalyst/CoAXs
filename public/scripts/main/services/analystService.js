@@ -121,39 +121,38 @@ coaxsApp.service('analystService', function ($q, supportService) {
       }
 
       var subjects = {
-        workers_low  : {
-          id: 'smart_location_database.e_lowwagew',
-          verbose: 'Low Wage Workers',
-        },
-        workers_med  : {
-          id: 'smart_location_database.e_medwagew',
-          verbose: 'Median Wage Workers',
-        },
-        workers_high : {
-          id: 'smart_location_database.e_hiwagewk',
-          verbose: 'High Wage Workers',
-        },
-        jobs_tot     : {
-          id: 'smart_location_database.emptot',
-          verbose: 'Total Jobs',
-        },
-        hh_zerocar   : {
+        hh_zerocar: {
           id: 'smart_location_database.autoown0',
           verbose: 'Zero-car Households',
         },
-        totpop       : {
+        totpop: {
           id: 'smart_location_database.totpop10',
           verbose: 'Total Population',
         },
+        jobs_tot: {
+          id: 'smart_location_database.emptot',
+          verbose: 'Total Jobs',
+        },
+        retail: {
+          id: 'smart_location_database.e8_ret10',
+          verbose: 'Retail Jobs'
+        },
+        healthcare: {
+          id: 'smart_location_database.e8_hlth10',
+          verbose: 'Health Care Jobs'
+        },
+        education: {
+          id: 'smart_location_database.e8_ed10',
+          verbose: 'Education Jobs'
+        }
       };
 
-      if (!compareKey && subjects) { 
+      if (!compareKey && subjects) {
         for (key in subjects) {
           var id = subjects[key].id;
           var tempArray = response.results.data[id].pointEstimate.sums;
-          for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] }
-          console.log(tempArray);
-          subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } })
+          for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
+          subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
         }
         cb(response.results.key, subjects);
       } else {
