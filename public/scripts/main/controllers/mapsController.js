@@ -293,44 +293,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       poiUserPoints.addTo(map);
     });
 
-    loadService.getLocationCache(function (data) {
-      console.log(data);
-      var i = 0;
-
-      var poiUpdateSequence = function () {
-        console.log("Running instance: ", i);
-        if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
-          leafletData.getMap('map_left').then(function(map) {
-            console.log("Running base case for: ", i);
-            analystService.resetAll(map);
-            analystService.modifyRoutes([]);
-            analystService.modifyDwells([]);
-            analystService.modifyFrequencies([]);
-
-            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
-              console.log("Running SPA instance: ", i);
-              if (subjects) { 
-                data[i]['graphData'] = subjects; 
-                data[i]['tilesURL'] = tilesURL; 
-                analystService.vectorRequest(data[i], false, function (result, isochrones) {
-                  if (result) {
-                    data[i]['isochrones'] = isochrones.worstCase.features;
-                    i += 1;
-                    if (i < data.length) { poiUpdateSequence(); }
-                    else {  
-                      data = JSON.stringify(data);
-                      loadService.updateLocationCache(data, function (result) {
-                        if (result) { console.log('fini'); }
-                      })
-                    }
-                  };
-                });
-              }
-            });
-          });
-        }
-      };
-      poiUpdateSequence();
+    loadService.updateLocationCache(function (result) {
+      if (result) {
+        console.log('Done.');
+      }
     });
 
   })

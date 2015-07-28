@@ -1,7 +1,7 @@
 // all of these have been explained in main controller, this is simple the services portion and each function 
 // roughly shares the same name
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
-coaxsApp.service('loadService', function ($http, targetService, supportService) {
+coaxsApp.service('loadService', function ($http, analystService, targetService, supportService) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
@@ -107,21 +107,53 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     });
   };
 
-  this.getLocationCache = function (cb) {
+  this.updateLocationCache = function (cb) {
     $http.get('/geojson/cachedLocs')
     .success(function (data, status) {
-      cb(data);
+      var i = 0;
+      var poiUpdateSequence = function () {
+        console.log("Running instance: ", i);
+        if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
+          leafletData.getMap('map_left').then(function(map) {
+            console.log("Running base case for: ", i);
+            analystService.resetAll(map);
+            analystService.modifyRoutes([]);
+            analystService.modifyDwells([]);
+            analystService.modifyFrequencies([]);
+
+            // welcome to callback hell
+            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
+              console.log("Running SPA instance: ", i);
+              if (subjects) { 
+                data[i]['graphData'] = subjects; 
+                data[i]['tilesURL'] = tilesURL; 
+                analystService.vectorRequest(data[i], false, function (result, isochrones) {
+                  if (result) {
+                    data[i]['isochrones'] = isochrones.worstCase.features;
+                    i += 1;
+                    if (i < data.length) { poiUpdateSequence(); }
+                    else {  
+                      $http.post('/cachedLocs', {newPOIs: JSON.stringify(data)})
+                      .success(function (data, status) {
+                        cb(true);
+                      }).error(function(data, status, headers, config) {
+                        cb(false);
+                      });
+                    }
+                  };
+                });
+              }
+            });
+          });
+        } else {
+          i += 1;
+          if (i < data.length) { poiUpdateSequence(); }
+          else { console.log('already up to date'); cb(true); }
+        }
+      };
+      poiUpdateSequence();
     }).error(function(data, status, headers, config) {
       console.log(data, status, headers, config);
-    });
-  }
-
-  this.updateLocationCache = function (newPOIs, cb) {
-    $http.post('/cachedLocs', {newPOIs: newPOIs})
-    .success(function (data, status) {
-      cb(true);
-    }).error(function(data, status, headers, config) {
-      cb(false);
     });
   }
 
