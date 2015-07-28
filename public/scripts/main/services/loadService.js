@@ -112,10 +112,8 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
     .success(function (data, status) {
       var i = 0;
       var poiUpdateSequence = function () {
-        console.log("Running instance: ", i);
         if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
           leafletData.getMap('map_left').then(function(map) {
-            console.log("Running base case for: ", i);
             analystService.resetAll(map);
             analystService.modifyRoutes([]);
             analystService.modifyDwells([]);
@@ -123,7 +121,6 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
 
             // welcome to callback hell
             analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
-              console.log("Running SPA instance: ", i);
               if (subjects) { 
                 data[i]['graphData'] = subjects; 
                 data[i]['tilesURL'] = tilesURL; 
@@ -148,7 +145,7 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
         } else {
           i += 1;
           if (i < data.length) { poiUpdateSequence(); }
-          else { console.log('already up to date'); cb(true); }
+          else { cb(true); }
         }
       };
       poiUpdateSequence();
@@ -161,32 +158,10 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
   this.getUsersPoints = function (cb) {
     $http.get('/pois')
     .success(function (data, status) {
-      if (status == 200) {
-       
+      if (status == 200) {       
         var circles = [];
         var poiUsers = [];
-        var homeIcons = [];
 
-        // var iconColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)
-
-        var smallMarkerOptions = {
-          radius      : 10,
-          fillColor   : 'yellow',
-          color       : 'null',
-          weight      : 1,
-          opacity     : 1,
-          fillOpacity : 0.8
-        };
-        
-        // Invisible Marker underlay for tooltip activation
-        var bigMarkerOptions = {
-          radius      : 15,
-          fillColor   : 'rgba(139,139,210,0)',
-          weight      : 0,
-        };
-
-        
-        // POI Marker Class Setup
         var iconStyle = L.Icon.extend({
           options : {
             iconSize     : [22, 22],
@@ -200,36 +175,19 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
           var userId = data[i].Name[0] + data[i].Name[1];
-
-          // SAVE for Tooltip Activation 
-          // smallMarkerOptions['userId'] = userId;
-          // bigMarkerOptions['userId']   = userId;
                  
-          poiUsers.push({ 
-            name : userId, 
-            color : ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)
-          });
+          poiUsers.push({name : userId});
   
           for (var n=0; n<pois.length; n++) {
-
-            // SAVE for Tooltip Activation 
-            // if (pois[n].poiTag == "home") {
-            // circles.push(L.marker([pois[n].lat, pois[n].lng], {icon: homeIcon}, {name: data[i].Name}));
-            // } else {
-            // circles.push(L.circleMarker([pois[n].lat, pois[n].lng], smallMarkerOptions, {name: data[i].Name}));
-            // }
-            // circles.push(L.circleMarker([pois[n].lat, pois[n].lng], bigMarkerOptions)   // field for for tooltip hoover
-            //   .bindPopup('<b>' + data[i].Name + '</b>: ' + pois[n].poiTag));
-
+            var icon;
             if (pois[n].poiTag == "home") {
-              var icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
             }
             else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
-              var icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
-              var icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
-              
+              icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
             }
             var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
             marker['userId'] = userId;
