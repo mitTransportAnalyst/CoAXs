@@ -14,9 +14,6 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
             opacity   : 0.5,
             dashArray : 0,
           };
-        },
-        onEachFeature: function (feature, layer) {
-          // layer.bindPopup('<b>' + feature.properties.LINE + ' Line</b> ' + feature.properties.ROUTE);
         }
       });
       cb(subwayRoutes);

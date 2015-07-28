@@ -1,8 +1,9 @@
 var express = require('express');
-var app     = express();
+var app = express();
 
+var fs = require('fs');
 
-var morgan     = require('morgan');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
 
@@ -39,6 +40,7 @@ var fileNames = {
   proposed_priority: 'priority.geojson',
   t_stops: 'stations.geojson',
   proposed_stops: 'stops.geojson',
+  cachedLocs: 'cachedLocs.json',
 
 }
 
@@ -56,6 +58,16 @@ app.get('/geojson/:fileId', function (req, res) {
     if (err) {
       console.log('sendFile error:', err);
       res.status(err.status).end();
+    }
+  });
+})
+
+app.post('geojson/cachedLocs', function (req, res) {
+  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs2.json'
+  fs.writeFile(fileLoc, 'Hello World!', function (err) {
+    if (err) {
+        console.log('Write file error:', err);
+        res.status(err.status).end();
     }
   });
 })
