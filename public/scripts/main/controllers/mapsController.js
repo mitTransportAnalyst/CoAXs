@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
+coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
   var runScreenSetUp = function () {
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
@@ -106,7 +106,7 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
 
 
   // what calls the SPA analysis and updates and tile and map components
-  runMarkerQuerys = function () {
+  var runMarkerQuerys = function () {
     $scope.showVectorIsosOn = false;
     var marker = angular.copy($scope.markers_left.main);
 
@@ -209,7 +209,6 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
     })
   }
 
-
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
@@ -292,8 +291,47 @@ coaxsApp.controller('mapsController', function ($scope, $state, leafletData, ana
       $scope.poiUsers = poiUsers;
       poiUserPoints   = points;
       poiUserPoints.addTo(map);
+    });
 
-    })
+    loadService.getLocationCache(function (data) {
+      console.log(data);
+      var i = 0;
+
+      var poiUpdateSequence = function () {
+        console.log("Running instance: ", i);
+        if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
+          leafletData.getMap('map_left').then(function(map) {
+            console.log("Running base case for: ", i);
+            analystService.resetAll(map);
+            analystService.modifyRoutes([]);
+            analystService.modifyDwells([]);
+            analystService.modifyFrequencies([]);
+
+            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
+              console.log("Running SPA instance: ", i);
+              if (subjects) { 
+                data[i]['graphData'] = subjects; 
+                data[i]['tilesURL'] = tilesURL; 
+                analystService.vectorRequest(data[i], false, function (result, isochrones) {
+                  if (result) {
+                    data[i]['isochrones'] = isochrones.worstCase.features;
+                    i += 1;
+                    if (i < data.length-9) { poiUpdateSequence(); }
+                    else {  
+                      loadService.updateLocationCache(data, function (result) {
+                        if (result) { console.log('fini'); }
+                      })
+                    }
+                  };
+                });
+              }
+            });
+          });
+        }
+      };
+      poiUpdateSequence();
+    });
+
   })
 
 

@@ -30,10 +30,6 @@ app.get('/', function (req, res) {
   });
 });
 
-app.post('/posttest', function (req, res) {
-  console.log("POST TEST", req);
-});
-
 var fileNames = {
   existing: 'lines.geojson',
   proposed: 'proposed.geojson',
@@ -60,17 +56,19 @@ app.get('/geojson/:fileId', function (req, res) {
       res.status(err.status).end();
     }
   });
-})
+});
 
-app.post('geojson/cachedLocs', function (req, res) {
+app.post('/cachedLocs', function (req, res) {
   var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs2.json'
-  fs.writeFile(fileLoc, 'Hello World!', function (err) {
+  fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
     if (err) {
-        console.log('Write file error:', err);
-        res.status(err.status).end();
+      console.log('Write file error:', err);
+      res.status(err.status).end();
+    } else {
+      res.status(200).end();
     }
   });
-})
+});
 
 
 // gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)

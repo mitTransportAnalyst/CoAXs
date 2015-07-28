@@ -1,5 +1,5 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
-coaxsApp.service('analystService', function ($q, supportService) {
+coaxsApp.service('analystService', function (supportService) {
 
   this.isochrones = null;
 
@@ -154,7 +154,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
           for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
           subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
         }
-        cb(response.results.key, subjects);
+        cb(response.results.key, subjects, isoLayer._url);
       } else {
         cb(response.results.key, null);
       }
@@ -173,7 +173,7 @@ coaxsApp.service('analystService', function ($q, supportService) {
     .then(function (response) {
       if (compareTrue) { vecComIsos = response.isochrones; }
       else { vectorIsos = response.isochrones; }
-      cb(true);
+      cb(true, response.isochrones);
     });
   };
 

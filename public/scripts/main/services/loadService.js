@@ -107,6 +107,24 @@ coaxsApp.service('loadService', function ($http, targetService, supportService) 
     });
   };
 
+  this.getLocationCache = function (cb) {
+    $http.get('/geojson/cachedLocs')
+    .success(function (data, status) {
+      cb(data);
+    }).error(function(data, status, headers, config) {
+      console.log(data, status, headers, config);
+    });
+  }
+
+  this.updateLocationCache = function (newPOIs, cb) {
+    $http.post('/cachedLocs', {newPOIs: newPOIs})
+    .success(function (data, status) {
+      cb(true);
+    }).error(function(data, status, headers, config) {
+      cb(false);
+    });
+  }
+
   // update map with phil's spread sheet points
   this.getUsersPoints = function (cb) {
     $http.get('/pois')
