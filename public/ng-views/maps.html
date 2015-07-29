@@ -12,13 +12,29 @@
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
   </div>
+
+  <div class="legend">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h6 class="panel-title">
+          Legend
+          <i class="fa fa-times-circle-o pull-right" ng-click="scenarioLegend=!scenarioLegend"></i>
+        </h6>
+      </div>
+      <div class="panel-body" ng-show="scenarioLegend">
+        Time Boundary
+        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Selected</small>
+        <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>Compared</small>
+      </div>
+    </div>
+  </div>
 </div>
 
 
 
 <!-- upper views -->
 
-<div class="topcol left">
+<div class="topcol">
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
     <h4>
       Scenario Scorecard

@@ -99,18 +99,39 @@ nav div.section {
   padding          : 10px;
   z-index          : 100;
   cursor           : pointer;
-/*    width            : 50%;*/
+  width            : 50%;
   float            : left;
-  text-shadow      : 0px 1px 1px rgba(0,0,0,0.75);
 }
+
+.topnav .legend {
+  width: 150px;
+  height: 150px;
+  top: 0px;
+  right: 0px;
+  position: absolute;
+  margin-top: 10px;
+  margin-right: 12px;
+}
+
+.legend .panel {
+  border-radius: 0px
+}
+
+.legend .panel-heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.legend .panel-title {
+  font-size: 0.8em;
+}
+.legend .panel-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .right {
   left             : 50%;
   /*color            : rgb(50,50,50);*/
-}
-.topnav small {
-  font-weight      : 900;
-  font-family      : sans-serif;
-  text-shadow      : 0px -1px 1px rgba(0,0,0,0.5);
 }
 .unselected {
   opacity          : 0.35;

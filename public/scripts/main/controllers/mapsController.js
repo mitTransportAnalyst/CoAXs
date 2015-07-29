@@ -95,7 +95,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
 
   // snap point sensitivity
-  $scope.sensitivity = 0.5
+  $scope.sensitivity = 0.5;
 
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
