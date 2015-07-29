@@ -43,6 +43,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       stopsLayer      = null,
       routesLayer     = null,
       poiUserPoints   = null,
+      snapPoints      = null,
       existingMBTAKey = null;
 
   $scope.loadProgress = {vis:false, val:0};
@@ -101,9 +102,44 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       lng  : marker.model.lng,
       draggable : true
     };
-    runMarkerQuerys();
+
+    if (snapPoints) {
+      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
+      if (nearest.distance < 0.5) {
+        $scope.markers_left.main.lat = nearest.poi.lat;
+        $scope.markers_left.main.lng = nearest.poi.lng;
+        console.log(nearest.poi)
+        markerQueryPreload(nearest.poi)
+      } else {
+        runMarkerQuerys();
+      }
+    } else {
+      runMarkerQuerys();
+    }
   });
 
+
+  var markerQueryPreload = function (poi) {
+    $scope.showVectorIsosOn = false;
+    animateProgressBar();
+    leafletData.getMap('map_left').then(function(map) {
+      analystService.resetAll(map);
+      analystService.loadExisting(poi, function(result) {
+        if (result) {
+          if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
+          $scope.scenarioScore.graphData = {
+            all: poi.graphData,
+            sel: poi.graphData.jobs_tot
+          };
+          d3Service.drawGraph(poi.graphData.jobs_tot.data);
+          $scope.loadProgress.val = 100;
+          setTimeout(function () { $scope.$apply (function () {
+            $scope.loadProgress.vis = false; // terminate progress bar viewport
+          }) }, 1000);
+        }
+      });
+    });
+  }
 
   // what calls the SPA analysis and updates and tile and map components
   var runMarkerQuerys = function () {
@@ -149,7 +185,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
         analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
           if (subjects) { 
-            if (!$scope.scenarioScore) { updateScenarioScorecard(); };
+            if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
               all: subjects,
               sel: subjects.jobs_tot
@@ -294,27 +330,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
 
     loadService.getLocationCache()
-      .then(function (data) {
-        console.log(data);
-
-        var marker = angular.copy($scope.markers_left.main);
-        var nearest = supportService.getNearestPOI(marker, data);
-        console.log(nearest);
-
-        var circle = L.circle([nearest.poi.lat, nearest.poi.lng], 500, {
-          color: 'red',
-          fillColor: '#f03',
-          fillOpacity: 0.5
-        }).addTo(map);
-      })
+    .then(function (data) {
+      snapPoints = data;
+    })
   });
 
 
   $scope.updateLocationCache = function () {
+    $scope.managerOperations = true;
     loadService.getLocationCache()
     .then(function (data) {
+      var differences = 0;
       if (data) {
-        var differences = 0;
         data.forEach(function (each, index) {
           var match = 0;
           $scope.poiUsers.forEach(function (user) {
@@ -327,7 +354,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
             data.splice(index, 1);
           }
         });
-
+      }
+      if (differences > 0 || !data) {
+        if (!data) { data = [] };
         $scope.poiUsers.forEach(function (user) {
           user.points.forEach(function (point) {
             var match = 0;
@@ -340,14 +369,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           });
         });
 
-        if (differences > 0) {
-          loadService.updateLocationCache(data)
-          .then(function (data) {
-            if (data) { alert('Data has been updated. Refresh page.'); }
-          })
-        } else {
-          alert('Data was not updated, no changes found')
-        }
+        loadService.updateLocationCache(data)
+        .then(function (data) {
+          if (data) { alert('Data has been updated. Refresh page.'); }
+          $scope.managerOperations = false;
+        })
+      } else {
+        alert('Data was not updated, no changes found');
+        $scope.managerOperations = false;
       }
     })
   };

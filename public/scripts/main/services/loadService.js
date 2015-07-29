@@ -118,11 +118,11 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   }
   
 
-  this.updateLocationCache = function (data) {
+  this.updateLocationCache = function (data) { console.log('second');
     var deferred = $q.defer();
     var i = 0;
     var poiUpdateSequence = function () {
-      if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
+      if (!data[i].graphData || !data[i].isochrones) {
         leafletData.getMap('map_left').then(function(map) {
           analystService.resetAll(map);
           analystService.modifyRoutes([]);
@@ -130,15 +130,14 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           analystService.modifyFrequencies([]);
 
           // welcome to callback hell
-          analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
+          analystService.singlePointRequest(data[i], map, undefined, function (key, subjects) {
             if (subjects) { 
               data[i]['graphData'] = subjects; 
-              data[i]['tilesURL'] = tilesURL; 
               analystService.vectorRequest(data[i], false, function (result, isochrones) {
                 if (result) {
-                  data[i]['isochrones'] = isochrones.worstCase.features;
+                  data[i]['isochrones'] = isochrones;
                   i += 1;
-                  if (i < data.length) { poiUpdateSequence(); }
+                  if (i < data.length) { console.log('running round ', i); poiUpdateSequence(); }
                   else {
                     var newPOIs = JSON.stringify(data);
                     $http.post('/cachedLocs', {newPOIs: newPOIs})

@@ -106,6 +106,21 @@ coaxsApp.service('analystService', function (supportService) {
     });
   }
 
+  this.loadExisting = function (poi, cb) {
+    vectorIsos = poi.isochrones;
+    analyst.singlePointRequest({
+      lat : poi.lat,
+      lng : poi.lng,
+    }, undefined, optionCurrent)
+    .then(function (response) {
+      cb(true);
+    })
+    .catch(function (err) {
+      console.log(err);
+      cb(false);
+    });;
+  }
+
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
     analyst.singlePointRequest({
@@ -154,7 +169,7 @@ coaxsApp.service('analystService', function (supportService) {
           for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
           subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
         }
-        cb(response.results.key, subjects, isoLayer._url);
+        cb(response.results.key, subjects);
       } else {
         cb(response.results.key, null);
       }
