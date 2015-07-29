@@ -124,7 +124,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     animateProgressBar();
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map);
-      analystService.loadExisting(poi, function(result) {
+      analystService.loadExisting(poi, map, function(result) {
         if (result) {
           if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
           $scope.scenarioScore.graphData = {
@@ -191,7 +191,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
               sel: subjects.jobs_tot
             };
             d3Service.drawGraph(subjects.jobs_tot.data);
-          } // draws svg of jobs access, etc.
+          } 
           if (!$scope.combos.sel) { existingMBTAKey = key }; 
           analystService.vectorRequest(marker, false, function (result) {
             if (result) {

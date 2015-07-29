@@ -106,13 +106,19 @@ coaxsApp.service('analystService', function (supportService) {
     });
   }
 
-  this.loadExisting = function (poi, cb) {
+  this.loadExisting = function (poi, map, cb) {
     vectorIsos = poi.isochrones;
     analyst.singlePointRequest({
       lat : poi.lat,
       lng : poi.lng,
     }, undefined, optionCurrent)
     .then(function (response) {
+      if (isoLayer) {
+        isoLayer.redraw(); 
+      } else {
+        isoLayer = response.tileLayer;
+        isoLayer.addTo(map);
+      }
       cb(true);
     })
     .catch(function (err) {
