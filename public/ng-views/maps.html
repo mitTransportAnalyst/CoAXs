@@ -110,6 +110,11 @@
         Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="test()">Run Create</span>
       </h6>
       <h6>
+        Current sensitivity level is: {{ sensitivity | number: 2 }} miles. 
+        <span class="badge" ng-click="sensitivity = sensitivity + 0.05">Increase</span>
+        <span class="badge" ng-click="sensitivity = sensitivity - 0.05">Decrease</span>
+      </h6>
+      <h6>
         Click to auto sync preloaded GeoJSON data with spreadsheet. <span class="badge" ng-click="updateLocationCache()">Run AutoSync</span>
       </h6>
     </div>
@@ -364,6 +369,11 @@
           tiles    = "tiles_right"
           >
 </leaflet>
+
+
+<div class="middleDivider"
+      style="left:50%; height:100%; border-style: solid; border-color: black; border-width: 10px; "
+></div>
 
 
 <!-- 1 poi markers --> 

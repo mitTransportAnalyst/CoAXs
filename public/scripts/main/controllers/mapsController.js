@@ -94,6 +94,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.geojson_left  = null;
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
 
+  // snap point sensitivity
+  $scope.sensitivity = 0.5
+
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
     leftLeafletMarker = marker;
@@ -105,7 +108,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     if (snapPoints) {
       var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
-      if (nearest.distance < 0.5) {
+      if (nearest.distance < $scope.sensitivity) {
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
         console.log(nearest.poi)
