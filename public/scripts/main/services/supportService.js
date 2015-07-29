@@ -19,8 +19,20 @@ coaxsApp.service('supportService', function () {
     else { return null; }
   }
 
+  this.getNearestPOI = function (marker, pois) {
+    var currentShortest = {poi: pois[0], distance: distance(marker.lat, marker.lng, pois[0].lat, pois[0].lng)};
+    pois.forEach(function (poi) {
+      var result = distance(marker.lat, marker.lng, poi.lat, poi.lng);
+      if (result < currentShortest.distance) {
+        currentShortest.poi = poi;
+        currentShortest.distance = result;
+      }
+    });
+    return currentShortest;
+  }
+
   function calculateLength(lineString) {
-    if (lineString.length<2) { return 0; }
+    if (lineString.length < 2) { return 0; }
     var result = 0;
     for (var i=1; i<lineString.length; i++) {
         result += distance(lineString[i-1][0],lineString[i-1][1],

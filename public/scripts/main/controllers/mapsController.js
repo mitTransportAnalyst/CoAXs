@@ -292,6 +292,21 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       poiUserPoints = points;
       poiUserPoints.addTo(map);
     });
+
+    loadService.getLocationCache()
+      .then(function (data) {
+        console.log(data);
+
+        var marker = angular.copy($scope.markers_left.main);
+        var nearest = supportService.getNearestPOI(marker, data);
+        console.log(nearest);
+
+        var circle = L.circle([nearest.poi.lat, nearest.poi.lng], 500, {
+          color: 'red',
+          fillColor: '#f03',
+          fillOpacity: 0.5
+        }).addTo(map);
+      })
   });
 
 
@@ -304,9 +319,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           var match = 0;
           $scope.poiUsers.forEach(function (user) {
             user.points.forEach(function (point) {
-              if (each.lat==point.lat && each.lng==point.lng) {
-                match += 1;
-              }
+              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
             });
           });
           if (match==0) {
@@ -319,16 +332,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           user.points.forEach(function (point) {
             var match = 0;
             data.forEach(function (each, index) {
-              if (each.lat==point.lat && each.lng==point.lng) {
-                match += 1;
-              }
+              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
             });
             if (match==0) {
-              data.push({
-                lat: point.lat,
-                lng: point.lng,
-                id: point.poiTag,
-              })
+              data.push({ lat: point.lat, lng: point.lng, id: point.poiTag })
             }
           });
         });
@@ -336,12 +343,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         if (differences > 0) {
           loadService.updateLocationCache(data)
           .then(function (data) {
-            if (data) {
-              console.log('data', data);
-            }
+            if (data) { alert('Data has been updated. Refresh page.'); }
           })
         } else {
-          console.log('Done and no differences')
+          alert('Data was not updated, no changes found')
         }
       }
     })
