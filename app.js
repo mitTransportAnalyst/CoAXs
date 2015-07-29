@@ -61,7 +61,7 @@ app.get('/geojson/:fileId', function (req, res) {
 });
 
 app.post('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
-  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs2.json'
+  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs.json'
   fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
     if (err) {
       console.log('Write file error:', err);

@@ -289,24 +289,69 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
       $scope.poiUsers = poiUsers;
-      poiUserPoints   = points;
+      poiUserPoints = points;
       poiUserPoints.addTo(map);
     });
+  });
 
-    loadService.updateLocationCache(function (result) {
-      if (result) {
-        console.log('Done.');
+
+  $scope.updateLocationCache = function () {
+    loadService.getLocationCache()
+    .then(function (data) {
+      if (data) {
+        var differences = 0;
+        data.forEach(function (each, index) {
+          var match = 0;
+          $scope.poiUsers.forEach(function (user) {
+            user.points.forEach(function (point) {
+              if (each.lat==point.lat && each.lng==point.lng) {
+                match += 1;
+              }
+            });
+          });
+          if (match==0) {
+            differences += 1;
+            data.splice(index, 1);
+          }
+        });
+
+        $scope.poiUsers.forEach(function (user) {
+          user.points.forEach(function (point) {
+            var match = 0;
+            data.forEach(function (each, index) {
+              if (each.lat==point.lat && each.lng==point.lng) {
+                match += 1;
+              }
+            });
+            if (match==0) {
+              data.push({
+                lat: point.lat,
+                lng: point.lng,
+                id: point.poiTag,
+              })
+            }
+          });
+        });
+
+        if (differences > 0) {
+          loadService.updateLocationCache(data)
+          .then(function (data) {
+            if (data) {
+              console.log('data', data);
+            }
+          })
+        } else {
+          console.log('Done and no differences')
+        }
       }
-    });
-
-  })
-
+    })
+  };
 
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
     // targetService.targetStops(stopsLayer, null, 0);
-  }
+  };
 
   // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) {
@@ -320,7 +365,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     } else {
       $scope.targetFeature = {};
     }
-  }
+  };
 
   // create a new route variant based off of existing scenario settings
   $scope.newVariant = function (tabnav, autoSet) {
@@ -332,7 +377,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       $scope.setSelectedVariant(tabnav, uuid); 
     };
     return uuid;
-  }
+  };
 
   // take a selected variant and set that to current (able to be loaded as total scenario)
   $scope.setSelectedVariant = function (tabnav, uuid) {
@@ -348,7 +393,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     } else {
       $scope.scenario[tabnav].routeId = null;
     }
-  }
+  };
 
   // set left default scenario to examine (for SPA or compare)
   $scope.updateLeftRoutes = function(comboId) {
@@ -446,12 +491,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   }
 
   $scope.targetPOIUsers = function (id) {
-    if (id) { 
-      leftService.targetPOIUsers(poiUserPoints, id); 
-    } else { 
-      poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) });
-      $scope.currentPOIUser = null;
-    }
+    $scope.currentPOIUser = id;
+    if (id) { leftService.targetPOIUsers(poiUserPoints, id); } 
+    else { poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })}
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again

@@ -1,7 +1,7 @@
 // all of these have been explained in main controller, this is simple the services portion and each function 
 // roughly shares the same name
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
-coaxsApp.service('loadService', function ($http, analystService, targetService, supportService) {
+coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
   this.getExisting = function (cb) {
     $http.get('/geojson/existing')
@@ -107,51 +107,60 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
     });
   };
 
-  this.updateLocationCache = function (cb) {
-    $http.get('/geojson/cachedLocs')
-    .success(function (data, status) {
-      var i = 0;
-      var poiUpdateSequence = function () {
-        if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
-          leafletData.getMap('map_left').then(function(map) {
-            analystService.resetAll(map);
-            analystService.modifyRoutes([]);
-            analystService.modifyDwells([]);
-            analystService.modifyFrequencies([]);
+  
 
-            // welcome to callback hell
-            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
-              if (subjects) { 
-                data[i]['graphData'] = subjects; 
-                data[i]['tilesURL'] = tilesURL; 
-                analystService.vectorRequest(data[i], false, function (result, isochrones) {
-                  if (result) {
-                    data[i]['isochrones'] = isochrones.worstCase.features;
-                    i += 1;
-                    if (i < data.length) { poiUpdateSequence(); }
-                    else {  
-                      $http.post('/cachedLocs', {newPOIs: JSON.stringify(data)})
-                      .success(function (data, status) {
-                        cb(true);
-                      }).error(function(data, status, headers, config) {
-                        cb(false);
-                      });
-                    }
-                  };
-                });
-              }
-            });
+  this.getLocationCache = function () {
+    var deferred = $q.defer();
+    $http.get('/geojson/cachedLocs')
+      .success(function (data) {deferred.resolve(data)})
+      .error(function(data, status, headers, config) {deferred.resolve(false)});
+    return deferred.promise;
+  }
+  
+
+  this.updateLocationCache = function (data) {
+    var deferred = $q.defer();
+    var i = 0;
+    var poiUpdateSequence = function () {
+      if (!data[i].graphData || !data[i].tilesURL || !data[i].isochrones) {
+        leafletData.getMap('map_left').then(function(map) {
+          analystService.resetAll(map);
+          analystService.modifyRoutes([]);
+          analystService.modifyDwells([]);
+          analystService.modifyFrequencies([]);
+
+          // welcome to callback hell
+          analystService.singlePointRequest(data[i], map, undefined, function (key, subjects, tilesURL) {
+            if (subjects) { 
+              data[i]['graphData'] = subjects; 
+              data[i]['tilesURL'] = tilesURL; 
+              analystService.vectorRequest(data[i], false, function (result, isochrones) {
+                if (result) {
+                  data[i]['isochrones'] = isochrones.worstCase.features;
+                  i += 1;
+                  if (i < data.length) { poiUpdateSequence(); }
+                  else {
+                    var newPOIs = JSON.stringify(data);
+                    $http.post('/cachedLocs', {newPOIs: newPOIs})
+                    .success(function (data) {
+                      deferred.resolve(true);
+                    }).error(function(data, status, headers, config) {
+                      deferred.resolve(false);
+                    });
+                  }
+                };
+              });
+            }
           });
-        } else {
-          i += 1;
-          if (i < data.length) { poiUpdateSequence(); }
-          else { cb(true); }
-        }
-      };
-      poiUpdateSequence();
-    }).error(function(data, status, headers, config) {
-      console.log(data, status, headers, config);
-    });
+        });
+      } else {
+        i += 1;
+        if (i < data.length) { poiUpdateSequence(); }
+        else { deferred.resolve(JSON.stringify(data)); }
+      }
+    };
+    poiUpdateSequence();
+    return deferred.promise;
   }
 
   // update map with phil's spread sheet points
@@ -174,9 +183,8 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
 
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
-          var userId = data[i].Name[0] + data[i].Name[1];
-                 
-          poiUsers.push({name : userId});
+          var userId = data[i].Name[0] + data[i].Name[1]; 
+          var points = [];              
   
           for (var n=0; n<pois.length; n++) {
             var icon;
@@ -192,11 +200,11 @@ coaxsApp.service('loadService', function ($http, analystService, targetService, 
             var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
             marker['userId'] = userId;
             circles.push(marker);
-          
+            points.push({lat: pois[n].lat, lng: pois[n].lng, poiTag: pois[n].poiTag});
           }
+          poiUsers.push({userId : userId, points: points});
         }
-        var iconLayers = L.layerGroup(circles);
-        cb(iconLayers, poiUsers);        
+        cb(L.layerGroup(circles), poiUsers);
       }
     })
   };

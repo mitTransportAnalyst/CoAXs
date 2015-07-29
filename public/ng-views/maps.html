@@ -106,6 +106,9 @@
       <i class="fa fa-times-circle-o pull-right" ng-click="managerView=false"></i>
     </h4>
     <div class="topinfo-body container">
+
+    <button style="color:red" ng-click="updateLocationCache()">updateLocationCache</button>
+
       <h6>
         Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="test()">Run Create</span>
       </h6>
@@ -365,14 +368,14 @@
 
 <!-- 1 poi markers --> 
 <div class="leftNav">
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.name)">
+  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
         <i class="fa fa-user"></i><br> All
   </div>
   <div class="badge" 
         ng-repeat="user in poiUsers track by $index" 
-        ng-click="targetPOIUsers(user.name)" 
-        ng-class="user.name == currentPOIUser ? '' : 'unselected'">
-        <i class="fa fa-user"></i><br> {{ user.name }}
+        ng-click="targetPOIUsers(user.userId)" 
+        ng-class="user.userId == currentPOIUser ? '' : 'unselected'">
+        <i class="fa fa-user"></i><br> {{ user.userId }}
   </div>
 </div>
 
