@@ -371,9 +371,7 @@
 </leaflet>
 
 
-<div class="middleDivider"
-      style="left:50%; height:100%; border-style: solid; border-color: black; border-width: 10px; "
-></div>
+<div style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>
 
 
 <!-- 1 poi markers --> 
@@ -472,11 +470,11 @@
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
         <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);">
           <div>ID</div>
-          <div><i class="fa fa-stop" style="color:#0071CA"  tooltip="Blue Hill"></i></div>
-          <div><i class="fa fa-stop" style="color:#B10086"  tooltip="Hyde Park"></i></div>
-          <div><i class="fa fa-stop" style="color:#CE5504"  tooltip="Harvard-Dudley"></i></div>
-          <div><i class="fa fa-stop" style="color:#AD0101"  tooltip="Sullivan-Dudley"></i></div>
-          <div><i class="fa fa-arrows-h"></i></div>
+          <div class="square" style="background-color:#0071CA" tooltip="Blue Hill">BH</div>
+          <div class="square" style="background-color:#B10086" tooltip="Hyde Park">HP</div>
+          <div class="square" style="background-color:#CE5504" tooltip="Harvard-Dudley">HD</div>
+          <div class="square" style="background-color:#AD0101" tooltip="Sullivan-Dudley">SD</div>
+          <div class="fa fa-arrows-h"></div>
         </div>
 
         <div style="margin-left:21px;height:100%;width:10000px;overflow-y:scroll;overflow-x:scroll;">

@@ -156,6 +156,7 @@ nav div.section {
   min-height: 150px;
   overflow: hidden;
   padding-top: 28px;
+  z-index: 10;
 }
 
 .bottomNav .colBody {
@@ -256,6 +257,18 @@ nav div.section {
   overflow-x: scroll;
   overflow-y: hidden;
   height: inherit;
+}
+
+.scenariosTable .square {
+  color: rgba(255,255,255,0.65);;
+  height: 18px;
+  width: 18px;
+  overflow: hidden;
+  line-height: 18px;
+  font-size: 10px;
+  text-align: center;
+  margin-bottom: 2px;
+  padding: 2px;
 }
 
 .scenariosTable .scenario {
