@@ -99,7 +99,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // Left map listener
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
-    leftLeafletMarker = marker;
+    // leftLeafletMarker = marker;
     $scope.markers_left.main = {
       lat  : marker.model.lat,
       lng  : marker.model.lng,
@@ -111,7 +111,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       if (nearest.distance < $scope.sensitivity) {
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
-        console.log(nearest.poi)
         markerQueryPreload(nearest.poi)
       } else {
         runMarkerQuerys();
@@ -121,20 +120,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     }
   });
 
-
   var markerQueryPreload = function (poi) {
     $scope.showVectorIsosOn = false;
     animateProgressBar();
+    if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
+    $scope.scenarioScore.graphData = {
+      all: poi.graphData,
+      sel: poi.graphData.jobs_tot
+    };
+    d3Service.drawGraph(poi.graphData.jobs_tot.data);
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map);
       analystService.loadExisting(poi, map, function(result) {
         if (result) {
-          if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-          $scope.scenarioScore.graphData = {
-            all: poi.graphData,
-            sel: poi.graphData.jobs_tot
-          };
-          d3Service.drawGraph(poi.graphData.jobs_tot.data);
           $scope.loadProgress.val = 100;
           setTimeout(function () { $scope.$apply (function () {
             $scope.loadProgress.vis = false; // terminate progress bar viewport
@@ -487,7 +485,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // updates on new selected scenario combo
   $scope.updateScenarioScorecard = function (id) {
     if (!id) {
-      $scope.scenarioScore = scorecardService.generateEmptyScore();
+      var tempScen = scorecardService.generateEmptyScore();
+      if ($scope.scenarioScore && $scope.scenarioScore.graphData) { 
+        tempScen.graphData = $scope.scenarioScore.graphData; 
+      }
+      $scope.scenarioScore = tempScen;
     } else {
       var allCorKeys = $scope.combos.all[id].sel;
       var busTot = {count: 0, cost: 0};
@@ -548,7 +550,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
 
   // just boiler for now, ignore this - i use it to debug, currently we are using it for the manager auto create scenario tool bound to hamburger menu
-  $scope.test = function(foo) {
+  $scope.buildScenarios = function(foo) {
     // window.confirm('OK to run auto create scenarios?');
 
     var comboId = supportService.generateUUID();

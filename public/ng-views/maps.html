@@ -35,6 +35,8 @@
 <!-- upper views -->
 
 <div class="topcol">
+
+
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
     <h4>
       Scenario Scorecard
@@ -102,7 +104,7 @@
               <span class="caret"></span>
               <span class="sr-only">Split button!</span>
             </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
+            <ul class="dropdown-menu" role="menu">
               <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
                   ng-click="scenarioScore.graphData.sel = dataVal"
                   value="{{ id }}">
@@ -110,7 +112,6 @@
               </li>
             </ul>
           </div>
-
         </center>
       </div>
     </div>
@@ -123,7 +124,7 @@
     </h4>
     <div class="topinfo-body container">
       <h6>
-        Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="test()">Run Create</span>
+        Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="buildScenarios()">Run Create</span>
       </h6>
       <h6>
         Current sensitivity level is: {{ sensitivity | number: 2 }} miles. 
@@ -133,6 +134,9 @@
       <h6>
         Click to auto sync preloaded GeoJSON data with spreadsheet. <span class="badge" ng-click="updateLocationCache()">Run AutoSync</span>
       </h6>
+      <!-- <h6>
+        Debugger tool. <span class="badge">Run Test</span>
+      </h6> -->
     </div>
   </div>
 </div>
