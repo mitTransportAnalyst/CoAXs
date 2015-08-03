@@ -72,10 +72,10 @@ nav div.section {
   cursor           : pointer;
 }
 .topcol {
-  position         : absolute;
-  color            : #FFF;
-  z-index          : 100;
-  width            : 50%;
+  position: absolute;
+  color: #FFF;
+  z-index: 10;
+  width: 50%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
   padding-left: 15px;
@@ -97,7 +97,7 @@ nav div.section {
 .topnav {
   position         : absolute;
   padding          : 10px;
-  z-index          : 100;
+  z-index          : 10;
   cursor           : pointer;
   width            : 50%;
   float            : left;
@@ -111,6 +111,25 @@ nav div.section {
   position: absolute;
   margin-top: 10px;
   margin-right: 12px;
+  z-index: 8 !important;
+}
+
+.bottomCol {
+  position: absolute;
+  color: #FFF;
+  z-index: 10;
+  width: 50%;
+  background-color: red;
+  bottom: 25%
+}
+.bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.bottomCol .saveAlt {
+  background-color : #1fa67a;
+  overflow         : hidden;
+  bottom: 0px;
 }
 
 .legend .panel {
@@ -317,10 +336,6 @@ nav div.section {
 }
 
 
-.saveAlt {
-  background-color : #1fa67a;
-  overflow         : hidden;
-}
 .noTopMargin {
   margin-top : 0px;
 }

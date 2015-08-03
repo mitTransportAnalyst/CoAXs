@@ -20,14 +20,15 @@
           <span ng-show="showVectorIsosOn">Time Vector</span>
           <span ng-show="!showVectorIsosOn">Isochrones</span>
           Legend
+          <i class="fa fa-expand pull-right"></i>
         </h6>
       </div>
-      <div class="panel-body" ng-show="!scenarioLegend && showVectorIsosOn">
+      <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn">
         Time Boundary
         <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Selected</small>
         <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>Compared</small>
       </div>
-      <div class="panel-body" ng-show="!scenarioLegend && !showVectorIsosOn">
+      <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn">
         Travel Scenario
         <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Faster</small>
         <br><i class="fa fa-stop" style="color:#fecf61"></i> <small>Slower</small>
@@ -289,11 +290,12 @@
       </button>
     </div>
   </div>
+</div>
 
 
+<div class="bottomCol">
   <!--SAVE-ROUTE PROMPT-->
-
-  <div class="topleft saveAlt" ng-show="saveAlt">
+  <div class="saveAlt" ng-show="saveAlt">
     <h4>
       Save this variation of the {{ routes[scenario[tabnav].routeId][0].options.base.varName }} path
       <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false"></i>
@@ -335,13 +337,9 @@
       </div>
     </div>
   </div>
-</div>
 
-
-<!--SAVE-SCENARIO PROMPT-->
-
-<div class="topcol left">
-  <div class="topleft saveAlt" ng-show="saveCombo">
+  <!--SAVE-SCENARIO PROMPT-->
+  <div class="saveAlt" ng-show="saveCombo">
     <h4>
       Save this scenario alternative
       <i class="fa fa-times-circle-o pull-right" ng-click="saveCombo=false"></i>
