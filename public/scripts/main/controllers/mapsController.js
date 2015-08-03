@@ -98,8 +98,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.sensitivity = 0.5;
 
   // Left map listener
-  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
-    // leftLeafletMarker = marker;
+  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { $scope.preMarkerQuery(marker); });
+
+  $scope.preMarkerQuery = function (marker) {
     $scope.markers_left.main = {
       lat  : marker.model.lat,
       lng  : marker.model.lng,
@@ -112,16 +113,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         alert('entered auto mode');
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
-        markerQueryPreload(nearest.poi)
+        preloadedMarker(nearest.poi)
       } else {
         runMarkerQuerys();
       }
     } else {
       runMarkerQuerys();
     }
-  });
+  }
 
-  var markerQueryPreload = function (poi) {
+  var preloadedMarker = function (poi) {
     $scope.showVectorIsosOn = false;
     animateProgressBar();
     if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
