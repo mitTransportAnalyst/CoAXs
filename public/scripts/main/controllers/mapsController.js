@@ -108,7 +108,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     if (snapPoints) {
       var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
-      if (nearest.distance < $scope.sensitivity) {
+      if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare) {
+        alert('entered auto mode');
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
         markerQueryPreload(nearest.poi)
