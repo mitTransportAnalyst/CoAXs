@@ -98,19 +98,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.sensitivity = 0.5;
 
   // Left map listener
-  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { $scope.preMarkerQuery(marker); });
+  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
+    $scope.markers_left.main.lat = marker.model.lat;
+    $scope.markers_left.main.lng = marker.model.lng;
+    $scope.preMarkerQuery(); 
+  });
 
-  $scope.preMarkerQuery = function (marker) {
-    $scope.markers_left.main = {
-      lat  : marker.model.lat,
-      lng  : marker.model.lng,
-      draggable : true
-    };
-
+  $scope.preMarkerQuery = function () {
     if (snapPoints) {
       var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
       if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare) {
-        alert('entered auto mode');
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
         preloadedMarker(nearest.poi)
