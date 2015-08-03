@@ -699,13 +699,11 @@
                 <i class="fa fa-square-o" 
                     ng-show="variants[tabnav].sel !== variant._key" 
                     ng-click="setSelectedVariant(tabnav, variant._key);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav);
-                              $event.stopPropagation()"></i>
+                              updateRouteScorecard(scenario[tabnav].routeId, tabnav);"></i>
                 <i class="fa fa-check-square" 
                     ng-show="variants[tabnav].sel == variant._key"
                     ng-click="setSelectedVariant(tabnav, null);
-                              updateRouteScorecard();
-                              $event.stopPropagation()"></i>
+                              updateRouteScorecard();"></i>
               </td>
               <td>{{ variant.name }}</td>
               <td>
