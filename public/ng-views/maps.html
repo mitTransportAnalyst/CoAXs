@@ -16,15 +16,27 @@
   <div class="legend">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h6 class="panel-title">
+        <h6 class="panel-title" ng-click="scenarioLegend=!scenarioLegend">
+          <span ng-show="showVectorIsosOn">Time Vector</span>
+          <span ng-show="!showVectorIsosOn">Isochrones</span>
           Legend
-          <i class="fa fa-times-circle-o pull-right" ng-click="scenarioLegend=!scenarioLegend"></i>
         </h6>
       </div>
-      <div class="panel-body" ng-show="scenarioLegend">
+      <div class="panel-body" ng-show="!scenarioLegend && showVectorIsosOn">
         Time Boundary
         <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Selected</small>
         <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>Compared</small>
+      </div>
+      <div class="panel-body" ng-show="!scenarioLegend && !showVectorIsosOn">
+        Travel Scenario
+        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Faster</small>
+        <br><i class="fa fa-stop" style="color:#fecf61"></i> <small>Slower</small>
+        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>Slowest</small>
+        <br><i class="fa fa-stop" style="color:#FFF"></i> <small>Unreachable</small>
+        Comparisons <small>(Select Scenario)</small>
+        <br><i class="fa fa-stop" style="color:#9651d5"></i> <small>Much Faster</small>
+        <br><i class="fa fa-stop" style="color:#bd92e5"></i> <small>Slightly Faster</small>
+        <br><i class="fa fa-stop" style="color:#e4d3f4"></i> <small>Faster</small>
       </div>
     </div>
   </div>
