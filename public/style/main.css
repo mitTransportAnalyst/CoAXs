@@ -111,15 +111,13 @@ nav div.section {
   position: absolute;
   margin-top: 10px;
   margin-right: 12px;
-  z-index: 8 !important;
 }
 
 .bottomCol {
   position: absolute;
   color: #FFF;
-  z-index: 10;
-  width: 50%;
-  background-color: red;
+  z-index: 95;
+  width: 100%;
   bottom: 25%
 }
 .bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6 {
@@ -127,8 +125,10 @@ nav div.section {
   padding-right: 15px;
 }
 .bottomCol .saveAlt {
+  position: absolute;
   background-color : #1fa67a;
   overflow         : hidden;
+  width: 50%;
   bottom: 0px;
 }
 
@@ -150,7 +150,6 @@ nav div.section {
 
 .right {
   left             : 50%;
-  /*color            : rgb(50,50,50);*/
 }
 .unselected {
   opacity          : 0.35;
