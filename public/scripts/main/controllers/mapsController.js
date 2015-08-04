@@ -36,7 +36,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     all : {},
   }
   $scope.tabnav = 'BH';
-  $scope.modeSelect = 'all'; // walk, bus, local, all <-- options
+  $scope.mode = {
+    all: [],
+    local: [3, 5, 6, 7],
+    bus: [0, 1, 3, 5, 6, 7],
+    walking: [0, 1, 2, 3, 4, 5, 6, 7],
+    selected: 'all'
+  };
 
   // left globals
   var subwaysLayer    = null,
@@ -111,6 +117,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare) {
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
+        $scope.mode.selected = null; // unknown what scenario is being loaded
         preloadedMarker(nearest.poi)
       } else {
         runMarkerQuerys();
@@ -153,6 +160,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       analystService.modifyRoutes(toKeep);
       analystService.modifyDwells(toKeep);
       analystService.modifyFrequencies(toKeep);
+      if ($scope.mode.selected) {
+        analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+      }
     };
 
     animateProgressBar(); // start the progress bar

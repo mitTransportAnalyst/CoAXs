@@ -106,6 +106,26 @@ coaxsApp.service('analystService', function (supportService) {
     });
   }
 
+  this.modifyModes = function (keepRoutes, routeTypes) {
+    keepRoutes.forEach(function (route) {
+      optionCurrent.scenario.modifications.push({
+        type: 'adjust-headway',
+        agencyId: agencyId,
+        routeId: [route.routeId],
+        tripId: null,
+        routeType: routeTypes,
+      });
+
+      console.log({
+        type: 'adjust-headway',
+        agencyId: agencyId,
+        routeId: [route.routeId],
+        tripId: null,
+        routeType: routeTypes,
+      });
+    });
+  }
+
   this.loadExisting = function (poi, map, cb) {
     vectorIsos = poi.isochrones;
     analyst.singlePointRequest({

@@ -469,16 +469,20 @@
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs" ng-class="modeSelect=='walk' ? 'active' : ''">
+        <label class="btn btn-xs" ng-class="mode.selected=='walk' ? 'active tiny' : ''"
+                ng-click="mode.selected='walk'">
           <i class="fa fa-child"></i>
         </label>
-        <label class="btn btn-xs" ng-class="modeSelect=='bus' ? 'active' : ''">
+        <label class="btn btn-xs" ng-class="mode.selected=='bus' ? 'active tiny' : ''"
+                ng-click="mode.selected='bus'">
           <i class="fa fa-bus"></i>
         </label>
-        <label class="btn btn-xs" ng-class="modeSelect=='local' ? 'active' : ''">
+        <label class="btn btn-xs" ng-class="mode.selected=='local' ? 'active tiny' : ''"
+                ng-click="mode.selected='local'">
           <i class="fa fa-train"></i>
         </label>
-        <label class="btn btn-xs" ng-class="modeSelect=='all' ? 'active' : ''">
+        <label class="btn btn-xs" ng-class="mode.selected=='all' ? 'active tiny' : ''"
+                ng-click="mode.selected='all'">
           <i class="fa fa-ship"></i>
         </label>
       </div>

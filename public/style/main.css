@@ -34,6 +34,9 @@ button {
   background-color : #1fa67a;
 }
 
+.tiny {
+  background-color: #959595;
+}
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
   color            : #FFF;
