@@ -115,7 +115,7 @@
 
           <div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
-                    ng-click="drawGraph(scenarioScore.graphData.sel)">
+                    ng-click="drawGraph(scenarioScore.graphData)">
               Show with {{ scenarioScore.graphData.sel.verbose }}
             </button>
             <button type="button" class="btn btn-success" dropdown-toggle>
@@ -124,7 +124,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
-                  ng-click="scenarioScore.graphData.sel = dataVal"
+                  ng-click="selectGraphData(dataVal)"
                   value="{{ id }}">
                 <a href="">{{ dataVal.verbose }}</a>
               </li>

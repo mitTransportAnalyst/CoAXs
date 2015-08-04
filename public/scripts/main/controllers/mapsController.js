@@ -219,8 +219,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
   }
 
-  $scope.drawGraph = function (data) {
-    d3Service.drawGraph(data.data);
+  $scope.selectGraphData = function (dataVal) {
+    $scope.scenarioScore.graphData.sel = dataVal;
+    if (graphData.com) {
+      graphData.com.sel = dataVal;
+    }
+  }
+
+  $scope.drawGraph = function (graphData) {
+    if (!graphData) { 
+      d3Service.drawGraph(graphData.sel.data);
+    } else {
+      d3Service.drawGraph(graphData.sel.data, graphData.com.sel.data);
+    }
   }
 
   // filter for routes that match with the desired corridor
@@ -531,6 +542,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           vehTot.cost  += vehicles.cost;
         }
       }
+      if (!$scope.scenarioScore) { $scope.scenarioScore = {}; }
       $scope.scenarioScore.bus = busTot; 
       $scope.scenarioScore.length = lenTot; 
       $scope.scenarioScore.vehicles = vehTot;
