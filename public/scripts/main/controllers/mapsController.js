@@ -160,13 +160,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
         this.runPrep(map, $scope.combos.com);
-        analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) { console.log('compareSubjects.jobs_tot', compareSubjects.jobs_tot);
+        analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) { 
           analystService.vectorRequest(marker, true, function (result) {
             if (result) { $scope.loadProgress.val += 5; };
           });
 
           this.runPrep(map, $scope.combos.sel);
-          analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { console.log('subjects.jobs_tot', subjects.jobs_tot);
+          analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { 
             $scope.loadProgress.val += 5;
             if (subjects) { 
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
@@ -221,8 +221,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   $scope.selectGraphData = function (dataVal) {
     $scope.scenarioScore.graphData.sel = dataVal;
-    if (graphData.com) {
-      graphData.com.sel = dataVal;
+    if ($scope.scenarioScore.graphData.com) {
+      $scope.scenarioScore.graphData.com.sel = dataVal;
     }
   }
 

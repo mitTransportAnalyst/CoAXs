@@ -2,7 +2,7 @@
 coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
-  this.drawGraph = function (data, compare) {  console.log('compared3', data, compare)
+  this.drawGraph = function (data, compare) {  
 
     var vis   = d3.select("#compPlot"),
       WIDTH   = 350,
@@ -79,13 +79,15 @@ coaxsApp.service('d3Service', function () {
 
   vis.append("svg:path")
     .attr("d", lineFunc(data))
-    .attr("class", "line");
+    .attr("class", "line")
+    .style("stroke-width", "1");
 
   if (compare) { 
     vis.append("svg:path")
       .attr("d", lineFunc(compare))
       .attr("class", "line")
-      .style("stroke-dasharray", ("3, 3"));
+      .style("stroke-dasharray", ("3, 3"))
+      .style("stroke-width", "1");
   }
 
 
