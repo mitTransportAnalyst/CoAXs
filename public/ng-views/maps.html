@@ -22,8 +22,6 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h6 class="panel-title" ng-click="scenarioLegend=!scenarioLegend">
-          <span ng-show="showVectorIsosOn">Time Vector</span>
-          <span ng-show="!showVectorIsosOn">Isochrones</span>
           Legend
           <i class="fa fa-expand pull-right"></i>
         </h6>
@@ -439,7 +437,7 @@
 
     <div class="showToggle" ng-show="visibleTabs.travel">
       <div class="subHead" ng-click="toggleShowVectorIsos()">
-        Toggle time vectors
+        Show time boundaries
         <span ng-show="showVectorIsosOn">
           <i class="fa fa-eye"></i> On
         </span>
