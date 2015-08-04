@@ -384,7 +384,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     loadService.getLocationCache()
     .then(function (data) {
       $scope.snapPoints.all = data;
-      $scope.snapPoints.sel = data[0];
+      if (data.indexOf('baseline.json') > -1) {
+        $scope.snapPoints.sel = 'baseline.json';
+      }
 
       loadService.loadSnapCache($scope.snapPoints.sel)
       .then(function (data) {
@@ -601,9 +603,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   }
 
   // from manager control runautosync
-  $scope.updateLocationCache = function () {
+  $scope.updateLocationCache = function (selId) {
     $scope.managerOperations = true;
-    loadService.getLocationCache()
+    loadService.loadSnapCache(selId)
     .then(function (data) {
       var differences = 0;
       if (data) {
@@ -634,7 +636,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           });
         });
 
-        loadService.updateLocationCache(data)
+        loadService.updateLocationCache(data, selId)
         .then(function (data) {
           if (data) { alert('Data has been updated. Refresh page.'); }
           $scope.managerOperations = false;

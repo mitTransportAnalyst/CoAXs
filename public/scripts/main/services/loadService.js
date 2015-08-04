@@ -125,7 +125,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   }
   
 
-  this.updateLocationCache = function (data) { console.log('second');
+  this.updateLocationCache = function (data, id) {
     var deferred = $q.defer();
     var i = 0;
     var poiUpdateSequence = function () {
@@ -147,7 +147,8 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
                   if (i < data.length) { console.log('running round ', i); poiUpdateSequence(); }
                   else {
                     var newPOIs = JSON.stringify(data);
-                    $http.post('/cachedLocs', {newPOIs: newPOIs})
+                    var url = '/cachedLocs/' + id;
+                    $http.post(url, {newPOIs: newPOIs})
                     .success(function (data) {
                       deferred.resolve(true);
                     }).error(function(data, status, headers, config) {
