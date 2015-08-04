@@ -1,8 +1,9 @@
 coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
+  // control screen size situation
   var runScreenSetUp = function () {
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
-      // alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
+      alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
     document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
     document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35) + 'px';
@@ -104,28 +105,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // snap point sensitivity
   $scope.sensitivity = 0.5;
 
-  // Left map listener
+  // Handle left map queries
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     $scope.markers_left.main.lat = marker.model.lat;
     $scope.markers_left.main.lng = marker.model.lng;
     $scope.preMarkerQuery(); 
   });
-
-  $scope.downloadSession = function () {
-    var comboAll = angular.copy($scope.combos.all);
-    for (combo in comboAll) {
-      combo = comboAll[combo].sel;
-      for (cor in combo) {
-        if (combo[cor]) {
-          combo[cor] = $scope.variants[cor].all[combo[cor]];
-        }
-      }
-    }
-
-    var text = [JSON.stringify(comboAll)];
-    var blob = new Blob(text, {type: "text/json;charset=utf-8"});
-    saveAs(blob, "sessionSave.json");
-  }
 
   $scope.preMarkerQuery = function () {
     if (snapPoints) {
@@ -262,13 +247,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
   }
 
+  // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
     $scope.scenarioScore.graphData.sel = dataVal;
     if ($scope.scenarioScore.graphData.com) {
       $scope.scenarioScore.graphData.com.sel = dataVal;
     }
   }
-
   $scope.drawGraph = function (graphData) {
     if (!graphData.com) { 
       d3Service.drawGraph(graphData.sel.data);
@@ -401,52 +386,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       snapPoints = data;
     })
   });
-
-
-  $scope.updateLocationCache = function () {
-    $scope.managerOperations = true;
-    loadService.getLocationCache()
-    .then(function (data) {
-      var differences = 0;
-      if (data) {
-        data.forEach(function (each, index) {
-          var match = 0;
-          $scope.poiUsers.forEach(function (user) {
-            user.points.forEach(function (point) {
-              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
-            });
-          });
-          if (match==0) {
-            differences += 1;
-            data.splice(index, 1);
-          }
-        });
-      }
-      if (differences > 0 || !data) {
-        if (!data) { data = [] };
-        $scope.poiUsers.forEach(function (user) {
-          user.points.forEach(function (point) {
-            var match = 0;
-            data.forEach(function (each, index) {
-              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
-            });
-            if (match==0) {
-              data.push({ lat: point.lat, lng: point.lng, id: point.poiTag })
-            }
-          });
-        });
-
-        loadService.updateLocationCache(data)
-        .then(function (data) {
-          if (data) { alert('Data has been updated. Refresh page.'); }
-          $scope.managerOperations = false;
-        })
-      } else {
-        alert('Data was not updated, no changes found');
-        $scope.managerOperations = false;
-      }
-    })
-  };
 
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (id) {
@@ -618,11 +557,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
   };
 
-
-  // just boiler for now, ignore this - i use it to debug, currently we are using it for the manager auto create scenario tool bound to hamburger menu
-  $scope.buildScenarios = function(foo) {
-    // window.confirm('OK to run auto create scenarios?');
-
+  // MANAGER CONTROLS
+  // from manager control run create
+  $scope.buildScenarios = function(foo) {  
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
       name    : 'Baseline',
@@ -646,5 +583,68 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       }
     };
   }
+
+  // from manager control runautosync
+  $scope.updateLocationCache = function () {
+    $scope.managerOperations = true;
+    loadService.getLocationCache()
+    .then(function (data) {
+      var differences = 0;
+      if (data) {
+        data.forEach(function (each, index) {
+          var match = 0;
+          $scope.poiUsers.forEach(function (user) {
+            user.points.forEach(function (point) {
+              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
+            });
+          });
+          if (match==0) {
+            differences += 1;
+            data.splice(index, 1);
+          }
+        });
+      }
+      if (differences > 0 || !data) {
+        if (!data) { data = [] };
+        $scope.poiUsers.forEach(function (user) {
+          user.points.forEach(function (point) {
+            var match = 0;
+            data.forEach(function (each, index) {
+              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
+            });
+            if (match==0) {
+              data.push({ lat: point.lat, lng: point.lng, id: point.poiTag })
+            }
+          });
+        });
+
+        loadService.updateLocationCache(data)
+        .then(function (data) {
+          if (data) { alert('Data has been updated. Refresh page.'); }
+          $scope.managerOperations = false;
+        })
+      } else {
+        alert('Data was not updated, no changes found');
+        $scope.managerOperations = false;
+      }
+    })
+  };
+
+  // from manager control run download
+  $scope.downloadSession = function () {
+    var comboAll = angular.copy($scope.combos.all);
+    for (combo in comboAll) {
+      combo = comboAll[combo].sel;
+      for (cor in combo) {
+        if (combo[cor]) {
+          combo[cor] = $scope.variants[cor].all[combo[cor]];
+        }
+      }
+    }
+    var text = [JSON.stringify(comboAll)];
+    var blob = new Blob(text, {type: "text/json;charset=utf-8"});
+    saveAs(blob, "sessionSave.json");
+  }
+
 
 });
