@@ -2,7 +2,7 @@
 coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
-  this.drawGraph = function (data) {
+  this.drawGraph = function (data, compare) { 
 
     var vis   = d3.select("#compPlot"),
       WIDTH   = 350,
@@ -13,18 +13,21 @@ coaxsApp.service('d3Service', function () {
         bottom : 20,
         left   : 50
       },
-      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function (d) {
+
+      combined = compare ? data.concat(compare) : data,
+
+      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(combined, function (d) {
           return d.x;
         }),
-        d3.max(data, function (d) {
+        d3.max(combined, function (d) {
           return d.x;
         })
       ]),
 
-      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function (d) {
+      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(combined, function (d) {
           return d.y;
         }),
-        d3.max(data, function (d) {
+        d3.max(combined, function (d) {
           return d.y;
         })
       ]),
@@ -38,7 +41,7 @@ coaxsApp.service('d3Service', function () {
         .scale(yRange)
         .tickSize(5)
         .orient("left")
-        .tickSubdivide(true);
+        .tickSubdivide(true); 
 
     vis.selectAll("*").remove();
 
@@ -76,7 +79,14 @@ coaxsApp.service('d3Service', function () {
 
   vis.append("svg:path")
     .attr("d", lineFunc(data))
-    .attr("class", "line")
+    .attr("class", "line");
+
+  if (compare) { 
+    vis.append("svg:path")
+      .attr("d", lineFunc(compare))
+      .attr("class", "line");
+  }
+
 
   }
 

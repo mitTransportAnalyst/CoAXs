@@ -166,8 +166,20 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           });
 
           this.runPrep(map, $scope.combos.sel);
-          analystService.singlePointRequest(marker, map, compareKey, function (key) {
+          analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
             $scope.loadProgress.val += 5;
+            if (subjects) { 
+              if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
+              $scope.scenarioScore.graphData = {
+                all: subjects,
+                sel: subjects.jobs_tot,
+                com: {
+                  all: compareSubjects,
+                  sel: compareSubjects.jobs_tot,
+                }
+              };
+              d3Service.drawGraph(subjects.jobs_tot.data, compareSubjects.jobs_tot.data);
+            } 
             analystService.vectorRequest(marker, false, function (result) {
               if (result) {
                 $scope.loadProgress.val = 100;
@@ -188,7 +200,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
               all: subjects,
-              sel: subjects.jobs_tot
+              sel: subjects.jobs_tot,
+              com: false
             };
             d3Service.drawGraph(subjects.jobs_tot.data);
           } 
@@ -518,7 +531,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           vehTot.cost  += vehicles.cost;
         }
       }
-      $scope.scenarioScore = { bus: busTot, length: lenTot, vehicles: vehTot };
+      $scope.scenarioScore.bus = busTot; 
+      $scope.scenarioScore.length = lenTot; 
+      $scope.scenarioScore.vehicles = vehTot;
     }
   }
 

@@ -168,17 +168,13 @@ coaxsApp.service('analystService', function (supportService) {
         }
       };
 
-      if (!compareKey && subjects) {
-        for (key in subjects) {
-          var id = subjects[key].id;
-          var tempArray = response.results.data[id].pointEstimate.sums;
-          for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
-          subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
-        }
-        cb(response.results.key, subjects);
-      } else {
-        cb(response.results.key, null);
+      for (key in subjects) {
+        var id = subjects[key].id;
+        var tempArray = response.results.data[id].pointEstimate.sums;
+        for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
+        subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
       }
+      cb(response.results.key, subjects);
     })
     .catch(function (err) {
       console.log(err);
