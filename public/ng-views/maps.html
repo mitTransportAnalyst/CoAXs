@@ -135,7 +135,7 @@
 
   <div class="topleft topinfo" ng-show="managerView">
     <h4>
-      <i class="fa fa-cog fa-spin" ng-if="managerOperations"></i> Manger Controls
+      <i class="fa fa-cog fa-spin" ng-if="managerOperations"></i> Manager Controls
       <i class="fa fa-times-circle-o pull-right" ng-click="managerView=false"></i>
     </h4>
     <div class="topinfo-body container">
@@ -150,9 +150,9 @@
       <h6>
         Click to auto sync preloaded GeoJSON data with spreadsheet. <span class="badge" ng-click="updateLocationCache()">Run AutoSync</span>
       </h6>
-      <!-- <h6>
-        Debugger tool. <span class="badge">Run Test</span>
-      </h6> -->
+      <h6>
+        Download session footprint. <span class="badge" ng-click="downloadSession()">Download</span>
+      </h6>
     </div>
   </div>
 </div>

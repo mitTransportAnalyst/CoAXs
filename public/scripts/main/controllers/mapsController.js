@@ -111,6 +111,22 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     $scope.preMarkerQuery(); 
   });
 
+  $scope.downloadSession = function () {
+    var comboAll = angular.copy($scope.combos.all);
+    for (combo in comboAll) {
+      combo = comboAll[combo].sel;
+      for (cor in combo) {
+        if (combo[cor]) {
+          combo[cor] = $scope.variants[cor].all[combo[cor]];
+        }
+      }
+    }
+
+    var text = [JSON.stringify(comboAll)];
+    var blob = new Blob(text, {type: "text/json;charset=utf-8"});
+    saveAs(blob, "sessionSave.json");
+  }
+
   $scope.preMarkerQuery = function () {
     if (snapPoints) {
       var matchesSnap = compareToSnapPoints();
