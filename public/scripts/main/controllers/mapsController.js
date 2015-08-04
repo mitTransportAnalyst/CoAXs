@@ -115,7 +115,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.preMarkerQuery = function () {
     if ($scope.snapPoints.sel) {
       var matchesSnap = compareToSnapPoints();
-      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.sel.data);
+      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.data);
       if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
@@ -129,12 +129,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     }
   }
 
-  var compareToSnapPoints = function (poi) { console.log($scope.combos);
+  var compareToSnapPoints = function () { 
     var sel = $scope.combos.sel;
     if (sel) {
       sel = $scope.combos.all[sel].sel;
       for (route in sel) { 
-        if (sel[route] !== null) { console.log(sel[route]);
+        if (sel[route] !== null) {
           return false;
         }
       };
@@ -271,7 +271,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
         if (corridorData) { keepRoutes.push(corridorData); }
       }
-    };
+    };console.log(keepRoutes);
     return keepRoutes;
   }
 
