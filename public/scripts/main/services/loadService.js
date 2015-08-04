@@ -107,11 +107,18 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     });
   };
 
-  
-
   this.getLocationCache = function () {
     var deferred = $q.defer();
-    $http.get('/geojson/cachedLocs')
+    $http.get('/cachedLocs')
+      .success(function (data) {deferred.resolve(data)})
+      .error(function(data, status, headers, config) {deferred.resolve(false)});
+    return deferred.promise;
+  }
+  
+  this.loadSnapCache = function (fileName) {
+    var deferred = $q.defer();
+    var url = '/loadSnapCache/' + fileName;
+    $http.get(url)
       .success(function (data) {deferred.resolve(data)})
       .error(function(data, status, headers, config) {deferred.resolve(false)});
     return deferred.promise;

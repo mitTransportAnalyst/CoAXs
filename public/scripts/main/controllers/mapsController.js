@@ -51,9 +51,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       stopsLayer      = null,
       routesLayer     = null,
       poiUserPoints   = null,
-      snapPoints      = null,
       existingMBTAKey = null;
 
+  $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:12};
 
@@ -113,9 +113,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   });
 
   $scope.preMarkerQuery = function () {
-    if (snapPoints) {
+    if ($scope.snapPoints.sel) {
       var matchesSnap = compareToSnapPoints();
-      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
+      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.sel.data);
       if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
@@ -383,7 +383,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     loadService.getLocationCache()
     .then(function (data) {
-      snapPoints = data;
+      $scope.snapPoints.all = data;
+      $scope.snapPoints.sel = data[0];
+
+      loadService.loadSnapCache($scope.snapPoints.sel)
+      .then(function (data) {
+        $scope.snapPoints.data = data
+      })
     })
   });
 
@@ -582,6 +588,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         'CT' : $scope.variants['CT'].sel,
       }
     };
+  }
+
+  $scope.setNewSnapCache = function (id) {
+    $scope.managerOperations = true;
+    $scope.snapPoints.sel = id;
+    loadService.loadSnapCache(id)
+    .then(function (data) {
+      $scope.snapPoints.data = data
+      $scope.managerOperations = false;
+    })
   }
 
   // from manager control runautosync

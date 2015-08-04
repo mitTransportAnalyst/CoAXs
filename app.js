@@ -38,7 +38,6 @@ var fileNames = {
   proposed_priority: 'priority.geojson',
   t_stops: 'stations.geojson',
   proposed_stops: 'stops.geojson',
-  cachedLocs: 'cachedLocs.json',
 
 }
 
@@ -60,8 +59,38 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
+app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '5mb'}), function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  var file = req.params.fileId;
+  res.sendFile(file, options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
+app.get('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
+  var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
+  fs.readdir(path, function (err, files) {
+    if (err) {
+      console.log('Read folder error:', err);
+      res.status(err.status).end();
+    } else {
+      res.status(200).send(files);
+    }
+  });
+});
+
 app.post('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
-  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cachedLocs.json'
+  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/cachedLocs.json'
   fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
     if (err) {
       console.log('Write file error:', err);

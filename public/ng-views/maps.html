@@ -143,6 +143,24 @@
         <span class="badge" ng-click="sensitivity = sensitivity + 0.05">Increase</span>
       </h6>
       <h6>
+        You currently have selected this JSON cache: 
+        <div class="btn-group" dropdown>
+          <button type="button" class="btn btn-default btn-xs">
+            {{ snapPoints.sel }}
+          </button>
+          <button type="button" class="btn btn-default btn-xs" dropdown-toggle>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="id in snapPoints.all" 
+                ng-click="setNewSnapCache(id)"
+                value="{{ id }}">
+              <a href="">{{ id }}</a>
+            </li>
+          </ul>
+        </div>
+      </h6>
+      <h6>
         Click to auto sync preloaded GeoJSON data with spreadsheet. <span class="badge" ng-click="updateLocationCache()">Run AutoSync</span>
       </h6>
       <h6>
