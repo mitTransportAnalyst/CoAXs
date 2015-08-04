@@ -469,10 +469,18 @@
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs"><i class="fa fa-bus"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-bicycle"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-child"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-ship"></i></label>
+        <label class="btn btn-xs" ng-class="modeSelect=='walk' ? 'active' : ''">
+          <i class="fa fa-child"></i>
+        </label>
+        <label class="btn btn-xs" ng-class="modeSelect=='bus' ? 'active' : ''">
+          <i class="fa fa-bus"></i>
+        </label>
+        <label class="btn btn-xs" ng-class="modeSelect=='local' ? 'active' : ''">
+          <i class="fa fa-train"></i>
+        </label>
+        <label class="btn btn-xs" ng-class="modeSelect=='all' ? 'active' : ''">
+          <i class="fa fa-ship"></i>
+        </label>
       </div>
     </div>
   </div>

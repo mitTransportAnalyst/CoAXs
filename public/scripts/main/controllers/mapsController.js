@@ -36,6 +36,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     all : {},
   }
   $scope.tabnav = 'BH';
+  $scope.modeSelect = 'all'; // walk, bus, local, all <-- options
 
   // left globals
   var subwaysLayer    = null,
@@ -227,7 +228,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   }
 
   $scope.drawGraph = function (graphData) {
-    if (!graphData) { 
+    if (!graphData.com) { 
       d3Service.drawGraph(graphData.sel.data);
     } else {
       d3Service.drawGraph(graphData.sel.data, graphData.com.sel.data);
