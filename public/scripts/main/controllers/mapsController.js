@@ -113,8 +113,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   $scope.preMarkerQuery = function () {
     if (snapPoints) {
+      var matchesSnap = compareToSnapPoints();
       var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), snapPoints);
-      if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare) {
+      if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
         $scope.markers_left.main.lat = nearest.poi.lat;
         $scope.markers_left.main.lng = nearest.poi.lng;
         $scope.mode.selected = null; // unknown what scenario is being loaded
@@ -126,6 +127,21 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       runMarkerQuerys();
     }
   }
+
+  var compareToSnapPoints = function (poi) { console.log($scope.combos);
+    var sel = $scope.combos.sel;
+    if (sel) {
+      sel = $scope.combos.all[sel].sel;
+      for (route in sel) { 
+        if (sel[route] !== null) { console.log(sel[route]);
+          return false;
+        }
+      };
+      return true;
+    } else {
+      return true;
+    }
+  };
 
   var preloadedMarker = function (poi) {
     $scope.showVectorIsosOn = false;

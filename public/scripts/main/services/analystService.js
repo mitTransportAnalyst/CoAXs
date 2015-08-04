@@ -115,14 +115,6 @@ coaxsApp.service('analystService', function (supportService) {
         tripId: null,
         routeType: routeTypes,
       });
-
-      console.log({
-        type: 'adjust-headway',
-        agencyId: agencyId,
-        routeId: [route.routeId],
-        tripId: null,
-        routeType: routeTypes,
-      });
     });
   }
 
