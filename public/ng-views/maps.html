@@ -166,6 +166,16 @@
       <h6>
         Download session footprint. <span class="badge" ng-click="downloadSession()">Download</span>
       </h6>
+	  	  <h6>
+        Basemap (Left): <span class="badge" ng-click="changeTilesLeft('blank')">Basic</span>
+		<span class="badge" ng-click="changeTilesLeft('base')">Neighborhoods and Parks</span>
+		<span class="badge" ng-click="changeTilesLeft('collisions')">Crash Hotspots</span>
+      </h6>
+	  <h6>
+        Basemap (Right): <span class="badge" ng-click="changeTilesRight('blank')">Basic</span>
+		<span class="badge" ng-click="changeTilesRight('base')">Neighborhoods and Parks</span>
+		<span class="badge" ng-click="changeTilesRight('collisions')">Crash Hotspots</span>
+      </h6>
     </div>
   </div>
 </div>
