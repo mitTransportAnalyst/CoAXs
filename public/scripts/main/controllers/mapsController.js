@@ -83,6 +83,24 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
       type: 'xyz',
   };
+   var tilesDict = {
+    blank: {
+		name: 'Blank',
+		url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+		type: 'xyz'
+    },
+	base: {
+        name: 'Neighborhoods and Parks',
+        url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+        type: 'xyz'
+    },
+	collisions: {
+        name: 'Collisions',
+        url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+        type: 'xyz'
+    }
+  }; 
+  
   var center_global = {
     lat  : 42.360543,
     lng  : -71.058169,
