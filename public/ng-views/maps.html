@@ -439,7 +439,7 @@
   <!-- 2 destination and time filters --> 
   <div class="colBody" style="width:275px"> 
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
-      <i class="fa fa-clock-o"></i> Travel Time
+      <i class="fa fa-clock-o"></i> Time Map
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.travel" ng-click="visibleTabs.travel = !visibleTabs.travel">
@@ -683,7 +683,7 @@
   <div class="colBody" id="rightDynamic1">
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <span ng-show="variants[tabnav].sel">
-        {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} corridor variant
+        {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}: Corridor Editor
       </span>
 
       <span ng-show="!variants[tabnav].sel">
@@ -802,7 +802,7 @@
   <!-- 6 route editor module --> 
   <div class="colBody" style="width:275px">
     <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize">
-      <i class="fa fa-pencil-square-o"></i> Target Route Customization
+      <i class="fa fa-pencil-square-o"></i> Service Editor
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize" ng-click="visibleTabs.customize = !visibleTabs.customize">
