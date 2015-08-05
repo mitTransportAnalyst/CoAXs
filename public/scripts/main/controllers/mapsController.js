@@ -123,6 +123,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // snap point sensitivity
   $scope.sensitivity = 0.5;
 
+  $scope.changeTilesLeft = function(tiles) {
+	$scope.tiles_left = tilesDict[tiles];
+  };
+  
+  $scope.changeTilesRight = function(tiles) {
+	$scope.tiles_right = tilesDict[tiles];
+  };
+  
   // Handle left map queries
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     $scope.markers_left.main.lat = marker.model.lat;
