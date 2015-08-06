@@ -376,7 +376,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
-      $scope.poiUsers = poiUsers; console.log($scope.poiUsers);
+      $scope.poiUsers = poiUsers;
       poiUserPoints = points;
       poiUserPoints.addTo(map);
     });
@@ -656,7 +656,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     if ($scope.snapPoints.all.indexOf(desired) > -1) {
       alert('That name, ' + desired + ', already exists as a file. Try again.')
     } else {
-      loadService.loadSnapCache(desired)
+      loadService.loadSnapCache('baseline.json')
       .then(function (data) {
 
         var runPrep = function (map, comboItem) {
@@ -673,7 +673,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         var i = 0;
         var poiUpdateSequence = function () {
           leafletData.getMap('map_left').then(function(map) {
-            this.runPrep(map, $scope.combos.sel);
+            runPrep(map, $scope.combos.sel);
 
             // welcome to callback hell
             analystService.singlePointRequest(data[i], map, undefined, function (key, subjects) {
@@ -683,7 +683,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
                   if (result) {
                     data[i]['isochrones'] = isochrones;
                     i += 1;
-                    if (i < data.length) { console.log('running round ', i); poiUpdateSequence(); }
+                    if (i < data.length) { poiUpdateSequence(); }
                     else {
                       var newPOIs = JSON.stringify(data);
                       var url = '/cachedLocs/' + desired;
@@ -701,7 +701,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           });
         };
         poiUpdateSequence();
-      }
+      });
     }
   };
 

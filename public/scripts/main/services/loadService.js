@@ -189,7 +189,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
               if (result) {
                 data[i]['isochrones'] = isochrones;
                 i += 1;
-                if (i < data.length) { console.log('running round ', i); poiUpdateSequence(); }
+                if (i < data.length) { poiUpdateSequence(); }
                 else {
                   var newPOIs = JSON.stringify(data);
                   var url = '/cachedLocs/' + id;
