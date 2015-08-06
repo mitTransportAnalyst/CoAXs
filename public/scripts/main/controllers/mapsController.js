@@ -271,7 +271,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         var corridorData = $scope.variants[corridor].all[selectedCorridors[corridor]];
         if (corridorData) { keepRoutes.push(corridorData); }
       }
-    };console.log(keepRoutes);
+    };
     return keepRoutes;
   }
 
@@ -376,7 +376,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
-      $scope.poiUsers = poiUsers;
+      $scope.poiUsers = poiUsers; console.log($scope.poiUsers);
       poiUserPoints = points;
       poiUserPoints.addTo(map);
     });
@@ -646,6 +646,63 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         $scope.managerOperations = false;
       }
     })
+  };
+
+  // from manager control runautosync
+  $scope.saveScenarioCache = function () {
+    $scope.managerOperations = true;
+    var name = prompt("Please enter a name to save the file as (no spaces or special characters).", "foobar");
+    var desired = name.replace(/[^\w]/gi, '') + '.json';
+    if ($scope.snapPoints.all.indexOf(desired) > -1) {
+      alert('That name, ' + desired + ', already exists as a file. Try again.')
+    } else {
+      loadService.loadSnapCache(desired)
+      .then(function (data) {
+
+        var runPrep = function (map, comboItem) {
+          var toKeep = getKeepRoutes(comboItem);
+          analystService.resetAll(map);
+          analystService.modifyRoutes(toKeep);
+          analystService.modifyDwells(toKeep);
+          analystService.modifyFrequencies(toKeep);
+          if ($scope.mode.selected) {
+            analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+          }
+        };
+
+        var i = 0;
+        var poiUpdateSequence = function () {
+          leafletData.getMap('map_left').then(function(map) {
+            this.runPrep(map, $scope.combos.sel);
+
+            // welcome to callback hell
+            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects) {
+              if (subjects) { 
+                data[i]['graphData'] = subjects; 
+                analystService.vectorRequest(data[i], false, function (result, isochrones) {
+                  if (result) {
+                    data[i]['isochrones'] = isochrones;
+                    i += 1;
+                    if (i < data.length) { console.log('running round ', i); poiUpdateSequence(); }
+                    else {
+                      var newPOIs = JSON.stringify(data);
+                      var url = '/cachedLocs/' + desired;
+                      $http.post(url, {newPOIs: newPOIs})
+                      .success(function (data) {
+                        deferred.resolve(true);
+                      }).error(function(data, status, headers, config) {
+                        deferred.resolve(false);
+                      });
+                    }
+                  };
+                });
+              }
+            });
+          });
+        };
+        poiUpdateSequence();
+      }
+    }
   };
 
   // from manager control run download
