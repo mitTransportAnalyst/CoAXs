@@ -169,6 +169,46 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     poiUpdateSequence();
     return deferred.promise;
   }
+  
+
+  this.createNewLocationCache = function (data, id) {
+    var deferred = $q.defer();
+    var i = 0;
+    var poiUpdateSequence = function () {
+      leafletData.getMap('map_left').then(function(map) {
+        analystService.resetAll(map);
+        analystService.modifyRoutes([]);
+        analystService.modifyDwells([]);
+        analystService.modifyFrequencies([]);
+
+        // welcome to callback hell
+        analystService.singlePointRequest(data[i], map, undefined, function (key, subjects) {
+          if (subjects) { 
+            data[i]['graphData'] = subjects; 
+            analystService.vectorRequest(data[i], false, function (result, isochrones) {
+              if (result) {
+                data[i]['isochrones'] = isochrones;
+                i += 1;
+                if (i < data.length) { poiUpdateSequence(); }
+                else {
+                  var newPOIs = JSON.stringify(data);
+                  var url = '/cachedLocs/' + id;
+                  $http.post(url, {newPOIs: newPOIs})
+                  .success(function (data) {
+                    deferred.resolve(true);
+                  }).error(function(data, status, headers, config) {
+                    deferred.resolve(false);
+                  });
+                }
+              };
+            });
+          }
+        });
+      });
+    };
+    poiUpdateSequence();
+    return deferred.promise;
+  }
 
   // update map with phil's spread sheet points
   this.getUsersPoints = function (cb) {
