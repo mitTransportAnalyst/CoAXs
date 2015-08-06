@@ -689,9 +689,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
                       var url = '/cachedLocs/' + desired;
                       $http.post(url, {newPOIs: newPOIs})
                       .success(function (data) {
-                        deferred.resolve(true);
+                        alert('Datafile successfully produced');
                       }).error(function(data, status, headers, config) {
-                        deferred.resolve(false);
+                        alert('Process failed. An error occurred during the iteration through points. Check console.');
                       });
                     }
                   };
