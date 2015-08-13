@@ -367,7 +367,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = {0: 50, 1: 60, 2: 80};
+      var stopTypeSizes = {0: 45, 1: 60, 2: 75};
       var circleList = [];
 	  var stationNameList = [];
 
