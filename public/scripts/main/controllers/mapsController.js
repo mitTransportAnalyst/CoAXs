@@ -64,7 +64,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // Angular Leaflet Directive - base components
   var defaults_global = {
     minZoom: 9,
-    maxZoom: 15,
+    maxZoom: 18,
     scrollWheelZoom    : true,
     zoomControl        : false,
     attributionControl : false,
@@ -367,21 +367,29 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = {0: 60, 1: 90, 2: 120};
+      var stopTypeSizes = {0: 50, 1: 60, 2: 80};
       var circleList = [];
+	  var stationNameList = [];
 
       stops.eachLayer(function (marker) {
         var stationColor = marker.options.base.line,
             stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            stationStop = stopTypeSizes[marker.options.base.stopType];
-
+            stationStop = stopTypeSizes[marker.options.base.stopType],
+            stationName = marker.options.base.station,
+            stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>')
+			
         circleList.push(L.circle(stationLatLng, stationStop, {
           stroke: false,
           fillColor: stationColor,
           fillOpacity: 1.0,
-        }));
-      });
-
+		}).bindPopup(stationNamePopup));
+	    
+	  });
+	
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
