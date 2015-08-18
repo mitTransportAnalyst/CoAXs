@@ -354,6 +354,28 @@ nav div.section {
 }
 
 
+.station-sign .leaflet-popup-content-wrapper {
+	padding: 0px;
+	text-align: center;
+	border-radius: 0px;
+}
+
+.station-sign .leaflet-popup-content {
+	margin: 0px;
+	line-height: 1;
+}
+
+.station-sign .leaflet-popup-content p {
+	margin: 0px 0;
+	color: white;
+	background-color: black;
+	text-transform: uppercase;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
@@ -369,6 +391,7 @@ nav div.section {
   background : -moz-linear-gradient(    #CDD2D4, #F5F5F3) !important; /* For Firefox 3.6 to 15 */
   background : linear-gradient(         #CDD2D4, #F5F5F3) !important; /* Standard syntax */
 }
+
 .projects {
   margin-top : 550px;
 }
