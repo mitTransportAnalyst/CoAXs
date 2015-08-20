@@ -422,10 +422,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         $scope.snapPoints.sel = 'baseline.json';
       }
 
-      loadService.loadSnapCache($scope.snapPoints.sel)
-      .then(function (data) {
-        $scope.snapPoints.data = data
-      })
+      if ($scope.snapPoints.sel !== undefined) {
+        loadService.loadSnapCache($scope.snapPoints.sel)
+        .then(function (data) {
+          console.log('success on load snaps', data)
+          $scope.snapPoints.data = data
+        })
+      }
     })
   });
 
