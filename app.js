@@ -9,36 +9,12 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var path = require('path');
 var aws = require('aws-sdk');
+var s3 = new aws.S3();
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
 
-
-
-var s3 = new aws.S3();
-var params = {
-  Bucket: S3_BUCKET,
-  // Delimiter: 'STRING_VALUE',
-  // EncodingType: 'url',
-  // KeyMarker: 'STRING_VALUE',
-  MaxKeys: 100,
-  // Prefix: 'STRING_VALUE',
-  // VersionIdMarker: 'STRING_VALUE'
-};
-var allKeys = [];
-function listAllKeys(params, cb) {
-  s3.listObjects(params, function (err, data) {
-    if (data && data.Contents) {
-      allKeys.push(data.Contents);
-    }
-    if(data && data.IsTruncated)
-      listAllKeys(data.Contents.slice(-1)[0].Key, cb);
-    else
-      cb(allKeys)
-  });
-};
-listAllKeys(params, function(ak) {console.log('done', ak)});
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
@@ -110,16 +86,32 @@ app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '50mb'}), function (re
 });
 
 app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
-  var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
-  fs.readdir(path, function (err, files) {
-    if (err) {
-      console.log('Read folder error:', err);
-      res.status(err.status).end();
+  var allKeys = [];
+  s3.listObjects({Bucket: S3_BUCKET}, function (err, data) {
+    if (data) {
+      allKeys.push(data.Contents);
+      if (data.IsTruncated) {
+        listAllKeys(data.Contents.slice(-1)[0].Key);
+      }
+      else {
+        data = data.Contents.map(function (each) { return each.Key; });
+        res.status(200).send(data)
+      }
     } else {
-      console.log('files', files);
-      res.status(200).send(files);
+      res.status(err.status).send('Error accessing S3 bucket.');
     }
   });
+
+  // var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
+  // fs.readdir(path, function (err, files) {
+  //   if (err) {
+  //     console.log('Read folder error:', err);
+  //     res.status(err.status).end();
+  //   } else {
+  //     console.log('files', files);
+  //     res.status(200).send(files);
+  //   }
+  // });
 });
 
 app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
