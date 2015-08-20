@@ -6,7 +6,9 @@ var fs = require('fs');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
-
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
