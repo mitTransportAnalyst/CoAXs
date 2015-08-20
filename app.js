@@ -59,7 +59,7 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
-app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '5mb'}), function (req, res) {
+app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
     'dotfiles' : 'deny',
@@ -77,19 +77,20 @@ app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '5mb'}), function (req
   });
 });
 
-app.get('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
+app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
   var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
   fs.readdir(path, function (err, files) {
     if (err) {
       console.log('Read folder error:', err);
       res.status(err.status).end();
     } else {
+      console.log('files', files);
       res.status(200).send(files);
     }
   });
 });
 
-app.post('/cachedLocs/:fileId', bodyParser.json({limit: '5mb'}), function (req, res) {
+app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
   var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/' + req.params.fileId;
   fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
     if (err) {
@@ -125,3 +126,4 @@ var server = app.listen(process.env.PORT || 3000, function () {
   var port = server.address().port;
   console.log('Coaxs app listening at http://%s:%s', host, port);
 });
+
