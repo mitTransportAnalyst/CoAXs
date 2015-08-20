@@ -6,9 +6,39 @@ var fs = require('fs');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
+var http = require('http');
+var path = require('path');
+var aws = require('aws-sdk');
+
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET
+var S3_BUCKET = process.env.S3_BUCKET;
+
+
+
+var s3 = new aws.S3();
+var params = {
+  Bucket: S3_BUCKET,
+  // Delimiter: 'STRING_VALUE',
+  // EncodingType: 'url',
+  // KeyMarker: 'STRING_VALUE',
+  MaxKeys: 100,
+  // Prefix: 'STRING_VALUE',
+  // VersionIdMarker: 'STRING_VALUE'
+};
+var allKeys = [];
+function listAllKeys(params, cb) {
+  s3.listObjects(params, function (err, data) {
+    if (data && data.Contents) {
+      allKeys.push(data.Contents);
+    }
+    if(data && data.IsTruncated)
+      listAllKeys(data.Contents.slice(-1)[0].Key, cb);
+    else
+      cb(allKeys)
+  });
+};
+listAllKeys(params, function(ak) {console.log('done', ak)});
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
