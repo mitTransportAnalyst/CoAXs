@@ -2,6 +2,4 @@
 node_modules
 bower_components
 build
-public/scripts/main/misc/filters.js
-
-public/scripts/main/controllers/mapsController.js
+credentials.js
