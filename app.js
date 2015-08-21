@@ -80,13 +80,12 @@ app.get('/loadSnapCache/:fileId', function (req, res) {
     Bucket: S3_BUCKET,
     Key: req.params.fileId
   };
-  // var file = require('fs').createWriteStream('temporary.json');
-  var file = ''
-  console.log(file);
+  var file = require('fs').createWriteStream('temporary.json');
   s3.getObject(params).
     on('httpData', function(chunk) { file += JSON.stringify(chunk); }).
     on('httpDone', function() { 
       file.end();
+      console.log('file.end')
       res.sendFile('temporary.json', options, function (err) {
         if (err) {
           console.log('sendFile error:', err);
