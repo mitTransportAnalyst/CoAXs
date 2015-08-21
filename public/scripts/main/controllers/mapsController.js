@@ -417,17 +417,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
     loadService.getLocationCache()
     .then(function (data) {
+      console.log(data);
       $scope.snapPoints.all = data;
       if (data.indexOf('baseline.json') > -1) {
         $scope.snapPoints.sel = 'baseline.json';
-      }
 
-      if ($scope.snapPoints.sel !== undefined) {
         loadService.loadSnapCache($scope.snapPoints.sel)
         .then(function (data) {
           console.log('success on load snaps', data)
           $scope.snapPoints.data = data
         })
+      } else {
+        alert('Load failed. Baseline.json is missing.');
       }
     })
   });

@@ -67,18 +67,42 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
-app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
+app.get('/loadSnapCache/:fileId', function (req, res) {
+  var options = {
+    'root'     : __dirname,
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
   var params = {
     Bucket: S3_BUCKET,
-    Key: req.params.fileId;
+    Key: req.params.fileId
   };
-  s3.getObject(params, function(err, data) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(200).send(data)
-    }
-  });
+  // var file = require('fs').createWriteStream('temporary.json');
+  var file = ''
+  console.log(file);
+  s3.getObject(params).
+    on('httpData', function(chunk) { file += JSON.stringify(chunk); }).
+    on('httpDone', function() { 
+      file.end();
+      res.sendFile('temporary.json', options, function (err) {
+        if (err) {
+          console.log('sendFile error:', err);
+          res.status(err.status).end();
+        }
+      });
+    }).
+    send();
+
+  // s3.getObject(params, function(err, data) {
+  //   if (err) {
+  //     console.log('getObject failed: ', err);
+  //   } else {
+  //     res.status(200).send(data)
+  //   }
+  // });
 
   // var options = {
   //   'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
@@ -130,7 +154,7 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
   var fileName = req.params.fileId;
   
   s3.putObject({
-    ACL: 'public-read',
+    ACL: 'public-read-write',
     Bucket: BUCKET_NAME,
     Key: fileName,
     Body: req.body.newPOIs,
