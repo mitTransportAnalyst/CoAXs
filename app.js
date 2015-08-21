@@ -68,21 +68,33 @@ app.get('/geojson/:fileId', function (req, res) {
 });
 
 app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
+  var params = {
+    Bucket: S3_BUCKET,
+    Key: req.params.fileId;
   };
-  var file = req.params.fileId;
-  res.sendFile(file, options, function (err) {
+  s3.getObject(params, function(err, data) {
     if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
+      console.log(err);
+    } else {
+      res.status(200).send(data)
     }
   });
+
+  // var options = {
+  //   'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
+  //   'dotfiles' : 'deny',
+  //   'headers'  : {
+  //       'x-timestamp' : Date.now(),
+  //       'x-sent'      : true
+  //   }
+  // };
+  // var file = req.params.fileId;
+  // res.sendFile(file, options, function (err) {
+  //   if (err) {
+  //     console.log('sendFile error:', err);
+  //     res.status(err.status).end();
+  //   }
+  // });
 });
 
 app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
@@ -115,8 +127,15 @@ app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
 });
 
 app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
-  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/' + req.params.fileId;
-  fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
+  var fileName = req.params.fileId;
+  
+  s3.putObject({
+    ACL: 'public-read',
+    Bucket: BUCKET_NAME,
+    Key: fileName,
+    Body: req.body.newPOIs,
+    ContentType: 'application/json'
+  }, function(err, response) {
     if (err) {
       console.log('Write file error:', err);
       res.status(err.status).end();
@@ -124,6 +143,16 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
       res.status(200).end();
     }
   });
+
+  // var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/' + req.params.fileId;
+  // fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
+  //   if (err) {
+  //     console.log('Write file error:', err);
+  //     res.status(err.status).end();
+  //   } else {
+  //     res.status(200).end();
+  //   }
+  // });
 });
 
 
