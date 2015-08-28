@@ -67,98 +67,83 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
-app.get('/loadSnapCache/:fileId', function (req, res) {
-  var options = {
-    'root'     : __dirname,
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
-  };
+var globalGetDone = false;
+app.get('/startSnapCache/:fileId', function (req, res) {
+  globalGetDone = false;
   var params = {
     Bucket: S3_BUCKET,
     Key: req.params.fileId
   };
   var file = require('fs').createWriteStream('temporary.json');
-  s3.getObject(params).
-    on('httpData', function(chunk) { file += JSON.stringify(chunk); }).
-    on('httpDone', function() { 
-      file.end();
-      console.log('file.end')
-      res.sendFile('temporary.json', options, function (err) {
-        if (err) {
-          console.log('sendFile error:', err);
-          res.status(err.status).end();
-        }
-      });
-    }).
-    send();
 
-  // s3.getObject(params, function(err, data) {
-  //   if (err) {
-  //     console.log('getObject failed: ', err);
-  //   } else {
-  //     res.status(200).send(data)
-  //   }
-  // });
+  s3.getObject(params).on('httpData', function(chunk) { 
+    file.write(chunk); 
+  }).on('httpDone', function() { 
+    file.end();
+    globalGetDone = true;
+    res.status(200).send({started: true});
+  }).send();
+});
 
-  // var options = {
-  //   'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
-  //   'dotfiles' : 'deny',
-  //   'headers'  : {
-  //       'x-timestamp' : Date.now(),
-  //       'x-sent'      : true
-  //   }
-  // };
-  // var file = req.params.fileId;
-  // res.sendFile(file, options, function (err) {
-  //   if (err) {
-  //     console.log('sendFile error:', err);
-  //     res.status(err.status).end();
-  //   }
-  // });
+app.get('/loadSnapCache', function (req, res) {
+  if (globalGetDone) {
+    var options = {
+      root: __dirname,
+      dotfiles: 'deny',
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+      }
+    };
+    var file = 'temporary.json';
+    res.sendFile(file, options, function (err) {
+      if (err) {
+        console.log('sendFile error:', err);
+        res.status(err.status).end();
+      }
+    });
+  } else {
+    res.status(200).send({notReady: true});
+  }
 });
 
 app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
   var allKeys = [];
-  s3.listObjects({Bucket: S3_BUCKET}, function (err, data) {
+  var params = {Bucket: S3_BUCKET};
+  
+  s3.listObjects(params, function (err, data) {
     if (data) {
       allKeys.push(data.Contents);
-      if (data.IsTruncated) {
+      if (data.IsTruncated && data.hasOwnProperty('Contents')) {
         listAllKeys(data.Contents.slice(-1)[0].Key);
       }
       else {
-        data = data.Contents.map(function (each) { return each.Key; });
-        res.status(200).send(data)
+        if (data.hasOwnProperty('Contents')) {
+          data = data.Contents.map(function (each) { return each.Key; });
+          res.status(200).send(data)
+        } else {
+          res.status(500).send('Error missing Contents key value.');
+        }
       }
     } else {
-      res.status(err.status).send('Error accessing S3 bucket.');
+      console.log('Error occured', err);
+      var status = err.status ? err.status : 500;
+      res.status(status).send('Error accessing S3 bucket.');
     }
   });
-
-  // var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
-  // fs.readdir(path, function (err, files) {
-  //   if (err) {
-  //     console.log('Read folder error:', err);
-  //     res.status(err.status).end();
-  //   } else {
-  //     console.log('files', files);
-  //     res.status(200).send(files);
-  //   }
-  // });
 });
 
 app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
   var fileName = req.params.fileId;
-  
-  s3.putObject({
+  var params = {
     ACL: 'public-read-write',
     Bucket: BUCKET_NAME,
     Key: fileName,
     Body: req.body.newPOIs,
     ContentType: 'application/json'
-  }, function(err, response) {
+  }
+  
+  s3.putObject(params, function(err, response) {
     if (err) {
       console.log('Write file error:', err);
       res.status(err.status).end();
@@ -166,16 +151,6 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
       res.status(200).end();
     }
   });
-
-  // var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/' + req.params.fileId;
-  // fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
-  //   if (err) {
-  //     console.log('Write file error:', err);
-  //     res.status(err.status).end();
-  //   } else {
-  //     res.status(200).end();
-  //   }
-  // });
 });
 
 
