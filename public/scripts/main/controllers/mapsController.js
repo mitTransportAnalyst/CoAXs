@@ -1,5 +1,5 @@
 coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
-console.log('foobar');
+
   // control screen size situation
   var runScreenSetUp = function () {
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
