@@ -8,12 +8,16 @@ var bodyParser = require('body-parser');
 
 var http = require('http');
 var path = require('path');
-var aws = require('aws-sdk');
-var s3 = new aws.S3();
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
+
+var aws = require('aws-sdk');
+    aws.config = new aws.Config();
+    aws.config.accessKeyId = AWS_ACCESS_KEY;
+    aws.config.secretAccessKey = AWS_SECRET_KEY;
+var s3 = new aws.S3();
 
 console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
