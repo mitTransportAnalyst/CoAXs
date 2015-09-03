@@ -19,9 +19,7 @@ coaxsApp.service('d3Service', function () {
       xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(combined, function (d) {
           return d.x;
         }),
-        d3.max(combined, function (d) {
-          return d.x;
-        })
+        120
       ]),
 
       yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(combined, function (d) {
@@ -40,6 +38,10 @@ coaxsApp.service('d3Service', function () {
       yAxis = d3.svg.axis()
         .scale(yRange)
         .tickSize(5)
+        .tickFormat(function (d) {
+          var prefix = d3.formatPrefix(d);
+          return prefix.scale(d) + prefix.symbol;
+        })
         .orient("left")
         .tickSubdivide(true); 
 
@@ -67,6 +69,7 @@ coaxsApp.service('d3Service', function () {
         .attr("dy", ".71em")
         .style("text-anchor", "middle")
         .text("Count");
+
 
     var lineFunc = d3.svg.line()
     .x(function (d) {

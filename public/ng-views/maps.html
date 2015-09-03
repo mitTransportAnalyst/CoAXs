@@ -492,31 +492,31 @@
       </div>
 
 
-      <div class="subHead">Destinations</div>
-      <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs"><i class="fa fa-briefcase"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-heartbeat"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-shopping-cart"></i></label>
-        <label class="btn btn-xs"><i class="fa fa-graduation-cap"></i></label>
-      </div>
+      <!--<div class="subHead">Destinations</div>-->
+      <!--<div class="btn-group btn-group-justified">-->
+        <!--<label class="btn btn-xs"><i class="fa fa-briefcase"></i></label>-->
+        <!--<label class="btn btn-xs"><i class="fa fa-heartbeat"></i></label>-->
+        <!--<label class="btn btn-xs"><i class="fa fa-shopping-cart"></i></label>-->
+        <!--<label class="btn btn-xs"><i class="fa fa-graduation-cap"></i></label>-->
+      <!--</div>-->
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
         <label class="btn btn-xs" ng-class="mode.selected=='walk' ? 'active tiny' : ''"
                 ng-click="mode.selected='walk'">
-          <i class="fa fa-child"></i>
+          <i class="fa fa-child fa-lg"></i>
         </label>
         <label class="btn btn-xs" ng-class="mode.selected=='bus' ? 'active tiny' : ''"
                 ng-click="mode.selected='bus'">
-          <i class="fa fa-bus"></i>
+          <i class="fa fa-bus fa-lg"></i>
         </label>
         <label class="btn btn-xs" ng-class="mode.selected=='local' ? 'active tiny' : ''"
                 ng-click="mode.selected='local'">
-          <i class="fa fa-train"></i>
+          <i class="fa fa-train fa-lg"></i>
         </label>
         <label class="btn btn-xs" ng-class="mode.selected=='all' ? 'active tiny' : ''"
                 ng-click="mode.selected='all'">
-          <i class="fa fa-ship"></i>
+          <i class="fa fa-ship fa-lg"></i>
         </label>
       </div>
     </div>
@@ -636,7 +636,7 @@
         <div class="subHead">
           <span class="pull-left"
                 ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)">
-                Scorecard
+                Scorecard <i class="fa fa-tachometer"></i>
           </span>
           <span>
             <span ng-show="scenarioCompare" 
@@ -649,7 +649,7 @@
             </span>
           </span>
           <span class="pull-right" ng-click="saveCombo=!saveCombo">
-                New Scenario
+                New Scenario <i class="fa fa-paint-brush"></i>
           </span>
         </div>
       </div>
