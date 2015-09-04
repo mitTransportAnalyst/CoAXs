@@ -71,12 +71,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   };
   var maxBounds_global =  {
     northEast: {
-      lat: 41.36,
-      lng: -71.8
+      lat: -32,
+      lng: -70
       },
     southWest: {
-      lat: 43.36,
-      lng:-70.3}
+      lat: -34,
+      lng:-72}
   };
   var tiles_global = {
       name: 'CartoDB Light',
@@ -96,15 +96,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     },
 	collisions: {
         name: 'Collisions',
-        url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+        url: 'https://api.mapbox.com/v4/ansoncfit.5b18d723/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
     }
   }; 
   
   var center_global = {
-    lat  : 42.360543,
-    lng  : -71.058169,
-    zoom : 12,
+    lat  : -33.45,
+    lng  : -70.648,
+    zoom : 11,
   };
   // Assembling left map
   $scope.defaults_right  = angular.copy(defaults_global);
@@ -115,7 +115,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
-  $scope.center_left.zoom = 11;
+  $scope.center_left.zoom = 10;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};

@@ -454,7 +454,7 @@
   <!-- 2 destination and time filters --> 
   <div class="colBody" style="width:275px"> 
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
-      <i class="fa fa-clock-o"></i> Time Map
+      <i class="fa fa-clock-o"></i> Tiempo de Viaje
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.travel" ng-click="visibleTabs.travel = !visibleTabs.travel">
@@ -465,7 +465,7 @@
 
     <div class="showToggle" ng-show="visibleTabs.travel">
       <div class="subHead" ng-click="toggleShowVectorIsos()">
-        Show time boundaries
+        Fronteras del tiempo
         <span ng-show="showVectorIsosOn">
           <i class="fa fa-eye"></i> On
         </span>
@@ -527,12 +527,12 @@
   <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <i class="fa fa-binoculars"></i>
-      <span ng-show="!combos.sel">Existing MBTA System</span>
+      <span ng-show="!combos.sel">Sistema Actual</span>
       <span ng-show="combos.sel">
         Scenario {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
-          <span ng-show="combos.com">Compared with {{ combos.all[combos.com].name }}</span>
-          <span ng-show="!combos.com">Compared with Baseline</span>
+          <span ng-show="combos.com">Comparado con {{ combos.all[combos.com].name }}</span>
+          <span ng-show="!combos.com">Comparado con el sistema actual</span>
         </span>
       </span>
     </div>
@@ -548,10 +548,10 @@
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
         <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);">
           <div>ID</div>
-          <div class="square" style="background-color:#0071CA">BH</div>
-          <div class="square" style="background-color:#B10086">HP</div>
-          <div class="square" style="background-color:#CE5504">HD</div>
-          <div class="square" style="background-color:#AD0101">SD</div>
+          <div class="square" style="background-color:#0071CA">L3</div>
+          <div class="square" style="background-color:#B10086">L6</div>
+          <div class="square" style="background-color:#CE5504">AP</div>
+          <div class="square" style="background-color:#AD0101">GA</div>
           <div class="fa fa-arrows-h"></div>
         </div>
 
@@ -572,41 +572,41 @@
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['BH']">
+              <span class="text-success" ng-show="variant.sel['L3']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
+                <small><i>{{ variants['L3'].all[variant.sel['L3']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['BH']">
+              <span class="text-danger" ng-show="!variant.sel['L3']">
                 <i class="fa fa-times"></i>
                 <small><i>None</i></small>
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['HP']">
+              <span class="text-success" ng-show="variant.sel['L6']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
+                <small><i>{{ variants['L6'].all[variant.sel['L6']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['HP']">
+              <span class="text-danger" ng-show="!variant.sel['L6']">
                 <i class="fa fa-times"></i>
                 <small><i>None</i></small>
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['HD']">
+              <span class="text-success" ng-show="variant.sel['AP']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
+                <small><i>{{ variants['AP'].all[variant.sel['AP']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['HD']">
+              <span class="text-danger" ng-show="!variant.sel['AP']">
                 <i class="fa fa-times"></i>
                 <small><i>None</i></small>
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['CT']">
+              <span class="text-success" ng-show="variant.sel['GA']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
+                <small><i>{{ variants['GA'].all[variant.sel['GA']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['CT']">
+              <span class="text-danger" ng-show="!variant.sel['GA']">
                 <i class="fa fa-times"></i>
                 <small><i>None</i></small>
               </span>
@@ -641,15 +641,15 @@
           <span>
             <span ng-show="scenarioCompare" 
                   ng-click="scenarioCompare=false; combos.com=null">
-                  Compare Scenarios <i class="fa fa-toggle-on"></i>
+                  Comparar Scenarios <i class="fa fa-toggle-on"></i>
             </span>
             <span ng-show="!scenarioCompare" 
                   ng-click="scenarioCompare=true">
-                  Compare Scenarios <i class="fa fa-toggle-off"></i>
+                  Comparar Scenarios <i class="fa fa-toggle-off"></i>
             </span>
           </span>
           <span class="pull-right" ng-click="saveCombo=!saveCombo">
-                New Scenario
+                Crear Scenario
           </span>
         </div>
       </div>
@@ -668,27 +668,27 @@
       
     <div class="showToggle" ng-show="visibleTabs.routes" style="background-color: rgba(255,165,0,0.5)">
       <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
-            ng-click="targetCorridor('BH'); tabnav='BH'; overview=true"
-            ng-class="tabnav !== 'BH' ? 'unselected' : ''">
-            BH
+            ng-click="targetCorridor('L3'); tabnav='L3'; overview=true"
+            ng-class="tabnav !== 'L3' ? 'unselected' : ''">
+            L3
       </div>
 
       <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
-            ng-click="targetCorridor('HP'); tabnav='HP'; overview=true"
-            ng-class="tabnav !== 'HP' ? 'unselected' : ''">
-            HP
+            ng-click="targetCorridor('L6'); tabnav='L6'; overview=true"
+            ng-class="tabnav !== 'L6' ? 'unselected' : ''">
+            L6
       </div>
 
       <div class="smallColVal" style="color:#FFF;background-color:#CE5504;"
-            ng-click="targetCorridor('HD'); tabnav='HD'; overview=true"
-            ng-class="tabnav !== 'HD' ? 'unselected' : ''">
-            HD
+            ng-click="targetCorridor('AP'); tabnav='AP'; overview=true"
+            ng-class="tabnav !== 'AP' ? 'unselected' : ''">
+            AP
       </div>
 
       <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
-            ng-click="targetCorridor('CT'); tabnav='CT'; overview=true"
-            ng-class="tabnav !== 'CT' ? 'unselected' : ''">
-            CT
+            ng-click="targetCorridor('GA'); tabnav='GA'; overview=true"
+            ng-class="tabnav !== 'GA' ? 'unselected' : ''">
+            GA
       </div> 
     </div>
   </div>  

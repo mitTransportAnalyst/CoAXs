@@ -7,23 +7,23 @@ coaxsApp.service('analystService', function (supportService) {
   var analyst = new Analyst(window.L, {
     apiUrl         : 'http://mit-analyst.conveyal.com/api',
     tileUrl        : 'http://mit-analyst.conveyal.com/tile',
-    shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-    graphId        : '8a35783dd95ff1a52fc928e183e23340',
+    shapefileId    : '',
+    graphId        : '68746a5bc59a12f0ed02c8288542752c',
     showIso        : true,
   });
 
   var optionCurrent = {
     scenario      : {
-      id            : 0,
-      description   : 'Run from CoAXs SPA.',
+      id            : '',
+      description   : '',
       modifications : [],
     },
   }
 
-  var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-  var agencyId = 'd802657';
+  var allRoutes = [];
+  var agencyId = null;
 
-  // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
+  // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
 
   var vectorIsos = null;

@@ -1,0 +1,112 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@2.11.2
+3 info using node@v0.12.6
+4 verbose readDependencies loading dependencies from C:\Users\Anson\Documents\GitHub\CoAXs\package.json
+5 warn package.json coaxs@ No repository field.
+6 warn package.json coaxs@ No license field.
+7 verbose install where, deps [ 'C:\\Users\\Anson\\Documents\\GitHub\\CoAXs',
+7 verbose install   [ 'aws-sdk',
+7 verbose install     'body-parser',
+7 verbose install     'bower',
+7 verbose install     'csv-streamify',
+7 verbose install     'debug',
+7 verbose install     'ejs',
+7 verbose install     'express',
+7 verbose install     'googleapis',
+7 verbose install     'morgan',
+7 verbose install     'pg',
+7 verbose install     'request' ] ]
+8 verbose install where, peers [ 'C:\\Users\\Anson\\Documents\\GitHub\\CoAXs', [] ]
+9 verbose installManyTop reading for lifecycle C:\Users\Anson\Documents\GitHub\CoAXs\package.json
+10 info preinstall coaxs@
+11 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\aws-sdk\package.json
+12 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\body-parser\package.json
+13 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\bower\package.json
+14 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\csv-streamify\package.json
+15 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\debug\package.json
+16 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\ejs\package.json
+17 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\express\package.json
+18 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\googleapis\package.json
+19 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\morgan\package.json
+20 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\pg\package.json
+21 verbose installManyTop reading scoped package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\request\package.json
+22 info package.json csv-streamify@2.0.0 license should be a valid SPDX license expression
+23 info package.json ejs@0.8.8 No license field.
+24 info package.json bower@1.4.1 No license field.
+25 verbose readDependencies loading dependencies from C:\Users\Anson\Documents\GitHub\CoAXs\package.json
+26 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\aws-sdk\package.json
+27 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\body-parser\package.json
+28 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\bower\package.json
+29 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\csv-streamify\package.json
+30 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\debug\package.json
+31 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\ejs\package.json
+32 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\express\package.json
+33 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\googleapis\package.json
+34 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\morgan\package.json
+35 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\pg\package.json
+36 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\request\package.json
+37 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\.bin\csv-streamify\package.json
+38 verbose targetResolver reading package data from C:\Users\Anson\Documents\GitHub\CoAXs\node_modules\.bin\csv-streamify.cmd\package.json
+39 verbose already installed skipping ejs@~0.8.5 C:\Users\Anson\Documents\GitHub\CoAXs
+40 verbose already installed skipping express@~4.9.0 C:\Users\Anson\Documents\GitHub\CoAXs
+41 verbose already installed skipping googleapis@^2.0.5 C:\Users\Anson\Documents\GitHub\CoAXs
+42 verbose already installed skipping morgan@^1.6.1 C:\Users\Anson\Documents\GitHub\CoAXs
+43 verbose already installed skipping pg@^4.4.0 C:\Users\Anson\Documents\GitHub\CoAXs
+44 verbose already installed skipping request@^2.57.0 C:\Users\Anson\Documents\GitHub\CoAXs
+45 verbose already installed skipping aws-sdk@^2.1.45 C:\Users\Anson\Documents\GitHub\CoAXs
+46 verbose already installed skipping body-parser@^1.12.4 C:\Users\Anson\Documents\GitHub\CoAXs
+47 verbose already installed skipping bower@1.4.1 C:\Users\Anson\Documents\GitHub\CoAXs
+48 verbose already installed skipping csv-streamify@^2.0.0 C:\Users\Anson\Documents\GitHub\CoAXs
+49 verbose already installed skipping debug@^2.2.0 C:\Users\Anson\Documents\GitHub\CoAXs
+50 silly install resolved []
+51 info build C:\Users\Anson\Documents\GitHub\CoAXs
+52 info linkStuff coaxs@
+53 silly linkStuff coaxs@ has C:\Users\Anson\Documents\GitHub as its parent node_modules
+54 verbose linkBins coaxs@
+55 verbose linkMans coaxs@
+56 verbose rebuildBundles coaxs@
+57 verbose rebuildBundles [ '.bin',
+57 verbose rebuildBundles   'aws-sdk',
+57 verbose rebuildBundles   'body-parser',
+57 verbose rebuildBundles   'bower',
+57 verbose rebuildBundles   'csv-streamify',
+57 verbose rebuildBundles   'debug',
+57 verbose rebuildBundles   'ejs',
+57 verbose rebuildBundles   'express',
+57 verbose rebuildBundles   'googleapis',
+57 verbose rebuildBundles   'morgan',
+57 verbose rebuildBundles   'pg',
+57 verbose rebuildBundles   'request' ]
+58 info install coaxs@
+59 info postinstall coaxs@
+60 verbose unsafe-perm in lifecycle true
+61 info coaxs@ Failed to exec postinstall script
+62 verbose stack Error: coaxs@ postinstall: `./node_modules/bower/bin/bower install`
+62 verbose stack Exit status 1
+62 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:213:16)
+62 verbose stack     at EventEmitter.emit (events.js:110:17)
+62 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+62 verbose stack     at ChildProcess.emit (events.js:110:17)
+62 verbose stack     at maybeClose (child_process.js:1015:16)
+62 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
+63 verbose pkgid coaxs@
+64 verbose cwd C:\Users\Anson\Documents\GitHub\CoAXs
+65 error Windows_NT 6.3.9600
+66 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+67 error node v0.12.6
+68 error npm  v2.11.2
+69 error code ELIFECYCLE
+70 error coaxs@ postinstall: `./node_modules/bower/bin/bower install`
+70 error Exit status 1
+71 error Failed at the coaxs@ postinstall script './node_modules/bower/bin/bower install'.
+71 error This is most likely a problem with the coaxs package,
+71 error not with npm itself.
+71 error Tell the author that this fails on your system:
+71 error     ./node_modules/bower/bin/bower install
+71 error You can get their info via:
+71 error     npm owner ls coaxs
+71 error There is likely additional logging output above.
+72 verbose exit [ 1, true ]
