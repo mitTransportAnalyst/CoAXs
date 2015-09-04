@@ -423,6 +423,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
         loadService.loadSnapCache($scope.snapPoints.sel)
         .then(function (data) {
+          console.log('Loaded snapPoints: ', data);
           $scope.snapPoints.data = data
         })
       } else {
