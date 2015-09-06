@@ -93,8 +93,15 @@ coaxsApp.service('d3Service', function () {
       .style("stroke-width", "1");
   }
 
+  };
 
+  this.radarChart = function(target, data) {
+    RadarChart.defaultConfig.levelTick = true;
+    RadarChart.defaultConfig.w = 150;
+    RadarChart.defaultConfig.h = 150;
+    RadarChart.draw(target, data);
   }
+
 
 });
 

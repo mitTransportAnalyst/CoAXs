@@ -74,6 +74,7 @@ coaxsApp.service('scorecardService', function () {
       dist   : {
         non  : 0,
         ded  : 0,
+        total: 0,
       },
       cost   : 0,
     };
@@ -87,8 +88,11 @@ coaxsApp.service('scorecardService', function () {
           length.dist.non += base.length-(base.length*diff);
         }
         var totalDist = length.dist.non + length.dist.ded;
-        length.dist.non = length.dist.non/totalDist;
-        length.dist.ded = length.dist.ded/totalDist;
+        // length.dist.total = length.dist.non + length.dist.ded;
+        length.dist.non = length.dist.non/totalDist;    
+        length.dist.ded = length.dist.ded/totalDist;   
+        // length.dist.nonDist = length.dist.non*totalDist;
+        // length.dist.dedDist = length.dist.ded*totalDist;
         length.count += route.options.base.length;
       }
     });
@@ -140,8 +144,7 @@ coaxsApp.service('scorecardService', function () {
   }
 
 
-
-});
+}); 
 
 
 

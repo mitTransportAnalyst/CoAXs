@@ -49,61 +49,71 @@
 
 
   <div class="topleft" style="background-color:#216C2A" ng-show="scenarioScorecard">
-    <h4>
-      Scenario Scorecard
+    <h5>
+      SCENARIO SCORECARD
       <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard = false"></i>
-    </h4>
-    <div class="topinfo-body container" style="min-height:250px">
+    </h5>
+    <div class="topinfo-body container" style="min-height:200px">
 
-      <div class="pull-left" style="width: 100%; padding-right: 310px;">
+      <div class="pull-left" style="width: 100%; padding-right: 300px;">
         <div class="row">
-          <div class="col-xs-5">
-            <h3>
+          <div class="col-xs-4">
+            <h4>
               <i class="fa fa-dot-circle-o"></i> {{ scenarioScore.bus.count }}
               <h6>Bus Stops</h6>
-            </h3>
+            </h4>
           </div>
           <div class="col-xs-6">
-            <h3>
+            <h4>
               <i class="fa fa-usd"></i> {{ scenarioScore.bus.cost/1000000 | number:2 }}M
-              <h6>All Stations</h6>
-            </h3>
+              <h6>All Stations {{  scenarioScore.bus.cost / (scenarioScore.bus.cost + scenarioScore.length.cost) | number:2 }}</h6>
+            
+            </h4>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-5">
-            <h3>
+          <div class="col-xs-4">
+            <h4>
               <i class="fa fa-road"></i> {{ scenarioScore.length.count | number:1 }}
               <h6>Miles</h6>
-            </h3>
+            </h4>
           </div>
           <div class="col-xs-6">
-            <h3>
+            <h4>
               <i class="fa fa-usd"></i> {{ scenarioScore.length.cost/1000000 | number:2 }}M
-              <h6>All Lanes</h6>
-            </h3>
+              <h6>All Lanes  
+                {{ scenarioScore.length.dedDist / scenarioScore.length.totalDist | number:2 }}
+              </h6>
+            </h4>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-5">
-            <h3>
+          <div class="col-xs-4">
+            <h4>
               <i class="fa fa-bus"></i> {{ scenarioScore.vehicles.count }}
               <h6>Vehicles</h6>
-            </h3>
+            </h4>
           </div>
           <div class="col-xs-6">
-            <h3>
+            <h4>
               <i class="fa fa-usd"></i> {{ scenarioScore.vehicles.cost/1000000 | number:2 }}M
-              <h6>Operations</h6>
-            </h3>
+              <h6>Operations {{ 1 - scenarioScore.vehicles.cost/100000000 | number:2 }}</h6>
+            </h4>
+
           </div>
         </div>
       </div>
 
-      <div style="height: 250px; position: absolute; right: 0px">
-        <svg id="compPlot" width="350" height="200"></svg>
+       
+        <div style="height: 250px; position: absolute; padding-left:230px">
+           <svg id="spider" width="350" height="200"></svg>
+        </div>
+ 
+
+      <div style="height: 200px; position: absolute; right: 0px">
+        <svg id="compPlot" width="350" height="150"></svg>
         <center>
 
           <div class="btn-group" dropdown>
