@@ -7,7 +7,7 @@ coaxsApp.service('analystService', function (supportService) {
   var analyst = new Analyst(window.L, {
     apiUrl         : 'http://mit-analyst.conveyal.com/api',
     tileUrl        : 'http://mit-analyst.conveyal.com/tile',
-    shapefileId    : '',
+    shapefileId    : 'b5b8f39b2066f57079cc58b253376a77_6696efea6cf1a3f232077db7280acaef',
     graphId        : '68746a5bc59a12f0ed02c8288542752c',
     showIso        : true,
   });

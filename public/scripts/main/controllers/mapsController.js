@@ -14,29 +14,30 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-    station  : 0,
+    station  : 2,
     routeId  : null,
-    peak     : { min : 5,  sec : 0 },
-    offpeak  : { min : 10, sec : 0 },
+    peak     : { min : 2,  sec : 0 },
+    offpeak  : { min : 5, sec : 0 },
   }
   $scope.scenario = {
-    'BH' : angular.copy(scenarioBase),
-    'HP' : angular.copy(scenarioBase),
-    'HD' : angular.copy(scenarioBase),
-    'CT' : angular.copy(scenarioBase),
+    'L3' : angular.copy(scenarioBase),
+    'L6' : angular.copy(scenarioBase),
+    'AP' : angular.copy(scenarioBase),
+    'GA' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'BH' : { sel : null, all : {} },
-    'HP' : { sel : null, all : {} },
-    'HD' : { sel : null, all : {} },
-    'CT' : { sel : null, all : {} },
+    'L3' : { sel : null, all : {} },
+    'L6' : { sel : null, all : {} },
+    'AP' : { sel : null, all : {} },
+    'GA' : { sel : null, all : {} },
   }
   $scope.combos = {
     sel : null,
     com : null,
     all : {},
   }
-  $scope.tabnav = 'BH';
+  $scope.tabnav = 'L6';
+  
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
