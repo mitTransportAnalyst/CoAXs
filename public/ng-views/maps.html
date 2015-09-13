@@ -534,12 +534,12 @@
   <!-- 3 scenario table module --> 
   <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
-      <i class="fa fa-binoculars"></i>
-      <span ng-show="!combos.sel">Existing MBTA System</span>
+      <i class="fa fa-random"></i>
+      <span ng-show="!combos.sel">Combo: Existing MBTA System</span>
       <span ng-show="combos.sel">
-        Scenario {{ combos.all[combos.sel].name }}
+        Combo: {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
-          <span ng-show="combos.com">Compared with {{ combos.all[combos.com].name }}</span>
+          <span ng-show="combos.com">compared with {{ combos.all[combos.com].name }}</span>
           <span ng-show="!combos.com">Compared with Baseline</span>
         </span>
       </span>
@@ -547,7 +547,7 @@
 
     <div class="placeHolder" ng-show="!visibleTabs.scenarios" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <div class="bigText">
-        <i class="fa fa-binoculars"></i>
+        <i class="fa fa-random"></i>
       </div>
     </div>
 
@@ -670,7 +670,7 @@
   <div class="colBody text-center" style="width:35px"> 
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <div class="fa-stack" ng-click="targetPOIUsers()">
-        <i class="fa fa-bus"></i>
+        <i class="fa fa-code-fork fa-rotate-270"></i>
       </div>
     </div>
       
@@ -706,17 +706,17 @@
   <div class="colBody" id="rightDynamic1">
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <span ng-show="variants[tabnav].sel">
-        {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}: Corridor Editor
+        Corridor Editor: {{ tabnav }} - {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}
       </span>
 
       <span ng-show="!variants[tabnav].sel">
-        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }} corridor
+        <i class="fa fa-exclamation-triangle"></i> No variation activated for Corridor {{ tabnav }}
       </span>
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.routes" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <div class="bigText">
-        <i class="fa fa-bus"></i>
+        <i class="fa fa-code-fork fa-rotate-270"></i>
       </div>
     </div>
 
@@ -728,11 +728,11 @@
         <span class="pull-right">
               View Scorecard
         </span>
-        {{ variants[tabnav].all[variants[tabnav].sel].name }} selected.
+        {{ variants[tabnav].all[variants[tabnav].sel].name }} activated
       </div>
 
       <div class="subHead" ng-show="!variants[tabnav].sel">
-        This route will be exluded from model right.
+        Activate this corridor by checking a variation below.
       </div>
     
       <div style="height: 100%; overflow-y: scroll">
