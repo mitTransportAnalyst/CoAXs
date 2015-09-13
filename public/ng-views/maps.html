@@ -287,16 +287,16 @@
 
   <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show="routeDetails">
     <h4>
-      {{ targetFeature.properties.varName }} allignment
+      {{ targetFeature.properties.varName }} Alignment
       <i class="fa fa-times-circle-o pull-right" ng-click="routeDetails=false"></i>
     </h4>
     <div class="topinfo-body container">
       <h6>
-        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}). This particular path is {{ targetFeature.properties.length | number:2 }} miles long.
+        Corridor: {{ targetFeature.properties.corLonName }} | Alignment: {{ targetFeature.properties.varName }} | Length: {{ targetFeature.properties.length | number:2 }} miles
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
-        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} path alternatives along this corridor. {{ variants[tabnav].all | keyLength }} variations, based off of these route path alternatives, have been created this session. They are: 
+        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} alignments for Corridor {{ targetFeature.properties.corName }}. Based on these alignments, {{ variants[tabnav].all | keyLength }} variations have been created this session: 
         <span ng-repeat="(key, variant) in variants[tabnav].all">
           <span class="badge"  style="color: #{{ targetFeature.properties.routeColor }}" 
                 ng-click="updateTargetFeature(variant)">
