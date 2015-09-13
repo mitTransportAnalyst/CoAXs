@@ -420,12 +420,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       $scope.snapPoints.all = data;
       if (data.indexOf('baseline.json') > -1) {
         $scope.snapPoints.sel = 'baseline.json';
-      }
 
-      loadService.loadSnapCache($scope.snapPoints.sel)
-      .then(function (data) {
-        $scope.snapPoints.data = data
-      })
+        loadService.loadSnapCache($scope.snapPoints.sel)
+        .then(function (data) {
+          $scope.snapPoints.data = data
+        })
+      } else {
+        alert('Initial POISs load failed. Baseline.json is missing.');
+      }
     })
   });
 

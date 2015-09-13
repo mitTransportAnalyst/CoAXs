@@ -5,6 +5,7 @@
     "node": "0.10.33"
   },
   "dependencies": {
+    "aws-sdk": "^2.1.45",
     "body-parser": "^1.12.4",
     "bower": "1.4.1",
     "csv-streamify": "^2.0.0",
@@ -12,7 +13,7 @@
     "ejs": "~0.8.5",
     "express": "~4.9.0",
     "googleapis": "^2.0.5",
-    "morgan": "^1.5.3",
+    "morgan": "^1.6.1",
     "pg": "^4.4.0",
     "request": "^2.57.0"
   },

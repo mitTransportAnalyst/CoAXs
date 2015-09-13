@@ -6,6 +6,20 @@ var fs = require('fs');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
+var http = require('http');
+var path = require('path');
+
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
+
+var aws = require('aws-sdk');
+    aws.config = new aws.Config();
+    aws.config.accessKeyId = AWS_ACCESS_KEY;
+    aws.config.secretAccessKey = AWS_SECRET_KEY;
+var s3 = new aws.S3();
+
+console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
 
 app.use(morgan('dev'));  
@@ -59,39 +73,83 @@ app.get('/geojson/:fileId', function (req, res) {
   });
 });
 
-app.get('/loadSnapCache/:fileId', bodyParser.json({limit: '5mb'}), function (req, res) {
-  var options = {
-    'root'     : __dirname + '/public/routes/shapefiles/mapApp/cached',
-    'dotfiles' : 'deny',
-    'headers'  : {
-        'x-timestamp' : Date.now(),
-        'x-sent'      : true
-    }
+var globalGetDone = false;
+app.get('/startSnapCache/:fileId', function (req, res) {
+  globalGetDone = false;
+  var params = {
+    Bucket: S3_BUCKET,
+    Key: req.params.fileId
   };
-  var file = req.params.fileId;
-  res.sendFile(file, options, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
+  var file = require('fs').createWriteStream('temporary.json');
+
+  s3.getObject(params).on('httpData', function(chunk) { 
+    file.write(chunk); 
+  }).on('httpDone', function() { 
+    file.end();
+    globalGetDone = true;
+    res.status(200).send({started: true});
+  }).send();
 });
 
-app.get('/cachedLocs', bodyParser.json({limit: '5mb'}), function (req, res) {
-  var path = __dirname + '/public/routes/shapefiles/mapApp/cached/'
-  fs.readdir(path, function (err, files) {
-    if (err) {
-      console.log('Read folder error:', err);
-      res.status(err.status).end();
+app.get('/loadSnapCache', function (req, res) {
+  if (globalGetDone) {
+    var options = {
+      root: __dirname,
+      dotfiles: 'deny',
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+      }
+    };
+    var file = 'temporary.json';
+    res.sendFile(file, options, function (err) {
+      if (err) {
+        console.log('sendFile error:', err);
+        res.status(err.status).end();
+      }
+    });
+  } else {
+    res.status(200).send({notReady: true});
+  }
+});
+
+app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
+  var allKeys = [];
+  var params = {Bucket: S3_BUCKET};
+  
+  s3.listObjects(params, function (err, data) {
+    if (data) {
+      allKeys.push(data.Contents);
+      if (data.IsTruncated && data.hasOwnProperty('Contents')) {
+        listAllKeys(data.Contents.slice(-1)[0].Key);
+      }
+      else {
+        if (data.hasOwnProperty('Contents')) {
+          data = data.Contents.map(function (each) { return each.Key; });
+          res.status(200).send(data)
+        } else {
+          res.status(500).send('Error missing Contents key value.');
+        }
+      }
     } else {
-      res.status(200).send(files);
+      console.log('Error occured', err);
+      var status = err.status ? err.status : 500;
+      res.status(status).send('Error accessing S3 bucket.');
     }
   });
 });
 
-app.post('/cachedLocs/:fileId', bodyParser.json({limit: '5mb'}), function (req, res) {
-  var fileLoc = __dirname + '/public/routes/shapefiles/mapApp/cached/' + req.params.fileId;
-  fs.writeFile(fileLoc, req.body.newPOIs, function (err) {
+app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req, res) {
+  var fileName = req.params.fileId;
+  var params = {
+    ACL: 'public-read-write',
+    Bucket: BUCKET_NAME,
+    Key: fileName,
+    Body: req.body.newPOIs,
+    ContentType: 'application/json'
+  }
+  
+  s3.putObject(params, function(err, response) {
     if (err) {
       console.log('Write file error:', err);
       res.status(err.status).end();
@@ -125,3 +183,4 @@ var server = app.listen(process.env.PORT || 3000, function () {
   var port = server.address().port;
   console.log('Coaxs app listening at http://%s:%s', host, port);
 });
+

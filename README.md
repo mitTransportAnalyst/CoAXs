@@ -21,3 +21,5 @@ Run `bower install` and `npm install` to install dependencies for client and ser
 
 #### Starting up node
 Once all dependencies have been installed, all that's left to do is enter `npm start`. Now open a web browser and navigate to `http://127.0.0.1:3000`. The app should be up and running there.
+
+(Note: Install Heroku Toolbelt. use ​foreman start​ instead of ​npm start)

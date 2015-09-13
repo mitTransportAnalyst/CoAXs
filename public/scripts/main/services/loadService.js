@@ -117,10 +117,26 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   
   this.loadSnapCache = function (fileName) {
     var deferred = $q.defer();
-    var url = '/loadSnapCache/' + fileName;
+    var url = '/startSnapCache/' + fileName;
     $http.get(url)
-      .success(function (data) {deferred.resolve(data)})
-      .error(function(data, status, headers, config) {deferred.resolve(false)});
+    .success(function (data) {
+      if (data.started) {
+        var runCheck = setTimeout(function () {
+          $http.get('/loadSnapCache')
+          .success(function (data) {
+            if (data.notReady) {
+              runCheck();
+            } else {
+              deferred.resolve(data)
+            }
+          }).error(function (data) {
+            deferred.resolve(false)
+          })
+        }, 2000);
+      }
+    }).error(function (data, status, headers, config) {
+      deferred.resolve(false)
+    });
     return deferred.promise;
   }
   
