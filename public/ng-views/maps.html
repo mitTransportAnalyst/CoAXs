@@ -23,21 +23,22 @@
       </div>
       <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn">
         Time Boundary
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
-        <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>{{ combos.all[combos.com].name }}</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
+        <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
       </div>
       <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
         Travel Time
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Shorter</small>
-        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>Longer</small>
-        <br><i class="fa fa-stop" style="color:#FFF"></i> <small>Unreachable</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Shorter</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Longer</small>
+		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over 2 hrs</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FFF"></i> <small>Inaccessible</small>
       </div>  
 	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
-		Travel Time
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>No Difference</small>
-        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>No Difference</small>
-		<br><i class="fa fa-stop" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Shorter</small>
-        <br><i class="fa fa-stop" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Shorter</small>
+		Travel Time Comparison
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Equal</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Equal</small>
+		<br><i class="fa fa-stop fa-border" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Faster</small>
+		<br><i class="fa fa-stop fa-border" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Faster</small>
       </div>
     </div>
   </div>
