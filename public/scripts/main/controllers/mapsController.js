@@ -288,33 +288,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     }
   }
 
-  var radarData = [
-      {
-        className: 'teamA', // optional can be used for styling
-        axes: [
-          {axis: "Job Access", value: null}, 
-          {axis: "Comfort", value: null}, 
-          {axis: "Reliability", value: null},
-          {axis: "Opex Effic.", value: null},  
-          {axis: "Capex Effic.", value: null} 
-        ]
-      },
-    //   {
-    //     className: 'teamB',
-    //     axes: [
-    //       {axis: "Job Access", value: 1}, 
-    //       {axis: "Comfort", value: 6}, 
-    //       {axis: "Reliability", value: 2},
-    //       {axis: "Opex Effic.", value: 1},  
-    //       {axis: "Capex Effic.", value: 9}  
-    //     ]
-    //   }
-    ];
-
-  $scope.drawRadar = function () {
-      d3Service.radarChart('#spider', radarData);
-  }
-
   // filter for routes that match with the desired corridor
   getKeepRoutes = function (selected) {
     var keepRoutes = [];
@@ -556,15 +529,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       var time     = scorecardService.generateTimeScore(routesLayer, routeId);
       var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
       $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
-
-      console.log("bus:" + bus);
     }
   }
 
   // updates on new selected scenario combo
   $scope.updateScenarioScorecard = function (id) {
-    
-
     if (!id) {
       var tempScen = scorecardService.generateEmptyScore();
       if ($scope.scenarioScore && $scope.scenarioScore.graphData) { 
@@ -573,8 +542,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       $scope.scenarioScore = tempScen;
     } else {
       var allCorKeys = $scope.combos.all[id].sel;
-      var busTot = {count: 0, cost: 0, brt: 0, plat: 0, norm:0};   // phil added 3 station type kay-value pairs 
-      var lenTot = {count: 0, cost: 0, dedDist:0, nonDist: 0};  // phil added 2 lane type kay-value pairs 
+      var busTot = {count: 0, cost: 0};
+      var lenTot = {count: 0, cost: 0};
       var vehTot = {count: 0, cost: 0};
 
       for (cor in allCorKeys) {
@@ -584,20 +553,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           var bus       = scorecardService.generateBusScore(stopsLayer, selCor.station, selCor.routeId);
           busTot.count += bus.count;
           busTot.cost  += bus.cost;
-          busTot.norm  += bus.dist[0]*bus.count  
-          busTot.plat  += bus.dist[1]*bus.count   
-          busTot.brt  += bus.dist[2]*bus.count
-
 
           var length    = scorecardService.generateLengthScore(routesLayer, selCor.routeId);
           lenTot.count += length.count;
           lenTot.cost  += length.cost;
-          // lenTot.dedDist   += length.dist.dedDist;
-          // lenTot.nonDist   += length.dist.nonDist;
-          // lenTot.totalDist += length.dist.total;
-          lenTot.nonDist += length.dist.non*lenTot.count;
-          lenTot.dedDist += length.dist.ded*lenTot.count;
-           
 
           var frequencies = {
             peak : selCor.peak.min*60 + selCor.peak.sec,
@@ -613,27 +572,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       $scope.scenarioScore.bus = busTot; 
       $scope.scenarioScore.length = lenTot; 
       $scope.scenarioScore.vehicles = vehTot;
-
-      var jobAccess = radarData[0].axes[0].value = 5;   // Job Access
-      var comfort = radarData[0].axes[1].value = 10*(0*busTot.norm + 1*busTot.plat + 2*busTot.brt)/(2*busTot.count);   // Comfort 
-      var reliability = radarData[0].axes[2].value = 10*lenTot.dedDist/lenTot.count;   // Reliability
-      var opex = radarData[0].axes[3].value = 10 - vehTot.cost/10000000;   // Opex Efficiency
-      var capex = radarData[0].axes[4].value = 10*busTot.cost/(busTot.cost+lenTot.cost);   // Capex Efficiency
-      $scope.drawRadar();
-      // console.log("dedicated:" + lenTot.dedDist)
-      // console.log("non-dedicated:" + lenTot.nonDist)
-      // console.log("total dist:" + lenTot.totalDist)
-      // console.log("length count:" + lenTot.count)
-      console.log("norm:" + busTot.norm + "  plat:" + busTot.plat + "  brt:" + busTot.brt + "  total stations:" + busTot.count)
-      console.log("Comfort Score:" + comfort)
-
-      console.log("Reliability Score:" + reliability)
-      console.log("Opex Score:" + opex)
-      console.log("Capex Score:" + capex)
-     }
+    }
   }
-
-
 
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
