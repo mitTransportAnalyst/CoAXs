@@ -23,19 +23,21 @@
       </div>
       <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn">
         Time Boundary
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Selected</small>
-        <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>Compared</small>
+        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
+        <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>{{ combos.all[combos.com].name }}</small>
       </div>
-      <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn">
-        Travel Scenario
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Faster</small>
-        <br><i class="fa fa-stop" style="color:#fecf61"></i> <small>Slower</small>
-        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>Slowest</small>
+      <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
+        Travel Time
+        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Shorter</small>
+        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>Longer</small>
         <br><i class="fa fa-stop" style="color:#FFF"></i> <small>Unreachable</small>
-        Comparisons <small>(Select Scenario)</small>
-        <br><i class="fa fa-stop" style="color:#9651d5"></i> <small>Much Faster</small>
-        <br><i class="fa fa-stop" style="color:#bd92e5"></i> <small>Slightly Faster</small>
-        <br><i class="fa fa-stop" style="color:#e4d3f4"></i> <small>Faster</small>
+      </div>  
+	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
+		Travel Time
+        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>No Difference</small>
+        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>No Difference</small>
+		<br><i class="fa fa-stop" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Shorter</small>
+        <br><i class="fa fa-stop" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Shorter</small>
       </div>
     </div>
   </div>
@@ -285,16 +287,16 @@
 
   <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show="routeDetails">
     <h4>
-      {{ targetFeature.properties.varName }} allignment
+      {{ targetFeature.properties.varName }} Alignment
       <i class="fa fa-times-circle-o pull-right" ng-click="routeDetails=false"></i>
     </h4>
     <div class="topinfo-body container">
       <h6>
-        This is variation adopts the {{ targetFeature.properties.varName }} allignment. The {{ targetFeature.properties.varName }} allignment runs along the {{ targetFeature.properties.corLonName }} corridor ({{ targetFeature.properties.corName }}). This particular path is {{ targetFeature.properties.length | number:2 }} miles long.
+        Corridor: {{ targetFeature.properties.corLonName }} | Alignment: {{ targetFeature.properties.varName }} | Length: {{ targetFeature.properties.length | number:2 }} miles
       </h6>
 
       <h6 ng-show="targetFeature.alternatives">
-        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} path alternatives along this corridor. {{ variants[tabnav].all | keyLength }} variations, based off of these route path alternatives, have been created this session. They are: 
+        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} alignments for Corridor {{ targetFeature.properties.corName }}. Based on these alignments, {{ variants[tabnav].all | keyLength }} variations have been created this session: 
         <span ng-repeat="(key, variant) in variants[tabnav].all">
           <span class="badge"  style="color: #{{ targetFeature.properties.routeColor }}" 
                 ng-click="updateTargetFeature(variant)">
@@ -324,33 +326,37 @@
 
 <div class="bottomCol">
   <!--SAVE-ROUTE PROMPT-->
-  <div class="saveAlt right" ng-show="saveAlt">
+  <div class="saveVar" ng-show="saveAlt">
     <h4>
-      Save this variation of the {{ routes[scenario[tabnav].routeId][0].options.base.varName }} path
+      Save new variation for Corridor {{ tabnav }}
       <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false"></i>
     </h4>
-    <div class="topinfo-body container">
-      <h6 ng-if="scenario[tabnav].routeId">
-        This alternative route variation is based off of the path for route {{ routes[scenario[tabnav].routeId][0].options.base.varName }} within the {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} corridor.
+    <div class="saveAlt-body container">
+      <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a parent variation from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
+	  <ol ng-if="scenario[tabnav].routeId">
+	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Service Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"> <i class="fa fa-pencil-square-o"></i></span></li>
+	  <li>Review variation:
+	  <h6 ng-if="scenario[tabnav].routeId">
+        Corridor: {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} | Alignment: {{ routes[scenario[tabnav].routeId][0].options.base.varName }} 
       </h6>
-      <h6 ng-if="!scenario[tabnav].routeId">
-        You have not selected a path from the available options for this route. To select a path variation, choose from the available variations on the underlying map.
       </h6>
       <h6>
-        Your alternative for Route {{ tabnav }} has installed
+        Station type: 
         <span ng-if="scenario[tabnav].station == 0">
-          traditional standard bus stops.
+          standard bus stops
         </span>
         <span ng-if="scenario[tabnav].station == 1">
-          bus stops enhanced with raised platforms.
+          bus stops enhanced with raised platforms
         </span>
         <span ng-if="scenario[tabnav].station == 2">
           BRT bus stations that feature both raised platforms and preboarding fare purchasing
         </span>
-        Peak frequencies along your alternative of Route {{ tabnav }} have been set to {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals. Off-peak frequencies have been set to {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals. Complete the field below to add this alternative to Route {{ tabnav }}.
+        Peak frequencies along your alternative of Route {{ tabnav }} have been set to {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals. Off-peak frequencies have been set to {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals.
       </h6>
+	  </li>
+	  <li>Name variation and save 
       <div class="input-group">
-        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name your alternative for Route {{ tabnav }}...">
+        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name variant for corridor {{ tabnav }}...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
             ng-show="!scenario[tabnav].name" 
@@ -364,48 +370,50 @@
           </button>
         </span>
       </div>
+	  </li>
     </div>
   </div>
 
   <!--SAVE-SCENARIO PROMPT-->
-  <div class="saveAlt" ng-show="saveCombo">
+  <div class="saveComb" ng-show="saveCombo">
     <h4>
-      Save this scenario alternative
+      Save new combo
       <i class="fa fa-times-circle-o pull-right" ng-click="saveCombo=false"></i>
     </h4>
-    <div class="topinfo-body container">
-      <h6>
-        Of the four routes customizable in this model, the following are included in this scenario:
-      </h6>
+    <div class="saveAlt-body container">
+      <ol>
+	  <li>Activate variations in the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.routes = !visibleTabs.routes"><i class="fa fa-level-down fa-2x"></i>  </span><span style="float:right" ng-click="visibleTabs.routes = !visibleTabs.routes"> <i class="fa fa-code-fork fa-rotate-270"></i></span></li>
+	  <li>Review combo:
       <h6 ng-repeat="(key, variant) in variants" ng-show="variant.sel">
         <b class="badge" style="color: #{{ routes[variant.all[variant.sel].routeId][0].options.base.routeColor }}">
           {{ variant.all[variant.sel].name }}: 
         </b>
-        The station type used along this routes is a
+        Station type: 
         <span ng-if="variant.all[variant.sel].station == 0">
-          standard bus stop.
+          standard bus stop
         </span>
         <span ng-if="variant.all[variant.sel].station == 1">
-          raised platform.
+          raised platform
         </span>
         <span ng-if="variant.all[variant.sel].station == 2">
-          BRT station.
+          BRT station
         </span>
-        Peak service operates with an average wait time of {{ variant.all[variant.sel].peak.min | avgWaitTime }} minutes, while 
-        off-peak service operates with an average wait time of {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} minutes.
+        | Average wait time: {{ variant.all[variant.sel].peak.min | avgWaitTime }} (peak), {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} (off-peak)
       </h6>
+	  </li>
+	  <li>Name combo and save</li>
       <div class="input-group">
-        <input type="text" class="form-control" ng-model="comboName" placeholder="Enter a name for this scenario...">
+        <input type="text" class="form-control" ng-model="comboName" placeholder="Enter a name for this combo...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
             ng-show="!comboName"
             style="cursor:not-allowed" disabled>
-            Save Scenario Combination
+            Save Combo
           </button>
           <button class="btn btn-savealt" type="button" 
             ng-show="comboName"
             ng-click="newCombo(comboName); saveCombo=false">
-            Save Scenario Combination
+            Save Combo
           </button>
         </span>
       </div>
@@ -526,12 +534,12 @@
   <!-- 3 scenario table module --> 
   <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
-      <i class="fa fa-binoculars"></i>
-      <span ng-show="!combos.sel">Existing MBTA System</span>
+      <i class="fa fa-random"></i>
+      <span ng-show="!combos.sel">Combo: Existing MBTA System</span>
       <span ng-show="combos.sel">
-        Scenario {{ combos.all[combos.sel].name }}
+        Combo: {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
-          <span ng-show="combos.com">Compared with {{ combos.all[combos.com].name }}</span>
+          <span ng-show="combos.com">compared with {{ combos.all[combos.com].name }}</span>
           <span ng-show="!combos.com">Compared with Baseline</span>
         </span>
       </span>
@@ -539,7 +547,7 @@
 
     <div class="placeHolder" ng-show="!visibleTabs.scenarios" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <div class="bigText">
-        <i class="fa fa-binoculars"></i>
+        <i class="fa fa-random"></i>
       </div>
     </div>
 
@@ -662,7 +670,7 @@
   <div class="colBody text-center" style="width:35px"> 
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <div class="fa-stack" ng-click="targetPOIUsers()">
-        <i class="fa fa-bus"></i>
+        <i class="fa fa-code-fork fa-rotate-270"></i>
       </div>
     </div>
       
@@ -698,17 +706,17 @@
   <div class="colBody" id="rightDynamic1">
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <span ng-show="variants[tabnav].sel">
-        {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}: Corridor Editor
+        Corridor Editor: {{ tabnav }} - {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}
       </span>
 
       <span ng-show="!variants[tabnav].sel">
-        <i class="fa fa-exclamation-triangle"></i> No path selected for {{ tabnav }} corridor
+        <i class="fa fa-exclamation-triangle"></i> No variation activated for Corridor {{ tabnav }}
       </span>
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.routes" ng-click="visibleTabs.routes = !visibleTabs.routes">
       <div class="bigText">
-        <i class="fa fa-bus"></i>
+        <i class="fa fa-code-fork fa-rotate-270"></i>
       </div>
     </div>
 
@@ -720,11 +728,11 @@
         <span class="pull-right">
               View Scorecard
         </span>
-        {{ variants[tabnav].all[variants[tabnav].sel].name }} selected.
+        {{ variants[tabnav].all[variants[tabnav].sel].name }} activated
       </div>
 
       <div class="subHead" ng-show="!variants[tabnav].sel">
-        This route will be exluded from model right.
+        Activate this corridor by checking a variation below.
       </div>
     
       <div style="height: 100%; overflow-y: scroll">

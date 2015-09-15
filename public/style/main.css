@@ -32,6 +32,7 @@ button {
 }
 .btn-savealt {
   background-color : #1fa67a;
+  border-width     : 1px;
 }
 
 .tiny {
@@ -81,8 +82,8 @@ nav div.section {
   width: 50%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 45px;
+  padding-right: 45px;
 }
 
 .topleft {
@@ -127,12 +128,38 @@ nav div.section {
   padding-left: 15px;
   padding-right: 15px;
 }
-.bottomCol .saveAlt {
+.bottomCol .saveComb{
   position: absolute;
-  background-color : #1fa67a;
+  background-color : #696969;
   overflow         : hidden;
-  width: 50%;
+  width: 995px;
+  width: -moz-calc(50% + 35px);
+  width: calc(50% + 35px);
   bottom: 0px;
+}
+
+.bottomCol .saveVar{
+  position: absolute;
+  right: 0px;
+  background-color : #696969;
+  overflow         : hidden;
+  width: 960px;
+  width: -moz-calc(50% - 35px);
+  width: calc(50% - 35px);
+  bottom: 0px;
+}
+
+.input-group{
+width: 90%
+}
+
+.col-head-button{
+background-color  : #696969;
+}
+
+.saveAlt-body {
+  background-color : #b4b4b4;
+  width            : 100%;
 }
 
 .legend .panel {
