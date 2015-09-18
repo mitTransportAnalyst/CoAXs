@@ -22,44 +22,6 @@ var s3 = new aws.S3();
 
 console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
-//request oauth2 token from analyst-server
-var btoa = require('btoa');
-var analystCreds = require('request');
-console.log('analyst_key: '+ process.env.analyst_key);
-console.log('analyst_secret: '+ process.env.analyst_secret);
-console.log(btoa(process.env.analyst_key +':'+ process.env.analyst_secret));
-
-var analystReqOpts = {
-  url: 'https://analyst.conveyal.com/oauth/token',
-  method: 'POST',
-  timeout: 10000,
-  auth: {
-	'user' : process.env.analyst_key,
-	'pass' : process.env.analyst_secret
-  },
-  headers: {
-	'content-type'  : 'application/x-www-form-urlencoded'
-  },
-  body: 'grant_type=client_credentials'
-};
-
-analystCreds(analystReqOpts, function (error, response, body){
-    console.log(JSON.stringify(response));});
-
-// var analystCred = require('http');
-
-// analystCred.request({
-  // protocol: 'https',
-  // hostname: 'analyst.conveyal.com',
-  // path: '/oauth/token',
-  // method: 'POST',
-  // auth: {process.env.analyst_key : process.env.analyst_secret},
-  // headers : {'content-type'  : 'application/x-www-form-urlencoded'
-  // },
-  // body: 'grant_type=client_credentials'
-// }, function (error, response, body){
-    // console.log(JSON.stringify(response));});
-	
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
