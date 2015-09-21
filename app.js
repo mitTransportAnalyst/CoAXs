@@ -21,7 +21,6 @@ var s3 = new aws.S3();
 
 console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
-
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));

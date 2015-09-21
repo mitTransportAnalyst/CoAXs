@@ -130,13 +130,24 @@ nav div.section {
 }
 .bottomCol .saveComb{
   position: absolute;
-  background-color : #696969;
+  background-color : rgba(211,211,211,0.975);
   overflow         : hidden;
+  height: 1000px;
   width: 995px;
   width: -moz-calc(50% + 35px);
   width: calc(50% + 35px);
   bottom: 0px;
 }
+
+.bottomCol .saveComb .title{
+  position: absolute;
+  background-color : #696969;
+  overflow         : hidden;
+  width: 100%;
+  bottom: 0px;
+}
+
+
 
 .bottomCol .saveVar{
   position: absolute;
