@@ -9,7 +9,6 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var path = require('path');
 
-//s3 authentication
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
@@ -22,6 +21,10 @@ var s3 = new aws.S3();
 
 console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 72b59b0... Start to oath token request
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -158,6 +161,7 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
     }
   });
 });
+
 
 // gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)
 app.get('/pois', function (req, res) {
