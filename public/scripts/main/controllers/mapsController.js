@@ -78,11 +78,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       lat: 43.36,
       lng:-70.3}
   };
-  var tiles_global = {
-      name: 'CartoDB Light',
-      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
-      type: 'xyz',
-  };
+  
    var tilesDict = {
     blank: {
 		name: 'Blank',
@@ -100,6 +96,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
         type: 'xyz'
     }
   }; 
+  
+  var tiles_global = tilesDict.base;
   
   var center_global = {
     lat  : 42.360543,
@@ -588,7 +586,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 	leftService.targetPOIUsers(poiUserPoints, id); 
 	$scope.poiUsers.forEach(function (user) {
 	if (user.userId == id) {
-		console.log(user);
 		if (user.homeLoc[0] && user.homeLoc[1]){
 			$scope.markers_left.main.lat = user.homeLoc[0];
 			$scope.markers_left.main.lng = user.homeLoc[1];
