@@ -485,20 +485,20 @@
         </span>
       </div>
 
-      <div style="width:100%; height:45px; overflow:hidden;padding-top:5px;">
-        <div class="text-center" style="width:25px;height:35px;float:left;padding-bottom:5px;background-color:#31B0D5;opacity:0.5">
-          <div class="fa fa-refresh fa-inverse" style="line-height:35px" ng-click="preMarkerQuery()"></div>
-        </div>
+      <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="float:left; width: 250px; padding: 0px 8px 0px 8px">
           <span ng-class="showVectorIsosOn ? '' : 'unselected'" >
             <input type="range" min="1" max="24" class="isosRange"
               ng-model="vectorIsos.val"
               ng-disabled="!showVectorIsosOn"
               ng-click="showVectorIsos(300*vectorIsos.val)"/>
-            <i class="fa fa-minus-square" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
-            {{ vectorIsos.val*5 | minuteConverter }} hours
-            <i class="fa fa-plus-square" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+            <i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+            {{ vectorIsos.val*5 | minuteConverter }}
+            <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
           </span>
+        </div>
+		<div class="text-center" style="width:25px;height:35px;float:left;padding-bottom:5px;background-color:#31B0D5;opacity:0.5">
+          <div class="fa fa-refresh fa-inverse" style="line-height:35px" ng-click="preMarkerQuery()"></div>
         </div>
       </div>
 
