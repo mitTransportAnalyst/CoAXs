@@ -513,21 +513,21 @@
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs" ng-class="mode.selected=='walk' ? 'active tiny' : ''"
-                ng-click="mode.selected='walk'">
-          <i class="fa fa-child fa-lg"></i>
+        <label class="btn btn-xs" ng-class="mode.selected=='all' ? 'active tiny' : ''"
+                ng-click="mode.selected='all'"> 
+          <i class="fa fa-ship fa-lg"></i>
         </label>
-        <label class="btn btn-xs" ng-class="mode.selected=='bus' ? 'active tiny' : ''"
-                ng-click="mode.selected='bus'">
-          <i class="fa fa-bus fa-lg"></i>
-        </label>
-        <label class="btn btn-xs" ng-class="mode.selected=='local' ? 'active tiny' : ''"
+        <label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local'? 'active tiny' : ''"
                 ng-click="mode.selected='local'">
           <i class="fa fa-train fa-lg"></i>
         </label>
-        <label class="btn btn-xs" ng-class="mode.selected=='all' ? 'active tiny' : ''"
-                ng-click="mode.selected='all'">
-          <i class="fa fa-ship fa-lg"></i>
+		<label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local' || mode.selected=='bus' ? 'active tiny' : ''"
+                ng-click="mode.selected='bus'">
+          <i class="fa fa-bus fa-lg"></i>
+        </label>
+		<label class="btn btn-xs" ng-class="mode.selected=='all' ||  mode.selected=='local' || mode.selected=='bus' || mode.selected=='walk' ? 'active tiny' : ''"
+                ng-click="mode.selected='walk'">
+          <i class="fa fa-child fa-lg"></i>
         </label>
       </div>
     </div>
