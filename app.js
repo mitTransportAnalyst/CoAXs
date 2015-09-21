@@ -21,10 +21,6 @@ var s3 = new aws.S3();
 
 console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 72b59b0... Start to oath token request
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
