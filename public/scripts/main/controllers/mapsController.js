@@ -584,8 +584,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-    if (id) { leftService.targetPOIUsers(poiUserPoints, id); } 
-    else { poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })}
+	if (id) { 
+	leftService.targetPOIUsers(poiUserPoints, id); 
+	$scope.poiUsers.forEach(function (user) {
+	if (user.userId == id) {
+		console.log(user);
+		if (user.homeLoc[0] && user.homeLoc[1]){
+			$scope.markers_left.main.lat = user.homeLoc[0];
+			$scope.markers_left.main.lng = user.homeLoc[1];
+		}
+	}});
+	$scope.preMarkerQuery()}
+	else { poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })}
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again

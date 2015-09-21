@@ -247,12 +247,14 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
           var userId = data[i].Name[0] + data[i].Name[1]; 
-          var points = [];              
+          var points = [];
+		  var homeLoc = [];
   
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "home") {
               icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+			  homeLoc = [pois[n].lat, pois[n].lng];
             }
             else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
@@ -265,7 +267,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
             circles.push(marker);
             points.push({lat: pois[n].lat, lng: pois[n].lng, poiTag: pois[n].poiTag});
           }
-          poiUsers.push({userId : userId, points: points});
+          poiUsers.push({userId : userId, points: points, homeLoc: homeLoc});
         }
         cb(L.layerGroup(circles), poiUsers);
       }
