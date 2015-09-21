@@ -196,10 +196,10 @@
 
       <div class="row">
         <div class="col-xs-3">
-          <h2>
+          <h5>
             <i class="fa fa-dot-circle-o"></i> {{ routeScore.bus.count }}
             <h6>Bus Stops</h6>
-          </h2>
+          </h5>
         </div>
         <div class="col-xs-4">
           <h5>
@@ -222,13 +222,12 @@
 
       <div class="row">
         <div class="col-xs-3">
-          <h2>
+          <h5>
             <i class="fa fa-road"></i> {{ routeScore.length.count | number:1 }}
             <h6>Miles Round-Trip</h6>
-          </h2>
+          </h5>
         </div>
         <div class="col-xs-4">
-          <br>
           <h5>
             <b>Non-dedicated:</b> {{ routeScore.length.dist.non | convertPercentage | number:0 }}%
           </h5>
@@ -246,13 +245,12 @@
 
       <div class="row">
         <div class="col-xs-3">
-          <h2>
+          <h5>
             <i class="fa fa-clock-o"></i> {{ routeScore.time.count | minuteConverter }}
             <h6>Peak Round-Trip</h6>
-          </h2>
+          </h5>
         </div>
         <div class="col-xs-4">
-          <br>
           <h5>
             <b>Moving:</b> {{ routeScore.time.dist.move | convertPercentage | number:0 }}%
           </h5>
@@ -261,23 +259,23 @@
           </h5>
         </div>
         <div class="col-xs-5">
+		  <h2>
+            <i class="fa fa-usd"></i> {{ routeScore.vehicles.cost | number:0 }}
+            <h6>Annual Cost of Operations</h6>
+          </h2>
         </div>
       </div>
 
       <div class="row">
         <div class="col-xs-3">
-          <h2>
+          <h5>
             <i class="fa fa-bus"></i> {{ routeScore.vehicles.count }}
             <h6>Vehicles</h6>
-          </h2>
+          </h5>
         </div>
         <div class="col-xs-4">
         </div>
         <div class="col-xs-5">
-          <h2>
-            <i class="fa fa-usd"></i> {{ routeScore.vehicles.cost | number:0 }}
-            <h6>Annual Cost of Operations</h6>
-          </h2>
         </div>
       </div>
     </div>
