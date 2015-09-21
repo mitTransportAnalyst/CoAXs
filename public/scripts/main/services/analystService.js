@@ -2,9 +2,6 @@
 coaxsApp.service('analystService', function (supportService) {
 
   this.isochrones = null;
-
-  //var setClientCredentials = window.setClientCredentials;
-  //var setClientCreds = new setClientCredentials(clientCreds);
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
