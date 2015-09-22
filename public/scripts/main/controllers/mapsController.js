@@ -60,6 +60,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // right globals
   var geoJsonLeft = null;
 
+  $scope.introPanel = true;
 
   // Angular Leaflet Directive - base components
   var defaults_global = {

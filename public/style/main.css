@@ -139,6 +139,16 @@ nav div.section {
   bottom: 0px;
 }
 
+.bottomCol .introPan{
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  background-color : rgba(211,211,211,0.975);
+  overflow         : hidden;
+  height: 1000px;
+  width: 50%
+}
+
 .bottomCol .saveComb .title{
   position: absolute;
   background-color : #696969;
@@ -147,7 +157,13 @@ nav div.section {
   bottom: 0px;
 }
 
-
+.bottomCol .introPan .title {
+  position: absolute;
+  background-color : #696969;
+  overflow         : hidden;
+  width: 100%;
+  bottom: 20%;
+}
 
 .bottomCol .saveVar{
   position: absolute;
