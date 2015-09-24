@@ -114,7 +114,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
-  $scope.center_left.zoom = 11;
+  $scope.center_left.zoom = 12;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
