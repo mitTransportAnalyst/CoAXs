@@ -569,10 +569,10 @@
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
         <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);">
           <div>ID</div>
-          <div class="square" style="background-color:#0071CA">BH</div>
-          <div class="square" style="background-color:#B10086">HP</div>
-          <div class="square" style="background-color:#CE5504">HD</div>
-          <div class="square" style="background-color:#AD0101">SD</div>
+          <div class="square" style="background-color:#0071CA">B</div>
+          <div class="square" style="background-color:#B10086">C</div>
+          <div class="square" style="background-color:#CE5504">D</div>
+          <div class="square" style="background-color:#AD0101">E</div>
           <div class="fa fa-arrows-h"></div>
         </div>
 
@@ -593,43 +593,39 @@
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['BH']">
+              <span class="text-success" ng-show="variant.sel['B']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['BH'].all[variant.sel['BH']].name }}</i></small>
+                <small><i>{{ variants['B'].all[variant.sel['B']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['BH']">
-                <i class="fa fa-times"></i>
-                <small><i>None</i></small>
+              <span class="text-danger" ng-show="!variant.sel['B']">
+                <div class="text-center"><i class="fa fa-times"></i></div>
+              </span>
+            </div>
+			<div>
+              <span class="text-success" ng-show="variant.sel['C']">
+                <i class="fa fa-check"></i>
+                <small><i>{{ variants['C'].all[variant.sel['C']].name }}</i></small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['C']">
+                <div class="text-center"><i class="fa fa-times"></i></div>
               </span>
             </div>
             <div>
-              <span class="text-success" ng-show="variant.sel['HP']">
+              <span class="text-success" ng-show="variant.sel['D']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['HP'].all[variant.sel['HP']].name }}</i></small>
+                <small><i>{{ variants['D'].all[variant.sel['D']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['HP']">
-                <i class="fa fa-times"></i>
-                <small><i>None</i></small>
+              <span class="text-danger" ng-show="!variant.sel['D']">
+                <div class="text-center"><i class="fa fa-times"></i></div>
               </span>
             </div>
-            <div>
-              <span class="text-success" ng-show="variant.sel['HD']">
+			<div>
+              <span class="text-success" ng-show="variant.sel['E']">
                 <i class="fa fa-check"></i>
-                <small><i>{{ variants['HD'].all[variant.sel['HD']].name }}</i></small>
+                <small><i>{{ variants['E'].all[variant.sel['E']].name }}</i></small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['HD']">
-                <i class="fa fa-times"></i>
-                <small><i>None</i></small>
-              </span>
-            </div>
-            <div>
-              <span class="text-success" ng-show="variant.sel['CT']">
-                <i class="fa fa-check"></i>
-                <small><i>{{ variants['CT'].all[variant.sel['CT']].name }}</i></small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['CT']">
-                <i class="fa fa-times"></i>
-                <small><i>None</i></small>
+              <span class="text-danger" ng-show="!variant.sel['E']">
+                <div class="text-center"><i class="fa fa-times"></i></div>
               </span>
             </div>
 
@@ -689,28 +685,29 @@
       
     <div class="showToggle" ng-show="visibleTabs.routes" style="background-color: rgba(255,165,0,0.5)">
       <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
-            ng-click="targetCorridor('BH'); tabnav='BH'; overview=true"
-            ng-class="tabnav !== 'BH' ? 'unselected' : ''">
-            BH
+            ng-click="targetCorridor('B'); tabnav='B'; overview=true"
+            ng-class="tabnav !== 'B' ? 'unselected' : ''">
+            B
       </div>
-
-      <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
-            ng-click="targetCorridor('HP'); tabnav='HP'; overview=true"
-            ng-class="tabnav !== 'HP' ? 'unselected' : ''">
-            HP
-      </div>
+      
+	  <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
+            ng-click="targetCorridor('C'); tabnav='C'; overview=true"
+            ng-class="tabnav !== 'C' ? 'unselected' : ''">
+            C
+      </div> 
 
       <div class="smallColVal" style="color:#FFF;background-color:#CE5504;"
-            ng-click="targetCorridor('HD'); tabnav='HD'; overview=true"
-            ng-class="tabnav !== 'HD' ? 'unselected' : ''">
-            HD
+            ng-click="targetCorridor('D'); tabnav='D'; overview=true"
+            ng-class="tabnav !== 'D' ? 'unselected' : ''">
+            D
       </div>
 
-      <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
-            ng-click="targetCorridor('CT'); tabnav='CT'; overview=true"
-            ng-class="tabnav !== 'CT' ? 'unselected' : ''">
-            CT
-      </div> 
+	  <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
+            ng-click="targetCorridor('E'); tabnav='E'; overview=true"
+            ng-class="tabnav !== 'E' ? 'unselected' : ''">
+            E
+      </div>
+	  
     </div>
   </div>  
 

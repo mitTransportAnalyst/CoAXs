@@ -20,23 +20,23 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     offpeak  : { min : 10, sec : 0 },
   }
   $scope.scenario = {
-    'BH' : angular.copy(scenarioBase),
-    'HP' : angular.copy(scenarioBase),
-    'HD' : angular.copy(scenarioBase),
-    'CT' : angular.copy(scenarioBase),
+    'B' : angular.copy(scenarioBase),
+    'C' : angular.copy(scenarioBase),
+    'D' : angular.copy(scenarioBase),
+    'E' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'BH' : { sel : null, all : {} },
-    'HP' : { sel : null, all : {} },
-    'HD' : { sel : null, all : {} },
-    'CT' : { sel : null, all : {} },
+    'B' : { sel : null, all : {} },
+    'C' : { sel : null, all : {} },
+    'D' : { sel : null, all : {} },
+    'E' : { sel : null, all : {} },
   }
   $scope.combos = {
     sel : null,
     com : null,
     all : {},
   }
-  $scope.tabnav = 'BH';
+  $scope.tabnav = 'B';
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
@@ -503,10 +503,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       name    : name,
       created : Date.now(),
       sel     : {
-        'BH' : $scope.variants['BH'].sel,
-        'HP' : $scope.variants['HP'].sel,
-        'HD' : $scope.variants['HD'].sel,
-        'CT' : $scope.variants['CT'].sel,
+        'B' : $scope.variants['B'].sel,
+        'C' : $scope.variants['C'].sel,
+        'D' : $scope.variants['D'].sel,
+        'E' : $scope.variants['E'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -615,24 +615,24 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.buildScenarios = function(foo) {  
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'Baseline',
+      name    : 'Existing',
       created : Date.now(),
       sel     : {
-        'BH' : null,
-        'HP' : null,
-        'HD' : null,
-        'CT' : null,
+        'B' : null,
+        'C' : null,
+        'D' : null,
+        'E' : null,
       }
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'BH & HP Local',
+      name    : '28 Brigham',
       created : Date.now(),
       sel     : {
-        'BH' : $scope.variants['BH'].sel,
-        'HP' : $scope.variants['HP'].sel,
-        'HD' : $scope.variants['HD'].sel,
-        'CT' : $scope.variants['CT'].sel,
+        'B' : $scope.variants['B'].sel,
+        'C' : $scope.variants['C'].sel,
+        'D' : $scope.variants['D'].sel,
+        'E' : $scope.variants['E'].sel,
       }
     };
   }
