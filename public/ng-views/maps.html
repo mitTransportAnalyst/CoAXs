@@ -495,18 +495,20 @@
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.travel">
-      <div class="subHead" ng-click="toggleShowVectorIsos()">
-        Show time boundaries
-        <span ng-show="showVectorIsosOn">
-          <i class="fa fa-eye"></i> On
-        </span>
-        <span ng-show="!showVectorIsosOn">
-          <i class="fa fa-eye-slash"></i> Off
-        </span>
+      <div class="subHead">
+        Contours
+	  </div>
+	  <div class="btn-group btn-group-justified">
+			<label class="btn btn-xs"><i class="fa fa-refresh" ng-class="loadProgress.vis ? 'fa-spin' : ''" style="line-height:25px" ng-click="preMarkerQuery()"></i>
+			</label>
+			<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye" style="line-height:25px"></i>
+			</label>
+			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye-slash" style="line-height:25px" ></i>
+			</label>
       </div>
 
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
-        <div class="text-center" style="float:left; width: 250px; padding: 0px 8px 0px 8px">
+        <div class="text-center" style="float:left; width: 100%; padding: 0px 8px 0px 8px">
           <span ng-class="showVectorIsosOn ? '' : 'unselected'" >
             <input type="range" min="1" max="24" class="isosRange"
               ng-model="vectorIsos.val"
@@ -517,19 +519,7 @@
             <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
           </span>
         </div>
-		<div class="text-center" style="width:25px;height:35px;float:left;padding-bottom:5px;background-color:#31B0D5;opacity:0.5">
-          <div class="fa fa-refresh fa-inverse" style="line-height:35px" ng-click="preMarkerQuery()"></div>
-        </div>
       </div>
-
-
-      <!--<div class="subHead">Destinations</div>-->
-      <!--<div class="btn-group btn-group-justified">-->
-        <!--<label class="btn btn-xs"><i class="fa fa-briefcase"></i></label>-->
-        <!--<label class="btn btn-xs"><i class="fa fa-heartbeat"></i></label>-->
-        <!--<label class="btn btn-xs"><i class="fa fa-shopping-cart"></i></label>-->
-        <!--<label class="btn btn-xs"><i class="fa fa-graduation-cap"></i></label>-->
-      <!--</div>-->
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
