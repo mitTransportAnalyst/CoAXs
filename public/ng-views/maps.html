@@ -495,15 +495,12 @@
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.travel">
-      <div class="subHead">
-        Contours
-	  </div>
 	  <div class="btn-group btn-group-justified">
-			<label class="btn btn-xs"><i class="fa fa-refresh" ng-class="loadProgress.vis ? 'fa-spin' : ''" style="line-height:25px" ng-click="preMarkerQuery()"></i>
+			<label class="btn btn-info"><i class="fa fa-refresh" ng-class="loadProgress.vis ? 'fa-spin' : ''" ng-click="preMarkerQuery()"></i>
 			</label>
-			<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye" style="line-height:25px"></i>
+			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye" style="line-height:25px"></i>
 			</label>
-			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye-slash" style="line-height:25px" ></i>
+			<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye-slash" style="line-height:25px" ></i>
 			</label>
       </div>
 
@@ -523,19 +520,19 @@
 
       <div class="subHead">Mode</div>
       <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs" ng-class="mode.selected=='all' ? 'active tiny' : ''"
+        <label class="btn btn-xs" ng-class="mode.selected=='all' ? '' : 'active tiny'"
                 ng-click="mode.selected=='all' ? mode.selected='local' : mode.selected='all'"> 
           <i class="fa fa-ship fa-lg"></i>
         </label>
-        <label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local'? 'active tiny' : ''"
+        <label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local'? '' : 'active tiny'"
                 ng-click="mode.selected=='local' ? mode.selected='bus' : mode.selected='local'">
           <i class="fa fa-subway fa-lg"></i>
         </label>
-		<label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local' || mode.selected=='bus' ? 'active tiny' : ''"
+		<label class="btn btn-xs" ng-class="mode.selected=='all' || mode.selected=='local' || mode.selected=='bus' ? '' : 'active tiny'"
                 ng-click="mode.selected=='bus' ? mode.selected='walk' : mode.selected='bus'">
           <i class="fa fa-bus fa-lg"></i>
         </label>
-		<label class="btn btn-xs" ng-class="mode.selected=='all' ||  mode.selected=='local' || mode.selected=='bus' || mode.selected=='walk' ? 'active tiny' : ''"
+		<label class="btn btn-xs" ng-class="mode.selected=='all' ||  mode.selected=='local' || mode.selected=='bus' || mode.selected=='walk' ? '' : 'active tiny'"
                 ng-click="mode.selected='walk'">
           <i class="fa fa-child fa-lg"></i>
         </label>
