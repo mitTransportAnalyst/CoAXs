@@ -261,6 +261,8 @@ background-color  : #696969;
   overflow-x: hidden;
   overflow-y: scroll;
   cursor: pointer;
+  z-index: 5; 
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
 
 .colBody .placeHolder {
