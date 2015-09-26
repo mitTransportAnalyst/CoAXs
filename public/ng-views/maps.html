@@ -23,21 +23,22 @@
       </div>
       <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn">
         Time Boundary
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
-        <br><i class="fa fa-stop" style="color:#89cff0"></i> <small>{{ combos.all[combos.com].name }}</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
+        <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
       </div>
       <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
         Travel Time
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>Shorter</small>
-        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>Longer</small>
-        <br><i class="fa fa-stop" style="color:#FFF"></i> <small>Unreachable</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Shorter</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Longer</small>
+		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over 2 hrs</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FFF"></i> <small>Inaccessible</small>
       </div>  
 	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
-		Travel Time
-        <br><i class="fa fa-stop" style="color:#FDB813"></i> <small>No Difference</small>
-        <br><i class="fa fa-stop" style="color:#FEEDC2"></i> <small>No Difference</small>
-		<br><i class="fa fa-stop" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Shorter</small>
-        <br><i class="fa fa-stop" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Shorter</small>
+		Travel Time Comparison
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Equal</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Equal</small>
+		<br><i class="fa fa-stop fa-border" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Faster</small>
+		<br><i class="fa fa-stop fa-border" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Faster</small>
       </div>
     </div>
   </div>
@@ -334,7 +335,7 @@
     <div class="saveAlt-body container">
       <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a parent variation from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
 	  <ol ng-if="scenario[tabnav].routeId">
-	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Service Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"> <i class="fa fa-pencil-square-o"></i></span></li>
+	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Service Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
 	  <li>Review variation:
 	  <h6 ng-if="scenario[tabnav].routeId">
         Corridor: {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} | Alignment: {{ routes[scenario[tabnav].routeId][0].options.base.varName }} 
@@ -376,13 +377,14 @@
 
   <!--SAVE-SCENARIO PROMPT-->
   <div class="saveComb" ng-show="saveCombo">
+  <div class="title">
     <h4>
       Save new combo
       <i class="fa fa-times-circle-o pull-right" ng-click="saveCombo=false"></i>
     </h4>
     <div class="saveAlt-body container">
       <ol>
-	  <li>Activate variations in the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.routes = !visibleTabs.routes"><i class="fa fa-level-down fa-2x"></i>  </span><span style="float:right" ng-click="visibleTabs.routes = !visibleTabs.routes"> <i class="fa fa-code-fork fa-rotate-270"></i></span></li>
+	  <li>Activate variations in the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.routes = !visibleTabs.routes"><i class="fa fa-level-down fa-2x"></i>  </span><span style="float:right" ng-click="visibleTabs.routes = !visibleTabs.routes"></span></li>
 	  <li>Review combo:
       <h6 ng-repeat="(key, variant) in variants" ng-show="variant.sel">
         <b class="badge" style="color: #{{ routes[variant.all[variant.sel].routeId][0].options.base.routeColor }}">
@@ -418,6 +420,7 @@
         </span>
       </div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -744,7 +747,7 @@
               <th>Station</th>
               <th>Peak</th>
               <th>Off-Peak</th>
-              <th>Modifying</th>
+              <th><i class="fa fa-pencil-square-o"></i></th>
             </tr>
           </thead>
           

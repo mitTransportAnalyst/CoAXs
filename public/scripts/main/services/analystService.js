@@ -2,7 +2,7 @@
 coaxsApp.service('analystService', function (supportService) {
 
   this.isochrones = null;
-
+  
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
     apiUrl         : 'http://analyst.conveyal.com/api',

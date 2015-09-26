@@ -19,7 +19,6 @@ var aws = require('aws-sdk');
     aws.config.secretAccessKey = AWS_SECRET_KEY;
 var s3 = new aws.S3();
 
-
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
