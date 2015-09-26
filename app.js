@@ -19,8 +19,6 @@ var aws = require('aws-sdk');
     aws.config.secretAccessKey = AWS_SECRET_KEY;
 var s3 = new aws.S3();
 
-console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
-
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
@@ -75,6 +73,8 @@ app.get('/geojson/:fileId', function (req, res) {
 
 var globalGetDone = false;
 app.get('/startSnapCache/:fileId', function (req, res) {
+  console.log('Starting the download for ', req.params.fileId);
+
   globalGetDone = false;
   var params = {
     Bucket: S3_BUCKET,
@@ -85,6 +85,7 @@ app.get('/startSnapCache/:fileId', function (req, res) {
   s3.getObject(params).on('httpData', function(chunk) { 
     file.write(chunk); 
   }).on('httpDone', function() { 
+    console.log(req.params.fileId, 'download from S3 completed.');
     file.end();
     globalGetDone = true;
     res.status(200).send({started: true});
@@ -109,6 +110,7 @@ app.get('/loadSnapCache', function (req, res) {
       }
     });
   } else {
+    console.log('JSON download not done...');
     res.status(200).send({notReady: true});
   }
 });

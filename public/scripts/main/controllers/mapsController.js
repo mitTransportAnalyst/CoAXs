@@ -139,8 +139,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   });
 
   $scope.preMarkerQuery = function () {
-    if ($scope.snapPoints.sel) {
+    if ($scope.snapPoints.sel !== null) {
       var matchesSnap = compareToSnapPoints();
+      console.log($scope.snapPoints.data);
       var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.data);
       if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
         $scope.markers_left.main.lat = nearest.poi.lat;
@@ -194,6 +195,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // what calls the SPA analysis and updates and tile and map components
   var runMarkerQuerys = function () {
+    // start the progress bar
+    animateProgressBar(); 
+    console.log('Running marker query...');
+
     $scope.showVectorIsosOn = false;
     var marker = angular.copy($scope.markers_left.main);
 
@@ -208,7 +213,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       }
     };
 
-    animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
 
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
@@ -415,15 +419,20 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       poiUserPoints.addTo(map);
     });
 
+    console.log('Calling for POI JSON...');
     loadService.getLocationCache()
     .then(function (data) {
       $scope.snapPoints.all = data;
       if (data.indexOf('baseline.json') > -1) {
-        $scope.snapPoints.sel = 'baseline.json';
-
-        loadService.loadSnapCache($scope.snapPoints.sel)
+        
+        loadService.loadSnapCache('baseline.json')
         .then(function (data) {
-          $scope.snapPoints.data = data
+          if (data == false) {
+            alert('Initial POISs load failed. S3 connection error.');
+          } else {
+            $scope.snapPoints.sel = 'baseline.json';
+            $scope.snapPoints.data = data;
+          }
         })
       } else {
         alert('Initial POISs load failed. Baseline.json is missing.');
