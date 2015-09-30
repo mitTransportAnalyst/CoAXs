@@ -504,10 +504,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       name    : name,
       created : Date.now(),
       sel     : {
-        'B' : $scope.variants['B'].sel,
+        'A' : $scope.variants['A'].sel,
+		'B' : $scope.variants['B'].sel,
         'C' : $scope.variants['C'].sel,
         'D' : $scope.variants['D'].sel,
-        'E' : $scope.variants['E'].sel,
+        'I' : $scope.variants['I'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -619,10 +620,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       name    : 'Existing',
       created : Date.now(),
       sel     : {
+		'A' : null,
         'B' : null,
         'C' : null,
         'D' : null,
-        'E' : null,
+        'I' : null,
       }
     };
     var comboId = supportService.generateUUID();
@@ -630,10 +632,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       name    : '28 Brigham',
       created : Date.now(),
       sel     : {
-        'B' : $scope.variants['B'].sel,
+        'A' : $scope.variants['A'].sel,
+		'B' : $scope.variants['B'].sel,
         'C' : $scope.variants['C'].sel,
         'D' : $scope.variants['D'].sel,
-        'E' : $scope.variants['E'].sel,
+        'I' : $scope.variants['I'].sel,
       }
     };
   }
