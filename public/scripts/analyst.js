@@ -10168,7 +10168,7 @@ var Analyst = (function () {
     this.profile = opts.profile === undefined ? true : opts.profile;
 
     this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 3600;
+    this.timeLimit = opts.timeLimit || 7200;
     this.showPoints = !!opts.showPoints;
     this.showIso = !!opts.showIso;
 
