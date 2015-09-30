@@ -1,2 +1,0 @@
-agency_id,agency_name,agency_url,agency_timezone
-41880d0,Transitmix Pro - MBTA+,https://pro.transitmix.net/map/41880d0,America/Los_Angeles
