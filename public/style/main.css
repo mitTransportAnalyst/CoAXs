@@ -124,7 +124,7 @@ nav div.section {
   width: 100%;
   bottom: 25%
 }
-.bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6 {
+.bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6, .introPan h4 {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -139,14 +139,23 @@ nav div.section {
   bottom: 0px;
 }
 
-.bottomCol .introPan{
+.introPan{
   position: absolute;
+  color: #FFF;
   right: 0px;
-  bottom: 0px;
+  top: 0px;
   background-color : rgba(211,211,211,0.975);
   overflow         : hidden;
-  height: 1000px;
-  width: 50%
+  height: 75%;
+  width: 50%;
+  width: -moz-calc(50% + 2px);
+  width: calc(50% + 2px);
+  z-index: 10;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
+}
+
+.introPan ol , .introPan 	 ul {
+  line-height: 3;
 }
 
 .bottomCol .saveComb .title{
@@ -155,14 +164,20 @@ nav div.section {
   overflow         : hidden;
   width: 100%;
   bottom: 0px;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
 
-.bottomCol .introPan .title {
+.introPan .title {
   position: absolute;
   background-color : #696969;
   overflow         : hidden;
   width: 100%;
-  bottom: 20%;
+  top: 0px;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
+}
+
+.introPan h4{
+  margin-left: 4px; 
 }
 
 .bottomCol .saveVar{
@@ -240,6 +255,13 @@ background-color  : #696969;
   display: block;
   margin: 8px;
   cursor: pointer;
+  background-color: orange;
+  font-size: 0.65em;
+}
+
+.introPan .badge {
+  text-align: center;
+  margin: 4px;
   background-color: orange;
   font-size: 0.65em;
 }
