@@ -603,9 +603,16 @@
               </span>
             </div>
             <div>
+              <span class="text-success" ng-show="variant.sel['A']">
+                <small>{{ variants['A'].all[variant.sel['A']].name }}</small>
+              </span>
+              <span class="text-danger" ng-show="!variant.sel['A']">
+                <div class="text-center"><i class="fa fa-times"></i></div>
+              </span>
+            </div>
+			<div>
               <span class="text-success" ng-show="variant.sel['B']">
-                <i class="fa fa-check"></i>
-                <small><i>{{ variants['B'].all[variant.sel['B']].name }}</i></small>
+                <small>{{ variants['B'].all[variant.sel['B']].name }}</small>
               </span>
               <span class="text-danger" ng-show="!variant.sel['B']">
                 <div class="text-center"><i class="fa fa-times"></i></div>
@@ -613,7 +620,6 @@
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['C']">
-                <i class="fa fa-check"></i>
                 <small><i>{{ variants['C'].all[variant.sel['C']].name }}</i></small>
               </span>
               <span class="text-danger" ng-show="!variant.sel['C']">
@@ -622,19 +628,17 @@
             </div>
             <div>
               <span class="text-success" ng-show="variant.sel['D']">
-                <i class="fa fa-check"></i>
-                <small><i>{{ variants['D'].all[variant.sel['D']].name }}</i></small>
+                <small>{{ variants['D'].all[variant.sel['D']].name }}</small>
               </span>
               <span class="text-danger" ng-show="!variant.sel['D']">
                 <div class="text-center"><i class="fa fa-times"></i></div>
               </span>
             </div>
 			<div>
-              <span class="text-success" ng-show="variant.sel['E']">
-                <i class="fa fa-check"></i>
-                <small><i>{{ variants['E'].all[variant.sel['E']].name }}</i></small>
+              <span class="text-success" ng-show="variant.sel['I']">
+                <small>{{ variants['I'].all[variant.sel['I']].name }}</small>
               </span>
-              <span class="text-danger" ng-show="!variant.sel['E']">
+              <span class="text-danger" ng-show="!variant.sel['I']">
                 <div class="text-center"><i class="fa fa-times"></i></div>
               </span>
             </div>
@@ -694,28 +698,34 @@
     </div>
       
     <div class="showToggle" ng-show="visibleTabs.routes" style="background-color: rgba(255,165,0,0.5)">
-      <div class="smallColVal" style="color:#FFF;background-color:#0071CA;"
-            ng-click="targetCorridor('B'); tabnav='B'; overview=true"
+      <div class="smallColVal" style="color:#FFF;background-color:#555555;"
+            ng-click="targetCorridor('A'); tabnav='A'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
+            ng-class="tabnav !== 'A' ? 'unselected' : ''">
+            A
+      </div>
+	  
+	  <div class="smallColVal" style="color:#FFF;background-color:#7DD5ED;"
+            ng-click="targetCorridor('B'); tabnav='B'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'B' ? 'unselected' : ''">
             B
       </div>
       
-	  <div class="smallColVal" style="color:#FFF;background-color:#AD0101;"
-            ng-click="targetCorridor('C'); tabnav='C'; overview=true"
+	  <div class="smallColVal" style="color:#FFF;background-color:#F3E05E;"
+            ng-click="targetCorridor('C'); tabnav='C'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'C' ? 'unselected' : ''">
             C
       </div> 
 
-      <div class="smallColVal" style="color:#FFF;background-color:#CE5504;"
-            ng-click="targetCorridor('D'); tabnav='D'; overview=true"
+      <div class="smallColVal" style="color:#FFF;background-color:#E092DF;"
+            ng-click="targetCorridor('D'); tabnav='D'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'D' ? 'unselected' : ''">
             D
       </div>
 
-	  <div class="smallColVal" style="color:#FFF;background-color:#B10086;"
-            ng-click="targetCorridor('E'); tabnav='E'; overview=true"
-            ng-class="tabnav !== 'E' ? 'unselected' : ''">
-            E
+	  <div class="smallColVal" style="color:#FFF;background-color:#8D6AA8;"
+            ng-click="targetCorridor('I'); tabnav='I'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
+            ng-class="tabnav !== 'I' ? 'unselected' : ''">
+            I
       </div>
 	  
     </div>

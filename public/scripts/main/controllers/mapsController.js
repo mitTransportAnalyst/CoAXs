@@ -20,16 +20,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     offpeak  : { min : 10, sec : 0 },
   }
   $scope.scenario = {
-    'B' : angular.copy(scenarioBase),
+    'A' : angular.copy(scenarioBase),
+	'B' : angular.copy(scenarioBase),
     'C' : angular.copy(scenarioBase),
     'D' : angular.copy(scenarioBase),
-    'E' : angular.copy(scenarioBase),
+    'I' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'B' : { sel : null, all : {} },
+    'A' : { sel : 0, all : {} },
+	'B' : { sel : null, all : {} },
     'C' : { sel : null, all : {} },
     'D' : { sel : null, all : {} },
-    'E' : { sel : null, all : {} },
+    'I' : { sel : 0 , all : {} },
   }
   $scope.combos = {
     sel : null,
