@@ -140,6 +140,9 @@
       <h6>
         Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="buildScenarios()">Run Create</span>
       </h6>
+	  <h6>
+	  Show <span class="badge" ng-click="introPanel = true">Intro Panel</span>
+	  </h6>
       <h6>
         Current sensitivity level is: {{ sensitivity | number: 2 }} miles. 
         <span class="badge" ng-click="sensitivity = sensitivity - 0.05">Decrease</span>
@@ -182,6 +185,36 @@
       <h6>
         Cache current scenario. <span class="badge" ng-click="saveScenarioCache()">Run Caching</span>
       </h6>
+    </div>
+  </div>
+</div>
+
+  <!--Intro screen-->
+ <div class="introPan" ng-show="introPanel">
+   <div class="title">
+    <h4>
+      Welcome to CoAXs
+	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
+	</h4>
+    <div class="saveAlt-body container">
+	  <h4>Getting Started</h4>
+	  <h5>
+	  <ol>
+	  <li>Tap a <span class="badge"><i class="fa fa-user"></i></span> User Badge or move the <img src="public/imgs/start.png" style="height:18px"> Start Marker </li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o "></i> Time Map &nbsp </span> &nbsp  to explore how far you can travel</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios"> &nbsp <i class="fa fa-random"></i> Combo &nbsp </span> &nbsp to change the transit network</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes"> &nbsp <i class="fa fa-code-fork fa-rotate-270"></i> Corridor Editor &nbsp </span> &nbsp to select routes</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize"> &nbsp <i class="fa fa-pencil-square-o"></i> Route Editor &nbsp </span> &nbsp to modify routes</li>
+	  </ol>
+	 <h4>Tips</h4>
+	  <ul>
+	  <li>To move the map, drag one finger <i class="fa fa-hand-pointer-o faa-passing animated"></i></li>
+	  <li>To zoom the map, drag two fingers up/down <i class="fa fa-hand-peace-o"></i></li>
+	 </ul>
+	</h5>
+	<br>
+	<br>
+	<!--<div style="text-align: right; font-size: xx-small">Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com/">Mapbox</a></div>-->
     </div>
   </div>
 </div>
@@ -325,31 +358,6 @@
 
 <div class="bottomCol">
   
-  <!--Intro screen-->
-  <div class="introPan" ng-show="introPanel">
-	<div class="title">
-    <h4>
-      Welcome to CoAXs
-	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
-	</h4>
-    <div class="saveAlt-body container">
-      <h5>
-	  <ol>
-	  <li>To start, move the blue marker, or click on a <i class="fa fa-user"></i> user badge</li><br>
-	  <li>See how far you can go with the <i class="fa fa-clock-o"></i> Time Map</li><br>
-	  <li>Add new corridors to make a <i class="fa fa-random"></i> Combo</li><br>
-	  <li>Modify corridors with the <i class="fa fa-code-fork fa-rotate-270"></i> Corridor Editor and <i class="fa fa-pencil-square-o"></i> Service Editor</li>
-	  </ol>
-	  </h5>
-	 <h4>Tips</h4>
-	  <ul>
-	  <li>To move the map, drag one finger. <i class="fa fa-hand-pointer-o"></i></li>
-	  <li>To zoom the map, drag two fingers up/down <i class="fa fa-hand-peace-o"></i></li>
-	  </ul>
-    </div>
-  </div>
-  </div>
-  
   <!--SAVE-ROUTE PROMPT-->
   <div class="saveVar" ng-show="saveAlt">
     <h4>
@@ -359,7 +367,7 @@
     <div class="saveAlt-body container">
       <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a parent variation from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
 	  <ol ng-if="scenario[tabnav].routeId">
-	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Service Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
+	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Route Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
 	  <li>Review variation:
 	  <h6 ng-if="scenario[tabnav].routeId">
         Corridor: {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} | Alignment: {{ routes[scenario[tabnav].routeId][0].options.base.varName }} 
