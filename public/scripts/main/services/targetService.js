@@ -36,6 +36,16 @@ coaxsApp.service('targetService', function (leafletData) {
     });
 	  return stopsLayer;
 	}
+	
+	this.targetPriority = function(priorityLayer, id) {
+		priorityLayer.eachLayer(function (segment){
+			if (segment.options.base.routeId == id) {segment.setStyle({opacity: 0.1})}
+			else {segment.setStyle({opacity: 0});
+	      }
+		})
+		return priorityLayer;
+	}
+	
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
   // pans to the bounds of that site, as well

@@ -30,11 +30,18 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
-          style: function (feature) { return { color: color, weight: 10, opacity: 0.1 }; }
+          style: function (feature) { 
+			return { color: color, 
+				weight: 16, 
+				opacity: 0
+			}; 
+		},
+		  base: feature
         });
         geojsonList.push(routes[feature.routeId][feature.direction]);
       }
-      cb(L.layerGroup(geojsonList));
+      var priorityLayer = L.layerGroup(geojsonList);
+	  cb(priorityLayer);
     });
   }
 

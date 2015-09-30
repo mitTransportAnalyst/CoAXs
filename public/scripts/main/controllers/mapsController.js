@@ -334,6 +334,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     // get priority portions (do this first so it renders beneath other content)
     loadService.getProposedPriorityLanes(function (priorityLanes) {
       priorityLanes.addTo(map);
+	  priorityLayer = priorityLanes;
     })
 
     // now pull the proposed routes
