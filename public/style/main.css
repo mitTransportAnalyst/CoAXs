@@ -339,9 +339,9 @@ background-color  : #696969;
 
 .colBody .bottomFixed {
   position:absolute;
-  bottom: 0px; 
+  bottom: 0px;
+  margin: 0px 0px 5px 0px;
   width: inherit;
-  z-index: 90;
 }
 
 .bottomNav:not(:first-child) .colHead {

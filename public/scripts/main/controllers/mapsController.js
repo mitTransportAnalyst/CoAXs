@@ -493,7 +493,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) {
-    $scope.routeDetails = true;
+	targetService.targetPriority(priorityLayer, routeId);
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
     var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
