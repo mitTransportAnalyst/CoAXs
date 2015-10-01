@@ -878,10 +878,51 @@
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.customize">
-      <div class="subHead">
+      	<div class="btn-group btn-group-justified">
+		<label class="btn btn-xs" ng-show="!variants[tabnav].sel" ></label>
+		<label class="btn btn-xs" style="background-color: 
+		#{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF" 
+		ng-show="variants[tabnav].sel" 
+		ng-click="visibleTabs.routes =! visibleTabs.routes"> 
+			{{ variants[tabnav].all[variants[tabnav].sel].name }} <i>Edit</i>
+		</label>
+		<label class="btn btn-xs btn-info" style="line-height:25px" ng-click="saveAlt=true; createVar=false">
+            <i class="fa fa-save"></i>
+        </label>
+    </div>
+        <div class="subHead">
+          Set Station Type
+        </div>
+
+        <div class="btn-group btn-group-justified">
+          <label  class="btn btn-xs"
+				  ng-class="scenario[tabnav].station==0 ? '' : 'tiny active'"
+                  ng-model="scenario[tabnav].station"
+                  ng-click="scenario[tabnav].station=0;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            Standard
+          </label>
+          <label  class="btn btn-xs"
+                  ng-class="scenario[tabnav].station==1 ? '' : 'tiny active'"
+				  ng-model="scenario[tabnav].station" 
+                  ng-click="scenario[tabnav].station=1;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            Upgraded
+          </label>
+          <label  class="btn btn-xs"
+                  ng-class="scenario[tabnav].station==2 ? '' : 'tiny active'"
+				  ng-model="scenario[tabnav].station" 
+                  ng-click="scenario[tabnav].station=2;
+                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
+            Full
+          </label>
+        </div>
+	 <div class="bottomFixed">
+
+	  <div class="subHead">
         Set Average Wait Times
       </div>
-
+	
       <div class="setTimesTitle">
         <input type="range" min="1" max="30" value="5" class="isosRange"
                       ng-model="scenario[tabnav].peak.min"
@@ -902,34 +943,6 @@
         </h6>
       </div>
 
-      <div class="bottomFixed">
-        <div class="subHead">
-          Station Type
-        </div>
-
-        <div class="btn-group btn-group-justified">
-          <label  class="btn btn-xs btn-info" btn-radio="0"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=0;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            Normal
-          </label>
-          <label  class="btn btn-xs btn-info" btn-radio="1"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=1;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            Platform
-          </label>
-          <label  class="btn btn-xs btn-info" btn-radio="2"
-                  ng-model="scenario[tabnav].station" 
-                  ng-click="scenario[tabnav].station=2;
-                            updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            BRT
-          </label>
-          <label class="btn btn-success" ng-click="saveAlt=true; createVar=false">
-            <i class="fa fa-cloud-upload"></i> Save
-          </label>
-        </div>
       </div>
     </div>
   </div>
