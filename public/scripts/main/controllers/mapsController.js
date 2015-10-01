@@ -103,20 +103,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   var tiles_global = tilesDict.base;
   
   var center_global = {
-    lat  : 42.360543,
-    lng  : -71.058169,
+    lat  : 42.3302,
+    lng  : -71.084,
     zoom : 12,
   };
-  // Assembling left map
+  // Assembling right map
   $scope.defaults_right  = angular.copy(defaults_global);
   $scope.maxBounds_right  = angular.copy(maxBounds_global);
   $scope.center_right    = angular.copy(center_global);
-  $scope.tiles_right     = angular.copy(tiles_global);
-  // Assembling right map
+  $scope.tiles_right     = angular.copy(tilesDict.blank);
+  // Assembling left map
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
-  $scope.center_left.zoom = 12;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
