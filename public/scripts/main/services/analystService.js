@@ -106,15 +106,16 @@ coaxsApp.service('analystService', function (supportService) {
     });
   }
 
-  this.modifyModes = function (routeTypes) {
-    optionCurrent.scenario.modifications.push({
-      type: 'remove-trip',
-      agencyId: agencyId,
-      routeId: null,
-      tripId: null,
-      routeType: routeTypes
+  this.modifyModes = function (keepRoutes, routeTypes) {
+    keepRoutes.forEach(function (route) {
+      optionCurrent.scenario.modifications.push({
+        type: 'adjust-headway',
+        agencyId: agencyId,
+        routeId: [route.routeId],
+        tripId: null,
+        routeType: routeTypes,
+      });
     });
-	console.log(optionCurrent.scenario.modifications);
   }
 
   this.loadExisting = function (poi, map, cb) {
@@ -140,8 +141,7 @@ coaxsApp.service('analystService', function (supportService) {
 
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
-    console.log(optionCurrent);
-	analyst.singlePointRequest({
+    analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, compareKey, optionCurrent)
