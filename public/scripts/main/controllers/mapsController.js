@@ -38,7 +38,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     com : null,
     all : {},
   }
-  $scope.tabnav = 'B';
+  $scope.tabnav = 'A';
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
@@ -61,6 +61,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // right globals
   var geoJsonLeft = null;
+	priorityLayer = null;
 
   $scope.introPanel = true;
 
@@ -670,10 +671,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.buildScenarios = function(foo) {  
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'Existing',
+      name    : 'BASE',
       created : Date.now(),
       sel     : {
-		'A' : null,
+		'A' : $scope.variants['A'].sel,
         'B' : null,
         'C' : null,
         'D' : null,
@@ -682,14 +683,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : '28 Brigham',
+      name    : 'BRT',
       created : Date.now(),
       sel     : {
-        'A' : $scope.variants['A'].sel,
-		'B' : $scope.variants['B'].sel,
-        'C' : $scope.variants['C'].sel,
-        'D' : $scope.variants['D'].sel,
-        'I' : $scope.variants['I'].sel,
+        'A' : Object.keys($scope.variants['A'].all)[0],
+		'B' : Object.keys($scope.variants['B'].all)[2],
+        'C' : Object.keys($scope.variants['C'].all)[1],
+        'D' : Object.keys($scope.variants['D'].all)[1],
+        'I' : null,
       }
     };
   }
