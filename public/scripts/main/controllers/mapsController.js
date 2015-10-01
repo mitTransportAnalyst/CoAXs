@@ -140,21 +140,28 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   });
 
   $scope.preMarkerQuery = function () {
-    if ($scope.snapPoints.sel) {
-      var matchesSnap = compareToSnapPoints();
-      var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.data);
-      if(nearest){
-	  if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
-        $scope.markers_left.main.lat = nearest.poi.lat;
-        $scope.markers_left.main.lng = nearest.poi.lng;
-        $scope.mode.selected = null; // unknown what scenario is being loaded
-        preloadedMarker(nearest.poi)
-      }} else {
-        runMarkerQuerys();
-      }
-    } else {
-      runMarkerQuerys();
-    }
+	runMarkerQuerys();
+	// console.log($scope.mode.selected);
+	// if ($scope.snapPoints.sel) {
+      // console.log('a');
+	  // var matchesSnap = compareToSnapPoints();
+      // var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.data);
+      // if(nearest){
+	  // if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
+        // console.log('nearest: ' + nearest);
+		// console.log('nearest.dist: ' + nearest.distance);
+		// $scope.markers_left.main.lat = nearest.poi.lat;
+        // $scope.markers_left.main.lng = nearest.poi.lng;
+        // //$scope.mode.selected = null; // unknown what scenario is being loaded
+        // preloadedMarker(nearest.poi);
+      // }} else {
+		// console.log('c');
+        // runMarkerQuerys();
+      // }
+    // } else {
+		// console.log('d');
+      // runMarkerQuerys();
+    // }
   }
 
   var compareToSnapPoints = function () { 
