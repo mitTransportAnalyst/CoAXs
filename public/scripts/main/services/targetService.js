@@ -60,7 +60,7 @@ coaxsApp.service('targetService', function (leafletData) {
 	        layer.setStyle({opacity: 0.2, weight: 2});
 	      }
 	    });
-	    map.setZoom(12).panInsideBounds(tempBounds);
+	    map.fitBounds(tempBounds);
 	  });
 	  return routesLayer
 	}
