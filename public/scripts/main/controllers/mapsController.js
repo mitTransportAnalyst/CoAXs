@@ -334,6 +334,46 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       subwaysLayer = subways;
     },gs);
 
+	// place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = [200, 300, 400];
+      var circleList = [];
+	  var stationNameList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.color,
+		    stationStroke = false,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            strokeWeight = 20/(map.getZoom()^(1/10)),
+			stationName = marker.options.base.station
+			
+   
+		var stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+
+		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+
+			
+		circleList.push(L.circle(stationLatLng, size, {
+          stroke: stationStroke,
+		  color: "#000000",
+		  weight: strokeWeight,
+		  opacity: 1,
+          fillColor: stationColor,
+          fillOpacity: 0.6,
+		}).bindPopup(stationNamePopup));
+	    
+	  });
+	
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
+	
+	
     // get priority portions (do this first so it renders beneath other content)
     loadService.getProposedPriorityLanes(function (priorityLanes) {
       priorityLanes.addTo(map);
@@ -370,35 +410,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
 
     // place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = {0: 45, 1: 60, 2: 75};
-      var circleList = [];
-	  var stationNameList = [];
-
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.line,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            stationStop = stopTypeSizes[marker.options.base.stopType],
-            stationName = marker.options.base.station,
-            stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>')
-			
-        circleList.push(L.circle(stationLatLng, stationStop, {
-          stroke: false,
-          fillColor: stationColor,
-          fillOpacity: 1.0,
-		}).bindPopup(stationNamePopup));
-	    
-	  });
-	
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
-
-    // place stops over routes plots on map
     loadService.getStops('/geojson/proposed_stops', function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
@@ -407,11 +418,51 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
+    var gs=false;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
-    });
+    }, gs);
 
+	// place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = [400, 600, 800];
+      var circleList = [];
+	  var stationNameList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.color,
+		    stationStroke = false,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            strokeWeight = 20/(map.getZoom()^(1/10)),
+			stationName = marker.options.base.station
+			
+   
+		var stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+
+		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+
+			
+		circleList.push(L.circle(stationLatLng, size, {
+          stroke: stationStroke,
+		  color: "#000000",
+		  weight: strokeWeight,
+		  opacity: 1,
+          fillColor: stationColor,
+          fillOpacity: 0.9,
+		}).bindPopup(stationNamePopup));
+	    
+	  });
+	
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
+	
     // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
       $scope.poiUsers = poiUsers;
@@ -438,7 +489,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
-    // targetService.targetStops(stopsLayer, null, 0);
+    targetService.targetStops(stopsLayer, null, 0);
   };
 
   // update a specific route within a corridor
