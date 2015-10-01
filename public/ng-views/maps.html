@@ -220,9 +220,9 @@
 </div>
 
 <div class="topcol right">
-  <div class="topleft" style="background-color:#216C2A" ng-show="routeScorecard" >
+  <div class="topleft" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}" ng-show="routeScorecard" >
     <h4>
-      Route Scorecard
+      <i class="fa fa-bar-chart"></i> Route Data
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
     <div class="topinfo-body container">
@@ -361,40 +361,43 @@
   <!--SAVE-ROUTE PROMPT-->
   <div class="saveVar" ng-show="saveAlt">
     <h4>
-      Save new variation for Corridor {{ tabnav }}
+      Save new alternative for Corridor {{ tabnav }}
       <i class="fa fa-times-circle-o pull-right" ng-click="saveAlt=false"></i>
     </h4>
     <div class="saveAlt-body container">
-      <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a parent variation from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
+      <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a template route from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
 	  <ol ng-if="scenario[tabnav].routeId">
 	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Route Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
-	  <li>Review variation:
+	  <li>Review alternative:
 	  <h6 ng-if="scenario[tabnav].routeId">
-        Corridor: {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }} | Alignment: {{ routes[scenario[tabnav].routeId][0].options.base.varName }} 
+        Corridor: {{ tabnav }} - {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }}<br>
+		Template Route: {{ routes[scenario[tabnav].routeId][0].options.base.varName }} 
       </h6>
       </h6>
       <h6>
         Station type: 
         <span ng-if="scenario[tabnav].station == 0">
-          standard bus stops
+          standard stops
         </span>
         <span ng-if="scenario[tabnav].station == 1">
-          bus stops enhanced with raised platforms
+          stops upgraded with raised platforms
         </span>
         <span ng-if="scenario[tabnav].station == 2">
-          BRT bus stations that feature both raised platforms and preboarding fare purchasing
+		  full stations
         </span>
-        Peak frequencies along your alternative of Route {{ tabnav }} have been set to {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals. Off-peak frequencies have been set to {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals.
+		<div></div>
+        Frequency (peak): {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals.<br>
+		Frequency (off-peak): {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals.
       </h6>
 	  </li>
-	  <li>Name variation and save 
+	  <li>Name alternative and save 
       <div class="input-group">
-        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name variant for corridor {{ tabnav }}...">
+        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name alternative...">
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
             ng-show="!scenario[tabnav].name" 
             style="cursor:not-allowed">
-            Save Variation
+            Save Alternative
           </button>
           <button class="btn btn-savealt" type="button" 
             ng-click="saveAlt=false; newVariant(tabnav, true)" 
@@ -424,15 +427,15 @@
         </b>
         Station type: 
         <span ng-if="variant.all[variant.sel].station == 0">
-          standard bus stop
+        Standard
         </span>
         <span ng-if="variant.all[variant.sel].station == 1">
-          raised platform
+        Upgraded
         </span>
         <span ng-if="variant.all[variant.sel].station == 2">
-          BRT station
+        Full
         </span>
-        | Average wait time: {{ variant.all[variant.sel].peak.min | avgWaitTime }} (peak), {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} (off-peak)
+        , Average wait time: {{ variant.all[variant.sel].peak.min | avgWaitTime }} (peak), {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} (off-peak)
       </h6>
 	  </li>
 	  <li>Name combo and save</li>
@@ -531,7 +534,8 @@
         </div>
       </div>
 
-      <div class="subHead">Mode</div>
+      <div class="bottomFixed">
+	  <div class="subHead">Set Mode</div>
       <div class="btn-group btn-group-justified">
         <label class="btn btn-xs" ng-class="mode.selected=='all' ? '' : 'active tiny'"
                 ng-click="mode.selected=='all' ? mode.selected='local' : mode.selected='all'"> 
@@ -550,6 +554,7 @@
           <i class="fa fa-child fa-lg"></i>
         </label>
       </div>
+	  </div>
     </div>
   </div>
 
@@ -568,6 +573,8 @@
       </span>
     </div>
 
+	
+	
     <div class="placeHolder" ng-show="!visibleTabs.scenarios" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <div class="bigText">
         <i class="fa fa-random"></i>
@@ -741,7 +748,7 @@
       </span>
 
       <span ng-show="!variants[tabnav].sel">
-        <i class="fa fa-exclamation-triangle"></i> No variation activated for Corridor {{ tabnav }}
+        <i class="fa fa-exclamation-triangle"></i> Corridor {{ tabnav }} inactive
       </span>
     </div>
 
@@ -761,17 +768,17 @@
         </span>
         {{ variants[tabnav].all[variants[tabnav].sel].name }} activated
       </div>
-
-      <div class="subHead" ng-show="!variants[tabnav].sel">
-        Activate this corridor by checking a variation below.
+	  <div class="btn-group btn-group-justified" ng-show="!variants[tabnav].sel">
+			<label class="btn btn-xs active tiny" style="line-height:25px"><br>
+			</label>
       </div>
     
       <div style="height: 100%; overflow-y: scroll">
         <table class="table table-condensed table-hover">
           <thead>
             <tr>
-              <th><i class="fa fa-check-square"></i></th>
-              <th>Name</th>
+              <th></th>
+              <th style="width: 40%">Alternative</th>
               <th>Station</th>
               <th>Peak</th>
               <th>Off-Peak</th>
@@ -794,14 +801,14 @@
               </td>
               <td>{{ variant.name }}</td>
               <td>
-                <span ng-if="variant.station == 0">
+                <span ng-if="scenario[tabnav].station == 0">
                   Standard 
                 </span>
-                <span ng-if="variant.station == 1">
-                  Platform  
+                <span ng-if="scenario[tabnav].station == 1">
+                  Upgraded
                 </span>
-                <span ng-if="variant.station == 2">
-                  BRT Station 
+                <span ng-if="scenario[tabnav].station == 2">
+                  Full Station 
                 </span>
               </td>
               <td>
@@ -831,8 +838,8 @@
                 <span ng-if="scenario[tabnav].station == 0">
                   Standard 
                 </span>
-                <span ng-if="scenario[tabnav].station == 1">
-                  Raised Platform  
+                <span ng-if="variant.station == 1">
+                  Upgraded
                 </span>
                 <span ng-if="scenario[tabnav].station == 2">
                   BRT Station 
@@ -848,6 +855,11 @@
           </tbody>
         </table>
       </div>
+	  <div class="bottomFixed" ng-show="!variants[tabnav].sel">
+		<div class="subHead">
+			Tap an alternative above to activate.
+		</div>
+	  </div>
     </div>
   </div>
 
@@ -856,7 +868,7 @@
   <!-- 6 route editor module --> 
   <div class="colBody" style="width:275px">
     <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
-      <i class="fa fa-pencil-square-o"></i> Service Editor
+      <i class="fa fa-pencil-square-o"></i> Route Editor
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize" ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
@@ -923,4 +935,4 @@
   </div>
 
 </div>
-
+	
