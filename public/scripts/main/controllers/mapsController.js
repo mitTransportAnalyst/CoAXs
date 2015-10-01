@@ -328,10 +328,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
+	var gs = true;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
-    });
+    },gs);
 
     // get priority portions (do this first so it renders beneath other content)
     loadService.getProposedPriorityLanes(function (priorityLanes) {

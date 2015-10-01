@@ -3,14 +3,16 @@
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
 coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
-  this.getExisting = function (cb) {
-    $http.get('/geojson/existing')
+  this.getExisting = function (cb, gs) {
+	$http.get('/geojson/existing')	
     .success(function (data, status) {
-      var subwayRoutes = L.geoJson(data, {
-        style: function (feature) {
-          return {
-            color     : feature.properties.LINE,
-            weight    : 2,
+		var subwayRoutes = L.geoJson(data, {
+        style: function (feature, grayscale) {
+		  var col = "#AAAAAA";
+		  if (!gs){col = feature.properties.COLOR;}
+		  return {
+            color     : col,
+            weight    : 1.5,
             opacity   : 0.5,
             dashArray : 0,
           };
