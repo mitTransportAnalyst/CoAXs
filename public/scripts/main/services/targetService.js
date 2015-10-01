@@ -12,7 +12,7 @@ coaxsApp.service('targetService', function (leafletData) {
 
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType, routeColor) {
-    var stopTypeSizes = {0: 80, 1: 120, 2: 160};
+    var stopTypeSizes = {0: 60, 1: 90, 2: 120};
 
     stopsLayer.eachLayer(function (circle) {
       if (circle.options.base.routeId == id) {
@@ -26,7 +26,7 @@ coaxsApp.service('targetService', function (leafletData) {
           color: '#FFF',
           opacity: 1.0,
           fillColor: '#' + routeColor,
-          fillOpacity: 1.0,
+          fillOpacity: 0.8,
         });
         circle.setRadius(stationStop);
       } else {
@@ -36,6 +36,16 @@ coaxsApp.service('targetService', function (leafletData) {
     });
 	  return stopsLayer;
 	}
+	
+	this.targetPriority = function(priorityLayer, id) {
+		priorityLayer.eachLayer(function (segment){
+			if (segment.options.base.routeId == id) {segment.setStyle({opacity: 0.1})}
+			else {segment.setStyle({opacity: 0});
+	      }
+		})
+		return priorityLayer;
+	}
+	
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
   // pans to the bounds of that site, as well
@@ -44,13 +54,13 @@ coaxsApp.service('targetService', function (leafletData) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
 	      if (layer.options.base.corName == id || layer.options.base.routeId == id) {
-	        layer.setStyle({opacity: 0.35, weight: 5});
+	        layer.setStyle({opacity: 0.6, weight: 4});
 	        tempBounds = layer.getBounds();
 	      } else {
-	        layer.setStyle({opacity: 0.1, weight: 3});
+	        layer.setStyle({opacity: 0.2, weight: 2});
 	      }
 	    });
-	    map.setZoom(12).panInsideBounds(tempBounds);
+	    map.fitBounds(tempBounds);
 	  });
 	  return routesLayer
 	}

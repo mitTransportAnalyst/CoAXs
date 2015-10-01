@@ -3,14 +3,16 @@
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
 coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
-  this.getExisting = function (cb) {
-    $http.get('/geojson/existing')
+  this.getExisting = function (cb, gs) {
+	$http.get('/geojson/existing')	
     .success(function (data, status) {
-      var subwayRoutes = L.geoJson(data, {
-        style: function (feature) {
-          return {
-            color     : feature.properties.LINE,
-            weight    : 2,
+		var subwayRoutes = L.geoJson(data, {
+        style: function (feature, grayscale) {
+		  var col = "#AAAAAA";
+		  if (!gs){col = feature.properties.COLOR;}
+		  return {
+            color     : col,
+            weight    : 1.5,
             opacity   : 0.5,
             dashArray : 0,
           };
@@ -30,11 +32,18 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
-          style: function (feature) { return { color: color, weight: 10, opacity: 0.1 }; }
+          style: function (feature) { 
+			return { color: color, 
+				weight: 16, 
+				opacity: 0
+			}; 
+		},
+		  base: feature
         });
         geojsonList.push(routes[feature.routeId][feature.direction]);
       }
-      cb(L.layerGroup(geojsonList));
+      var priorityLayer = L.layerGroup(geojsonList);
+	  cb(priorityLayer);
     });
   }
 
@@ -247,12 +256,14 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         for (var i=0; i<data.length; i++) {
           var pois = JSON.parse(data[i].POIs);
           var userId = data[i].Name[0] + data[i].Name[1]; 
-          var points = [];              
+          var points = [];
+		  var homeLoc = [];
   
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "home") {
               icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+			  homeLoc = [pois[n].lat, pois[n].lng];
             }
             else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
@@ -265,7 +276,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
             circles.push(marker);
             points.push({lat: pois[n].lat, lng: pois[n].lng, poiTag: pois[n].poiTag});
           }
-          poiUsers.push({userId : userId, points: points});
+          poiUsers.push({userId : userId, points: points, homeLoc: homeLoc});
         }
         cb(L.layerGroup(circles), poiUsers);
       }

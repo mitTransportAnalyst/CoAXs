@@ -10110,14 +10110,14 @@ var LAYER_DEFAULTS = {};
 var REQUEST_DEFAULTS = {
   accessModes: 'WALK',
   egressModes: 'WALK',
-  date: '2015-06-16', // new Date().toISOString().split('T')[0],
+  date: '2015-09-30', // new Date().toISOString().split('T')[0],
   fromTime: 25200,
   toTime: 32400,
   walkSpeed: 1.3333333333333333,
   bikeSpeed: 4.1,
   carSpeed: 20,
   streetTime: 90,
-  maxWalkTime: 20,
+  maxWalkTime: 60,
   maxBikeTime: 45,
   maxCarTime: 45,
   minBikeTime: 10,
@@ -10168,7 +10168,7 @@ var Analyst = (function () {
     this.profile = opts.profile === undefined ? true : opts.profile;
 
     this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 3600;
+    this.timeLimit = opts.timeLimit || 7200;
     this.showPoints = !!opts.showPoints;
     this.showIso = !!opts.showIso;
 
