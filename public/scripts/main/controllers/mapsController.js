@@ -649,8 +649,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 			$scope.markers_left.main.lng = user.homeLoc[1];
 		}
 	}});
-	$scope.preMarkerQuery()}
-	else { poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })}
+	$scope.preMarkerQuery();
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
+	});
+	}
+	else { 
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([center_global.lat, center_global.lng]);
+		analystService.resetAll(map);
+	});	
+	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+	}
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again
