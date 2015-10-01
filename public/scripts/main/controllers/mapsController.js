@@ -60,7 +60,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.vectorIsos   = {vis:false, val:12};
 
   // right globals
-  var geoJsonLeft = null;
+  var geoJsonLeft = null,
 	priorityLayer = null;
 
   $scope.introPanel = true;
@@ -122,7 +122,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
 
   // snap point sensitivity
-  $scope.sensitivity = 0.5;
+  $scope.sensitivity = 0.05;
 
   $scope.changeTilesLeft = function(tiles) {
 	$scope.tiles_left = tilesDict[tiles];
@@ -212,10 +212,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       analystService.modifyRoutes(toKeep);
       analystService.modifyDwells(toKeep);
       analystService.modifyFrequencies(toKeep);
-      if ($scope.mode.selected) {
-        analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+	  if ($scope.mode.selected != 'all') {
+        analystService.modifyModes($scope.mode[$scope.mode.selected]);
       }
-    };
+	};
 
     animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
@@ -501,12 +501,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) {
-	targetService.targetPriority(priorityLayer, routeId);
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
     var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
     targetService.targetCorridor(routesLayer, routeId);
     targetService.targetStops(stopsLayer, routeId, station, routeColor);
+	targetService.targetPriority(priorityLayer, routeId);
     if (routeId) {
       $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {
@@ -686,7 +686,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // MANAGER CONTROLS
   // from manager control run create
   $scope.buildScenarios = function(foo) {  
-    var comboId = supportService.generateUUID();
+	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
       name    : 'BASE',
       created : Date.now(),
@@ -785,8 +785,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           analystService.modifyRoutes(toKeep);
           analystService.modifyDwells(toKeep);
           analystService.modifyFrequencies(toKeep);
-          if ($scope.mode.selected) {
-            analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+          if ($scope.mode.selected != 'all') {
+            analystService.modifyModes($scope.mode[$scope.mode.selected]);
           }
         };
 
