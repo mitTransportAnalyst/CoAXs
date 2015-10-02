@@ -261,11 +261,11 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   
           for (var n=0; n<pois.length; n++) {
             var icon;
-            if (pois[n].poiTag == "home") {
+            if (pois[n].poiTag == "HOME") {
               icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
 			  homeLoc = [pois[n].lat, pois[n].lng];
             }
-            else if (pois[n].poiTag == "friends" || pois[n].poiTag == "family")  {
+            else if (pois[n].poiTag == "HEALTHCARE")  {
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
