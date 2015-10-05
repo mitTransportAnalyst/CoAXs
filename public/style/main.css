@@ -358,6 +358,18 @@ background-color  : #696969;
   font-size: 0.75em;
 }
 
+.bottomNav .setTimesTitle .left{
+ position: absolute;
+ left: 0px;
+ width: 48%;
+}
+
+.bottomNav .setTimesTitle .right{
+ float: right;
+ width: 48%;
+}
+
+
 .bottomNav .isosRange {
   margin: 2px 0px -2px 0px;
 }

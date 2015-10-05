@@ -774,7 +774,7 @@
             <tr>
               <th></th>
               <th style="width: 40%">Alternative</th>
-              <th>Station</th>
+              <th>Stop Type</th>
               <th>Peak</th>
               <th>Off-Peak</th>
             </tr>
@@ -878,7 +878,7 @@
         </label>
     </div>
         <div class="subHead">
-          Set Station Type
+          Set Stop Type
         </div>
 
         <div class="btn-group btn-group-justified">
@@ -887,23 +887,26 @@
                   ng-model="scenario[tabnav].station"
                   ng-click="scenario[tabnav].station=0;
                             updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            Standard
+            <img src="public/imgs/stops/0.png" style="height:20px">
           </label>
           <label  class="btn btn-xs"
                   ng-class="scenario[tabnav].station==1 ? '' : 'tiny active'"
 				  ng-model="scenario[tabnav].station" 
                   ng-click="scenario[tabnav].station=1;
                             updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            Upgraded
+            <img src="public/imgs/stops/1.png" style="height:20px">
           </label>
           <label  class="btn btn-xs"
                   ng-class="scenario[tabnav].station==2 ? '' : 'tiny active'"
 				  ng-model="scenario[tabnav].station" 
                   ng-click="scenario[tabnav].station=2;
                             updateRouteScorecard(scenario[tabnav].routeId, tabnav)">
-            Full
+            <img src="public/imgs/stops/2.png" style="height:20px">
           </label>
         </div>
+		<span ng-show="scenario[tabnav].station==0" style="margin-left:10px">Standard</span>
+		<span ng-show="scenario[tabnav].station==1" style="margin-left:10px">Upgraded</span>
+		<span ng-show="scenario[tabnav].station==2" style="margin-left:10px">Full</span>
 	 <div class="bottomFixed">
 
 	  <div class="subHead">
@@ -911,23 +914,22 @@
       </div>
 	
       <div class="setTimesTitle">
-        <input type="range" min="1" max="30" value="5" class="isosRange"
+		<div class="left">
+		<input type="range" min="1" max="60" value="5" class="isosRange"
                       ng-model="scenario[tabnav].peak.min"
                       ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
                                 updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-        <h6>
           {{ scenario[tabnav].peak.min | avgWaitTime }}
           <small class="pull-right">Peak</small>
-        </h6>
-
-        <input type="range" min="1" max="30" value="10" class="isosRange"
+		</div>
+        <div class="right">
+		<input type="range" min="1" max="60" value="10" class="isosRange"
                     ng-model="scenario[tabnav].offpeak.min"
                     ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>    
-        <h6>
           {{ scenario[tabnav].offpeak.min | avgWaitTime }}
           <small class="pull-right">Off-Peak</small>
-        </h6>
+		 </div>
       </div>
 
       </div>
