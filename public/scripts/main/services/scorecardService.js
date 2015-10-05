@@ -84,12 +84,12 @@ coaxsApp.service('scorecardService', function () {
         for (var i=0; i<base.priority.length; i++) {
           var diff = base.priority[i][1] - base.priority[i][0];
 		  length.dist.ded += base.length*diff;
-        }
+          	if (!base.default) {length.cost += 4000000*diff* base.length;} //If lines don't exist, give them a construction cost
+		}
         length.count += route.options.base.length;
 		}
 	});
     length.dist.non = (length.count-length.dist.ded)/length.count;
-    length.cost = 4000000*length.dist.ded;
 	length.dist.ded = length.dist.ded/length.count;
     return length;
   }
