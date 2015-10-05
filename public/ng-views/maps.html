@@ -421,15 +421,15 @@
         </span>&nbsp 
 		Station type: 
         <span ng-if="variant.all[variant.sel].station == 0">
-        Standard
+        Standard,
         </span>
         <span ng-if="variant.all[variant.sel].station == 1">
-        Upgraded
+        Upgraded,
         </span>
         <span ng-if="variant.all[variant.sel].station == 2">
-        Full
+        Full,
         </span>
-        , Average wait time: {{ variant.all[variant.sel].peak.min | avgWaitTime }} (peak), {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} (off-peak)
+		Frequency: every {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} min., every {{ variant.all[variant.sel].peak.min | avgWaitTime }} min. (peak)
       </h6>
 	  </li>
 	  <li>Name combo and save</li>
