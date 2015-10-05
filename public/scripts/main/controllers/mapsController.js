@@ -19,12 +19,21 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     peak     : { min : 5,  sec : 0 },
     offpeak  : { min : 10, sec : 0 },
   }
+  
+var scenarioBaseI = {
+    name     : null,
+    station  : 1,
+    routeId  : null,
+    peak     : { min : 30,  sec : 0 },
+    offpeak  : { min : 60, sec : 0 },
+  }
+  
   $scope.scenario = {
     'A' : angular.copy(scenarioBase),
 	'B' : angular.copy(scenarioBase),
     'C' : angular.copy(scenarioBase),
     'D' : angular.copy(scenarioBase),
-    'I' : angular.copy(scenarioBase),
+    'I' : angular.copy(scenarioBaseI),
   }
   $scope.variants = {
     'A' : { sel : 0, all : {} },
