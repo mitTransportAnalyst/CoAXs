@@ -361,17 +361,17 @@ background-color  : #696969;
 .bottomNav .setTimesTitle .left{
  position: absolute;
  left: 0px;
- width: 48%;
+ width: 49%;
 }
 
 .bottomNav .setTimesTitle .right{
  float: right;
- width: 48%;
+ width: 49%;
 }
 
 
 .bottomNav .isosRange {
-  margin: 2px 0px -2px 0px;
+  margin: 2px;
 }
 
 .colBody .smallColVal {

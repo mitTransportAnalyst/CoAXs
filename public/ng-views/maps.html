@@ -896,25 +896,26 @@
 	 <div class="bottomFixed">
 
 	  <div class="subHead">
-        Set Average Wait Times
+        Set Frequency
       </div>
 	
       <div class="setTimesTitle">
 		<div class="left">
-		<input type="range" min="1" max="60" value="5" class="isosRange"
-                      ng-model="scenario[tabnav].peak.min"
-                      ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                                updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-          {{ scenario[tabnav].peak.min | avgWaitTime }}
-          <small class="pull-right">Peak</small>
-		</div>
-        <div class="right">
 		<input type="range" min="1" max="60" value="10" class="isosRange"
                     ng-model="scenario[tabnav].offpeak.min"
                     ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>    
-          {{ scenario[tabnav].offpeak.min | avgWaitTime }}
-          <small class="pull-right">Off-Peak</small>
+          Every {{ scenario[tabnav].offpeak.min}} min.
+          <small class="pull-right"></small>
+		
+		</div>
+        <div class="right">
+		<input type="range" min="1" max="60" value="5" class="isosRange"
+                      ng-model="scenario[tabnav].peak.min"
+                      ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
+                                updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
+          Every {{ scenario[tabnav].peak.min}} min.
+          <small class="pull-right">(Peak)</small>
 		 </div>
       </div>
 

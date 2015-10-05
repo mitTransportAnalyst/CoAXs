@@ -49,12 +49,11 @@ angular.module('coaxsFilters', [])
   return function (input) {
     input = Math.floor(Number(input));
     if (input < 10) {
-      return String('0 hr., ' + '0' + input + ' min.');
+      return String(input + ' min.');
     } else if (input < 60) {
-      return String('0 hr., '  + input + ' min.');
+      return String(input + ' min.');
     } else {
       var minutes = Math.floor(input%60);
-      if (minutes < 10) { minutes = String('0' + minutes); }
       var hours = Math.floor(input/60);
       return String(hours + ' hr., ' + minutes + ' min.')
     }
