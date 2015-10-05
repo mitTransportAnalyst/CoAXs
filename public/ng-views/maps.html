@@ -759,10 +759,9 @@
           <thead>
             <tr>
               <th></th>
-              <th style="width: 40%">Alternative</th>
+              <th style="width: 35%">Alternative</th>
               <th>Stop Type</th>
-              <th>Peak</th>
-              <th>Off-Peak</th>
+              <th colspan=2>Average Waiting Time</th>
             </tr>
           </thead>
           <tbody ng-show="visibleTabs.customize">
@@ -770,7 +769,7 @@
               <td>
 			  <i class="fa fa-sliders"></i>
               </td>
-              <td style="width: 40%"><b> {{ variants[tabnav].all[variants[tabnav].sel].name }} <i>Edit</i></b></td>
+              <td style="width: 35%"><b> {{ variants[tabnav].all[variants[tabnav].sel].name }} <i>Edit</i></b></td>
               <td>
                 <span ng-if="scenario[tabnav].station == 0">
                   Standard 
@@ -783,10 +782,10 @@
                 </span>
               </td>
               <td>
-                {{ scenario[tabnav].peak.min | avgWaitTime }}
+                 {{ scenario[tabnav].offpeak.min | avgWaitTime}} min.
               </td>
               <td>
-                {{ scenario[tabnav].offpeak.min | avgWaitTime }}
+                 {{ scenario[tabnav].peak.min | avgWaitTime}} min. (peak)
               </td>
             </tr>
           </tbody>
@@ -802,7 +801,7 @@
                     ng-click="setSelectedVariant(tabnav, null);
                               updateRouteScorecard(); updateTargetFeature();"></i>
               </td>
-              <td style="width: 40%" ng-click="setSelectedVariant(tabnav, variant._key);
+              <td style="width: 35%" ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">{{ variant.name }}</td>
               <td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
@@ -818,11 +817,12 @@
               </td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
               <td>
-                {{ variant.peak.min | avgWaitTime }}
+                 {{variant.offpeak.min | avgWaitTime}} min.
               </td>
               <td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
-                {{ variant.offpeak.min | avgWaitTime }}
+                {{variant.peak.min | avgWaitTime}} min. (peak)
+
               </td>
             </tr>
           </tbody>
@@ -892,7 +892,7 @@
         </div>
 		<span ng-show="scenario[tabnav].station==0" style="margin-left:10px">Standard</span>
 		<span ng-show="scenario[tabnav].station==1" style="margin-left:10px">Upgraded</span>
-		<span ng-show="scenario[tabnav].station==2" style="margin-left:10px">Full</span>
+		<span ng-show="scenario[tabnav].station==2" style="margin-left:10px">Full Station</span>
 	 <div class="bottomFixed">
 
 	  <div class="subHead">
