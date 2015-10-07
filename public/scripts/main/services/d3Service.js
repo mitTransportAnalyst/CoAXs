@@ -3,9 +3,9 @@ coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
   this.drawGraph = function (data, compare) {  
-
+	  
     var vis   = d3.select("#compPlot"),
-      WIDTH   = 350,
+      WIDTH   = 300,
       HEIGHT  = 200,
       MARGINS = {
         top    : 20,
@@ -32,11 +32,13 @@ coaxsApp.service('d3Service', function () {
 
       xAxis = d3.svg.axis()
         .scale(xRange)
+		.ticks(6)
         .tickSize(5)
         .tickSubdivide(true),
 
       yAxis = d3.svg.axis()
         .scale(yRange)
+		.ticks(6)
         .tickSize(5)
         .tickFormat(function (d) {
           var prefix = d3.formatPrefix(d);
@@ -47,16 +49,17 @@ coaxsApp.service('d3Service', function () {
 
     vis.selectAll("*").remove();
 
-    vis.append("svg:g")
+		
+   vis.append("svg:g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
       .call(xAxis)
         .append("text")
-        .attr("y", -7)
-        .attr("x", 190)
-        // .attr("dy", ".71em")
+        .attr("y", -10)
+        .attr("x", 175)
+        .attr("dy", ".71em")
         .style("text-anchor", "middle")
-        .text("Minutes");
+        .text("Minutes Traveled");
 
     vis.append("svg:g")
       .attr("class", "y axis")
@@ -68,7 +71,7 @@ coaxsApp.service('d3Service', function () {
         .attr("x", -100)
         .attr("dy", ".71em")
         .style("text-anchor", "middle")
-        .text("Count");
+        .text("Number Accessible");
 
 
     var lineFunc = d3.svg.line()
@@ -85,15 +88,35 @@ coaxsApp.service('d3Service', function () {
     .attr("class", "line")
     .style("stroke-width", "1");
 
+
   if (compare) { 
     vis.append("svg:path")
       .attr("d", lineFunc(compare))
-      .attr("class", "line")
+      .attr("class", "lineC")
       .style("stroke-dasharray", ("3, 3"))
       .style("stroke-width", "1");
+	  
+	vis.append("svg:g")
+		.attr("class", "title")
+		.attr("transform", "translate(0,0)")
+		.append("text")
+		.attr("y", 40)
+        .attr("x", 175)
+		.style("text-anchor","middle")
+        .html(data[60].y-compare[60].y + "more within 1 hr.");  
+
   }
+  else{
+	vis.append("svg:g")
+		.attr("class", "title")
+		.attr("transform", "translate(0,0)")
+		.append("text")
+		.attr("y", 40)
+        .attr("x", 175)
+		.style("text-anchor","middle")
+        .html(data[60].y + " within 1 hr.");  
 
-
+	}
   }
 
 });
