@@ -685,11 +685,13 @@ var scenarioBaseI = {
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
-    $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-    leafletData.getMap('map_left').then(function (map) {
-      if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
-      if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
-    });
+	if (!$scope.loadProgress.vis){
+      $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
+      leafletData.getMap('map_left').then(function (map) {
+        if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
+        if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
+      });
+	}
   };
 
   // MANAGER CONTROLS
