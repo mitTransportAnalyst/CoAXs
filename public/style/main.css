@@ -155,7 +155,7 @@ nav div.section {
 }
 
 .introPan ol , .introPan 	 ul {
-  line-height: 3;
+  line-height: 2.5;
 }
 
 .bottomCol .saveComb .title{
@@ -224,10 +224,7 @@ background-color  : #696969;
   left             : 50%;
 }
 .unselected {
-  opacity          : 0.35;
-}
-.unselected.active, .unselected.focus, .unselected.hover, .unselected:active, .unselected:focus, .unselected:hover {
-  opacity          : 0.75;
+  opacity          : 0.1;
 }
 
 /* in app navigation */
@@ -382,6 +379,7 @@ background-color  : #696969;
   width: inherit;
   padding: inherit;
   overflow: hidden;
+  position: relative;
 }
 
 .colBody .scenariosTable {
