@@ -103,7 +103,9 @@ coaxsApp.service('d3Service', function () {
 		.attr("y", 40)
         .attr("x", 175)
 		.style("text-anchor","middle")
-        .html(data[60].y-compare[60].y + "more within 1 hr.");  
+        .html( function (){
+		  return d3.format(",")(d3.round(data[60].y-compare[60].y,-2)) + " more within 1 hr.";
+		});  
 
   }
   else{
@@ -114,7 +116,9 @@ coaxsApp.service('d3Service', function () {
 		.attr("y", 40)
         .attr("x", 175)
 		.style("text-anchor","middle")
-        .html(data[60].y + " within 1 hr.");  
+        .html( function (){
+		  return d3.format(",")(d3.round(data[60].y,-3))  + " within 1 hr.";
+		});  
 
 	}
   }
