@@ -521,15 +521,15 @@
       </div>
 	
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
-        <div class="text-center" style="float:left; width: 100%; padding: 0px 8px 0px 8px">
-          <span ng-class="showVectorIsosOn ? '' : 'unselected'" >
+        <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px" ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
+		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
             <input type="range" min="1" max="24" class="isosRange"
               ng-model="vectorIsos.val"
               ng-disabled="!showVectorIsosOn"
               ng-click="showVectorIsos(300*vectorIsos.val)"/>
-            <i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)"></i>
+            <i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 40px"></i>
             {{ vectorIsos.val*5 | minuteConverter }}
-            <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)"></i>
+            <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 40px"></i>
           </span>
         </div>
       </div>
