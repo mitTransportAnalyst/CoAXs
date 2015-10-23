@@ -114,7 +114,6 @@ coaxsApp.service('analystService', function (supportService) {
       tripId: null,
       routeType: routeTypes
     });
-	console.log(optionCurrent.scenario.modifications);
   }
 
   this.loadExisting = function (poi, map, cb) {

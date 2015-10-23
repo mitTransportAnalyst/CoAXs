@@ -62,11 +62,18 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
-            return {
+            if (feature.properties.routeType==3){
+			return {
               color: color,
               weight: 3,
-              opacity: 0.1,
-            };
+              opacity: 0.4,
+            };}
+			else {
+			return {
+              color: color,
+              weight: 3,
+              opacity: 0,
+            };}
           },
           onEachFeature: function (feature, layer) {
             // per anson's request that when you click on a route it brings up the routes data, this is a hacky solution
