@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
+coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
   // control screen size situation
   var runScreenSetUp = function () {
@@ -172,7 +172,24 @@ var scenarioBaseI = {
       // runMarkerQuerys();
     // }
   }
-
+  
+  //Vector Iso Autoplay timer
+  $scope.timer = null;
+  $scope.timerPlaying = false;
+  
+  $scope.startTimer = function () {
+	$scope.timerPlaying = true;
+	$scope.timer = $interval (function (){
+	$scope.vectorTimeVal_add();
+	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 500);
+	//$scope.timer = $interval ($scope.showVectorIsos(300*$scope.vectorIsos.val()), 500);
+  };
+  
+  $scope.stopTimer = function () {
+    $scope.timerPlaying = false;
+	if (angular.isDefined($scope.timer)) { $interval.cancel($scope.timer); }
+  };
+  
   var compareToSnapPoints = function () { 
     var sel = $scope.combos.sel;
     if (sel) {

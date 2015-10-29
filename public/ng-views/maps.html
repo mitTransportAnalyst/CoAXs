@@ -523,10 +523,14 @@
               ng-model="vectorIsos.val"
               ng-disabled="!showVectorIsosOn"
               ng-click="showVectorIsos(300*vectorIsos.val)"/>
-            <i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 40px"></i>
+            <div>
+			<i class="fa fa-play fa-2x" style="position:absolute; left: 5px" ng-show="!timerPlaying" ng-click="startTimer()"></i>
+			<i class="fa fa-pause fa-2x" style="position:absolute; left: 5px" ng-show="timerPlaying" ng-click="stopTimer()"></i>
+			<i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 40px"></i>
             {{ vectorIsos.val*5 | minuteConverter }}
             <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 40px"></i>
-          </span>
+            </div>
+		  </span>
         </div>
       </div>
 
