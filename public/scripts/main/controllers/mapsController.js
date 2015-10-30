@@ -716,7 +716,7 @@ var scenarioBaseI = {
   $scope.buildScenarios = function(foo) {  
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'BASE',
+      name    : 'BASELINE',
       created : Date.now(),
       sel     : {
 		'A' : $scope.variants['A'].sel,
@@ -728,7 +728,7 @@ var scenarioBaseI = {
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'BRT',
+      name    : 'UPGRADES',
       created : Date.now(),
       sel     : {
         'A' : Object.keys($scope.variants['A'].all)[0],
