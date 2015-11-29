@@ -19,24 +19,35 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     peak     : { min : 5,  sec : 0 },
     offpeak  : { min : 10, sec : 0 },
   }
+  
+var scenarioBaseI = {
+    name     : null,
+    station  : 1,
+    routeId  : null,
+    peak     : { min : 30,  sec : 0 },
+    offpeak  : { min : 60, sec : 0 },
+  }
+  
   $scope.scenario = {
-    'BH' : angular.copy(scenarioBase),
-    'HP' : angular.copy(scenarioBase),
-    'HD' : angular.copy(scenarioBase),
-    'CT' : angular.copy(scenarioBase),
+    'A' : angular.copy(scenarioBase),
+	'B' : angular.copy(scenarioBase),
+    'C' : angular.copy(scenarioBase),
+    'D' : angular.copy(scenarioBase),
+    'I' : angular.copy(scenarioBaseI),
   }
   $scope.variants = {
-    'BH' : { sel : null, all : {} },
-    'HP' : { sel : null, all : {} },
-    'HD' : { sel : null, all : {} },
-    'CT' : { sel : null, all : {} },
+    'A' : { sel : 0, all : {} },
+	'B' : { sel : null, all : {} },
+    'C' : { sel : null, all : {} },
+    'D' : { sel : null, all : {} },
+    'I' : { sel : 0 , all : {} },
   }
   $scope.combos = {
     sel : null,
     com : null,
     all : {},
   }
-  $scope.tabnav = 'BH';
+  $scope.tabnav = 'A';
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
@@ -58,8 +69,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   $scope.vectorIsos   = {vis:false, val:12};
 
   // right globals
-  var geoJsonLeft = null;
+  var geoJsonLeft = null,
+	priorityLayer = null;
 
+  $scope.introPanel = true;
 
   // Angular Leaflet Directive - base components
   var defaults_global = {
@@ -78,11 +91,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       lat: 43.36,
       lng:-70.3}
   };
-  var tiles_global = {
-      name: 'CartoDB Light',
-      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
-      type: 'xyz',
-  };
+  
    var tilesDict = {
     blank: {
 		name: 'Blank',
@@ -101,27 +110,28 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     }
   }; 
   
+  var tiles_global = tilesDict.base;
+  
   var center_global = {
-    lat  : 42.360543,
-    lng  : -71.058169,
+    lat  : 42.3302,
+    lng  : -71.084,
     zoom : 12,
   };
-  // Assembling left map
+  // Assembling right map
   $scope.defaults_right  = angular.copy(defaults_global);
   $scope.maxBounds_right  = angular.copy(maxBounds_global);
   $scope.center_right    = angular.copy(center_global);
-  $scope.tiles_right     = angular.copy(tiles_global);
-  // Assembling right map
+  $scope.tiles_right     = angular.copy(tilesDict.blank);
+  // Assembling left map
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
-  $scope.center_left.zoom = 11;
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
   $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
 
   // snap point sensitivity
-  $scope.sensitivity = 0.5;
+  $scope.sensitivity = 0.05;
 
   $scope.changeTilesLeft = function(tiles) {
 	$scope.tiles_left = tilesDict[tiles];
@@ -208,10 +218,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       analystService.modifyRoutes(toKeep);
       analystService.modifyDwells(toKeep);
       analystService.modifyFrequencies(toKeep);
-      if ($scope.mode.selected) {
-        analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+	  if ($scope.mode.selected != 'all') {
+        analystService.modifyModes($scope.mode[$scope.mode.selected]);
       }
-    };
+	};
 
     leafletData.getMap('map_left').then(function(map) {
 
@@ -330,14 +340,56 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
+	var gs = true;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
-    });
+    },gs);
 
+	// place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = [200, 300, 400];
+      var circleList = [];
+	  var stationNameList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.color,
+		    stationStroke = false,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            strokeWeight = 20/(map.getZoom()^(1/10)),
+			stationName = marker.options.base.station
+			
+   
+		var stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+
+		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+
+			
+		circleList.push(L.circle(stationLatLng, size, {
+          stroke: stationStroke,
+		  color: "#000000",
+		  weight: strokeWeight,
+		  opacity: 1,
+          fillColor: stationColor,
+          fillOpacity: 0.6,
+		}).bindPopup(stationNamePopup));
+	    
+	  });
+	
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
+	
+	
     // get priority portions (do this first so it renders beneath other content)
     loadService.getProposedPriorityLanes(function (priorityLanes) {
       priorityLanes.addTo(map);
+	  priorityLayer = priorityLanes;
     })
 
     // now pull the proposed routes
@@ -370,35 +422,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
     });
 
     // place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = {0: 45, 1: 60, 2: 75};
-      var circleList = [];
-	  var stationNameList = [];
-
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.line,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            stationStop = stopTypeSizes[marker.options.base.stopType],
-            stationName = marker.options.base.station,
-            stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>')
-			
-        circleList.push(L.circle(stationLatLng, stationStop, {
-          stroke: false,
-          fillColor: stationColor,
-          fillOpacity: 1.0,
-		}).bindPopup(stationNamePopup));
-	    
-	  });
-	
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
-
-    // place stops over routes plots on map
     loadService.getStops('/geojson/proposed_stops', function (stops) {
       stops.addTo(map);
       stopsLayer = stops;
@@ -407,11 +430,51 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
+    var gs=false;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
-    });
+    }, gs);
 
+	// place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = [400, 600, 800];
+      var circleList = [];
+	  var stationNameList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.color,
+		    stationStroke = false,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            strokeWeight = 20/(map.getZoom()^(1/10)),
+			stationName = marker.options.base.station
+			
+   
+		var stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+
+		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+
+			
+		circleList.push(L.circle(stationLatLng, size, {
+          stroke: stationStroke,
+		  color: "#000000",
+		  weight: strokeWeight,
+		  opacity: 1,
+          fillColor: stationColor,
+          fillOpacity: 0.9,
+		}).bindPopup(stationNamePopup));
+	    
+	  });
+	
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
+	
     // load user points from phil's google spreadsheet
     loadService.getUsersPoints(function (points, poiUsers) {
       $scope.poiUsers = poiUsers;
@@ -443,17 +506,17 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (id) {
     targetService.targetCorridor(routesLayer, id);
-    // targetService.targetStops(stopsLayer, null, 0);
+    targetService.targetStops(stopsLayer, null, 0);
   };
 
   // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) {
-    $scope.routeDetails = true;
     var routeId = variant ? variant.routeId : undefined
     var station = variant ? variant.station : 0;
     var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
     targetService.targetCorridor(routesLayer, routeId);
     targetService.targetStops(stopsLayer, routeId, station, routeColor);
+	targetService.targetPriority(priorityLayer, routeId);
     if (routeId) {
       $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {
@@ -512,10 +575,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
       name    : name,
       created : Date.now(),
       sel     : {
-        'BH' : $scope.variants['BH'].sel,
-        'HP' : $scope.variants['HP'].sel,
-        'HD' : $scope.variants['HD'].sel,
-        'CT' : $scope.variants['CT'].sel,
+        'A' : $scope.variants['A'].sel,
+		'B' : $scope.variants['B'].sel,
+        'C' : $scope.variants['C'].sel,
+        'D' : $scope.variants['D'].sel,
+        'I' : $scope.variants['I'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -593,46 +657,69 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
 
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-    if (id) { leftService.targetPOIUsers(poiUserPoints, id); } 
-    else { poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })}
+	if (id) { 
+	leftService.targetPOIUsers(poiUserPoints, id); 
+	$scope.poiUsers.forEach(function (user) {
+	if (user.userId == id) {
+		if (user.homeLoc[0] && user.homeLoc[1]){
+			$scope.markers_left.main.lat = user.homeLoc[0];
+			$scope.markers_left.main.lng = user.homeLoc[1];
+		}
+	}});
+	$scope.preMarkerQuery();
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
+	});
+	}
+	else { 
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([center_global.lat, center_global.lng]);
+		analystService.resetAll(map);
+	});	
+	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+	}
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 }}
-  $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
+  $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<24) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1} else {$scope.vectorIsos.val = 0}}}
+  $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>0) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
-    $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-    leafletData.getMap('map_left').then(function (map) {
-      if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
-      if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
-    });
+	if (!$scope.loadProgress.vis){
+      $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
+      leafletData.getMap('map_left').then(function (map) {
+        if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
+        if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
+      });
+	}
   };
 
   // MANAGER CONTROLS
   // from manager control run create
   $scope.buildScenarios = function(foo) {  
-    var comboId = supportService.generateUUID();
+	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'Baseline',
+      name    : 'BASE',
       created : Date.now(),
       sel     : {
-        'BH' : null,
-        'HP' : null,
-        'HD' : null,
-        'CT' : null,
+		'A' : $scope.variants['A'].sel,
+        'B' : null,
+        'C' : null,
+        'D' : null,
+        'I' : null,
       }
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'BH & HP Local',
+      name    : 'BRT',
       created : Date.now(),
       sel     : {
-        'BH' : $scope.variants['BH'].sel,
-        'HP' : $scope.variants['HP'].sel,
-        'HD' : $scope.variants['HD'].sel,
-        'CT' : $scope.variants['CT'].sel,
+        'A' : Object.keys($scope.variants['A'].all)[0],
+		'B' : Object.keys($scope.variants['B'].all)[2],
+        'C' : Object.keys($scope.variants['C'].all)[1],
+        'D' : Object.keys($scope.variants['D'].all)[1],
+        'I' : null,
       }
     };
   }
@@ -710,8 +797,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, leafletDa
           analystService.modifyRoutes(toKeep);
           analystService.modifyDwells(toKeep);
           analystService.modifyFrequencies(toKeep);
-          if ($scope.mode.selected) {
-            analystService.modifyModes(toKeep, $scope.mode[$scope.mode.selected]);
+          if ($scope.mode.selected != 'all') {
+            analystService.modifyModes($scope.mode[$scope.mode.selected]);
           }
         };
 

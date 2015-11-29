@@ -8,7 +8,7 @@ coaxsApp.service('analystService', function (supportService) {
     apiUrl         : 'http://analyst.conveyal.com/api',
     tileUrl        : 'http://analyst.conveyal.com/tile',
     shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-    graphId        : '8a35783dd95ff1a52fc928e183e23340',
+    graphId        : '5558f8234ee6498ccb15abbabf7a8909',
     showIso        : true,
   });
 
@@ -20,8 +20,8 @@ coaxsApp.service('analystService', function (supportService) {
     },
   }
 
-  var allRoutes = ['029f53a', '007dd6d', 'a534420', '7cb27d8', '86d2825', 'a3e69c4', 'ea50129', '6f451b2', 'b56b5fd', 'cda69a2', 'a1c4c2e', '87aeff8', 'd6bd98c'];
-  var agencyId = 'd802657';
+  var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
+  var agencyId = '695c1ba';
 
   // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
@@ -106,16 +106,15 @@ coaxsApp.service('analystService', function (supportService) {
     });
   }
 
-  this.modifyModes = function (keepRoutes, routeTypes) {
-    keepRoutes.forEach(function (route) {
-      optionCurrent.scenario.modifications.push({
-        type: 'adjust-headway',
-        agencyId: agencyId,
-        routeId: [route.routeId],
-        tripId: null,
-        routeType: routeTypes,
-      });
+  this.modifyModes = function (routeTypes) {
+    optionCurrent.scenario.modifications.push({
+      type: 'remove-trip',
+      agencyId: agencyId,
+      routeId: null,
+      tripId: null,
+      routeType: routeTypes
     });
+	console.log(optionCurrent.scenario.modifications);
   }
 
   this.loadExisting = function (poi, map, cb) {
@@ -141,7 +140,8 @@ coaxsApp.service('analystService', function (supportService) {
 
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
-    analyst.singlePointRequest({
+    console.log(optionCurrent);
+	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, compareKey, optionCurrent)

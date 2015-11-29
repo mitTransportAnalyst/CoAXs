@@ -17,12 +17,9 @@ angular.module('coaxsFilters', [])
 
 .filter('avgWaitTime', function () {
   return function(input) {
-    var min = Math.floor(input/2);    
-    if (min < 10) { min = '0' + String(min) }
-    var sec = Math.floor((input%2)*30);
-    if (sec < 10) { sec = '0' + String(sec) }
-    if (!min) { sec = '00', min = "00"}         
-    return min + ':' + sec
+    var min = Math.ceil(input/2);
+	if (min <10) {min = '0' + String(min)};
+    return min;
   }
 })
 
@@ -52,14 +49,13 @@ angular.module('coaxsFilters', [])
   return function (input) {
     input = Math.floor(Number(input));
     if (input < 10) {
-      return String('0:0' + input);
+      return String(input + ' min.');
     } else if (input < 60) {
-      return String('0:' + input);
+      return String(input + ' min.');
     } else {
       var minutes = Math.floor(input%60);
-      if (minutes < 10) { minutes = String('0' + minutes); }
       var hours = Math.floor(input/60);
-      return String(hours + ':' + minutes)
+      return String(hours + ' hr., ' + minutes + ' min.')
     }
   }
 })

@@ -108,7 +108,7 @@ nav div.section {
 }
 
 .topnav .legend {
-  width: 150px;
+  width: 200px;
   height: 150px;
   top: 0px;
   right: 0px;
@@ -124,7 +124,7 @@ nav div.section {
   width: 100%;
   bottom: 25%
 }
-.bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6 {
+.bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6, .introPan h4 {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -139,15 +139,46 @@ nav div.section {
   bottom: 0px;
 }
 
+.introPan{
+  position: absolute;
+  color: #FFF;
+  right: 0px;
+  top: 0px;
+  background-color : rgba(211,211,211,0.975);
+  overflow         : hidden;
+  height: 75%;
+  width: 50%;
+  width: -moz-calc(50% + 2px);
+  width: calc(50% + 2px);
+  z-index: 10;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
+}
+
+.introPan ol , .introPan 	 ul {
+  line-height: 2;
+}
+
 .bottomCol .saveComb .title{
   position: absolute;
   background-color : #696969;
   overflow         : hidden;
   width: 100%;
   bottom: 0px;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
 
+.introPan .title {
+  position: absolute;
+  background-color : #696969;
+  overflow         : hidden;
+  width: 100%;
+  top: 0px;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
+}
 
+.introPan h4{
+  margin-left: 4px; 
+}
 
 .bottomCol .saveVar{
   position: absolute;
@@ -193,10 +224,7 @@ background-color  : #696969;
   left             : 50%;
 }
 .unselected {
-  opacity          : 0.35;
-}
-.unselected.active, .unselected.focus, .unselected.hover, .unselected:active, .unselected:focus, .unselected:hover {
-  opacity          : 0.75;
+  opacity          : 0.1;
 }
 
 /* in app navigation */
@@ -228,6 +256,13 @@ background-color  : #696969;
   font-size: 0.65em;
 }
 
+.introPan .badge {
+  text-align: center;
+  margin: 4px;
+  background-color: orange;
+  font-size: 0.65em;
+}
+
 .bottomNav {
   position: absolute;
   background-color: #d3d3d3;
@@ -245,6 +280,8 @@ background-color  : #696969;
   overflow-x: hidden;
   overflow-y: scroll;
   cursor: pointer;
+  z-index: 5; 
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
 
 .colBody .placeHolder {
@@ -299,9 +336,9 @@ background-color  : #696969;
 
 .colBody .bottomFixed {
   position:absolute;
-  bottom: 0px; 
+  bottom: 0px;
+  margin: 0px 0px 5px 0px;
   width: inherit;
-  z-index: 90;
 }
 
 .bottomNav:not(:first-child) .colHead {
@@ -313,13 +350,24 @@ background-color  : #696969;
   border-right-width: 1px;
 }
 
-
 .bottomNav .table {
   font-size: 0.75em;
 }
 
+.bottomNav .setTimesTitle .left{
+ position: absolute;
+ left: 0px;
+ width: 49%;
+}
+
+.bottomNav .setTimesTitle .right{
+ float: right;
+ width: 49%;
+}
+
+
 .bottomNav .isosRange {
-  margin: 2px 0px -2px 0px;
+  margin: 2px;
 }
 
 .colBody .smallColVal {
@@ -331,6 +379,7 @@ background-color  : #696969;
   width: inherit;
   padding: inherit;
   overflow: hidden;
+  position: relative;
 }
 
 .colBody .scenariosTable {

@@ -1,3 +1,4 @@
+// this is the analyst.js library, check out the 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Analyst = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
@@ -10109,14 +10110,14 @@ var LAYER_DEFAULTS = {};
 var REQUEST_DEFAULTS = {
   accessModes: 'WALK',
   egressModes: 'WALK',
-  date: new Date().toISOString().split('T')[0],
+  date: '2015-09-30', // new Date().toISOString().split('T')[0],
   fromTime: 25200,
   toTime: 32400,
   walkSpeed: 1.3333333333333333,
   bikeSpeed: 4.1,
   carSpeed: 20,
   streetTime: 90,
-  maxWalkTime: 20,
+  maxWalkTime: 60,
   maxBikeTime: 45,
   maxCarTime: 45,
   minBikeTime: 10,
@@ -10137,6 +10138,9 @@ var debug = (0, _debug2['default'])('analyst.js');
  * @param {Object} options Options object.
  * @param {String} [options.apiUrl]
  * @param {String} [options.tileUrl]
+ * @param {String} [options.shapefileId]
+ * @param {String} [options.graphId]
+ * @param {Boolean} [options.profile] Defaults to true
  * @param {String} [options.connectivityType]
  * @param {Number} [options.timeLimit] Defaults to 3600
  * @param {Boolean} [options.showPoints] Defaults to false
@@ -10159,8 +10163,12 @@ var Analyst = (function () {
     this.apiUrl = opts.apiUrl;
     this.tileUrl = opts.tileUrl;
 
+    this.shapefileId = opts.shapefileId;
+    this.graphId = opts.graphId;
+    this.profile = opts.profile === undefined ? true : opts.profile;
+
     this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 3600;
+    this.timeLimit = opts.timeLimit || 7200;
     this.showPoints = !!opts.showPoints;
     this.showIso = !!opts.showIso;
 
@@ -10176,20 +10184,20 @@ var Analyst = (function () {
     /**
      * Update/create the single point layer for this Analyst.js instance.
      *
-     * @param {String} key Key for accessing the single point layer tiles.
-     * @param {String} [comparisonKey] Key for the layer to compare against.
      * @return {TileLayer} A Leaflet tile layer that pulls in the generated single point tiles.
      * @example
-     * analyst.updateSinglePointLayer(key).redraw()
+     * analyst.key = 'NEW KEY'
+     * analyst.updateSinglePointLayer().redraw()
      */
 
-    value: function updateSinglePointLayer(key, comparisonKey) {
-      var keyVal = key;
-      if (comparisonKey) {
-        keyVal = comparisonKey + '/' + keyVal;
+    value: function updateSinglePointLayer(key1, key2) {
+      if (key2 !== undefined) {
+        var keyVals = key2 + '/' + key1;
+      } else {
+        var keyVals = key1;
       }
 
-      var url = '' + this.tileUrl + '/single/' + keyVal + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+      var url = this.tileUrl + '/single/' + keyVals + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
 
       if (!this.singlePointLayer) {
         debug('creating single point layer with url: ' + url);
@@ -10227,63 +10235,82 @@ var Analyst = (function () {
      * Run a single point request and generate a tile layer.
      *
      * @param {LatLng} point
-     * @param {String} graphId Graph ID to use for this request.
-     * @param {String} [shapefileId] Shapefile ID to be used with this request, can be omitted for a vector request.
-     * @param {Object} [options] Options object.
-     * @return {Promise} Resolves with an object containing the results data.
+     * @param {Object} options Options object.
+     * @return {Promise} Resolves with an object containing the tile layer and the results data.
      * @example
      * analyst
      *   .singlePointRequest(marker.getLatLng())
-     *   .then(function (data) {
-     *     analyst.updateSinglePointLayer(data.key)
+     *   .then(function (response) {
+     *     response.tileLayer.addTo(map)
      *   })
      */
 
-    value: function singlePointRequest(point, graphId, shapefileId) {
-      var options = arguments[3] === undefined ? {} : arguments[3];
+    value: function singlePointRequest(point, compareKey) {
+      var _this = this;
+
+      var opts = arguments[2] === undefined ? {} : arguments[2];
 
       if (!point) return Promise.reject(new Error('Lat/lng point required.'));
-      if (typeof shapefileId === 'object') {
-        options = shapefileId;
-        shapefileId = undefined;
-      }
+      if (!this.shapefileId) return Promise.reject(new Error('Shapefile ID required'));
+      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
 
-      var opts = Object.assign({}, this.requestOptions, options);
-      opts.fromLat = opts.toLat = point.lat;
-      opts.fromLon = opts.toLon = point.lng;
+      var options = Object.assign({}, this.requestOptions, opts);
+      options.fromLat = options.toLat = point.lat;
+      options.fromLon = options.toLon = point.lng;
 
-      debug('making single point request to [' + point.lng + ', ' + point.lat + ']', opts);
+      debug('making single point request to [' + point.lng + ', ' + point.lat + ']', options);
       return post(this.apiUrl + '/single', {
-        destinationPointsetId: shapefileId,
-        graphId: graphId,
-        profile: opts.profile,
-        options: opts
+        destinationPointsetId: this.shapefileId,
+        graphId: this.graphId,
+        profile: this.profile,
+        options: options
       }).then(function (data) {
         debug('single point request successful');
+        _this.key = data.key;
 
-        return data;
+        return {
+          tileLayer: _this.updateSinglePointLayer(_this.key, compareKey),
+          results: data
+        };
       });
     }
   }, {
-    key: 'singlePointComparison',
+    key: 'vectorRequest',
 
     /**
-     * Compare two scenarios.
+     * Run a vector request and return a GeoJSON object.
      *
      * @param {LatLng} point
-     * @param {Object} options
-     * @param {Object} comparisonOptions
-     * @return {Promise} Resolves with an array containing `[results, comparisonResults]`
+     * @param {Object} options Options object.
+     * @return {Promise} Resolves with an object containing the GeoJSON object.
      * @example
      * analyst
-     *   .singlePointComparison(marker.getLatLng(), { graphId: 'graph1' }, { graphId: 'graph2' })
-     *   .then(([res, cres]) => {
-     *     analyst.updateSinglePointLayer(res.key, cres.key)
+     *   .vectorRequest(marker.getLatLng())
+     *   .then(function (geojson) {
+     *     L.geoJson(geoJson).addTo(map)
      *   })
      */
 
-    value: function singlePointComparison(point, options, comparisonOptions) {
-      return Promise.all([this.singlePointRequest(point, options.graphId, options.shapefileId, options), this.singlePointRequest(point, comparisonOptions.graphId, comparisonOptions.shapefileId, comparisonOptions)]);
+    value: function vectorRequest(point) {
+      var opts = arguments[1] === undefined ? {} : arguments[1];
+
+      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
+      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
+
+      var options = Object.assign({}, this.requestOptions, opts);
+      options.fromLat = options.toLat = point.lat;
+      options.fromLon = options.toLon = point.lng;
+
+      debug('making vector request to [' + point.lng + ', ' + point.lat + ']', options);
+      return post(this.apiUrl + '/single', {
+        graphId: this.graphId,
+        profile: this.profile,
+        options: options
+      }).then(function (data) {
+        debug('vector request successful');
+
+        return data;
+      });
     }
   }]);
 
@@ -10318,10 +10345,10 @@ function post(url, data) {
     if (port !== undefined) params.port = port;
 
     debug('POST', params);
-    var req = _http2['default'].request(params, function (res) {
+    var req = _http2['default'].request(params, function (res) { 
       updateProgressBar(); // FOR PROGRRESS BAR
       res.on('error', reject);
-      res.pipe((0, _concatStream2['default'])(function (data) {
+      res.pipe((0, _concatStream2['default'])(function (data) { 
         updateProgressBar(); // FOR PROGRRESS BAR
         resolve(JSON.parse(data));
         updateProgressBar(); // FOR PROGRRESS BAR
@@ -10351,8 +10378,11 @@ module.exports = exports['default'];
 },{"concat-stream":34,"debug":48,"http":7}]},{},[51])(51)
 });
 
+
 function updateProgressBar() {
   var appElement = document.querySelector('[ng-app=coaxsApp]');
   var appScope = angular.element(appElement).scope().$$childHead;
   if (appScope.loadProgress.val < 99) { appScope.loadProgress.val += 2; }
 }
+
+

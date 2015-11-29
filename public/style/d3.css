@@ -2,20 +2,29 @@
 
 .axis path, .axis line {
   fill: none;
-  stroke: #FFF;
+  stroke: #CCC;
   shape-rendering: crispEdges;
 }
 
 .axis text {
   font-family: 'Arial';
   font-size: 10px;
-  fill: #FFF;
+  fill: #CCC;
 }
 
 .line {
   fill: none;
-  stroke: #FFF;
+  stroke: #FDB813;
   stroke-width: 2px;
 }
 
- 
+.lineC {
+  fill: none;
+  stroke: #89cff0;
+  stroke-width: 2px;
+}
+
+ .title text {
+  fill: #FFF;
+  font-size: 20px;
+}

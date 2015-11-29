@@ -20,7 +20,8 @@ coaxsApp.service('supportService', function () {
   }
 
   this.getNearestPOI = function (marker, pois) {
-    var currentShortest = {poi: pois[0], distance: distance(marker.lat, marker.lng, pois[0].lat, pois[0].lng)};
+    if (pois){
+	var currentShortest = {poi: pois[0], distance: distance(marker.lat, marker.lng, pois[0].lat, pois[0].lng)};
     pois.forEach(function (poi) {
       var result = distance(marker.lat, marker.lng, poi.lat, poi.lng);
       if (result < currentShortest.distance) {
@@ -29,7 +30,7 @@ coaxsApp.service('supportService', function () {
       }
     });
     return currentShortest;
-  }
+  }}
 
   function calculateLength(lineString) {
     if (lineString.length < 2) { return 0; }
