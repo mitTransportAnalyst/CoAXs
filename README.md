@@ -20,6 +20,10 @@ If you don't have the repo cloned already, navigate to a fresh/clean/empty direc
 Run `bower install` and `npm install` to install dependencies for client and server-side libraries, respectively. You can view the dependencies in `bower.json` for Bower and `package.json` for Node.
 
 #### Starting up node
-Once all dependencies have been installed, all that's left to do is enter `npm start`. Now open a web browser and navigate to `http://127.0.0.1:3000`. The app should be up and running there.
+Once all dependencies have been installed, all that's left to do is enter `foreman start​`. Now open a web browser and navigate to `http://127.0.0.1:3000`. The app should be up and running there. Note: Normally, one would use `npm start` but, since we are deploying on Heroku, we have a host of local variables that are held in the `.env` file. `foreman` is a Heroku tool that accesses that `.env` file and extracts the information from it. `start` is a command that is given/defined to `foreman` in the `Procfile`. Our `Procfile` looks like this: `start: node app.js`.
 
-(Note: Install Heroku Toolbelt. use ​foreman start​ instead of ​npm start)
+As you can see, it is super simple. It just defines `start` so that, when it is called, it knows to run `node app.js`. This is just the same as `npm` except, like I said earlier, it just also knows to use the `.env` information as environment variables a la Heroku in production. Our variables currently in the `.env` file are as follows:
+
+`AWS_ACCESS_KEY` = Unique id. 
+`AWS_SECRET_KEY` = Unique id.
+`S3_BUCKET` = Name of S3 bucket (currently all this is set up under Kuan's personal account, contact him for details if missing).
