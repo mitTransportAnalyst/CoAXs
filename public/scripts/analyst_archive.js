@@ -1985,12 +1985,10 @@ http.request = function (params, cb) {
     }
 
     if (!params.protocol) {
-      console.log("Here", params);
         if (params.scheme) {
             params.protocol = params.scheme + ':';
         } else {
-            params.protocol = 'https:';
-            // params.protocol = window.location.protocol;
+            params.protocol = window.location.protocol;
         }
     }
 
@@ -2125,6 +2123,7 @@ var Request = module.exports = function (xhr, params) {
     self.writable = true;
     self.xhr = xhr;
     self.body = [];
+    
     self.uri = (params.protocol || 'http:') + '//'
         + params.host
         + (params.port ? ':' + params.port : '')
@@ -10110,14 +10109,18 @@ var LAYER_DEFAULTS = {};
 var REQUEST_DEFAULTS = {
   accessModes: 'WALK',
   egressModes: 'WALK',
+<<<<<<< HEAD
   date: new Date().toISOString().split('T')[0],
+=======
+  date: '2015-09-30', // new Date().toISOString().split('T')[0],
+>>>>>>> 47d40c72e311fd65093198ff4faa148f856f4098
   fromTime: 25200,
   toTime: 32400,
   walkSpeed: 1.3333333333333333,
   bikeSpeed: 4.1,
   carSpeed: 20,
   streetTime: 90,
-  maxWalkTime: 20,
+  maxWalkTime: 60,
   maxBikeTime: 45,
   maxCarTime: 45,
   minBikeTime: 10,
@@ -10161,7 +10164,7 @@ var Analyst = (function () {
     this.tileUrl = opts.tileUrl;
 
     this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 3600;
+    this.timeLimit = opts.timeLimit || 7200;
     this.showPoints = !!opts.showPoints;
     this.showIso = !!opts.showIso;
 
@@ -10352,11 +10355,8 @@ module.exports = exports['default'];
 },{"concat-stream":34,"debug":48,"http":7}]},{},[51])(51)
 });
 
-
 function updateProgressBar() {
   var appElement = document.querySelector('[ng-app=coaxsApp]');
   var appScope = angular.element(appElement).scope().$$childHead;
   if (appScope.loadProgress.val < 99) { appScope.loadProgress.val += 2; }
 }
-
-

@@ -5,8 +5,8 @@ coaxsApp.service('analystService', function (supportService) {
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    apiUrl         : 'http://analyst.conveyal.com/api',
-    tileUrl        : 'http://analyst.conveyal.com/tile',
+    apiUrl         : 'https://mit-analyst.conveyal.com/api',
+    tileUrl        : 'https://mit-analyst.conveyal.com/tile',
     shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
     graphId        : '5558f8234ee6498ccb15abbabf7a8909',
     showIso        : true,
