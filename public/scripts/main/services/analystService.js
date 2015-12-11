@@ -1,14 +1,14 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
-coaxsApp.service('analystService', function (supportService) {
+coaxsApp.service('analystService', function ($http, supportService) {
 
   this.isochrones = null;
-  
+
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    apiUrl         : 'http://mit-analyst.conveyal.com/api',
-    tileUrl        : 'http://mit-analyst.conveyal.com/tile',
+    apiUrl         : 'http://analyst.conveyal.com/api',
+    tileUrl        : 'http://analyst.conveyal.com/tile',
     shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-    graphId        : '5558f8234ee6498ccb15abbabf7a8909',
+    graphId        : '9c0afffd53b5541289b2d1598e47daeb',
     showIso        : true,
   });
 
@@ -23,7 +23,7 @@ coaxsApp.service('analystService', function (supportService) {
   var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
   var agencyId = '695c1ba';
 
-  // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
+  // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
 
   var vectorIsos = null;
@@ -141,12 +141,23 @@ coaxsApp.service('analystService', function (supportService) {
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, compareKey, cb) {
     console.log(optionCurrent);
+
+	$http.get('/credentials')
+	.then(function(credReq){
+		console.log(credReq.data);
+		analyst.setClientCredentials(credReq.data);
+	})
+	.catch(function (err) {
+      console.log(err);
+	});
+
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, compareKey, optionCurrent)
     .then(function (response) { 
-      if (isoLayer) {
+      
+	  if (isoLayer) {
         isoLayer.redraw(); 
       } else {
         isoLayer = response.tileLayer;

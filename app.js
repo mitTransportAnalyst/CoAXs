@@ -9,6 +9,47 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var path = require('path');
 
+var analystCreds = require('request');
+console.log('analyst_key: '+ process.env.analyst_key);
+console.log('analyst_secret: '+ process.env.analyst_secret);
+//console.log(btoa(process.env.analyst_key +':'+ process.env.analyst_secret));
+
+var analystReqOpts = {
+  url: 'https://analyst.conveyal.com/oauth/token',
+  method: 'POST',
+  timeout: 10000,
+  auth: {
+    'user' : process.env.analyst_key,
+    'pass' : process.env.analyst_secret
+  },
+  headers: {
+    'content-type'  : 'application/x-www-form-urlencoded'
+  },
+  body: 'grant_type=client_credentials'
+};
+
+
+var credExpiration = 0,
+  clientCredentials = '';
+
+app.get('/credentials', function (req, res) {
+  console.log('date: ' + parseFloat(Date.now()+60000));
+  console.log(parseFloat(credExpiration));  
+  if ( parseFloat(Date.now()) >= parseFloat(credExpiration)) {
+    console.log('Requesting new credentials from analyst-server')
+	analystCreds(analystReqOpts, function (error, response, body){
+		clientCredentials = JSON.parse(body).access_token;
+		credExpiration = JSON.parse(body).expires_in*1000+parseFloat(Date.now()-60000);
+		console.log('New credentials received');
+	});
+  };
+  res.send(clientCredentials);
+});
+
+
+
+
+
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
@@ -103,7 +144,7 @@ app.get('/loadSnapCache', function (req, res) {
     var file = 'temporary.json';
     res.sendFile(file, options, function (err) {
       if (err) {
-        console.log('sendFile error:', err);
+        //console.log('sendFile error:', err);
         res.status(err.status).end();
       }
     });
@@ -131,7 +172,7 @@ app.get('/cachedLocs', bodyParser.json({limit: '50mb'}), function (req, res) {
         }
       }
     } else {
-      console.log('Error occured', err);
+      //console.log('Error occured', err);
       var status = err.status ? err.status : 500;
       res.status(status).send('Error accessing S3 bucket.');
     }
