@@ -134,16 +134,20 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           $http.get('/loadSnapCache')
           .success(function (data) {
             if (data.notReady) {
+              console.log('Running check...');
               runCheck();
             } else {
+              console.log('POIs baseline loaded: ', data);
               deferred.resolve(data)
             }
           }).error(function (data) {
-            deferred.resolve(false)
+            console.log('Error on load of snap points. Error: ', data);
+            deferred.resolve(false);
           })
         }, 2000);
       }
     }).error(function (data, status, headers, config) {
+      console.log('Error on load of snap points. Error: ', data, status);
       deferred.resolve(false)
     });
     return deferred.promise;
