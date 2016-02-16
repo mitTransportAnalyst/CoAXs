@@ -55,7 +55,7 @@ var scenarioBaseI = {
     walking: [0, 1, 2, 3, 4, 5, 6, 7],
     selected: 'all'
   };
-
+  
   // left globals
   var subwaysLayer    = null,
       subStopsLayer   = null,
@@ -67,7 +67,15 @@ var scenarioBaseI = {
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:12};
+  $scope.scenarioScore = {graphData: false};
 
+  $scope.$watch('vectorIsos.val',
+    function() {
+		if ($scope.scenarioScore.graphData){
+			$scope.drawGraph($scope.scenarioScore.graphData);
+		};
+  });
+  
   // right globals
   var geoJsonLeft = null,
 	priorityLayer = null;
@@ -206,7 +214,7 @@ var scenarioBaseI = {
       all: poi.graphData,
       sel: poi.graphData.jobs_tot
     };
-    d3Service.drawGraph(poi.graphData.jobs_tot.data);
+    $scope.drawGraph($scope.scenarioScore.graphData);
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map);
       analystService.loadExisting(poi, map, function(result) {
@@ -263,7 +271,7 @@ var scenarioBaseI = {
                   sel: compareSubjects.jobs_tot,
                 }
               };
-              d3Service.drawGraph(subjects.jobs_tot.data, compareSubjects.jobs_tot.data);
+              $scope.drawGraph($scope.scenarioScore.graphData);
             } 
             analystService.vectorRequest(marker, false, function (result) {
               if (result) {
@@ -288,7 +296,7 @@ var scenarioBaseI = {
               sel: subjects.jobs_tot,
               com: false
             };
-            d3Service.drawGraph(subjects.jobs_tot.data);
+            $scope.drawGraph($scope.scenarioScore.graphData);
           } 
           if (!$scope.combos.sel) { existingMBTAKey = key }; 
           analystService.vectorRequest(marker, false, function (result) {
@@ -313,9 +321,9 @@ var scenarioBaseI = {
   }
   $scope.drawGraph = function (graphData) {
     if (!graphData.com) { 
-      d3Service.drawGraph(graphData.sel.data);
+      d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
     } else {
-      d3Service.drawGraph(graphData.sel.data, graphData.com.sel.data);
+      d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data, graphData.com.sel.data);
     }
   }
 
@@ -698,8 +706,8 @@ var scenarioBaseI = {
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () { if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<24) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1} else {$scope.vectorIsos.val = 0}}}
-  $scope.vectorTimeVal_subtract = function () { if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>0) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
+  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<24) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1} else {$scope.vectorIsos.val = 0}}}
+  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>0) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
