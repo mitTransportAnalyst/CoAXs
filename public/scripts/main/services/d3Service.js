@@ -4,7 +4,6 @@ coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
   this.drawGraph = function (cutoff, data, compare) {  
-  
        var WIDTH   = 300,
       HEIGHT  = 200,
       MARGINS = {
@@ -17,15 +16,10 @@ coaxsApp.service('d3Service', function () {
 
       combined = compare ? data.concat(compare) : data,
 
-      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(combined, function (d) {
-          return d.x;
-        }),
-        120
-      ]),
+      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 120]
+      ),
 
-      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(combined, function (d) {
-          return d.y;
-        }),
+      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,
         d3.max(combined, function (d) {
           return d.y;
         })
@@ -106,7 +100,7 @@ coaxsApp.service('d3Service', function () {
 		.style("text-anchor","middle")
         .style("opacity", 0.85)
 		.html( function (){
-		  return d3.format(",")(d3.round(data[cutoff*5].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
+		  return d3.format(",")(d3.round(data[cutoff*5-1].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
 		});  
   }
   else{
@@ -119,7 +113,7 @@ coaxsApp.service('d3Service', function () {
 		.style("text-anchor","middle")
 		.style("opacity", 0.85)
         .html( function (){
-		  return d3.format(",")(d3.round(data[cutoff*5].y,-3))  + " within " + 5*cutoff + " min.";
+		  return d3.format(",")(d3.round(data[cutoff*5-1].y,-3))  + " within " + 5*cutoff + " min.";
 		});  
 
 	}
@@ -129,7 +123,7 @@ vis.append("svg:line")
 	.attr("class", "line")
 	.attr("x1", MARGINS.left+cutoff*5*(WIDTH-MARGINS.left-MARGINS.right)/120)
 	//.attr("y1", MARGINS.top+10)
-	.attr("y1", yRange(data[cutoff*5].y))
+	.attr("y1", yRange(data[cutoff*5-1].y))
 	.attr("x2", MARGINS.left+cutoff*5*(WIDTH-MARGINS.left-MARGINS.right)/120)
 	.attr("y2", HEIGHT-MARGINS.bottom)
 	.style("stroke", "rgb(255,255,255)")

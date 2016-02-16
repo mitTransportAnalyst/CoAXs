@@ -514,9 +514,11 @@
 	  <div class="btn-group btn-group-justified">
 			<label class="btn btn-info" ng-click="preMarkerQuery()"><i class="fa fa-refresh" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
 			</label>
-			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye"></i>
+			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
+			<i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>
+			<i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>
 			</label>
-			<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos()"><i class="fa fa-eye-slash"></i>
+			<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''" ng-click="toggleShowVectorIsos(); stopTimer()"><i class="fa fa-stop"></i>
 			</label>
       </div>
 	
@@ -528,11 +530,9 @@
               ng-disabled="!showVectorIsosOn"
               ng-click="showVectorIsos(300*vectorIsos.val)"/>
             <div>
-			<i class="fa fa-play fa-2x" style="position:absolute; left: 5px" ng-show="!timerPlaying" ng-click="startTimer()"></i>
-			<i class="fa fa-pause fa-2x" style="position:absolute; left: 5px" ng-show="timerPlaying" ng-click="stopTimer()"></i>
-			<i class="fa fa-minus-square fa-2x" ng-click="vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 40px"></i>
+			<i class="fa fa-step-backward fa-2x" ng-click="stopTimer(); vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 10px"></i>
             {{ vectorIsos.val*5 | minuteConverter }}
-            <i class="fa fa-plus-square fa-2x" ng-click="vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 40px"></i>
+            <i class="fa fa-step-forward fa-2x" ng-click="stopTimer(); vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 10px"></i>
             </div>
 		  </span>
         </div>
