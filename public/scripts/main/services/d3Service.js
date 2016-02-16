@@ -1,11 +1,10 @@
 // this is the boiler to visualize the d3 graph
 coaxsApp.service('d3Service', function () {
 
+
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
-  this.drawGraph = function (data, compare) {  
-	  
-    var vis   = d3.select("#compPlot"),
-      WIDTH   = 300,
+  this.drawGraph = function (cutoff, data, compare) {  
+       var WIDTH   = 300,
       HEIGHT  = 200,
       MARGINS = {
         top    : 20,
@@ -13,23 +12,19 @@ coaxsApp.service('d3Service', function () {
         bottom : 20,
         left   : 50
       },
+	vis   = d3.select("#compPlot"),
 
       combined = compare ? data.concat(compare) : data,
 
-      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(combined, function (d) {
-          return d.x;
-        }),
-        120
-      ]),
+      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 120]
+      ),
 
-      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(combined, function (d) {
-          return d.y;
-        }),
+      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,
         d3.max(combined, function (d) {
           return d.y;
         })
       ]),
-
+	  
       xAxis = d3.svg.axis()
         .scale(xRange)
 		.ticks(6)
@@ -87,9 +82,9 @@ coaxsApp.service('d3Service', function () {
     .attr("d", lineFunc(data))
     .attr("class", "line")
     .style("stroke-width", "1");
-
-
-  if (compare) { 
+	
+	
+	if (compare) { 
     vis.append("svg:path")
       .attr("d", lineFunc(compare))
       .attr("class", "lineC")
@@ -103,10 +98,10 @@ coaxsApp.service('d3Service', function () {
 		.attr("y", 40)
         .attr("x", 175)
 		.style("text-anchor","middle")
-        .html( function (){
-		  return d3.format(",")(d3.round(data[60].y-compare[60].y,-2)) + " more within 1 hr.";
+        .style("opacity", 0.85)
+		.html( function (){
+		  return d3.format(",")(d3.round(data[cutoff*5-1].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
 		});  
-
   }
   else{
 	vis.append("svg:g")
@@ -116,12 +111,26 @@ coaxsApp.service('d3Service', function () {
 		.attr("y", 40)
         .attr("x", 175)
 		.style("text-anchor","middle")
+		.style("opacity", 0.85)
         .html( function (){
-		  return d3.format(",")(d3.round(data[60].y,-3))  + " within 1 hr.";
+		  return d3.format(",")(d3.round(data[cutoff*5-1].y,-3))  + " within " + 5*cutoff + " min.";
 		});  
 
 	}
-  }
+	
+vis.append("svg:line")
+	.attr("id", "sliderLine")
+	.attr("class", "line")
+	.attr("x1", MARGINS.left+cutoff*5*(WIDTH-MARGINS.left-MARGINS.right)/120)
+	//.attr("y1", MARGINS.top+10)
+	.attr("y1", yRange(data[cutoff*5-1].y))
+	.attr("x2", MARGINS.left+cutoff*5*(WIDTH-MARGINS.left-MARGINS.right)/120)
+	.attr("y2", HEIGHT-MARGINS.bottom)
+	.style("stroke", "rgb(255,255,255)")
+	.style("opacity", 0.85);
+
+
+    }
 
 });
 
