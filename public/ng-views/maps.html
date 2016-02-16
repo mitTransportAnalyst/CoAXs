@@ -528,7 +528,7 @@
             <input type="range" min="1" max="24" class="isosRange"
               ng-model="vectorIsos.val"
               ng-disabled="!showVectorIsosOn"
-              ng-click="showVectorIsos(300*vectorIsos.val)"/>
+			/>
             <div>
 			<i class="fa fa-step-backward fa-2x" ng-click="stopTimer(); vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 10px"></i>
             {{ vectorIsos.val*5 | minuteConverter }}
