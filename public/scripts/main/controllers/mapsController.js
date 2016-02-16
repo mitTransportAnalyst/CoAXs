@@ -73,6 +73,7 @@ var scenarioBaseI = {
     function() {
 		if ($scope.scenarioScore.graphData){
 			$scope.drawGraph($scope.scenarioScore.graphData);
+			$scope.showVectorIsos(300*$scope.vectorIsos.val);
 		};
   });
   
@@ -190,7 +191,6 @@ var scenarioBaseI = {
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
 	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 500);
-	//$scope.timer = $interval ($scope.showVectorIsos(300*$scope.vectorIsos.val()), 500);
   };
   
   $scope.stopTimer = function () {
