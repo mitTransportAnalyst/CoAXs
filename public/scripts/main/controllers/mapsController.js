@@ -14,40 +14,39 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-    station  : 0,
+    station  : 2,
     routeId  : null,
     peak     : { min : 5,  sec : 0 },
-    offpeak  : { min : 10, sec : 0 },
+    offpeak  : { min : 5, sec : 0 },
   }
   
-var scenarioBaseI = {
-    name     : null,
-    station  : 1,
-    routeId  : null,
-    peak     : { min : 30,  sec : 0 },
-    offpeak  : { min : 60, sec : 0 },
-  }
   
   $scope.scenario = {
-    'A' : angular.copy(scenarioBase),
-	'B' : angular.copy(scenarioBase),
-    'C' : angular.copy(scenarioBase),
-    'D' : angular.copy(scenarioBase),
-    'I' : angular.copy(scenarioBaseI),
+    'I' : angular.copy(scenarioBase),
+	'P' : angular.copy(scenarioBase),
+    'N' : angular.copy(scenarioBase),
+    'F' : angular.copy(scenarioBase),
+    'M' : angular.copy(scenarioBase),
+	'K' : angular.copy(scenarioBase),
+	'W' : angular.copy(scenarioBase),
+	'G' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'A' : { sel : 0, all : {} },
-	'B' : { sel : null, all : {} },
-    'C' : { sel : null, all : {} },
-    'D' : { sel : null, all : {} },
-    'I' : { sel : 0 , all : {} },
+    'I' : { sel : 0, all : {} },
+	'P' : { sel : 0, all : {} },
+	'N' : { sel : 0, all : {} },
+	'F' : { sel : 0, all : {} },
+	'M' : { sel : 0, all : {} },
+	'K' : { sel : 0, all : {} },
+	'W' : { sel : 0, all : {} },
+	'G' : { sel : 0, all : {} },
   }
   $scope.combos = {
     sel : null,
     com : null,
     all : {},
   }
-  $scope.tabnav = 'A';
+  $scope.tabnav = 'I';
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
@@ -122,8 +121,8 @@ var scenarioBaseI = {
   var tiles_global = tilesDict.base;
   
   var center_global = {
-    lat  : 42.3302,
-    lng  : -71.084,
+    lat  : 42.365,
+    lng  : -71.1,
     zoom : 12,
   };
   // Assembling right map
@@ -318,15 +317,17 @@ var scenarioBaseI = {
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
-    $scope.scenarioScore.graphData.sel = dataVal;
+	$scope.scenarioScore.graphData.sel = dataVal;
     if ($scope.scenarioScore.graphData.com) {
       $scope.scenarioScore.graphData.com.sel = dataVal;
     }
+	console.log($scope.scenarioScore.graphData);
   }
   $scope.drawGraph = function (graphData) {
     if (!graphData.com) { 
-      d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
+	  d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
     } else {
+	  console.log(graphData);
       d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data, graphData.com.sel.data);
     }
   }
@@ -599,11 +600,14 @@ var scenarioBaseI = {
       name    : name,
       created : Date.now(),
       sel     : {
-        'A' : $scope.variants['A'].sel,
-		'B' : $scope.variants['B'].sel,
-        'C' : $scope.variants['C'].sel,
-        'D' : $scope.variants['D'].sel,
         'I' : $scope.variants['I'].sel,
+		'P' : $scope.variants['P'].sel,
+        'N' : $scope.variants['N'].sel,
+        'F' : $scope.variants['F'].sel,
+        'M' : $scope.variants['M'].sel,
+		'K' : $scope.variants['K'].sel,
+		'W' : $scope.variants['W'].sel,
+		'G' : $scope.variants['G'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -614,19 +618,19 @@ var scenarioBaseI = {
 
   // how we update the scorecard on the right side, also bound to events like range slider
   $scope.updateRouteScorecard = function (routeId, tabnav) {
-    if (!routeId && !tabnav) {
-      $scope.routeScore = scorecardService.generateEmptyScore();
-    } else {
-      var frequencies = {
-        peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
-        off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
-      };
-      var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
-      var length   = scorecardService.generateLengthScore(routesLayer, routeId);
-      var time     = scorecardService.generateTimeScore(routesLayer, routeId);
-      var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
-      $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
-    }
+     // if (!routeId && !tabnav) {
+      // $scope.routeScore = scorecardService.generateEmptyScore();
+    // } else {
+      // var frequencies = {
+        // peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
+        // off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
+      // };
+      // var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      // var length   = scorecardService.generateLengthScore(routesLayer, routeId);
+      // var time     = scorecardService.generateTimeScore(routesLayer, routeId);
+      // var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+      // $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
+    // }
   }
 
   // updates on new selected scenario combo
@@ -725,28 +729,35 @@ var scenarioBaseI = {
   $scope.buildScenarios = function(foo) {  
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'BASELINE',
+      name    : 'Baseline',
       created : Date.now(),
       sel     : {
-		'A' : $scope.variants['A'].sel,
-        'B' : null,
-        'C' : null,
-        'D' : null,
-        'I' : null,
+		'I' : null,
+        'P' : null,
+        'M' : null,
+        'F' : null,
+		'N' : null,
+		'W' : null,
+		'K' : null,
+		'G' : null,
       }
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'UPGRADES',
+      name    : 'N-S Rail Link',
       created : Date.now(),
       sel     : {
-        'A' : Object.keys($scope.variants['A'].all)[0],
-		'B' : Object.keys($scope.variants['B'].all)[2],
-        'C' : Object.keys($scope.variants['C'].all)[1],
-        'D' : Object.keys($scope.variants['D'].all)[1],
-        'I' : null,
+        'I' : Object.keys($scope.variants['I'].all)[0],
+		'P' : Object.keys($scope.variants['P'].all)[0],
+        'M' : Object.keys($scope.variants['M'].all)[0],
+        'F' : Object.keys($scope.variants['F'].all)[0],
+        'N' : Object.keys($scope.variants['N'].all)[0],
+		'W' : Object.keys($scope.variants['W'].all)[0],
+		'K' : Object.keys($scope.variants['K'].all)[0],
+		'G' : Object.keys($scope.variants['G'].all)[0],
       }
     };
+ 
   }
 
   $scope.setNewSnapCache = function (id) {

@@ -50,7 +50,6 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   this.getProposedRoutes = function (cb) {
     $http.get('/geojson/proposed')
     .success(function (data, status) {
-
       var geojsonList   = [];
       var routes = {};
 
@@ -98,11 +97,6 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
-
-        if (stop.properties.stopId) {
-          var stopId = stop.properties.stopId;
-          stop.properties['routeId'] = stopId.substr(stopId.indexOf('rte-')+4);
-        }
 
         stopList.push(L.circle([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], 0, {
           stroke: false,
