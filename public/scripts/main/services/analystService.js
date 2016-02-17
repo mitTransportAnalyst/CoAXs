@@ -212,7 +212,7 @@ coaxsApp.service('analystService', function (supportService) {
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
 
-    var isosArray = vectorIsos.worstCase.features;
+    var isosArray = vectorIsos.pointEstimate.features;
     for (var i=0; i<isosArray.length; i++) { 
       if (isosArray[i].properties.time == timeVal) { 
         currentIso = L.geoJson(isosArray[i], {
@@ -230,7 +230,7 @@ coaxsApp.service('analystService', function (supportService) {
     }
 
     if (vecComIsos) {
-      var isosArray = vecComIsos.worstCase.features;
+      var isosArray = vecComIsos.pointEstimate.features;
       for (var i=0; i<isosArray.length; i++) { 
         if (isosArray[i].properties.time == timeVal) { 
           compareIso = L.geoJson(isosArray[i], {
