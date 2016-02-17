@@ -8,7 +8,7 @@ coaxsApp.service('analystService', function (supportService) {
     apiUrl         : 'http://mit-analyst.conveyal.com/api',
     tileUrl        : 'http://mit-analyst.conveyal.com/tile',
     shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-    graphId        : '5558f8234ee6498ccb15abbabf7a8909',
+    graphId        : 'ea0356b76f2501b4da8598c8a1e95932',
     showIso        : true,
   });
 
@@ -20,10 +20,10 @@ coaxsApp.service('analystService', function (supportService) {
     },
   }
 
-  var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
-  var agencyId = '695c1ba';
+  var allRoutes = ['Worc','King','Fair','FitLake','FrankLow','Gree','NeedHave','NewRProv'];
+  var agencyId = '99';
 
-  // holdes current states for different map layers, etc. (allows you to grab and remove, replace)
+  // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
 
   var vectorIsos = null;
