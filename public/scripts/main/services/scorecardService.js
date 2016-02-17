@@ -79,7 +79,7 @@ coaxsApp.service('scorecardService', function () {
     };
 
     routesLayer.eachLayer(function (route) {
-      if (route.options.base.routeId == id) {
+      /* if (route.options.base.routeId == id) {
         var base = route.options.base;
         for (var i=0; i<base.priority.length; i++) {
           var diff = base.priority[i][1] - base.priority[i][0];
@@ -88,10 +88,11 @@ coaxsApp.service('scorecardService', function () {
 		}
         length.count += route.options.base.length;
 		}
+	*/
 	});
     length.dist.non = (length.count-length.dist.ded)/length.count;
 	length.dist.ded = length.dist.ded/length.count;
-    return length;
+    return length; 
   }
 
   this.generateTimeScore = function (routesLayer, id) {
