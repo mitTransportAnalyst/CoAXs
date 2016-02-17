@@ -523,9 +523,9 @@
               ng-disabled="!showVectorIsosOn"
 			/>
             <div>
-			<i class="fa fa-step-backward fa-2x" ng-click="stopTimer(); vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 10px"></i>
+			<span ng-click="stopTimer(); vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 10px; padding-right: 10px;"><i class="fa fa-step-backward fa-2x"></i></span>
             {{ vectorIsos.val*5 | minuteConverter }}
-            <i class="fa fa-step-forward fa-2x" ng-click="stopTimer(); vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 10px"></i>
+            <span ng-click="stopTimer(); vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 10px; padding-left: 10px;"><i class="fa fa-step-forward fa-2x"></i></span>
             </div>
 		  </span>
         </div>
