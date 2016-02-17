@@ -16,8 +16,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     name     : null,
     station  : 2,
     routeId  : null,
-    peak     : { min : 5,  sec : 0 },
-    offpeak  : { min : 5, sec : 0 },
+    peak     : { min : 15,  sec : 0 },
+    offpeak  : { min : 30, sec : 0 },
   }
   
   
@@ -327,7 +327,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (!graphData.com) { 
 	  d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
     } else {
-	  console.log(graphData);
       d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data, graphData.com.sel.data);
     }
   }
