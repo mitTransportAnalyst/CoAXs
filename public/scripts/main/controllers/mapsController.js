@@ -86,8 +86,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   var defaults_global = {
     minZoom: 9,
     maxZoom: 18,
-    scrollWheelZoom    : true,
-    zoomControl        : false,
+    scrollWheelZoom    : false,
+    zoomControl        : true,
+	zoomControlPosition: 'bottomright',
     attributionControl : false,
   };
   var maxBounds_global =  {
