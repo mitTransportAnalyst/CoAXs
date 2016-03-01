@@ -224,6 +224,7 @@ var Analyst = (function () {
   }, {
     key: 'setClientCredentials',
     value: function setClientCredentials(clientCredentials) {
+	  console.log(clientCredentials);
       this.clientCredentials = clientCredentials;
     }
 
@@ -264,10 +265,10 @@ var Analyst = (function () {
           path: path,
           method: 'POST',
           headers: {
-            'Accept': 'application/json',
+            'Accept': 'text/xml',
             'Content-Type': 'application/x-www-form-urlencoded'
           },
-          withCredentials: true
+          withCredentials: false
         };
 
         if (port !== undefined) {
@@ -280,9 +281,13 @@ var Analyst = (function () {
         var req = _https2['default'].request(params, function (res) {
           res.on('error', reject);
           res.pipe((0, _concatStream2['default'])(function (data) {
-            var parsed = JSON.parse(data);
+            var parsed = {
+				expires_in: 3600,
+				token_type: 'Bearer',
+				access_token: data};
             _this.setClientCredentials(parsed.access_token);
-            resolve(parsed);
+			resolve(parsed);
+			console.log(parsed.access_token);
 
             // get new credentials two minutes before these expire
             // note: does not create tail recursion problems as setTimeout puts it in a global executor loop and
@@ -337,7 +342,7 @@ var Analyst = (function () {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          withCredentials: true
+          withCredentials: false
         };
 
         if (port !== undefined) params.port = port;
@@ -3023,7 +3028,7 @@ for (var key in http) {
 https.request = function (params, cb) {
     if (!params) params = {};
     params.scheme = 'https';
-    params.protocol = 'https:';
+    params.protocol = 'http:';
     return http.request.call(this, params, cb);
 }
 
