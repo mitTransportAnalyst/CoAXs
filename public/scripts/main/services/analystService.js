@@ -19,14 +19,37 @@ coaxsApp.service('analystService', function (supportService) {
     showIso        : true,
   });
 
+  var analyst_key ={'key': 'NFSL557JLOHFNN57X2G72LWLX'}; 
+  var analyst_secret = {'secret': '0L2usK8Ojadn1DOwUECv8+BKrpwL6sOteVGirPGG+y4'};
+
+  analyst.obtainClientCredentials('NFSL557JLOHFNN57X2G72LWLX', '0L2usK8Ojadn1DOwUECv8+BKrpwL6sOteVGirPGG+y4');
+  
   var optionCurrent = {
     scenario      : {
       id            : 0,
-      description   : 'Run from CoAXs SPA.',
+      description   : 'Run on load from CoAXs SPA.',
       modifications : [],
+    }
+  };
+  
+  var optionC = []
+  
+  optionC[0] = {
+    scenario      : {
+      id            : 0,
+      description   : 'Scenario 0 from CoAXs',
+      modifications : []
+    }
+  }; 
+  
+  optionC[1] = {
+    scenario      : {
+      id            : 1,
+      description   : 'Scenario 1 from CoAXs',
+      modifications : []
     },
-  }
-
+  };
+    
   var allRoutes = ['Worc','King','Fair','FitLake','FrankLow','Gree','NeedHave','NewRProv'];
   var agencyId = '99';
 
@@ -41,11 +64,12 @@ coaxsApp.service('analystService', function (supportService) {
 
 
   // clear out everything that already exists, reset opacities to defaults
-  this.resetAll = function (map) {
+  this.resetAll = function (map, c) {
+    console.log("reset scenario " + c);
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
-    optionCurrent.scenario.modifications = []; // empty contents of the modifications list entirely
+    optionC[c].scenario.modifications = []; // empty contents of the modifications list entirely
   };
 
   this.killCompareIso = function (map) {
@@ -55,19 +79,20 @@ coaxsApp.service('analystService', function (supportService) {
   };
 
   // filter through and remove routes that we don't want banned on each scenario SPA call
-  this.modifyRoutes = function (keepRoutes) { 
+  this.modifyRoutes = function (keepRoutes, c) { 
     keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
     var rmRoutes = allRoutes.filter(function (route) { return keepRoutes.indexOf(route) < 0; });
+	console.log(rmRoutes);
     var routesMod = {
       type      : 'remove-trip',
-      agencyId  : agencyId,
+      agencyId  : rmRoutes.length > 0 ? agencyId : null,
       routeId   : rmRoutes,
       tripId    : null,
     };
-    optionCurrent.scenario.modifications.push(routesMod);
+    optionC[c].scenario.modifications.push(routesMod);
   };
 
-  this.modifyDwells = function (keepRoutes) {
+  this.modifyDwells = function (keepRoutes, c) {
     var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
     var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
     var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
@@ -82,19 +107,19 @@ coaxsApp.service('analystService', function (supportService) {
     };
     if (dwell10.length > 0) {
       dwellMod.routeId = dwell10; dwellMod.dwellTime = 10;
-      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
+      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
     };
     if (dwell20.length > 0) {
       dwellMod.routeId = dwell20; dwellMod.dwellTime = 20;
-      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
+      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
     };
     if (dwell30.length > 0) {
       dwellMod.routeId = dwell30; dwellMod.dwellTime = 30;
-      optionCurrent.scenario.modifications.push(angular.copy(dwellMod));
+      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
     };
   };
 
-  this.modifyFrequencies = function (keepRoutes) {
+  this.modifyFrequencies = function (keepRoutes, c) {
     keepRoutes = keepRoutes.map(function (route) { 
       return {
         routeId: route.routeId,
@@ -103,7 +128,7 @@ coaxsApp.service('analystService', function (supportService) {
     });
 
     keepRoutes.forEach(function (route) {
-      optionCurrent.scenario.modifications.push({
+      optionC[c].scenario.modifications.push({
         type: 'adjust-headway',
         agencyId: agencyId,
         routeId: [route.routeId],
@@ -114,14 +139,14 @@ coaxsApp.service('analystService', function (supportService) {
   }
 
   this.modifyModes = function (routeTypes) {
-    optionCurrent.scenario.modifications.push({
+    optionC[c].scenario.modifications.push({
       type: 'remove-trip',
       agencyId: agencyId,
       routeId: null,
       tripId: null,
       routeType: routeTypes
     });
-	console.log(optionCurrent.scenario.modifications);
+	console.log(optionC[c].scenario.modifications);
   }
 
   this.loadExisting = function (poi, map, cb) {
@@ -129,7 +154,7 @@ coaxsApp.service('analystService', function (supportService) {
     analyst.singlePointRequest({
       lat : poi.lat,
       lng : poi.lng,
-    }, undefined, optionCurrent)
+    }, defaultGraph, defaultShapefile, optionCurrent)
     .then(function (response) {
       if (isoLayer) {
         isoLayer.redraw(); 
@@ -145,55 +170,67 @@ coaxsApp.service('analystService', function (supportService) {
     });;
   }
 
+  this.singlePointComparison = function (marker, map, cb) {
+   	console.log(optionC[0]);
+	console.log(optionC[1]);
+	
+	analyst.singlePointComparison({
+      lat : marker.lat,
+      lng : marker.lng,
+    }, defaultGraph, defaultShapefile, optionC[1], optionC[0])
+		.then(function (response) {
+			console.log(response);
+			isoLayer = analyst.updateSinglePointLayer(response[0].key, response[1].key);
+			console.log(isoLayer);
+			isoLayer.addTo(map);
+		cb(response[0], response[1]);
+		})
+  }
+  
   // actually run the SPA and handle results from library
-  this.singlePointRequest = function (marker, map, compareKey, cb) {
-    console.log(optionCurrent);
+  this.singlePointRequest = function (marker, map, cb) {
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
-    }, compareKey, optionCurrent)
+    }, defaultGraph, defaultShapefile, optionC[0])
     .then(function (response) { 
-      if (isoLayer) {
-        isoLayer.redraw(); 
-      } else {
-        isoLayer = response.tileLayer;
-        isoLayer.addTo(map);
-      }
+        isoLayer = analyst.updateSinglePointLayer(response.key);
+		isoLayer.addTo(map);
 
       var subjects = {
         hh_zerocar: {
-          id: 'smart_location_database.autoown0',
+          id: 'epa_smart_location_database.autoown0',
           verbose: 'Zero-car Households',
         },
         totpop: {
-          id: 'smart_location_database.totpop10',
+          id: 'epa_smart_location_database.totpop10',
           verbose: 'Total Population',
         },
         jobs_tot: {
-          id: 'smart_location_database.emptot',
+          id: 'epa_smart_location_database.emptot',
           verbose: 'Total Jobs',
         },
         retail: {
-          id: 'smart_location_database.e8_ret10',
+          id: 'epa_smart_location_database.e8_ret10',
           verbose: 'Retail Jobs'
         },
         healthcare: {
-          id: 'smart_location_database.e8_hlth10',
+          id: 'epa_smart_location_database.e8_hlth10',
           verbose: 'Health Care Jobs'
         },
         education: {
-          id: 'smart_location_database.e8_ed10',
+          id: 'epa_smart_location_database.e8_ed10',
           verbose: 'Education Jobs'
         }
       };
 
       for (key in subjects) {
         var id = subjects[key].id;
-        var tempArray = response.results.data[id].pointEstimate.sums;
+        var tempArray = response.data[id].pointEstimate.sums;
         for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
         subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
       }
-      cb(response.results.key, subjects);
+      cb(response.key, subjects);
     })
     .catch(function (err) {
       console.log(err);
@@ -202,14 +239,28 @@ coaxsApp.service('analystService', function (supportService) {
 
   // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, compareTrue, cb) {
-    analyst.vectorRequest({
+	//single-point request for baseline scenario, with null destination shapefile null to retrieve vector isochrones
+	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
-    }, optionCurrent)
+    }, defaultGraph, null, optionC[0])
     .then(function (response) {
-      if (compareTrue) { vecComIsos = response.isochrones; }
-      else { vectorIsos = response.isochrones; }
-      cb(true, response.isochrones);
+      //then, if a comparison, run a second single-point request for new scenario, with null destination shapefile null to retrieve vector isochrones
+	  if (compareTrue) { 
+		vecComIsos = response.isochrones;
+		analyst.singlePointRequest({
+			lat : marker.lat,
+			lng : marker.lng,
+		}, defaultGraph, null, optionC[1])
+		.then(function (response) {
+			vectorIsos = response.isochrones;
+			cb(response.key, true);
+		}
+	  )}
+      else { 
+		vectorIsos = response.isochrones; 
+		cb(response.key, true);
+	  }
     });
   };
 

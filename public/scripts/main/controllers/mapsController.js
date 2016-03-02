@@ -223,7 +223,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     };
     $scope.drawGraph($scope.scenarioScore.graphData);
     leafletData.getMap('map_left').then(function(map) {
-      analystService.resetAll(map);
+      analystService.resetAll(map, 0);
       analystService.loadExisting(poi, map, function(result) {
         if (result) {
           $scope.loadProgress.val = 100;
@@ -240,14 +240,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.showVectorIsosOn = false;
     var marker = angular.copy($scope.markers_left.main);
 
-    this.runPrep = function (map, comboItem) {
-      var toKeep = getKeepRoutes(comboItem);
-      analystService.resetAll(map);
-      analystService.modifyRoutes(toKeep);
-      analystService.modifyDwells(toKeep);
-      analystService.modifyFrequencies(toKeep);
+    this.runPrep = function (map, comboItem, c) {
+	  var toKeep = getKeepRoutes(comboItem);
+      analystService.resetAll(map, c);
+      analystService.modifyRoutes(toKeep, c);
+      analystService.modifyDwells(toKeep, c);
+      analystService.modifyFrequencies(toKeep, c);
 	  if ($scope.mode.selected != 'all') {
-        analystService.modifyModes($scope.mode[$scope.mode.selected]);
+        analystService.modifyModes($scope.mode[$scope.mode.selected], c);
       }
 	};
 
@@ -256,44 +256,62 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {
-        this.runPrep(map, $scope.combos.com);
-        analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) { 
-          analystService.vectorRequest(marker, true, function (result) {
-            if (result) { $scope.loadProgress.val += 5; };
-          });
+		console.log("running comparison...");
+		this.runPrep(map, $scope.combos.com, 0);
+		this.runPrep(map, $scope.combos.sel, 1);
+		analystService.singlePointComparison(marker, map, function(res, cres){
+			analystService.vectorRequest(marker, true, function (key, result) {
+			console.log("vector Request done for key " + key);
+            if (result) {
+              $scope.loadProgress.val = 100;
+              setTimeout(function () { $scope.$apply (function () {
+                $scope.loadProgress.vis = false; // terminate progress bar viewport
+              }) }, 1000)
+            };
+          })
+			
+		}
+		);
+		
+        // analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) { 
+          // analystService.vectorRequest(marker, true, function (result) {
+            // if (result) { $scope.loadProgress.val += 5; };
+          // });
 
-          this.runPrep(map, $scope.combos.sel);
-          analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { 
-            $scope.loadProgress.val += 5;
-            if (subjects) { 
-              if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-              $scope.scenarioScore.graphData = {
-                all: subjects,
-                sel: subjects.jobs_tot,
-                com: {
-                  all: compareSubjects,
-                  sel: compareSubjects.jobs_tot,
-                }
-              };
-              $scope.drawGraph($scope.scenarioScore.graphData);
-            } 
-            analystService.vectorRequest(marker, false, function (result) {
-              if (result) {
-                $scope.loadProgress.val = 100;
-                setTimeout(function () { $scope.$apply (function () {
-                  $scope.loadProgress.vis = false; // terminate progress bar viewport
-                }) }, 1000);
-              };
-            });
-          });
-        });
+          
+          // analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { 
+            // $scope.loadProgress.val += 5;
+            // if (subjects) { 
+              // if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
+              // $scope.scenarioScore.graphData = {
+                // all: subjects,
+                // sel: subjects.jobs_tot,
+                // com: {
+                  // all: compareSubjects,
+                  // sel: compareSubjects.jobs_tot,
+                // }
+              // };
+              // $scope.drawGraph($scope.scenarioScore.graphData);
+            // } 
+            // analystService.vectorRequest(marker, false, function (result) {
+              // if (result) {
+                // $scope.loadProgress.val = 100;
+                // setTimeout(function () { $scope.$apply (function () {
+                  // $scope.loadProgress.vis = false; // terminate progress bar viewport
+                // }) }, 1000);
+              // };
+            // });
+          // });
+        // });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
       } else {
-        this.runPrep(map, $scope.combos.sel);
+        this.runPrep(map, $scope.combos.sel, 0);
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
-        analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) {
-          if (subjects) { 
+		var shapefile = undefined;
+        analystService.singlePointRequest(marker, map, function (key, subjects) {
+		  console.log("tile Request done for key " + key);
+		  if (subjects) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
               all: subjects,
@@ -303,7 +321,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
             $scope.drawGraph($scope.scenarioScore.graphData);
           } 
           if (!$scope.combos.sel) { existingMBTAKey = key }; 
-          analystService.vectorRequest(marker, false, function (result) {
+          analystService.vectorRequest(marker, false, function (key, result) {
+			console.log("vector Request done for key " + key);
             if (result) {
               $scope.loadProgress.val = 100;
               setTimeout(function () { $scope.$apply (function () {
@@ -512,20 +531,20 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       poiUserPoints.addTo(map);
     });
 
-    loadService.getLocationCache()
-    .then(function (data) {
-      $scope.snapPoints.all = data;
-      if (data.indexOf('baseline.json') > -1) {
-        $scope.snapPoints.sel = 'baseline.json';
+    // loadService.getLocationCache()
+    // .then(function (data) {
+      // $scope.snapPoints.all = data;
+      // if (data.indexOf('baseline.json') > -1) {
+        // $scope.snapPoints.sel = 'baseline.json';
 
-        loadService.loadSnapCache($scope.snapPoints.sel)
-        .then(function (data) {
-          $scope.snapPoints.data = data
-        })
-      } else {
-        alert('Initial POISs load failed. Baseline.json is missing.');
-      }
-    })
+        // loadService.loadSnapCache($scope.snapPoints.sel)
+        // .then(function (data) {
+          // $scope.snapPoints.data = data
+        // })
+      // } else {
+        // alert('Initial POISs load failed. Baseline.json is missing.');
+      // }
+    // })
   });
 
   // highlight a corridor, all routes within
@@ -719,7 +738,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
       leafletData.getMap('map_left').then(function (map) {
         if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
-        if (!$scope.showVectorIsosOn) { analystService.resetAll(map); };
+        if (!$scope.showVectorIsosOn) { analystService.resetAll(map, 0); };
       });
 	}
   }};
@@ -829,12 +848,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
         var runPrep = function (map, comboItem) {
           var toKeep = getKeepRoutes(comboItem);
-          analystService.resetAll(map);
-          analystService.modifyRoutes(toKeep);
-          analystService.modifyDwells(toKeep);
-          analystService.modifyFrequencies(toKeep);
+          analystService.resetAll(map,c);
+          analystService.modifyRoutes(toKeep,c);
+          analystService.modifyDwells(toKeep,c);
+          analystService.modifyFrequencies(toKeep,c);
           if ($scope.mode.selected != 'all') {
-            analystService.modifyModes($scope.mode[$scope.mode.selected]);
+            analystService.modifyModes($scope.mode[$scope.mode.selected],c);
           }
         };
 
