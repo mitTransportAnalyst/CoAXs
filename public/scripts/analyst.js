@@ -226,7 +226,6 @@ var Analyst = (function () {
   }, {
     key: 'setClientCredentials',
     value: function setClientCredentials(clientCredentials) {
-	  console.log(clientCredentials);
       this.clientCredentials = clientCredentials;
     }
 
@@ -289,7 +288,6 @@ var Analyst = (function () {
 				access_token: data};
             _this.setClientCredentials(parsed.access_token);
 			resolve(parsed);
-			console.log(parsed.access_token);
 
             // get new credentials two minutes before these expire
             // note: does not create tail recursion problems as setTimeout puts it in a global executor loop and
