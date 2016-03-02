@@ -159,7 +159,7 @@ var Analyst = (function () {
      *
      * @param {LatLng} point
      * @param {String} graphId Graph ID to use for this request.
-     * @param {String} [shapefileId] Shapefile ID to be used with this request, can be omitted for a vector request.
+     * @param {String} shapefileId Shapefile ID to be used with this request, can be omitted for a vector request.
      * @param {Object} [options] Options object.
      * @return {Promise} Resolves with an object containing the results data.
      * @example
@@ -172,14 +172,7 @@ var Analyst = (function () {
 
   }, {
     key: 'singlePointRequest',
-    value: function singlePointRequest(point, graphId, shapefileId) {
-      var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
-      if (typeof shapefileId === 'object') {
-        options = shapefileId;
-        shapefileId = undefined;
-      }
+    value: function singlePointRequest(point, graphId, shapefileId, options) {
 
       var opts = Object.assign({}, this.requestOptions, options);
       opts.fromLat = opts.toLat = point.lat;
