@@ -1,14 +1,21 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
 coaxsApp.service('analystService', function (supportService) {
 
+	
+  var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
+     defaultGraph = '7f04712943ce0a87d1fde97b18c4029e';  
+
+
   this.isochrones = null;
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    apiUrl         : 'http://mit-analyst.conveyal.com/api',
-    tileUrl        : 'http://mit-analyst.conveyal.com/tile',
-    shapefileId    : '0579b6bd8e14ec69e4f21e96527a684b_376500e5f8ac23d1664902fbe2ffc364',
-    graphId        : 'ea0356b76f2501b4da8598c8a1e95932',
+    baseUrl		   : 'http://ansons.mit.edu:9090',
+	apiUrl         : 'http://ansons.mit.edu:9090/api',
+    tileUrl        : 'http://ansons.mit.edu:9090/tile',
+    shapefileId    : defaultShapefile,
+    graphId        : defaultGraph,
+	//showPoints	   : true,
     showIso        : true,
   });
 
