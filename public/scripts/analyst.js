@@ -159,7 +159,7 @@ var Analyst = (function () {
      *
      * @param {LatLng} point
      * @param {String} graphId Graph ID to use for this request.
-     * @param {String} shapefileId Shapefile ID to be used with this request, can be omitted for a vector request.
+     * @param {String} shapefileId Shapefile ID to be used with this request, set to null for vector request.
      * @param {Object} [options] Options object.
      * @return {Promise} Resolves with an object containing the results data.
      * @example
@@ -194,8 +194,10 @@ var Analyst = (function () {
      * Compare two scenarios.
      *
      * @param {LatLng} point
+	 * @param {string} graphId  Graph ID to use for this request
+	 * @param {string} shapefileId Shapefile ID to be used with this request, set to null for vector request. 
      * @param {Object} options
-     * @param {Object} comparisonOptions
+     * @param {Object} [comparisonOptions]
      * @return {Promise} Resolves with an array containing `[results, comparisonResults]`
      * @example
      * analyst
@@ -207,8 +209,8 @@ var Analyst = (function () {
 
   }, {
     key: 'singlePointComparison',
-    value: function singlePointComparison(point, options, comparisonOptions) {
-      return Promise.all([this.singlePointRequest(point, options.graphId, options.shapefileId, options), this.singlePointRequest(point, comparisonOptions.graphId, comparisonOptions.shapefileId, comparisonOptions)]);
+    value: function singlePointComparison(point, graphId, shapefileId, options, comparisonOptions) {
+      return Promise.all([this.singlePointRequest(point, graphId, shapefileId, options), this.singlePointRequest(point, graphId, shapefileId, comparisonOptions)]);
     }
 
     /**
