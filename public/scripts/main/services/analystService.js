@@ -5,6 +5,32 @@ coaxsApp.service('analystService', function (supportService) {
   var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
      defaultGraph = '7f04712943ce0a87d1fde97b18c4029e';  
 
+  var subjects = {
+        hh_zerocar: {
+          id: 'epa_smart_location_database.autoown0',
+          verbose: 'Zero-car Households',
+        },
+        totpop: {
+          id: 'epa_smart_location_database.totpop10',
+          verbose: 'Residents',
+        },
+        jobs_tot: {
+          id: 'epa_smart_location_database.emptot',
+          verbose: 'Jobs',
+        },
+        retail: {
+          id: 'epa_smart_location_database.e8_ret10',
+          verbose: 'Jobs - Retail'
+        },
+        healthcare: {
+          id: 'epa_smart_location_database.e8_hlth10',
+          verbose: 'Jobs - Healthcare'
+        },
+        education: {
+          id: 'epa_smart_location_database.e8_ed10',
+          verbose: 'Jobs - Education'
+        }
+  };
 
   this.isochrones = null;
   
@@ -65,7 +91,6 @@ coaxsApp.service('analystService', function (supportService) {
 
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
-    console.log("reset scenario " + c);
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
@@ -82,7 +107,6 @@ coaxsApp.service('analystService', function (supportService) {
   this.modifyRoutes = function (keepRoutes, c) { 
     keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
     var rmRoutes = allRoutes.filter(function (route) { return keepRoutes.indexOf(route) < 0; });
-	console.log(rmRoutes);
     var routesMod = {
       type      : 'remove-trip',
       agencyId  : rmRoutes.length > 0 ? agencyId : null,
@@ -179,11 +203,36 @@ coaxsApp.service('analystService', function (supportService) {
       lng : marker.lng,
     }, defaultGraph, defaultShapefile, optionC[1], optionC[0])
 		.then(function (response) {
-			console.log(response);
+			var plotData = {};
+			var cPlotData = {};
+			
+			//compile cumulative plot data for scenario 1
+			for (key in subjects) {
+				var id = subjects[key].id;
+				var tempArray = response[0].data[id].pointEstimate.sums.slice(0,120);
+				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
+				cPlotData[key] = {
+					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
+					'id' : id,
+					'verbose' : subjects[key].verbose
+					}
+				};
+			
+			//compile cumulative plot data for scenario 0
+			for (key in subjects) {
+				var id = subjects[key].id;
+				var tempArray = response[1].data[id].pointEstimate.sums.slice(0,120);
+				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
+				plotData[key] = {
+					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
+					'id' : id,
+					'verbose' : subjects[key].verbose
+					}
+				};
+			// };
 			isoLayer = analyst.updateSinglePointLayer(response[0].key, response[1].key);
-			console.log(isoLayer);
 			isoLayer.addTo(map);
-		cb(response[0], response[1]);
+		cb(response[0], response[1], plotData, cPlotData);
 		})
   }
   
@@ -195,42 +244,15 @@ coaxsApp.service('analystService', function (supportService) {
     }, defaultGraph, defaultShapefile, optionC[0])
     .then(function (response) { 
         isoLayer = analyst.updateSinglePointLayer(response.key);
-		isoLayer.addTo(map);
-
-      var subjects = {
-        hh_zerocar: {
-          id: 'epa_smart_location_database.autoown0',
-          verbose: 'Zero-car Households',
-        },
-        totpop: {
-          id: 'epa_smart_location_database.totpop10',
-          verbose: 'Total Population',
-        },
-        jobs_tot: {
-          id: 'epa_smart_location_database.emptot',
-          verbose: 'Total Jobs',
-        },
-        retail: {
-          id: 'epa_smart_location_database.e8_ret10',
-          verbose: 'Retail Jobs'
-        },
-        healthcare: {
-          id: 'epa_smart_location_database.e8_hlth10',
-          verbose: 'Health Care Jobs'
-        },
-        education: {
-          id: 'epa_smart_location_database.e8_ed10',
-          verbose: 'Education Jobs'
-        }
-      };
-
+		isoLayer.addTo(map);  
+	  var plotData = subjects;
       for (key in subjects) {
         var id = subjects[key].id;
-        var tempArray = response.data[id].pointEstimate.sums;
-        for (var i = 1; i < tempArray.length; i++) { tempArray[i] = tempArray[i] + tempArray[i-1] };
-        subjects[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
+        var tempArray = response.data[id].pointEstimate.sums.slice(0,120);
+        for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
+        plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
       }
-      cb(response.key, subjects);
+      cb(response.key, plotData);
     })
     .catch(function (err) {
       console.log(err);

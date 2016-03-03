@@ -4,7 +4,7 @@ coaxsApp.service('d3Service', function () {
 
   // all you need to know is that you feed in the data array of length 120 to this function and it'll render
   this.drawGraph = function (cutoff, data, compare) {  
-       var WIDTH   = 500,
+       var WIDTH   = 400,
       HEIGHT  = 200,
       MARGINS = {
         top    : 20,
@@ -100,7 +100,7 @@ coaxsApp.service('d3Service', function () {
 		.style("text-anchor","middle")
         .style("opacity", 0.85)
 		.html( function (){
-		  return d3.format(",")(d3.round(data[cutoff*5-1].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
+		  return d3.format(",")(d3.round(data[cutoff*5].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
 		});  
   }
   else{

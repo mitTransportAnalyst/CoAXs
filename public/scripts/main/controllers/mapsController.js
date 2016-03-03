@@ -259,7 +259,21 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		console.log("running comparison...");
 		this.runPrep(map, $scope.combos.com, 0);
 		this.runPrep(map, $scope.combos.sel, 1);
-		analystService.singlePointComparison(marker, map, function(res, cres){
+		analystService.singlePointComparison(marker, map, function(res, cres, plotData, cPlotData){
+		if (plotData) { 
+              if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
+              $scope.scenarioScore.graphData = {
+                all: cPlotData,
+                sel: cPlotData.jobs_tot,
+                com: {
+                  all: plotData,
+                  sel: plotData.jobs_tot,
+                }
+              };
+              $scope.drawGraph($scope.scenarioScore.graphData);
+		}; 
+		
+			
 			analystService.vectorRequest(marker, true, function (key, result) {
 			console.log("vector Request done for key " + key);
             if (result) {
@@ -281,18 +295,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           
           // analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { 
             // $scope.loadProgress.val += 5;
-            // if (subjects) { 
-              // if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-              // $scope.scenarioScore.graphData = {
-                // all: subjects,
-                // sel: subjects.jobs_tot,
-                // com: {
-                  // all: compareSubjects,
-                  // sel: compareSubjects.jobs_tot,
-                // }
-              // };
-              // $scope.drawGraph($scope.scenarioScore.graphData);
-            // } 
+
             // analystService.vectorRequest(marker, false, function (result) {
               // if (result) {
                 // $scope.loadProgress.val = 100;
@@ -309,13 +312,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
 		var shapefile = undefined;
-        analystService.singlePointRequest(marker, map, function (key, subjects) {
+        analystService.singlePointRequest(marker, map, function (key, plotData) {
 		  console.log("tile Request done for key " + key);
-		  if (subjects) { 
+		  console.log(plotData);
+		  if (plotData) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
-              all: subjects,
-              sel: subjects.jobs_tot,
+              all: plotData,
+              sel: plotData.jobs_tot,
               com: false
             };
             $scope.drawGraph($scope.scenarioScore.graphData);
@@ -373,7 +377,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           $scope.loadProgress.val = 100;
           clearInterval(runProgressBar); // kill the animation bar process loop
         } else {
-          $scope.loadProgress.val += Math.floor(Math.random()*3);
+          $scope.loadProgress.val += Math.floor(Math.random()*2);
         }
       });
     }, 300)
