@@ -683,6 +683,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // MANAGER CONTROLS
   // from manager control run create
   $scope.buildScenarios = function(foo) {  
+	//check if combos have already been created
+	var alreadyBuilt = false;
+	for (prop in $scope.combos.all) {alreadyBuilt = true;}
+	
+	if(!alreadyBuilt){
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
       name    : 'Baseline',
@@ -713,7 +718,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'G' : Object.keys($scope.variants['G'].all)[0],
       }
     };
- 
+  }
   }
 
   $scope.setNewSnapCache = function (id) {
