@@ -6,30 +6,36 @@ coaxsApp.service('analystService', function (supportService) {
      defaultGraph = '7f04712943ce0a87d1fde97b18c4029e';  
 
   var subjects = {
-        hh_zerocar: {
-          id: 'epa_smart_location_database.autoown0',
-          verbose: 'Zero-car Households',
+        prefix : 'epa_smart_location_database',
+		fields : {
+		hh : { 
+		  id: 'counthu10',
+		  verbose : 'Households'
+		}, 
+		hh_zerocar: {
+          id: 'autoown0',
+          verbose: 'Households - Car-Free',
         },
         totpop: {
-          id: 'epa_smart_location_database.totpop10',
+          id: 'totpop10',
           verbose: 'Residents',
         },
         jobs_tot: {
-          id: 'epa_smart_location_database.emptot',
+          id: 'emptot',
           verbose: 'Jobs',
         },
         retail: {
-          id: 'epa_smart_location_database.e8_ret10',
+          id: 'e8_ret10',
           verbose: 'Jobs - Retail'
         },
         healthcare: {
-          id: 'epa_smart_location_database.e8_hlth10',
+          id: 'e8_hlth10',
           verbose: 'Jobs - Healthcare'
         },
         education: {
-          id: 'epa_smart_location_database.e8_ed10',
+          id: 'e8_ed10',
           verbose: 'Jobs - Education'
-        }
+        }}
   };
 
   this.isochrones = null;
@@ -170,7 +176,6 @@ coaxsApp.service('analystService', function (supportService) {
       tripId: null,
       routeType: routeTypes
     });
-	console.log(optionC[c].scenario.modifications);
   }
 
   this.loadExisting = function (poi, map, cb) {
@@ -207,26 +212,24 @@ coaxsApp.service('analystService', function (supportService) {
 			var cPlotData = {};
 			
 			//compile cumulative plot data for scenario 1
-			for (key in subjects) {
-				var id = subjects[key].id;
+			for (key in subjects.fields) {
+				var id = subjects.prefix+'.'+subjects.fields[key].id;
 				var tempArray = response[0].data[id].pointEstimate.sums.slice(0,120);
 				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
 				cPlotData[key] = {
 					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'id' : id,
-					'verbose' : subjects[key].verbose
+					'verbose' : subjects.fields[key].verbose
 					}
 				};
 			
 			//compile cumulative plot data for scenario 0
-			for (key in subjects) {
-				var id = subjects[key].id;
+			for (key in subjects.fields) {
+				var id = subjects.prefix+'.'+subjects.fields[key].id;
 				var tempArray = response[1].data[id].pointEstimate.sums.slice(0,120);
 				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
 				plotData[key] = {
 					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'id' : id,
-					'verbose' : subjects[key].verbose
+					'verbose' : subjects.fields[key].verbose
 					}
 				};
 			// };
@@ -245,9 +248,9 @@ coaxsApp.service('analystService', function (supportService) {
     .then(function (response) { 
         isoLayer = analyst.updateSinglePointLayer(response.key);
 		isoLayer.addTo(map);  
-	  var plotData = subjects;
-      for (key in subjects) {
-        var id = subjects[key].id;
+	  var plotData = subjects.fields;
+      for (key in subjects.fields) {
+        var id = subjects.prefix+'.'+subjects.fields[key].id;
         var tempArray = response.data[id].pointEstimate.sums.slice(0,120);
         for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
         plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });

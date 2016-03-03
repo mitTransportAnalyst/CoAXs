@@ -19,7 +19,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     peak     : { min : 15,  sec : 0 },
     offpeak  : { min : 30, sec : 0 },
   }
-  
+
+  $scope.selField = 'jobs_tot';
   
   $scope.scenario = {
     'I' : angular.copy(scenarioBase),
@@ -264,10 +265,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
               $scope.scenarioScore.graphData = {
                 all: cPlotData,
-                sel: cPlotData.jobs_tot,
+                sel: cPlotData[$scope.selField],
                 com: {
                   all: plotData,
-                  sel: plotData.jobs_tot,
+                  sel: plotData[$scope.selField],
                 }
               };
               $scope.drawGraph($scope.scenarioScore.graphData);
@@ -314,12 +315,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		var shapefile = undefined;
         analystService.singlePointRequest(marker, map, function (key, plotData) {
 		  console.log("tile Request done for key " + key);
-		  console.log(plotData);
 		  if (plotData) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
             $scope.scenarioScore.graphData = {
               all: plotData,
-              sel: plotData.jobs_tot,
+              sel: plotData[$scope.selField],
               com: false
             };
             $scope.drawGraph($scope.scenarioScore.graphData);
@@ -341,10 +341,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
+	$scope.selField = dataVal;
 	$scope.scenarioScore.graphData.sel = $scope.scenarioScore.graphData.all[dataVal];
     if ($scope.scenarioScore.graphData.com) {
       $scope.scenarioScore.graphData.com.sel = $scope.scenarioScore.graphData.com.all[dataVal];
 	}
+	$scope.drawGraph($scope.scenarioScore.graphData);
   }
   $scope.drawGraph = function (graphData) {
     if (!graphData.com) { 
