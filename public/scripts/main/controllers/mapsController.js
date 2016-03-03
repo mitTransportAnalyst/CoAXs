@@ -160,27 +160,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.preMarkerQuery = function () {
 	runMarkerQuerys();
-	// console.log($scope.mode.selected);
-	// if ($scope.snapPoints.sel) {
-      // console.log('a');
-	  // var matchesSnap = compareToSnapPoints();
-      // var nearest = supportService.getNearestPOI(angular.copy($scope.markers_left.main), $scope.snapPoints.data);
-      // if(nearest){
-	  // if (nearest.distance < $scope.sensitivity && !$scope.scenarioCompare && matchesSnap) { 
-        // console.log('nearest: ' + nearest);
-		// console.log('nearest.dist: ' + nearest.distance);
-		// $scope.markers_left.main.lat = nearest.poi.lat;
-        // $scope.markers_left.main.lng = nearest.poi.lng;
-        // //$scope.mode.selected = null; // unknown what scenario is being loaded
-        // preloadedMarker(nearest.poi);
-      // }} else {
-		// console.log('c');
-        // runMarkerQuerys();
-      // }
-    // } else {
-		// console.log('d');
-      // runMarkerQuerys();
-    // }
   }
   
   //Vector Iso Autoplay timer
@@ -287,26 +266,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 			
 		}
 		);
-		
-        // analystService.singlePointRequest(marker, map, undefined, function (compareKey, compareSubjects) { 
-          // analystService.vectorRequest(marker, true, function (result) {
-            // if (result) { $scope.loadProgress.val += 5; };
-          // });
 
-          
-          // analystService.singlePointRequest(marker, map, compareKey, function (key, subjects) { 
-            // $scope.loadProgress.val += 5;
-
-            // analystService.vectorRequest(marker, false, function (result) {
-              // if (result) {
-                // $scope.loadProgress.val = 100;
-                // setTimeout(function () { $scope.$apply (function () {
-                  // $scope.loadProgress.vis = false; // terminate progress bar viewport
-                // }) }, 1000);
-              // };
-            // });
-          // });
-        // });
       // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
       } else {
         this.runPrep(map, $scope.combos.sel, 0);
@@ -535,21 +495,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       poiUserPoints = points;
       poiUserPoints.addTo(map);
     });
-
-    // loadService.getLocationCache()
-    // .then(function (data) {
-      // $scope.snapPoints.all = data;
-      // if (data.indexOf('baseline.json') > -1) {
-        // $scope.snapPoints.sel = 'baseline.json';
-
-        // loadService.loadSnapCache($scope.snapPoints.sel)
-        // .then(function (data) {
-          // $scope.snapPoints.data = data
-        // })
-      // } else {
-        // alert('Initial POISs load failed. Baseline.json is missing.');
-      // }
-    // })
   });
 
   // highlight a corridor, all routes within
@@ -642,19 +587,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // how we update the scorecard on the right side, also bound to events like range slider
   $scope.updateRouteScorecard = function (routeId, tabnav) {
-     // if (!routeId && !tabnav) {
-      // $scope.routeScore = scorecardService.generateEmptyScore();
-    // } else {
-      // var frequencies = {
-        // peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
-        // off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
-      // };
-      // var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
-      // var length   = scorecardService.generateLengthScore(routesLayer, routeId);
-      // var time     = scorecardService.generateTimeScore(routesLayer, routeId);
-      // var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
-      // $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
-    // }
   }
 
   // updates on new selected scenario combo
