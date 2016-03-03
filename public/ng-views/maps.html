@@ -530,7 +530,7 @@
             <div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; left: 10px; padding-right: 10px;"><i class="fa fa-step-backward fa-2x"></i></span>
             {{ vectorIsos.val*5 | minuteConverter }}
-            <span ng-click="stopTimer(); vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 10px; padding-left: 10px;"><i class="fa fa-step-forward fa-2x"></i></span>
+            <span ng-click="stopTimer(); vectorTimeVal_add(); showVectorIsos(300*vectorIsos.val)" style="position: absolute; right: 8px; padding-left: 10px;"><i class="fa fa-step-forward fa-2x"></i></span>
             </div>
 		  </span>
         </div>
@@ -576,7 +576,7 @@
     </div>
 	
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
-        <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);">
+        <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);width:21px">
           <div>&nbsp</div>
 		  <div class="fa fa-arrows-h"></div>
           <div class="square" style="background-color:#3D33D3">I</div>
@@ -589,8 +589,7 @@
 		  <div class="square" style="background-color:#11b1b1">G</div>
         </div>
 
-        <div style="margin-left:21px;height:100%;width:10000px;overflow-y:scroll;overflow-x:scroll;">
-          
+        <div class="scenarioEntries">          
           <div class="scenario" style="display:inline-block;white-space:nowrap;"
                 ng-class="combos.sel == variant._key ? 'selected' : ''"
                 ng-repeat="variant in combos.all | toArray | orderBy:'created'">

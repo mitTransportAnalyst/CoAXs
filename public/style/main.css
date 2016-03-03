@@ -278,7 +278,7 @@ background-color  : #696969;
   height: 100%;
   float: left;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   cursor: pointer;
   z-index: 5; 
   box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
@@ -383,9 +383,17 @@ background-color  : #696969;
 }
 
 .colBody .scenariosTable {
-  overflow-x: scroll;
   overflow-y: hidden;
+  overflow-x: auto;
   height: inherit;
+}
+
+.scenarioEntries {
+  margin-left:21px;
+  height:100%;
+  width:10000px;
+  overflow-y:auto;
+  overflow-x:auto;
 }
 
 .scenariosTable .square {
@@ -403,7 +411,7 @@ background-color  : #696969;
   padding: 0px 3px 0px 3px;
   position: relative;
   float: left;
-  max-width: 100px;
+  width: 150px;
   height: inherit;
   white-space: nowrap;
   z-index: 9;
