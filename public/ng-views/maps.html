@@ -119,7 +119,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
-                  ng-click="selectGraphData(dataVal)"
+                  ng-click="selectGraphData(id)"
                   value="{{ id }}">
                 <a href="">{{ dataVal.verbose }}</a>
               </li>

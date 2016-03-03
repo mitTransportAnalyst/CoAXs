@@ -341,11 +341,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
-	$scope.scenarioScore.graphData.sel = dataVal;
+	$scope.scenarioScore.graphData.sel = $scope.scenarioScore.graphData.all[dataVal];
     if ($scope.scenarioScore.graphData.com) {
-      $scope.scenarioScore.graphData.com.sel = dataVal;
-    }
-	console.log($scope.scenarioScore.graphData);
+      $scope.scenarioScore.graphData.com.sel = $scope.scenarioScore.graphData.com.all[dataVal];
+	}
   }
   $scope.drawGraph = function (graphData) {
     if (!graphData.com) { 
