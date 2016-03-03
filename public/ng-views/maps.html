@@ -380,8 +380,8 @@
 		  full stations
         </span>
 		<div></div>
-        Frequency (peak): {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals.<br>
-		Frequency (off-peak): {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals.
+        Interval (peak): {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals.<br>
+		Interval (off-peak): {{ scenario[tabnav].offpeak.min }}:{{ scenario[tabnav].offpeak.sec | integerLength }} between arrivals.
       </h6>
 	  </li>
 	  <li>Name alternative and save 
@@ -433,7 +433,7 @@
         <span ng-if="variant.all[variant.sel].station == 2">
         Full,
         </span>
-		Frequency: every {{ variant.all[variant.sel].offpeak.min | avgWaitTime }} min., every {{ variant.all[variant.sel].peak.min | avgWaitTime }} min. (peak)
+		Interval: every {{ variant.all[variant.sel].offpeak.min}} min., every {{ variant.all[variant.sel].peak.min}} min. (peak)
       </h6>
 	  </li>
 	  <li>Name combo and save</li>
@@ -798,7 +798,7 @@
               <th></th>
               <th style="width: 35%">Alternative</th>
               <th>Stop Type</th>
-              <th colspan=2>Average Waiting Time</th>
+              <th colspan=2>Interval</th>
             </tr>
           </thead>
           <tbody ng-show="visibleTabs.customize">
@@ -819,10 +819,10 @@
                 </span>
               </td>
               <td>
-                 {{ scenario[tabnav].offpeak.min | avgWaitTime}} min.
+                 {{ scenario[tabnav].offpeak.min}} min.
               </td>
               <td>
-                 {{ scenario[tabnav].peak.min | avgWaitTime}} min. (peak)
+                 {{ scenario[tabnav].peak.min}} min. (peak)
               </td>
             </tr>
           </tbody>
@@ -854,11 +854,11 @@
               </td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
               <td>
-                 {{variant.offpeak.min | avgWaitTime}} min.
+                 {{variant.offpeak.min}} min.
               </td>
               <td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
-                {{variant.peak.min | avgWaitTime}} min. (peak)
+                {{variant.peak.min}} min. (peak)
 
               </td>
             </tr>
@@ -933,7 +933,7 @@
 	 <div class="bottomFixed">
 
 	  <div class="subHead">
-        Set Frequency
+        Set Interval
       </div>
 	
       <div class="setTimesTitle">
