@@ -505,13 +505,15 @@
 
     <div class="placeHolder" ng-show="!visibleTabs.travel" ng-click="visibleTabs.travel = !visibleTabs.travel">
       <div class="bigText">
-        <i class="fa fa-clock-o"></i>
+        <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i>
       </div>
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.travel">
 	  <div class="btn-group btn-group-justified">
-			<label class="btn btn-info" ng-click="preMarkerQuery()"><i class="fa fa-refresh" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
+			<label class="btn btn-info" ng-click="preMarkerQuery()">
+			<i class="fa fa-refresh" ng-show="!scenarioScore.graphData"  ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-pulse animated'"></i>
+			<i class="fa fa-refresh" ng-show="scenarioScore.graphData" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
 			</label>
 			<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''" ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 			<i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>
