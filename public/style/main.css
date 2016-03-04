@@ -137,6 +137,7 @@ nav div.section {
   width: -moz-calc(50% + 35px);
   width: calc(50% + 35px);
   bottom: 0px;
+  z-index: 10;
 }
 
 .introPan{
