@@ -6,7 +6,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
     document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
-    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 70) + 'px';
+    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 70 +1) + 'px';
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
@@ -42,6 +42,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	'W' : { sel : 0, all : {} },
 	'G' : { sel : 0, all : {} },
   }
+  
+  $scope.defaultsBuilt = false
+  
   $scope.combos = {
     sel : null,
     com : null,
@@ -684,10 +687,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // from manager control run create
   $scope.buildScenarios = function(foo) {  
 	//check if combos have already been created
-	var alreadyBuilt = false;
-	for (prop in $scope.combos.all) {alreadyBuilt = true;}
+	for (prop in $scope.combos.all) {$scope.defaultsBuilt = true;}
 	
-	if(!alreadyBuilt){
+	if(!$scope.defaultsBuilt){
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
       name    : 'Existing MBTA',
@@ -718,6 +720,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'G' : Object.keys($scope.variants['G'].all)[0],
       }
     };
+  $scope.defaultsBuilt = true;
   }
   }
 

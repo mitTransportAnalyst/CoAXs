@@ -53,7 +53,9 @@
 
   <div class="topleft" style="background-color:#696969" ng-show="scenarioScorecard">
     <h4>
-      Scenario Scorecard
+      <i class="fa fa-bar-chart"></i>&nbsp Data for 
+	  <span ng-show="!combos.sel">Existing MBTA</span>
+      <span ng-show="combos.sel">Combo: {{ combos.all[combos.sel].name }} </span>
       <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard = false"></i>
     </h4>
     <div class="topinfo-body container" style="min-height:250px">
@@ -197,28 +199,33 @@
 	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
 	</h4>
     <div class="saveAlt-body container">
-	<div style="width:65%">
-	<img src="public/imgs/alignment.jpg" style="width:450px"/><br>
+	<div style="width:400px; float:right">
+	<img src="public/imgs/alignment.jpg" style="width:400px"/><br>
 	</div>
-	<div style="width:35%; position: absolute; right:10px; top: 40px">	
-	<h4>Getting Started</h4>
-	  <h5>
+	<div>	
+	<h4>Explore how a new rail tunnel from North Station to South Station could improve regional transit connectivity</h4>
+	<br>
+	<br>
+	<h4>To Start</h4>
+	<h5>
 	  <ol>
-	  <li>Move the <img src="public/imgs/start.png" style="height:18px"> Start Marker </li>
-	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o "></i> Time Map &nbsp </span> &nbsp  to explore how far you can travel</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i> Time Map &nbsp </span> &nbsp to explore how far you can travel on transit</li>
+	  <li>Move the <img src="public/imgs/start.png" style="height:18px"> Start Marker to try other locations</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i> Combo Editor &nbsp </span> &nbsp to compare other scenarios</li>
 	  </ol>
 	</div>
-	 <h4>More Info</h4>
+	<div style="clear:both">
+	<h4>More Info</h4>
 	 <ul>
-	 <li>CoAXs (Collaborative Access-based Stakeholder Engagement) is a project of the <br> Mobility Futures Collaborative at MIT.  More info at <a href="https://mfc.mit.edu/innovations-participatory-design-brt-systems"> mfc.mit.edu <img style="float: right; height: 100px" src="public/imgs/mfc_qr.png"></a></li>
+	 <li>CoAXs (Collaborative Access-based Stakeholder Engagement) is a project of the <br> Mobility Futures Collaborative at MIT: <a href="https://mfc.mit.edu/innovations-participatory-design-brt-systems"> mfc.mit.edu <img style="float: right; height: 100px" src="public/imgs/mfc_qr.png"></a></li>
 	 <li>This preliminary analysis does not guarantee accuracy, and is not directly related to <a href="http://northsouthraillink.org">northsouthraillink.org</a></li>
-	 <li>Transport network analysis via Conveyal Transport Analyst</li>
+	 <li>Transport network analysis via <a href="http://conveyal.com/projects/analyst/"> Conveyal Transport Analyst</a></li>
 	 <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com/">Mapbox</a></li>
 	 </ul>
 	</h5>
 	<br>
 	<br>
-	
+	</div>
     </div>
   </div>
 </div>
@@ -500,12 +507,13 @@
   <!-- 2 destination and time filters --> 
   <div class="colBody" style="width:275px"> 
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
-      <i class="fa fa-clock-o"></i> Time Map
+      <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData && !visibleTabs.travel? 'faa-pulse animated' : ''" ></i>
+	  Time Map
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.travel" ng-click="visibleTabs.travel = !visibleTabs.travel">
       <div class="bigText">
-        <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i>
+			<i class="fa fa-clock-o"></i> 
       </div>
     </div>
 
@@ -547,7 +555,7 @@
   <!-- 3 scenario table module --> 
   <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
-      <i class="fa fa-random"></i>
+      <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i>
       <span ng-show="!combos.sel">Combo: Existing MBTA</span>
       <span ng-show="combos.sel">
         Combo: {{ combos.all[combos.sel].name }}
@@ -570,7 +578,7 @@
 
 	<div class="btn-group btn-group-justified">
 			<label class="btn btn-xs" ng-class="scenarioScorecard ? '' : 'active tiny'" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)" style="line-height:25px">
-                <i class="fa fa-bar-chart"></i> Data
+                <i class="fa fa-bar-chart" ng-class="scenarioScorecard ? '' : 'faa-pulse animated'"></i> Data
 			</label>
 			<label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'" ng-click="scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison
 			</label>
