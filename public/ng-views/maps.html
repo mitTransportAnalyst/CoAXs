@@ -579,116 +579,90 @@
     </div>
 	
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
-        <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);width:21px">
-          <div>&nbsp</div>
-		  <div class="fa fa-arrows-h"></div>
-          <div class="square" style="background-color:#3D33D3">I</div>
-		  <div class="square" style="background-color:#8B118F">P</div>
-          <div class="square" style="background-color:#6E3838">M</div>
-          <div class="square" style="background-color:#ADCDAD">F</div>
-          <div class="square" style="background-color:#D77FBC">N</div>
-		  <div class="square" style="background-color:#811881">W</div>
-		  <div class="square" style="background-color:#007eff">K</div>
-		  <div class="square" style="background-color:#11b1b1">G</div>
+        <div class="scenario" style="position:absolute;z-index:10;box-shadow:5px 0px 3px rgba(0,0,0,0.1);width:24px">
+		  <i class="fa fa-balance-scale" style="position:absolute;bottom:40px" ng-show="scenarioCompare"></i>
         </div>
 
         <div class="scenarioEntries">          
           <div class="scenario" style="display:inline-block;white-space:nowrap;"
                 ng-class="combos.sel == variant._key ? 'selected' : ''"
-                ng-repeat="variant in combos.all | toArray | orderBy:'created'">
+                ng-repeat="variant in combos.all | toArray | orderBy:'created'"
+				ng-click="updateLeftRoutes(variant._key); combos.com=null; updateScenarioScorecard(combos.sel)">
 
-            <div class="subHead" ng-show="combos.sel !== variant._key" 
-                  ng-click="updateLeftRoutes(variant._key); combos.com=null; updateScenarioScorecard(combos.sel)">
-                <small>{{ variant.name }}</small>
+            <div class="subHead">
+                {{ variant.name }}
 			</div>
-            <div class="subHead" ng-show="combos.sel == variant._key"
-                  ng-click="updateLeftRoutes(); combos.com=null; updateScenarioScorecard(combos.sel)">
-                <small><b>{{ variant.name }}</b></small>
-            </div>
+            <div style="width:20px;position:absolute">
+				<div class="square" style="background-color:#3D33D3" ng-show="variant.sel['I']">I</div>
+				<div class="square" style="background-color:#8B118F" ng-show="variant.sel['P']">P</div>
+				<div class="square" style="background-color:#6E3838" ng-show="variant.sel['M']">M</div>
+				<div class="square" style="background-color:#ADCDAD" ng-show="variant.sel['F']">F</div>
+			</div>	
 			
-			<div class="text-center">
-              <span ng-show="combos.sel !== variant._key">
-                <i  class = "fa fa-circle-o" 
-                    ng-show="combos.com !== variant._key" 
-                    ng-click="combos.com=variant._key; $event.stopPropagation()"></i>
-                <i  class = "fa fa-check-circle" 
-                    ng-show="combos.com == variant._key"
-                    ng-click="combos.com=null; $event.stopPropagation()"></i>
-              </span>
-              <span ng-show="combos.sel == variant._key">
-                <i class="fa fa-ban"></i>
-              </span>
-            </div>
-			
+			<div style="width:40%;position:absolute;left:22px;">
             <div>
               <span class="text-success" ng-show="variant.sel['I']">
-                <small>{{ variants['I'].all[variant.sel['I']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['I']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['I'].all[variant.sel['I']].name | altAbbrev }}</small>
               </span>
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['P']">
-                <small>{{ variants['P'].all[variant.sel['P']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['P']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['P'].all[variant.sel['P']].name | altAbbrev}}</small>
               </span>
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['M']">
-                <small>{{ variants['M'].all[variant.sel['M']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['M']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['M'].all[variant.sel['M']].name | altAbbrev}}</small>
               </span>
             </div>
             <div>
               <span class="text-success" ng-show="variant.sel['F']">
-                <small>{{ variants['F'].all[variant.sel['F']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['F']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['F'].all[variant.sel['F']].name | altAbbrev}}</small>
               </span>
             </div>
+
+			</div>
+
+			<div style="width:20px;position:absolute; left:75px">
+				<div class="square" style="background-color:#D77FBC" ng-show="variant.sel['N']">N</div>
+				<div class="square" style="background-color:#811881" ng-show="variant.sel['W']">W</div>
+				<div class="square" style="background-color:#007eff" ng-show="variant.sel['K']">K</div>
+				<div class="square" style="background-color:#11b1b1" ng-show="variant.sel['G']">G</div>
+			</div>
+			
+			<div style="width:40%;position:absolute;left:95px;">
 			<div>
               <span class="text-success" ng-show="variant.sel['N']">
-                <small>{{ variants['N'].all[variant.sel['N']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['N']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['N'].all[variant.sel['N']].name | altAbbrev}}</small>
               </span>
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['W']">
-                <small>{{ variants['W'].all[variant.sel['W']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['W']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['W'].all[variant.sel['W']].name | altAbbrev}}</small>
               </span>
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['K']">
-                <small>{{ variants['K'].all[variant.sel['K']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['K']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['K'].all[variant.sel['K']].name | altAbbrev}}</small>
               </span>
             </div>
 			<div>
               <span class="text-success" ng-show="variant.sel['G']">
-                <small>{{ variants['G'].all[variant.sel['G']].name }}</small>
-              </span>
-              <span class="text-danger" ng-show="!variant.sel['G']">
-                <div><i class="fa fa-times"></i></div>
+                <small>{{ variants['G'].all[variant.sel['G']].name | altAbbrev}}</small>
               </span>
             </div>
-
+			</div>
 			
 			
-
-
+			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
+			ng-show="combos.sel !== variant._key && combos.com !== variant._key &&  scenarioCompare" ng-click="combos.com=variant._key; $event.stopPropagation()">
+                <i  ng-show = "!combos.com" class= "fa fa-circle-o faa-pulse animated"></i>
+				<i  ng-show = "combos.com" class= "fa fa-circle-o"></i>
+			</div>
+			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
+			ng-show="combos.sel !== variant._key && combos.com == variant._key &&  scenarioCompare" ng-click="combos.com=null; $event.stopPropagation()">
+				<i  class = "fa fa-check-circle"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -697,38 +671,37 @@
 
 
   <!-- 4 route selector module --> 
-  <div class="colBody text-center" style="width:35px; box-shadow: 0px 0px 0px;""> 
-    <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
-      <div class="fa-stack" ng-click="targetPOIUsers()">
+  <div class="colBody text-center" style="width:70px; box-shadow: 0px 0px 0px;">
+  
+    <div class="colHead">
+      <div class="fa-stack">
         <i class="fa fa-code-fork fa-rotate-270"></i>
       </div>
-    </div>
-
-    <div class="showToggle" ng-show="visibleTabs.routes" style="background-color: rgba(255,165,0,0.5)">
-      <div class="smallColVal" style="color:#FFF;background-color:#3D33D3;"
+	</div>  
+	<div class="showToggle" ng-show="visibleTabs.routes">
+	<div style="width:34px;position:absolute">
+	  <div class="smallColVal" style="color:#FFF;background-color:#3D33D3;"
             ng-click="targetCorridor('I'); tabnav='I'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'I' ? 'unselected' : ''">
             I
       </div>
-	  
 	  <div class="smallColVal" style="color:#FFF;background-color:#8B118F;"
             ng-click="targetCorridor('P'); tabnav='P'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'P' ? 'unselected' : ''">
             P
       </div>
-      
 	  <div class="smallColVal" style="color:#FFF;background-color:#6E3838;"
             ng-click="targetCorridor('M'); tabnav='M'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'M' ? 'unselected' : ''">
             M
-      </div> 
-
+      </div>
       <div class="smallColVal" style="color:#FFF;background-color:#ADCDAD;"
             ng-click="targetCorridor('F'); tabnav='F'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'F' ? 'unselected' : ''">
             F
       </div>
-
+	</div>
+	<div style="width:34px;position:absolute;left:36px;top:0px">
 	  <div class="smallColVal" style="color:#FFF;background-color:#D77FBC;"
             ng-click="targetCorridor('N'); tabnav='N'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'N' ? 'unselected' : ''">
@@ -746,16 +719,14 @@
             ng-class="tabnav !== 'K' ? 'unselected' : ''">
             K
       </div>
-	  
 	  <div class="smallColVal" style="color:#FFF;background-color:#11b1b1;"
             ng-click="targetCorridor('G'); tabnav='G'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
             ng-class="tabnav !== 'G' ? 'unselected' : ''">
             G
       </div>
-	  
-    </div>
+	</div>
   </div>  
-
+  </div>
 
   <!-- 5 route table module --> 
   <div class="colBody" id="rightDynamic1" style=" box-shadow: 0px 0px 0px;">
@@ -784,7 +755,7 @@
 			<label class="btn btn-xs" ng-class="routeScorecard ? '' : 'active tiny'" ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard" style="line-height:25px">
                 <i class="fa fa-bar-chart"></i> Data
 			</label>
-			<label class="btn btn-xs" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF"> {{ variants[tabnav].all[variants[tabnav].sel].name }}
+			<label class="btn btn-xs" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF"> {{ variants[tabnav].all[variants[tabnav].sel].name | altAbbrev }}
 			</label>
 			<label class="btn btn-xs" ng-class="visibleTabs.customize ? '' : 'active tiny'" ng-click="visibleTabs.customize=!visibleTabs.customize; createVar=false"><i class="fa fa-pencil-square-o"></i> Edit
 			</label>
@@ -794,7 +765,7 @@
 			</label>
       </div>
     
-      <div style="height: 90%; overflow-y: scroll">
+      <div style="height: 90%; overflow-y: auto">
         <table class="table table-condensed table-hover">
           <thead>
             <tr>
