@@ -433,7 +433,7 @@
         <span ng-if="variant.all[variant.sel].station == 2">
         Full,
         </span>
-		Interval: every {{ variant.all[variant.sel].offpeak.min}} min., every {{ variant.all[variant.sel].peak.min}} min. (peak)
+		Intervals: every {{ variant.all[variant.sel].offpeak.min}} min., every {{ variant.all[variant.sel].peak.min}} min. (peak)
       </h6>
 	  </li>
 	  <li>Name combo and save</li>
@@ -545,12 +545,12 @@
   <div class="colBody" id="leftDynamic"> 
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <i class="fa fa-random"></i>
-      <span ng-show="!combos.sel">Combo: Existing MBTA System</span>
+      <span ng-show="!combos.sel">Combo: Existing MBTA</span>
       <span ng-show="combos.sel">
         Combo: {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
           <span ng-show="combos.com">compared with {{ combos.all[combos.com].name }}</span>
-          <span ng-show="!combos.com">Compared with Baseline</span>
+          <span ng-show="!combos.com">compared with...</span>
         </span>
       </span>
     </div>
@@ -798,7 +798,7 @@
               <th></th>
               <th style="width: 35%">Alternative</th>
               <th>Stop Type</th>
-              <th colspan=2>Interval</th>
+              <th colspan=2>Intervals</th>
             </tr>
           </thead>
           <tbody ng-show="visibleTabs.customize">
@@ -933,7 +933,7 @@
 	 <div class="bottomFixed">
 
 	  <div class="subHead">
-        Set Interval
+        Set Intervals
       </div>
 	
       <div class="setTimesTitle">
