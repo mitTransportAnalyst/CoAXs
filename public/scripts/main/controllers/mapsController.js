@@ -14,6 +14,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // Management for current scenario
   var scenarioBase = {
     name     : null,
+	num		 : 0,
     station  : 2,
     routeId  : null,
     peak     : { min : 15,  sec : 0 },
@@ -21,6 +22,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
 
   $scope.selField = 'jobs_tot';
+  $scope.scenarioLegend = true;
   
   $scope.scenario = {
     'I' : angular.copy(scenarioBase),
@@ -33,14 +35,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	'G' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'I' : { sel : 0, all : {} },
-	'P' : { sel : 0, all : {} },
-	'N' : { sel : 0, all : {} },
-	'F' : { sel : 0, all : {} },
-	'M' : { sel : 0, all : {} },
-	'K' : { sel : 0, all : {} },
-	'W' : { sel : 0, all : {} },
-	'G' : { sel : 0, all : {} },
+    'I' : { routeId : 'Fair', sel : 0, all : {} },
+	'P' : { routeId : 'NewRProv', sel : 0, all : {} },
+	'N' : { routeId : 'NeedHave', sel : 0, all : {} },
+	'F' : { routeId : 'FrankLow', sel : 0, all : {} },
+	'M' : { routeId : 'FitLake', sel : 0, all : {} },
+	'K' : { routeId : 'King', sel : 0, all : {} },
+	'W' : { routeId : 'Worc', sel : 0, all : {} },
+	'G' : { routeId : 'Gree', sel : 0, all : {} },
   }
   
   $scope.defaultsBuilt = false
@@ -501,19 +503,24 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   });
 
   // highlight a corridor, all routes within
-  $scope.targetCorridor = function (id) {
-    targetService.targetCorridor(routesLayer, id);
-    targetService.targetStops(stopsLayer, null, 0);
+  $scope.targetCorridor = function (variant) {
+    if(variant){
+    targetService.targetCorridor(routesLayer, variant._key);
+    targetService.targetStops(stopsLayer, null);
+	targetService.targetPriority(priorityLayer, null);
+	$scope.tabnav = variant._key;
+	$scope.variants[$scope.tabnav].sel == null? $scope.routeScorecard=false : $scope.updateRouteScorecard($scope.scenario[$scope.tabnav].routeId, $scope.tabnav);}
   };
 
   // update a specific route within a corridor
   $scope.updateTargetFeature = function (variant) {
-    var routeId = variant ? variant.routeId : undefined
-    var station = variant ? variant.station : 0;
+    var routeId = variant ? variant.routeId : undefined;
+    var station = variant ? variant.station : 2;
     var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
+	if(routeId){
     targetService.targetCorridor(routesLayer, routeId);
     targetService.targetStops(stopsLayer, routeId, station, routeColor);
-	targetService.targetPriority(priorityLayer, routeId);
+	targetService.targetPriority(priorityLayer, routeId);}
     if (routeId) {
       $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
     } else {
@@ -537,7 +544,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.setSelectedVariant = function (tabnav, uuid) {
     $scope.variants[tabnav].sel = uuid;
     if (uuid) {
-      $scope.scenario[tabnav].name        = $scope.variants[tabnav].all[uuid].name;
+      $scope.scenario[tabnav].num         = $scope.variants[tabnav].all[uuid].num + 1;
+	  $scope.scenario[tabnav].name        = $scope.variants[tabnav].all[uuid].name;
       $scope.scenario[tabnav].station     = $scope.variants[tabnav].all[uuid].station;
       $scope.scenario[tabnav].routeId     = $scope.variants[tabnav].all[uuid].routeId;
       $scope.scenario[tabnav].peak.min    = $scope.variants[tabnav].all[uuid].peak.min;

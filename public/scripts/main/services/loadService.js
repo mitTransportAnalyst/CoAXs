@@ -75,7 +75,6 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
               var appElement = document.querySelector('[ng-app=coaxsApp]');
               var appScope = angular.element(appElement).scope().$$childHead;
 
-              appScope.targetCorridor(route.corName);
               appScope.tabnav = route.corName;
               appScope.overview = true;
             }});

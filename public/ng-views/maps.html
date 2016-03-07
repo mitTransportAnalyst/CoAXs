@@ -395,7 +395,12 @@
 	  </li>
 	  <li>Name alternative and save 
       <div class="input-group">
-        <input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name alternative...">
+	    <div class="col-xs-2">
+        <input type="text" class="form-control" size="2" maxlength="2" ng-model="scenario[tabnav].num" placeholder="#">
+		</div>
+		<div class="col-xs-10">
+		<input type="text" class="form-control" ng-model="scenario[tabnav].name" placeholder="Name alternative...">
+		</div>
         <span class="input-group-btn">
           <button class="btn btn-savealt" type="button" 
             ng-show="!scenario[tabnav].name" 
@@ -403,13 +408,14 @@
             Save Alternative
           </button>
           <button class="btn btn-savealt" type="button" 
-            ng-click="saveAlt=false; newVariant(tabnav, true)" 
+            ng-click="saveAltButton()" 
             ng-show="scenario[tabnav].name && scenario[tabnav].routeId">
             Save Alternative
           </button>
         </span>
       </div>
 	  </li>
+	  </ol>
     </div>
   </div>
 
@@ -579,8 +585,8 @@
     <div class="showToggle" ng-show="visibleTabs.scenarios">
 
 	<div class="btn-group btn-group-justified">
-			<label class="btn btn-xs" ng-class="scenarioScorecard ? '' : 'active tiny'" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel)" style="line-height:25px">
-                <i class="fa fa-bar-chart" ng-class="scenarioScorecard ? '' : 'faa-pulse animated'"></i> Data
+			<label class="btn btn-xs" ng-class="scenarioScorecard ? '' : 'active tiny'" ng-click="scenarioScorecard = !scenarioScorecard; updateScenarioScorecard(combos.sel);" style="line-height:25px">
+                <i class="fa fa-bar-chart" ng-class="scenarioScore.graphData && !scenarioScorecard ? 'faa-pulse animated' : ''"></i> Data
 			</label>
 			<label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'" ng-click="scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison
 			</label>
@@ -600,65 +606,40 @@
 				ng-click="updateLeftRoutes(combo._key); combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateScenarioScorecard(combos.sel)">
 
             <div class="subHead">
-                {{ variant.name }}
+                {{ combo.name }}
 			</div>
-            <div style="width:20px;position:absolute">
-				<div class="square" style="background-color:#3D33D3" ng-show="variant.sel['I']">I</div>
-				<div class="square" style="background-color:#8B118F" ng-show="variant.sel['P']">P</div>
-				<div class="square" style="background-color:#6E3838" ng-show="variant.sel['M']">M</div>
-				<div class="square" style="background-color:#ADCDAD" ng-show="variant.sel['F']">F</div>
+            
+			<div style="width:20px;position:absolute">
+				<div class="square" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
+				{{variant._key}}
+				</div>
 			</div>	
 			
 			<div style="width:40%;position:absolute;left:22px;">
-            <div>
-              <span class="text-success" ng-show="variant.sel['I']">
-                <small>{{ variants['I'].all[variant.sel['I']].name | altAbbrev }}</small>
+            <div ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
+              <span class="text-success" ng-show="combo.sel[variant._key]">
+                <small>{{variant.all[combo.sel[variant._key]].num}} | {{ variant.all[combo.sel[variant._key]].name | altAbbrev }}</small>
               </span>
-            </div>
-			<div>
-              <span class="text-success" ng-show="variant.sel['P']">
-                <small>{{ variants['P'].all[variant.sel['P']].name | altAbbrev}}</small>
-              </span>
-            </div>
-			<div>
-              <span class="text-success" ng-show="variant.sel['M']">
-                <small>{{ variants['M'].all[variant.sel['M']].name | altAbbrev}}</small>
-              </span>
-            </div>
-            <div>
-              <span class="text-success" ng-show="variant.sel['F']">
-                <small>{{ variants['F'].all[variant.sel['F']].name | altAbbrev}}</small>
+			  <span class="text-danger" ng-show="!combo.sel[variant._key]">
+                <small>-</small>
               </span>
             </div>
 
 			</div>
 
 			<div style="width:20px;position:absolute; left:75px">
-				<div class="square" style="background-color:#D77FBC" ng-show="variant.sel['N']">N</div>
-				<div class="square" style="background-color:#811881" ng-show="variant.sel['W']">W</div>
-				<div class="square" style="background-color:#007eff" ng-show="variant.sel['K']">K</div>
-				<div class="square" style="background-color:#11b1b1" ng-show="variant.sel['G']">G</div>
+				<div class="square" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
+				{{variant._key}}
+				</div>
 			</div>
 			
 			<div style="width:40%;position:absolute;left:95px;">
-			<div>
-              <span class="text-success" ng-show="variant.sel['N']">
-                <small>{{ variants['N'].all[variant.sel['N']].name | altAbbrev}}</small>
+			<div ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
+              <span class="text-success" ng-show="combo.sel[variant._key]">
+                <small>{{variant.all[combo.sel[variant._key]].num}} | {{ variant.all[combo.sel[variant._key]].name | altAbbrev }}</small>
               </span>
-            </div>
-			<div>
-              <span class="text-success" ng-show="variant.sel['W']">
-                <small>{{ variants['W'].all[variant.sel['W']].name | altAbbrev}}</small>
-              </span>
-            </div>
-			<div>
-              <span class="text-success" ng-show="variant.sel['K']">
-                <small>{{ variants['K'].all[variant.sel['K']].name | altAbbrev}}</small>
-              </span>
-            </div>
-			<div>
-              <span class="text-success" ng-show="variant.sel['G']">
-                <small>{{ variants['G'].all[variant.sel['G']].name | altAbbrev}}</small>
+			  <span class="text-danger" ng-show="!combo.sel[variant._key]">
+                <small>-</small>
               </span>
             </div>
 			</div>
@@ -670,7 +651,7 @@
 				<i  ng-show = "combos.com" class= "fa fa-circle-o"></i>
 			</div>
 			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
-			ng-show="combos.sel !== variant._key && combos.com == variant._key &&  scenarioCompare" ng-click="combos.com=null; $event.stopPropagation()">
+			ng-show="combos.sel !== combo._key && combos.com == combo._key &&  scenarioCompare" ng-click="combos.com=null; $event.stopPropagation()">
 				<i  class = "fa fa-check-circle"></i>
             </div>
           </div>
@@ -690,50 +671,17 @@
 	</div>  
 	<div class="showToggle" ng-show="visibleTabs.routes">
 	<div style="width:34px;position:absolute">
-	  <div class="smallColVal" style="color:#FFF;background-color:#3D33D3;"
-            ng-click="targetCorridor('I'); tabnav='I'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'I' ? 'unselected' : ''">
-            I
-      </div>
-	  <div class="smallColVal" style="color:#FFF;background-color:#8B118F;"
-            ng-click="targetCorridor('P'); tabnav='P'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'P' ? 'unselected' : ''">
-            P
-      </div>
-	  <div class="smallColVal" style="color:#FFF;background-color:#6E3838;"
-            ng-click="targetCorridor('M'); tabnav='M'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'M' ? 'unselected' : ''">
-            M
-      </div>
-      <div class="smallColVal" style="color:#FFF;background-color:#ADCDAD;"
-            ng-click="targetCorridor('F'); tabnav='F'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'F' ? 'unselected' : ''">
-            F
-      </div>
+	  <!--First four routes -->
+	  <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
+            {{variant._key}}
+	  </div>
 	</div>
 	<div style="width:34px;position:absolute;left:36px;top:0px">
-	  <div class="smallColVal" style="color:#FFF;background-color:#D77FBC;"
-            ng-click="targetCorridor('N'); tabnav='N'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'N' ? 'unselected' : ''">
-            N
-      </div>
-	  
-	  <div class="smallColVal" style="color:#FFF;background-color:#811881;"
-            ng-click="targetCorridor('W'); tabnav='W'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'W' ? 'unselected' : ''">
-            W
-      </div>
-	  
-	  <div class="smallColVal" style="color:#FFF;background-color:#007eff;"
-            ng-click="targetCorridor('K'); tabnav='K'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'K' ? 'unselected' : ''">
-            K
-      </div>
-	  <div class="smallColVal" style="color:#FFF;background-color:#11b1b1;"
-            ng-click="targetCorridor('G'); tabnav='G'; variants[tabnav].sel == null? routeScorecard=false : updateRouteScorecard(scenario[tabnav].routeId, tabnav);"
-            ng-class="tabnav !== 'G' ? 'unselected' : ''">
-            G
-      </div>
+	 <!--Last four routes -->
+	 <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
+            {{variant._key}}
+	  </div> 
+	 
 	</div>
   </div>  
   </div>
@@ -762,12 +710,12 @@
     <div class="showToggle" ng-show="visibleTabs.routes">
 	  
 	  <div class="btn-group btn-group-justified" ng-show="variants[tabnav].sel">
-			<label class="btn btn-xs" ng-class="routeScorecard ? '' : 'active tiny'" ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav); routeScorecard=!routeScorecard" style="line-height:25px">
+			<label class="btn btn-xs" ng-class="routeScorecard ? '' : 'active tiny'" ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav)" style="line-height:25px">
                 <i class="fa fa-bar-chart"></i> Data
 			</label>
-			<label class="btn btn-xs" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF"> {{ variants[tabnav].all[variants[tabnav].sel].name | altAbbrev }}
+			<label class="btn btn-xs" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF"> {{ variants[tabnav].all[variants[tabnav].sel].num }} | {{variants[tabnav].all[variants[tabnav].sel].name | altAbbrev }}
 			</label>
-			<label class="btn btn-xs" ng-class="visibleTabs.customize ? '' : 'active tiny'" ng-click="visibleTabs.customize=!visibleTabs.customize; createVar=false"><i class="fa fa-pencil-square-o"></i> Edit
+			<label class="btn btn-xs" ng-class="visibleTabs.customize ? '' : 'active tiny'" ng-click="visibleTabs.customize=!visibleTabs.customize; createVar=false"><i class="fa fa-plus-square"></i> New
 			</label>
       </div>
 	  <div class="btn-group btn-group-justified" ng-show="!variants[tabnav].sel">
@@ -785,12 +733,13 @@
               <th colspan=2>Intervals</th>
             </tr>
           </thead>
-          <tbody ng-show="visibleTabs.customize">
+          <tbody ng-show="visibleTabs.customize && variants[tabnav].sel">
             <tr>
               <td>
 			  <i class="fa fa-sliders"></i>
               </td>
-              <td style="width: 35%"><b> {{ variants[tabnav].all[variants[tabnav].sel].name }} <i>Edit</i></b></td>
+			  <td style="padding-right:0px"><i>{{ variants[tabnav].all[variants[tabnav].sel].num + 1}} |</i></td>
+              <td style="width: 35%; padding-left:0px"><i> {{ variants[tabnav].all[variants[tabnav].sel].name}}</i></td>
               <td>
                 <span ng-if="scenario[tabnav].station == 0">
                   Standard 
@@ -820,9 +769,10 @@
                 <i class="fa fa-check-square" 
                     ng-show="variants[tabnav].sel == variant._key"
                     ng-click="setSelectedVariant(tabnav, null);
-                              updateRouteScorecard(); updateTargetFeature();"></i>
+                              updateRouteScorecard(); updateTargetFeature(); visibleTabs.customize = false;"></i>
               </td>
-              <td style="width: 35%" ng-click="setSelectedVariant(tabnav, variant._key);
+			  <td style="padding-right:0px">{{variant.num}} |</td>
+              <td style="width: 35%; padding-left:0px" ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">{{ variant.name }}</td>
               <td ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
@@ -859,30 +809,30 @@
 
 
 
-  <!-- 6 route editor module --> 
+  <!-- 6 service editor module --> 
   <div class="colBody" style="width:275px">
-    <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
+    <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
       <i class="fa fa-pencil-square-o"></i> Service Editor
     </div>
 
-    <div class="placeHolder" ng-show="!visibleTabs.customize" ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
+    <div class="placeHolder" ng-show="!visibleTabs.customize || !variants[tabnav].sel" ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
       <div class="bigText">
         <i class="fa fa-pencil-square-o"></i>
       </div>
     </div>
 
-    <div class="showToggle" ng-show="visibleTabs.customize">
+    <div class="showToggle" ng-show="visibleTabs.customize && variants[tabnav].sel">
       	<div class="btn-group btn-group-justified">
 		<label class="btn btn-xs" ng-show="!variants[tabnav].sel" ></label>
 		<label class="btn btn-xs" style="background-color: 
 		#{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}; color: #FFFFFF" 
-		ng-show="variants[tabnav].sel" 
-		ng-click="visibleTabs.routes =! visibleTabs.routes"> 
-			{{ variants[tabnav].all[variants[tabnav].sel].name }} <i>Edit</i>
+		ng-show="variants[tabnav].sel"> 
+			<i>{{ variants[tabnav].all[variants[tabnav].sel].num + 1}} |  {{variants[tabnav].all[variants[tabnav].sel].name | altAbbrev}} </i>
 		</label>
-		<label class="btn btn-xs btn-info" style="line-height:25px" ng-click="saveAlt=true; createVar=false">
-            <i class="fa fa-save"></i>
+		<label class="btn btn-xs btn-info" style="line-height:25px" ng-click="saveAltButton()">
+            <i class="fa fa-save"></i> Save
         </label>
+		</button>
     </div>
         <div class="subHead">
           Set Stop Type

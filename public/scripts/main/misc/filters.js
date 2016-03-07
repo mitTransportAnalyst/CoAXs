@@ -85,7 +85,8 @@ angular.module('coaxsFilters', [])
 
 .filter('altNumInc', function () {
   return function (input) {
-    return String.fromCharCode(input.charCodeAt(0)+1);
+   if(input){
+    return String.fromCharCode(input.charCodeAt(0)+1)+'|'+input.substring(2,input.length);}
   }
 })
 
@@ -93,7 +94,7 @@ angular.module('coaxsFilters', [])
   return function (input) {
     if(input){
 	len = input.length;
-	if (len > 5) {name = input.substring(0,7)+'...';}
+	if (len > 2) {name = input.substring(0,4)+'...';}
 	else{name = input};
 	return name;}
   }
