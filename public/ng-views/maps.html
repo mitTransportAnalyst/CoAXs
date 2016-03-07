@@ -21,24 +21,26 @@
           <i class="fa fa-expand pull-right"></i>
         </h6>
       </div>
-      <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn">
-        Time Boundary
+      <div class="panel-body" ng-show="scenarioLegend &&  showVectorIsosOn">
+        Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
         <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
       </div>
-      <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
-        Travel Time
+      <div class="panel-body" ng-show="scenarioScore.graphData&& scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
+        Travel Time by Transit
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Shorter</small>
         <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Longer</small>
-		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over 2 hrs</small>
+		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over 2 hours</small>
         <br><i class="fa fa-stop fa-border" style="color:#FFF"></i> <small>Inaccessible</small>
       </div>  
 	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
-		Travel Time Comparison
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Equal</small>
-        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Equal</small>
-		<br><i class="fa fa-stop fa-border" style="color:#e4d3f4"></i> <small>{{ combos.all[combos.sel].name }} Faster</small>
-		<br><i class="fa fa-stop fa-border" style="color:#9651d5"></i> <small>{{ combos.all[combos.sel].name }} Much Faster</small>
+		Travel Time Comparison<br>
+		<small>{{ combos.all[combos.sel].name }}...</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Same as or slower than...</small>
+        <br><i class="fa fa-stop fa-border" style="color:#e4d3f4"></i> <small>Faster than...</small>
+		<br><i class="fa fa-stop fa-border" style="color:#9651d5"></i> <small>Much faster than...</small>
+		<br>
+		<small>{{ combos.all[combos.com].name }}</small>
       </div>
     </div>
   </div>
@@ -593,9 +595,9 @@
 
         <div class="scenarioEntries">          
           <div class="scenario" style="display:inline-block;white-space:nowrap;"
-                ng-class="combos.sel == variant._key ? 'selected' : ''"
-                ng-repeat="variant in combos.all | toArray | orderBy:'created'"
-				ng-click="updateLeftRoutes(variant._key); combos.com=null; updateScenarioScorecard(combos.sel)">
+                ng-class="combos.sel == combo._key ? 'selected' : (combos.com == combo._key ? 'cselected' : '')"
+                ng-repeat="combo in combos.all | toArray | orderBy:'created'"
+				ng-click="updateLeftRoutes(combo._key); combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateScenarioScorecard(combos.sel)">
 
             <div class="subHead">
                 {{ variant.name }}
@@ -663,7 +665,7 @@
 			
 			
 			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
-			ng-show="combos.sel !== variant._key && combos.com !== variant._key &&  scenarioCompare" ng-click="combos.com=variant._key; $event.stopPropagation()">
+			ng-show="combos.sel !== combo._key && combos.com !== combo._key &&  scenarioCompare" ng-click="combos.com=combo._key; $event.stopPropagation(); preMarkerQuery()">
                 <i  ng-show = "!combos.com" class= "fa fa-circle-o faa-pulse animated"></i>
 				<i  ng-show = "combos.com" class= "fa fa-circle-o"></i>
 			</div>

@@ -108,7 +108,7 @@ nav div.section {
 }
 
 .topnav .legend {
-  width: 200px;
+  width: 275px;
   height: 150px;
   top: 0px;
   right: 0px;
@@ -427,6 +427,10 @@ background-color  : #696969;
 
 .scenariosTable .selected {
   background-color: rgba(255,165,0,0.5) !important;
+}
+
+.scenariosTable .cselected {
+  background-color: rgba(137,207,240,0.5) !important;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 

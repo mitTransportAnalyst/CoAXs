@@ -100,7 +100,12 @@ coaxsApp.service('d3Service', function () {
 		.style("text-anchor","middle")
         .style("opacity", 0.85)
 		.html( function (){
-		  return d3.format(",")(d3.round(data[cutoff*5].y-compare[cutoff*5].y,-2)) + " more w/in " + 5*cutoff + " min.";
+		if (data[cutoff*5].y>=compare[cutoff*5].y){
+		  return d3.format(",")(d3.round(data[cutoff*5].y-compare[cutoff*5].y,-2)) + " more within " + 5*cutoff + " min.";
+		  }
+		  else{
+		  return d3.format(",")(d3.round(compare[cutoff*5].y-data[cutoff*5].y,-2)) + " fewer within " + 5*cutoff + " min.";
+		  }
 		});  
   }
   else{
