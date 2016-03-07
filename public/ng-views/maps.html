@@ -370,7 +370,7 @@
     <div class="saveAlt-body container">
       <h6 ng-if="!scenario[tabnav].routeId"><i class="fa fa-level-down fa-2x fa-flip-horizontal" style="vertical-align:top; padding-right:10px" ></i> Select a template route from the <span class="col-head-button" ng-click="visibleTabs.routes = !visibleTabs.routes">   Corridor Editor   </span>.</h6>
 	  <ol ng-if="scenario[tabnav].routeId">
-	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Route Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
+	  <li>Make changes in the <span class="col-head-button" ng-click="visibleTabs.customize = !visibleTabs.customize">   Service Editor   </span> <span style="float:right; padding-left:10px" ng-click="visibleTabs.customize = !visibleTabs.customize"><i class="fa fa-level-down fa-2x" ></i>  </span><span style="float:right" ng-click="visibleTabs.customize = !visibleTabs.customize"></span></li>
 	  <li>Review alternative:
 	  <h6 ng-if="scenario[tabnav].routeId">
         Corridor: {{ tabnav }} - {{ routes[scenario[tabnav].routeId][0].options.base.corLonName }}<br>
