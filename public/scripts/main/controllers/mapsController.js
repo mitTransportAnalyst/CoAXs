@@ -643,6 +643,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }
   }
 
+  
+  $scope.saveAltButton = function () {
+    if($scope.saveAlt) {
+	  $scope.newVariant($scope.tabnav,true);
+	}
+	$scope.saveAlt=!$scope.saveAlt;
+  }
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
@@ -713,6 +720,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'G' : null,
       }
     };
+	$scope.combos.sel = comboId;
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
       name    : 'North-South Rail Link',
