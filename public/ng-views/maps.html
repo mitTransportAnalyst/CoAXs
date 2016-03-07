@@ -197,7 +197,7 @@
  <div class="introPan" ng-show="introPanel">
    <div class="title">
     <h4>
-      CoAXs - North-South Rail Link Beta Version
+      <b>CoAXs</b> | North-South Rail Link | Beta Version
 	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
 	</h4>
     <div class="saveAlt-body container">
@@ -205,13 +205,13 @@
 	<img src="public/imgs/alignment.jpg" style="width:400px"/><br>
 	</div>
 	<div>	
-	<h4>Explore how a new rail tunnel from North Station to South Station could improve regional transit connectivity</h4>
+	<h4>How could a new rail link between North Station and South Station transform regional transit connectivity? </h4>
 	<br>
 	<br>
 	<h4>To Start</h4>
 	<h5>
 	  <ol>
-	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i> Time Map &nbsp </span> &nbsp to explore how far you can travel on transit</li>
+	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i> Time Map &nbsp </span> &nbsp to explore how far you can travel on transit today</li>
 	  <li>Move the <img src="public/imgs/start.png" style="height:18px"> Start Marker to try other locations</li>
 	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i> Combo Editor &nbsp </span> &nbsp to compare other scenarios</li>
 	  </ol>
@@ -380,13 +380,13 @@
       <h6>
         Station type: 
         <span ng-if="scenario[tabnav].station == 0">
-          standard stops
+          Standard stops
         </span>
         <span ng-if="scenario[tabnav].station == 1">
-          stops upgraded with raised platforms
+          Stops upgraded with raised platforms
         </span>
         <span ng-if="scenario[tabnav].station == 2">
-		  full stations
+		  Full stations
         </span>
 		<div></div>
         Interval (peak): {{ scenario[tabnav].peak.min }}:{{ scenario[tabnav].peak.sec | integerLength }} between arrivals.<br>
