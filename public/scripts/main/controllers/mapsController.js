@@ -24,6 +24,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.selField = 'jobs_tot';
   $scope.scenarioLegend = true;
   
+  
+  analystService.refreshCred();
+  
+  $interval(function () {
+            analystService.refreshCred();
+          } , 3540000);
+  
   $scope.scenario = {
     'I' : angular.copy(scenarioBase),
 	'P' : angular.copy(scenarioBase),

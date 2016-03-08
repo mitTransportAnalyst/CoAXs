@@ -31,13 +31,46 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 
 
-
-
-
 /// ROUTING /// 
 var http    = require('http');
 var request = require('request');
 var csv     = require('csv-streamify');
+
+var analystCreds = require('request');
+
+var analystReqOpts = {
+  url: 'http://ansons.mit.edu:9090/oauth/token',
+  method: 'POST',
+  timeout: 10000,
+  auth: {
+    'user' : process.env.analyst_key,
+	'pass' : process.env.analyst_secret
+  },
+  headers : {
+    'content-type'  : 'application/x-www-form-urlencoded'
+  },
+  body: 'grant_type=client_credentials'
+};
+  
+ app.get('/credentials', function (req, res) {
+  var credExpiration = 0,
+  clientCredentials = '';
+  
+  console.log('date: ');
+  console.log(parseFloat(credExpiration));  
+  if ( parseFloat(Date.now()) >= parseFloat(credExpiration)) {
+    console.log('Requesting new credentials from analyst-server')
+	analystCreds(analystReqOpts, function (error, response, body){
+		clientCredentials = body;
+		credExpiration = 3600*1000+parseFloat(Date.now()-60000);
+		//console.log('New credentials received: ' + clientCredentials);
+		console.log(clientCredentials);
+		res.send(clientCredentials);
+	});
+  };
+});
+
+
 
 app.get('/', function (req, res) {
   res.render('index.ejs', {

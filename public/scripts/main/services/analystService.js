@@ -1,5 +1,5 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
-coaxsApp.service('analystService', function (supportService) {
+coaxsApp.service('analystService', function (supportService, $http) {
 
 	
   var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
@@ -51,10 +51,7 @@ coaxsApp.service('analystService', function (supportService) {
     showIso        : true,
   });
 
-  var analyst_key ={'key': 'NFSL557JLOHFNN57X2G72LWLX'}; 
-  var analyst_secret = {'secret': '0L2usK8Ojadn1DOwUECv8+BKrpwL6sOteVGirPGG+y4'};
-
-  analyst.obtainClientCredentials('NFSL557JLOHFNN57X2G72LWLX', '0L2usK8Ojadn1DOwUECv8+BKrpwL6sOteVGirPGG+y4');
+  this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
   
   var optionCurrent = {
     scenario      : {
