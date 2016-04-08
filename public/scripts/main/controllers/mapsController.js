@@ -664,6 +664,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     };
   }
 
+  $scope.clearPOIUsers = function () {
+    $scope.currentPOIUser = false;
+	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(0) });
+  }
+  
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
 	if (id) { 

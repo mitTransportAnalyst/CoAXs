@@ -507,6 +507,9 @@
         ng-class="user.userId == currentPOIUser ? '' : 'unselected'">
         <i class="fa fa-user"></i><br> {{ user.userId }}
   </div>
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">
+        <i class="fa fa-user"></i><br> Clear
+  </div>
 </div>
 
 
