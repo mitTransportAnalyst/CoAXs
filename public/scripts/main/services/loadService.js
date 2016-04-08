@@ -255,10 +255,19 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "HOME") {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
 			  homeLoc = [pois[n].lat, pois[n].lng];
             }
-            else if (pois[n].poiTag == "HEALTHCARE")  {
+            else if (pois[n].poiTag == "missed-bus")  {
+              icon = new L.divIcon({className: 'missed-bus'});;  
+            }
+			else if (pois[n].poiTag == "missed-train")  {
+              icon = new L.divIcon({className: 'missed-train'});;  
+            }
+			else if (pois[n].poiTag == "HEALTHCARE")  {
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
+            }
+			else if (pois[n].poiTag == "HEALTHCARE")  {
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
