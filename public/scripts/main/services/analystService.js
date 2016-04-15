@@ -3,7 +3,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
 	
   var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
-     defaultGraph = '7f04712943ce0a87d1fde97b18c4029e';  
+     defaultGraph = '70f850a5ea403be15aeb91ab07fc4162';  
 
   var subjects = {
         prefix : 'epa_smart_location_database',
@@ -81,6 +81,13 @@ coaxsApp.service('analystService', function (supportService, $http) {
     
   var allRoutes = ['Worc','King','Fair','FitLake','FrankLow','Gree','NeedHave','NewRProv'];
   var agencyId = '99';
+  var banExtraAgencies = [
+    {
+      type      : 'remove-trip',
+      agencyId  : 'KM',
+      routeId   : null,
+      tripId    : null,
+    }];
 
   // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
@@ -97,7 +104,8 @@ coaxsApp.service('analystService', function (supportService, $http) {
     if (isoLayer)   { isoLayer.setOpacity(1); };
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
-    optionC[c].scenario.modifications = []; // empty contents of the modifications list entirely
+    optionC[c].scenario.modifications = []
+	optionC[c].scenario.modifications.push(banExtraAgencies[0]); // empty contents of the modifications list entirely
   };
 
   this.killCompareIso = function (map) {
