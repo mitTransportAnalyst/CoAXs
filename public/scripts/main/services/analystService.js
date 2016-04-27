@@ -2,49 +2,42 @@
 coaxsApp.service('analystService', function (supportService, $http) {
 
 	
-  var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
-     defaultGraph = '70f850a5ea403be15aeb91ab07fc4162';  
+  var defaultShapefile = '6204ae67-0a51-415c-8b86-c57185a3a941',
+     defaultGraph = '53ab05a11caa3daef685ac214ef34e25';  
 
   var subjects = {
-        prefix : 'epa_smart_location_database',
+        prefix : 'Railplan_Joined',
 		fields : {
 		hh : { 
-		  id: 'counthu10',
-		  verbose : 'Households'
+		  id: 'dem_jobs',
+		  verbose : 'Jobs'
 		}, 
 		hh_zerocar: {
-          id: 'autoown0',
-          verbose: 'Households - Car-Free',
+          id: 'em_whitec2',
+          verbose: 'Jobs | White Collar',
         },
         totpop: {
-          id: 'totpop10',
-          verbose: 'Residents',
+          id: 'em_bluec20',
+          verbose: 'Jobs | Blue Collar',
         },
         jobs_tot: {
-          id: 'emptot',
-          verbose: 'Jobs',
+          id: 'dem_pop',
+          verbose: 'Residents',
         },
         retail: {
-          id: 'e8_ret10',
-          verbose: 'Jobs - Retail'
+          id: 'dem_pworka',
+          verbose: 'Residents | Working Age'
         },
-        healthcare: {
-          id: 'e8_hlth10',
-          verbose: 'Jobs - Healthcare'
-        },
-        education: {
-          id: 'e8_ed10',
-          verbose: 'Jobs - Education'
-        }}
+        }
   };
 
   this.isochrones = null;
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    baseUrl		   : 'http://ansons.mit.edu:9090',
-	apiUrl         : 'http://ansons.mit.edu:9090/api',
-    tileUrl        : 'http://ansons.mit.edu:9090/tile',
+    baseUrl		   : 'http://coaxs.mit.edu:9090',
+	apiUrl         : 'http://coaxs.mit.edu:9090/api',
+    tileUrl        : 'http://coaxs.mit.edu:9090/tile',
     shapefileId    : defaultShapefile,
     graphId        : defaultGraph,
 	//showPoints	   : true,
