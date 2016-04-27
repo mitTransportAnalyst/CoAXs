@@ -97,7 +97,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // Angular Leaflet Directive - base components
   var defaults_global = {
-    minZoom: 9,
+    minZoom: 8,
     maxZoom: 18,
     scrollWheelZoom    : false,
     zoomControl        : true,
@@ -106,12 +106,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   var maxBounds_global =  {
     northEast: {
-      lat: 41.36,
-      lng: -71.8
+      lat: 50,
+      lng: -2
       },
     southWest: {
-      lat: 43.36,
-      lng:-70.3}
+      lat: 53,
+      lng:2}
   };
   
    var tilesDict = {
@@ -135,9 +135,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   var tiles_global = tilesDict.base;
   
   var center_global = {
-    lat  : 42.36,
-    lng  : -71.092,
-    zoom : 12,
+    lat  : 51.539431,
+    lng  : 0.081417,
+    zoom : 11,
   };
   // Assembling right map
   $scope.defaults_right  = angular.copy(defaults_global);
