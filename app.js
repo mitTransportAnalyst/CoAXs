@@ -56,15 +56,12 @@ var analystReqOpts = {
   var credExpiration = 0,
   clientCredentials = '';
   
-  console.log('date: ');
-  console.log(parseFloat(credExpiration));  
   if ( parseFloat(Date.now()) >= parseFloat(credExpiration)) {
     console.log('Requesting new credentials from analyst-server')
 	analystCreds(analystReqOpts, function (error, response, body){
 		clientCredentials = body;
 		credExpiration = 3600*1000+parseFloat(Date.now()-60000);
 		//console.log('New credentials received: ' + clientCredentials);
-		console.log(clientCredentials);
 		res.send(clientCredentials);
 	});
   };
@@ -194,7 +191,7 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
 
 // gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)
 app.get('/pois', function (req, res) {
-  var url = 'http://docs.google.com/spreadsheets/d/19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac/export?format=csv&id';
+  var url = 'http://docs.google.com/spreadsheets/d/1LLVDBEuVY_WS2F8fjdD64UJmmwRooq-MKzrWsl9DXSs/export?format=csv&id';
   request(url)
   .pipe(csv({
     objectMode : true, 
