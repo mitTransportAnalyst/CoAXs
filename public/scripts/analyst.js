@@ -281,7 +281,7 @@ var Analyst = (function () {
 				expires_in: 3600,
 				token_type: 'Bearer',
 				access_token: data};
-            _this.setClientCredentials(parsed.access_token);
+            _this.setClientCredentials(data);
 			resolve(parsed);
 
             // get new credentials two minutes before these expire
@@ -323,9 +323,9 @@ var Analyst = (function () {
 
         if (_this2.clientCredentials !== undefined) {
           if (path.indexOf('?') !== -1) {
-            path += '&accessToken=' + _this2.clientCredentials;
+            path += '&accessToken=' + _this2.clientCredentials.access_token;
           } else {
-            path += '?accessToken=' + _this2.clientCredentials;
+            path += '?accessToken=' + _this2.clientCredentials.access_token;
           }
         }
 
