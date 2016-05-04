@@ -354,7 +354,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
 
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
-  leafletData.getMap('map_right').then(function (map) {
+  leafletData.getMap('map_left').then(function (map) {
     // get mbta existing subway information
 	var gs = true;
     loadService.getExisting(function (subways) {
@@ -408,34 +408,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	  priorityLayer = priorityLanes;
     })
 
-    // now pull the proposed routes
-    loadService.getProposedRoutes(function (data) {
-      routesLayer = data.layerGroup;
-      routesLayer.addTo(map);
 
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
-
-      // iterate through routes and set the default scenario values
-      for (var key in routes) {
-        var tabnavAlt = routes[key][0].options.base.corName;
-
-        var rewind = angular.copy($scope.scenario[tabnavAlt]);
-
-        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
-        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
-        $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
-
-        var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
-        $scope.newVariant(tabnavAlt, isDefault);
-        if (!isDefault) {
-          $scope.scenario[tabnavAlt].name = rewind.name;
-          $scope.scenario[tabnavAlt].routeId = rewind.routeId;
-          $scope.scenario[tabnavAlt].station = rewind.station;
-        };
-      };
-    });
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/proposed_stops', function (stops) {
@@ -489,6 +462,34 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
+    });
+	
+	    // now pull the proposed routes
+    loadService.getProposedRoutes(function (data) {
+	routesLayer = data.layerGroup;
+      routesLayer.addTo(map);
+
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
+      // iterate through routes and set the default scenario values
+	  for (var key in routes) {
+	    console.log(routes[key]);
+        var tabnavAlt = routes[key][0].options.base.corName;
+        var rewind = angular.copy($scope.scenario[tabnavAlt]);
+
+        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
+        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
+        $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
+
+        var isDefault = routes[key][0].options.base.default;
+        $scope.newVariant(tabnavAlt, isDefault);
+        if (!isDefault) {
+          $scope.scenario[tabnavAlt].name = rewind.name;
+          $scope.scenario[tabnavAlt].routeId = rewind.routeId;
+          $scope.scenario[tabnavAlt].station = rewind.station;
+        };
+      };
     });
 	
     // load user points from phil's google spreadsheet
