@@ -201,7 +201,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
     $scope.scenarioScore.graphData = {
       all: poi.graphData,
-      sel: poi.graphData.jobs_tot
+      sel: poi.graphData.dem_jobs
     };
     $scope.drawGraph($scope.scenarioScore.graphData);
     leafletData.getMap('map_left').then(function(map) {
