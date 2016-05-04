@@ -21,7 +21,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 30, sec : 0 },
   }
 
-  $scope.selField = 'jobs_tot';
+  $scope.selField = 'dem_jobs';
   $scope.scenarioLegend = true;
   
   
