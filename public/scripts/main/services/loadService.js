@@ -255,7 +255,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "HOME") {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
 			  homeLoc = [pois[n].lat, pois[n].lng];
             }
             else if (pois[n].poiTag == "missed-bus")  {
@@ -271,7 +271,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
-              icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
             }
             var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
             marker['userId'] = userId;
