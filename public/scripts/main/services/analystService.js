@@ -6,25 +6,25 @@ coaxsApp.service('analystService', function (supportService, $http) {
      defaultGraph = '53ab05a11caa3daef685ac214ef34e25';  
 
   var subjects = {
-        prefix : 'Railplan_Joined',
+        prefix : '2011___railplan_zones',
 		fields : {
-		hh : { 
+		dem_jobs : { 
 		  id: 'dem_jobs',
 		  verbose : 'Jobs'
 		}, 
-		hh_zerocar: {
+		em_whitec2: {
           id: 'em_whitec2',
           verbose: 'Jobs | White Collar',
         },
-        totpop: {
+        em_bluec20: {
           id: 'em_bluec20',
           verbose: 'Jobs | Blue Collar',
         },
-        jobs_tot: {
+        dem_pop: {
           id: 'dem_pop',
           verbose: 'Residents',
         },
-        retail: {
+        dem_pworka: {
           id: 'dem_pworka',
           verbose: 'Residents | Working Age'
         },
