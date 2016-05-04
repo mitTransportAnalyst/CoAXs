@@ -72,8 +72,8 @@ coaxsApp.service('analystService', function (supportService, $http) {
     },
   };
     
-  var allRoutes = ['Worc','King','Fair','FitLake','FrankLow','Gree','NeedHave','NewRProv'];
-  var agencyId = '99';
+  var allRoutes = ['R0','R1','R2','T1','J1'];
+  var agencyId = 'LO';
   var banExtraAgencies = [
     {
       type      : 'remove-trip',
