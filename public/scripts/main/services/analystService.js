@@ -42,9 +42,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    baseUrl		   : 'http://ansons.mit.edu:9090',
-	apiUrl         : 'http://ansons.mit.edu:9090/api',
-    tileUrl        : 'http://ansons.mit.edu:9090/tile',
+    baseUrl		   : 'http://coaxs.mit.edu:9090',
+	apiUrl         : 'http://coaxs.mit.edu:9090/api',
+    tileUrl        : 'http://coaxs.mit.edu:9090/tile',
     shapefileId    : defaultShapefile,
     graphId        : defaultGraph,
 	//showPoints	   : true,
