@@ -616,22 +616,8 @@
             </div>
 
 			</div>
-
-			<div style="width:20px;position:absolute; left:75px">
-				<div class="square" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
-				{{variant._key}}
-				</div>
-			</div>
 			
 			<div style="width:40%;position:absolute;left:95px;">
-			<div ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
-              <span class="text-success" ng-show="combo.sel[variant._key]">
-                <small>{{variant.all[combo.sel[variant._key]].num}} | {{ variant.all[combo.sel[variant._key]].name | altAbbrev }}</small>
-              </span>
-			  <span class="text-danger" ng-show="!combo.sel[variant._key]">
-                <small>-</small>
-              </span>
-            </div>
 			</div>
 			
 			
@@ -665,13 +651,6 @@
 	  <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
             {{variant._key}}
 	  </div>
-	</div>
-	<div style="width:34px;position:absolute;left:36px;top:0px">
-	 <!--Last four routes -->
-	 <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: -4">
-            {{variant._key}}
-	  </div> 
-	 
 	</div>
   </div>  
   </div>

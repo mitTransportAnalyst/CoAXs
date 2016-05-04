@@ -94,7 +94,7 @@ angular.module('coaxsFilters', [])
   return function (input) {
     if(input){
 	len = input.length;
-	if (len > 2) {name = input.substring(0,4)+'...';}
+	if (len > 22) {name = input.substring(0,20)+'...';}
 	else{name = input};
 	return name;}
   }
