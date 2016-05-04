@@ -32,24 +32,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           } , 3540000);
   
   $scope.scenario = {
-    'I' : angular.copy(scenarioBase),
-	'P' : angular.copy(scenarioBase),
-    'N' : angular.copy(scenarioBase),
-    'F' : angular.copy(scenarioBase),
-    'M' : angular.copy(scenarioBase),
-	'K' : angular.copy(scenarioBase),
-	'W' : angular.copy(scenarioBase),
-	'G' : angular.copy(scenarioBase),
+    'R' : angular.copy(scenarioBase),
+	'T' : angular.copy(scenarioBase),
+	'J' : angular.copy(scenarioBase),
   }
   $scope.variants = {
-    'I' : { routeId : 'Fair', sel : 0, all : {} },
-	'P' : { routeId : 'NewRProv', sel : 0, all : {} },
-	'N' : { routeId : 'NeedHave', sel : 0, all : {} },
-	'F' : { routeId : 'FrankLow', sel : 0, all : {} },
-	'M' : { routeId : 'FitLake', sel : 0, all : {} },
-	'K' : { routeId : 'King', sel : 0, all : {} },
-	'W' : { routeId : 'Worc', sel : 0, all : {} },
-	'G' : { routeId : 'Gree', sel : 0, all : {} },
+	'R' : { routeId : 'R1', sel : 0, all : {} },
+	'T' : { routeId : 'T1', sel : 0, all : {} },
+	'J' : { routeId : 'J1', sel : 0, all : {} },
   }
   
   $scope.defaultsBuilt = false
@@ -59,7 +49,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     com : null,
     all : {},
   }
-  $scope.tabnav = 'I';
+  $scope.tabnav = 'R';
   $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
@@ -587,14 +577,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : name,
       created : Date.now(),
       sel     : {
-        'I' : $scope.variants['I'].sel,
-		'P' : $scope.variants['P'].sel,
-        'N' : $scope.variants['N'].sel,
-        'F' : $scope.variants['F'].sel,
-        'M' : $scope.variants['M'].sel,
-		'K' : $scope.variants['K'].sel,
-		'W' : $scope.variants['W'].sel,
-		'G' : $scope.variants['G'].sel,
+        'R' : $scope.variants['R'].sel,
+		'T' : $scope.variants['T'].sel,
+        'J' : $scope.variants['J'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -719,35 +704,50 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if(!$scope.defaultsBuilt){
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'Existing MBTA',
+      name    : 'Current Service',
       created : Date.now(),
       sel     : {
-		'I' : null,
-        'P' : null,
-        'M' : null,
-        'F' : null,
-		'N' : null,
-		'W' : null,
-		'K' : null,
-		'G' : null,
+		'R' : Object.keys($scope.variants['R'].all)[0],
+		'T' : null,
+		'J' : null,
       }
     };
-	$scope.combos.sel = comboId;
-    var comboId = supportService.generateUUID();
+	
+	// var comboId = supportService.generateUUID();
+    // $scope.combos.all[comboId] = {
+      // name    : 'Part Closure',
+      // created : Date.now(),
+      // sel     : {
+		// 'R' : Object.keys($scope.variants['R'].all)[2],
+		// 'T' : Object.keys($scope.variants['T'].all)[0],
+		// 'J' : null,
+      // }
+    // };
+	
+	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'North-South Rail Link',
+      name    : 'Full Closure',
       created : Date.now(),
       sel     : {
-        'I' : Object.keys($scope.variants['I'].all)[0],
-		'P' : Object.keys($scope.variants['P'].all)[0],
-        'M' : Object.keys($scope.variants['M'].all)[0],
-        'F' : Object.keys($scope.variants['F'].all)[0],
-        'N' : Object.keys($scope.variants['N'].all)[0],
-		'W' : Object.keys($scope.variants['W'].all)[0],
-		'K' : Object.keys($scope.variants['K'].all)[0],
-		'G' : Object.keys($scope.variants['G'].all)[0],
+		'R' : null,
+	    'T' : Object.keys($scope.variants['T'].all)[0],
+		'J' : Object.keys($scope.variants['J'].all)[0],
       }
     };
+	
+	var comboId = supportService.generateUUID();
+    $scope.combos.all[comboId] = {
+      name    : 'Extension',
+      created : Date.now(),
+      sel     : {
+		'R' : Object.keys($scope.variants['R'].all)[1],
+		'T' : null,
+		'J' : null,
+      }
+    };
+	
+	$scope.combos.sel = comboId;
+    
   $scope.defaultsBuilt = true;
   }
   }
