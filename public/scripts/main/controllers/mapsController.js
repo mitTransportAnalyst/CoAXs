@@ -14,9 +14,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-	num		 : null,
     station  : 2,
     routeId  : null,
+	num		 : null,
     peak     : { min : 15,  sec : 0 },
     offpeak  : { min : 30, sec : 0 },
   }
@@ -721,6 +721,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       }
     };
 	
+	$scope.combos.sel = comboId;
+
+	
 	// var comboId = supportService.generateUUID();
     // $scope.combos.all[comboId] = {
       // name    : 'Part Closure',
@@ -748,14 +751,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : 'Extension',
       created : Date.now(),
       sel     : {
-		'R' : Object.keys($scope.variants['R'].all)[1],
+		'R' : Object.keys($scope.variants['R'].all)[2],
 		'T' : null,
 		'J' : null,
       }
     };
 	
-	$scope.combos.sel = comboId;
-    
+    console.log($scope.variants);
+	
   $scope.defaultsBuilt = true;
   }
   }
