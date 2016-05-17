@@ -166,14 +166,19 @@ coaxsApp.service('analystService', function (supportService, $http) {
     });
   }
 
-  this.modifyModes = function (routeTypes) {
-    optionC[c].scenario.modifications.push({
-      type: 'remove-trip',
-      agencyId: agencyId,
-      routeId: null,
-      tripId: null,
-      routeType: routeTypes
-    });
+  this.modifyModes = function (modes, c) {
+    if (modes.accessEgress.bike == true) {
+	optionC[c].accessModes = 'BICYCLE';
+    optionC[c].egressModes = 'BICYCLE';
+	optionC[c].directModes = 'BICYCLE';
+	}
+	else {
+	optionC[c].accessModes = 'WALK';
+    optionC[c].egressModes = 'WALK';
+	optionC[c].directModes = 'WALK';
+	}
+	
+	
   }
 
   this.loadExisting = function (poi, map, cb) {

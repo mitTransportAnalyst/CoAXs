@@ -51,12 +51,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
   $scope.tabnav = 'R';
   $scope.mode = {
-    all: [],
-    local: [3, 5, 6, 7],
-    bus: [0, 1, 3, 5, 6, 7],
-    walking: [0, 1, 2, 3, 4, 5, 6, 7],
-    selected: 'all'
-  };
+    accessEgress: { bike 	: false,},
+	transit: {		bus 	: true,
+					lu		: true,
+					lo      : true,
+					nr		: true,}};
+					
+    // $scope.modeC = angular.copy(
+	// all: [],
+    // local: [3, 5, 6, 7],
+    // bus: [0, 1, 3, 5, 6, 7],
+    // walking: [0, 1, 2, 3, 4, 5, 6, 7],
+    // selected: 'all'
+  // }; -->
   
   // left globals
   var subwaysLayer    = null,
@@ -228,9 +235,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       analystService.modifyRoutes(toKeep, c);
       analystService.modifyDwells(toKeep, c);
       analystService.modifyFrequencies(toKeep, c);
-	  if ($scope.mode.selected != 'all') {
-        analystService.modifyModes($scope.mode[$scope.mode.selected], c);
-      }
+      analystService.modifyModes($scope.mode, c);
 	};
 
     animateProgressBar(); // start the progress bar

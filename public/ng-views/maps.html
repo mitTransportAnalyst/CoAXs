@@ -544,6 +544,60 @@
       </div>
 
       
+	  <div class="subHead">
+          Set Modes
+        </div>
+
+        <div class="btn-group btn-group-justified">
+          <label  class="btn btn-xs" ng-class="tiny active">
+			<i class="fa fa-male"></i>
+          </label>
+		  <label  class="btn btn-xs"
+				  ng-class="mode.accessEgress.bike ? '' : 'tiny active'"
+                  ng-click="mode.accessEgress.bike=!mode.accessEgress.bike">
+            <span class="fa-stack">
+			<i class="fa fa-bicycle fa-stack-1x"></i>
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.accessEgress.bike"></i>'
+			</span>          </label>
+          <label class="btn btn-xs">
+          </label>
+          <label  class="btn btn-xs"
+                  ng-class="mode.transit.bus ? '' : 'tiny active'"
+                  ng-click="mode.transit.bus=!mode.transit.bus">
+            <span class="fa-stack">
+			<i class="fa fa-bus fa-stack-1x"></i>
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.bus"></i>'
+			</span>
+          </label>
+		  <label  class="btn btn-xs"
+                  ng-class="mode.transit.lu ? '' : 'tiny active'"
+                  ng-click="mode.transit.lu=!mode.transit.lu">
+            <span class="fa-stack">
+			<i class="fa fa-subway fa-stack-1x"></i>
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lu"></i>'
+			</span>
+          </label>
+		  <label  class="btn btn-xs"
+                  ng-class="mode.transit.lo ? '' : 'tiny active'"
+                  ng-click="mode.transit.lo=!mode.transit.lo">
+            <span class="fa-stack">
+			<i class="fa fa-train fa-stack-1x"></i>
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lo"></i>'
+			</span>
+          </label>
+		  <label  class="btn btn-xs"
+                  ng-class="mode.transit.nr ? '' : 'tiny active'"
+                  ng-click="mode.transit.nr=!mode.transit.nr">
+ 		    <span class="fa-stack">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.nr"></i>
+			<img src="public/imgs/nr.png" style="height:15px">
+			</span>
+          </label>
+		  
+		  
+        </div>
+
+	  
     </div>
   </div>
 
