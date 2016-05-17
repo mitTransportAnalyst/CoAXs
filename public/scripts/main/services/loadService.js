@@ -56,7 +56,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
         feature['length'] = supportService.getLength(data.features[i].geometry);
-
+		feature['num']=feature.id
         if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {

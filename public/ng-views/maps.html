@@ -648,7 +648,7 @@
 	<div class="showToggle" ng-show="visibleTabs.routes">
 	<div style="width:34px;position:absolute">
 	  <!--First four routes -->
-	  <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }};" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
+	  <div class="smallColVal" style="color:#FFF;background-color:#{{ routes[variant.routeId][0].options.base.routeColor }}" ng-click = "targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 4">
             {{variant._key}}
 	  </div>
 	</div>
@@ -698,7 +698,6 @@
             <tr>
               <th></th>
               <th colspan =2>Alternative</th>
-              <th>Stop Type</th>
               <th colspan=2>Intervals</th>
             </tr>
           </thead>
@@ -708,18 +707,8 @@
 			  <i class="fa fa-sliders"></i>
               </td>
 			  <td style="padding-right:0px"><i>{{ variants[tabnav].all[variants[tabnav].sel].num + 1}} |</i></td>
-              <td style="width: 35%; padding-left:0px"><i> {{ variants[tabnav].all[variants[tabnav].sel].name}}</i></td>
-              <td>
-                <span ng-if="scenario[tabnav].station == 0">
-                  Standard 
-                </span>
-                <span ng-if="scenario[tabnav].station == 1">
-                  Upgraded
-                </span>
-                <span ng-if="scenario[tabnav].station == 2">
-                  Full Station 
-                </span>
-              </td>
+              <td style="width: 45%; padding-left:0px"><i> {{ variants[tabnav].all[variants[tabnav].sel].name}}</i></td>
+
               <td>
                  {{ scenario[tabnav].offpeak.min}} min.
               </td>
@@ -740,22 +729,9 @@
                     ng-click="setSelectedVariant(tabnav, null);
                               updateRouteScorecard(); updateTargetFeature(); visibleTabs.customize = false;"></i>
               </td>
-			  <td style="padding-right:0px">{{variant.num}} |</td>
-              <td style="width: 35%; padding-left:0px" ng-click="setSelectedVariant(tabnav, variant._key);
+			  <td style="padding-right:0px">{{variant.num}}  |</td>
+              <td style="width: 45%; padding-left:0px" ng-click="setSelectedVariant(tabnav, variant._key);
                               updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">{{ variant.name }}</td>
-              <td ng-click="setSelectedVariant(tabnav, variant._key);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
-                <span ng-if="variant.station == 0">
-                  Standard 
-                </span>
-                <span ng-if="variant.station == 1">
-                  Upgraded
-                </span>
-                <span ng-if="variant.station == 2">
-                  Full Station 
-                </span>
-              </td ng-click="setSelectedVariant(tabnav, variant._key);
-                              updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">
               <td>
                  {{variant.offpeak.min}} min.
               </td>

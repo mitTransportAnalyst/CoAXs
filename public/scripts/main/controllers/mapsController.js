@@ -14,7 +14,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-	num		 : 0,
+	num		 : null,
     station  : 2,
     routeId  : null,
     peak     : { min : 15,  sec : 0 },
@@ -483,7 +483,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
 
         var isDefault = routes[key][0].options.base.default;
-        $scope.newVariant(tabnavAlt, isDefault);
+		var varIndex = routes[key][0].options.base.varId;
+        $scope.newVariant(tabnavAlt, varIndex, isDefault);
         if (!isDefault) {
           $scope.scenario[tabnavAlt].name = rewind.name;
           $scope.scenario[tabnavAlt].routeId = rewind.routeId;
@@ -527,7 +528,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   // create a new route variant based off of existing scenario settings
-  $scope.newVariant = function (tabnav, autoSet) {
+  $scope.newVariant = function (tabnav, varId, autoSet) {
     var uuid = supportService.generateUUID();
     $scope.scenario[tabnav]['created'] = Date.now();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
@@ -535,6 +536,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       $scope.scenario[tabnav] = angular.copy(scenarioBase);
       $scope.setSelectedVariant(tabnav, uuid); 
     };
+	$scope.variants[tabnav].all[uuid].num = varId;
     return uuid;
   };
 
