@@ -112,9 +112,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   
    var tilesDict = {
-    blank: {
+    all: {
 		name: 'Blank',
-		url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+		url: 'https://api.mapbox.com/styles/v1/ansoncfit/cioc4n55a00b6vemc85vgatj4/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
 		type: 'xyz'
     },
 	base: {
@@ -122,11 +122,17 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
     },
-	collisions: {
-        name: 'Collisions',
-        url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+	CH: {
+        name: 'Crouch Hill',
+        url: 'https://api.mapbox.com/styles/v1/ansoncfit/cioc1kjlb00b3vemccihbai9b/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
-    }
+    },
+	WP: {
+        name: 'Woodgrange Park',
+        url: 'https://api.mapbox.com/styles/v1/ansoncfit/cioc4djpn00bbbvnt2q24aqw9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+        type: 'xyz'
+    }	
+	
   }; 
   
   var tiles_global = tilesDict.base;
@@ -153,7 +159,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.sensitivity = 0.05;
 
   $scope.changeTilesLeft = function(tiles) {
-	$scope.tiles_left = tilesDict[tiles];
+	if(tilesDict[tiles]){
+	$scope.tiles_left = tilesDict[tiles];}
   };
   
   $scope.changeTilesRight = function(tiles) {
