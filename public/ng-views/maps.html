@@ -485,7 +485,7 @@
 
 <!-- 1 poi markers --> 
 <div class="leftNav">
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
+  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId); changeTilesLeft('all')">
         <i class="fa fa-user"></i><br> All
   </div>
   <div class="badge" 
