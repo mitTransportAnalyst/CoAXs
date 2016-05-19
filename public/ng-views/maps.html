@@ -23,8 +23,9 @@
       </div>
       <div class="panel-body" ng-show="scenarioLegend &&  showVectorIsosOn">
         Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
-        <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
+        <div ng-show ="!combos.sel"><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>with Current Service</small></div>
+		<div ng-show ="combos.sel"><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>with {{ combos.all[combos.sel].name }}</small></div>
+        <div ng-show="scenarioCompare"><i class="fa fa-stop fa-border" style="color:#89cff0"></i> <small>with {{ combos.all[combos.com].name }}</small></div>
       </div>
       <div class="panel-body" ng-show="scenarioScore.graphData&& scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
         Travel Time by Transit
@@ -214,7 +215,8 @@
 	<h4>More Info</h4>
 	 <ul>
 	 <li>Transport network analysis via <a href="http://conveyal.com/projects/analyst/"> Conveyal Transport Analyst</a></li>
-	 <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com/">Mapbox</a></li>
+	 <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a></li>
+	 <li>Map imagery © <a href="http://mapbox.com/">Mapbox</a></li>
 	 </ul>
 	</h5>
 	<br>
