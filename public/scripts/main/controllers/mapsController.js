@@ -21,6 +21,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 30, sec : 0 },
   }
 
+    var scenarioBaseBak = {
+    name     : null,
+    station  : 3,
+    routeId  : null,
+	num		 : null,
+    peak     : { min : 2,  sec : 30 },
+    offpeak  : { min : 4, sec : 0 },
+  }
+  
   $scope.selField = 'dem_jobs';
   $scope.scenarioLegend = true;
   
@@ -35,11 +44,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'R' : angular.copy(scenarioBase),
 	'T' : angular.copy(scenarioBase),
 	'J' : angular.copy(scenarioBase),
+	'B' : angular.copy(scenarioBaseBak),
   }
   $scope.variants = {
 	'R' : { routeId : 'R1', sel : 0, all : {} },
 	'T' : { routeId : 'T1', sel : 0, all : {} },
 	'J' : { routeId : 'J1', sel : 0, all : {} },
+	'B' : { routeId : 'B1', sel : 0, all : {} },
   }
   
   $scope.defaultsBuilt = false
@@ -595,6 +606,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         'R' : $scope.variants['R'].sel,
 		'T' : $scope.variants['T'].sel,
         'J' : $scope.variants['J'].sel,
+		'B' : $scope.variants['B'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
@@ -725,6 +737,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'R' : Object.keys($scope.variants['R'].all)[0],
 		'T' : null,
 		'J' : null,
+		'B' : Object.keys($scope.variants['B'].all)[0],
       }
     };
 	
@@ -750,6 +763,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'R' : null,
 	    'T' : Object.keys($scope.variants['T'].all)[0],
 		'J' : Object.keys($scope.variants['J'].all)[0],
+		'B' : Object.keys($scope.variants['B'].all)[0],
       }
     };
 	
@@ -761,6 +775,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		'R' : Object.keys($scope.variants['R'].all)[2],
 		'T' : null,
 		'J' : null,
+		'B' : Object.keys($scope.variants['B'].all)[0],
       }
     };
 	
