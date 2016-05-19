@@ -9,11 +9,11 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 		var subwayRoutes = L.geoJson(data, {
         style: function (feature, grayscale) {
 		  var col = "#AAAAAA";
-		  if (!gs){col = feature.properties.lines[feature.properties.lines.length-1].COLOR;}
+		  if (!gs){col = feature.properties.COLOR;}
 		  return {
             color     : col,
-            weight    : 0.5,
-            opacity   : 0.35,
+            weight    : 1.5,
+            opacity   : 0.5,
             dashArray : 0,
           };
         }
