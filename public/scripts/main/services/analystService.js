@@ -78,13 +78,6 @@ coaxsApp.service('analystService', function (supportService, $http) {
 				  };
 				   
   var agencyId = 'LO';
-  var banExtraAgencies = [
-    {
-      type      : 'remove-trip',
-      agencyId  : 'KM',
-      routeId   : null,
-      tripId    : null,
-    }];
 
   // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
@@ -102,7 +95,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
     optionC[c].scenario.modifications = []
-	optionC[c].scenario.modifications.push(banExtraAgencies[0]); // empty contents of the modifications list entirely
+	// empty contents of the modifications list entirely
+	console.log(optionC);
+
   };
 
   this.killCompareIso = function (map) {
