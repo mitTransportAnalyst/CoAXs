@@ -490,11 +490,11 @@
   </div>
   <div class="badge" 
         ng-repeat="user in poiUsers track by $index" 
-        ng-click="targetPOIUsers(user.userId)" 
+        ng-click="targetPOIUsers(user.userId); changeTilesLeft(user.userId)" 
         ng-class="user.userId == currentPOIUser ? '' : 'unselected'">
         <i class="fa fa-user"></i><br> {{ user.userId }}
   </div>
-  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers(); changeTilesLeft('base')">
         <i class="fa fa-user"></i><br> Clear
   </div>
 </div>
