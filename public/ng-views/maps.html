@@ -551,48 +551,50 @@
         </div>
 
         <div class="btn-group btn-group-justified">
-          <label  class="btn btn-xs" ng-class="tiny active">
-			<i class="fa fa-male"></i>
+      <label  class="btn btn-xs">
+			<img src="public/imgs/icons-ped.png" style="height:20px;position:absolute;left:10px;top:4px">
           </label>
 		  <label  class="btn btn-xs"
-				  ng-class="mode.accessEgress.bike ? '' : 'tiny active'"
-                  ng-click="mode.accessEgress.bike=!mode.accessEgress.bike">
+				  ng-class="mode.accessEgress.bike[0] ? '' : 'tiny active'"
+                  ng-click="mode.accessEgress.bike[0]=!mode.accessEgress.bike[0]">
             <span class="fa-stack">
-			<i class="fa fa-bicycle fa-stack-1x"></i>
-			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.accessEgress.bike"></i>'
-			</span>          </label>
-          <label class="btn btn-xs">
-          </label>
+			<img src="public/imgs/icons-bike.png" style="height:25px;position:absolute;left:-1px;top:-1px">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.accessEgress.bike[0]"></i>
+		    </span>          
+		  </label>
           <label  class="btn btn-xs"
-                  ng-class="mode.transit.bus ? '' : 'tiny active'"
-                  ng-click="mode.transit.bus=!mode.transit.bus">
+                  ng-class="mode.transit.bus[0] ? '' : 'tiny active'"
+                  ng-click="mode.transit.bus[0]=!mode.transit.bus[0]">
             <span class="fa-stack">
-			<i class="fa fa-bus fa-stack-1x"></i>
-			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.bus"></i>'
+			<img src="public/imgs/icons-bus.png" style="height:25px;position:absolute;left:0px;top:-1px">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.bus[0]"></i>
+			
 			</span>
           </label>
 		  <label  class="btn btn-xs"
-                  ng-class="mode.transit.lu ? '' : 'tiny active'"
-                  ng-click="mode.transit.lu=!mode.transit.lu">
+                  ng-class="mode.transit.lu[0] ? '' : 'tiny active'"
+                  ng-click="mode.transit.lu[0]=!mode.transit.lu[0]">
             <span class="fa-stack">
-			<i class="fa fa-subway fa-stack-1x"></i>
-			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lu"></i>'
+			<img src="public/imgs/icons-lu.png" style="height:25px;position:absolute;left:-1px;top:-1px">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lu[0]"></i>
+			
 			</span>
           </label>
 		  <label  class="btn btn-xs"
-                  ng-class="mode.transit.lo ? '' : 'tiny active'"
-                  ng-click="mode.transit.lo=!mode.transit.lo">
+                  ng-class="mode.transit.lo[0] ? '' : 'tiny active'"
+                  ng-click="mode.transit.lo[0]=!mode.transit.lo[0]">
             <span class="fa-stack">
-			<i class="fa fa-train fa-stack-1x"></i>
-			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lo"></i>'
+			<img src="public/imgs/icons-lo.png" style="height:25px;position:absolute;left:-1px;top:-1px">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.lo[0]"></i>
+			
 			</span>
           </label>
 		  <label  class="btn btn-xs"
-                  ng-class="mode.transit.nr ? '' : 'tiny active'"
-                  ng-click="mode.transit.nr=!mode.transit.nr">
+                  ng-class="mode.transit.nr[0] ? '' : 'tiny active'"
+                  ng-click="mode.transit.nr[0]=!mode.transit.nr[0]">
  		    <span class="fa-stack">
-			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.nr"></i>
-			<img src="public/imgs/nr.png" style="height:15px">
+			<img src="public/imgs/icons-nr.png" style="height:25px;position:absolute;left:-1px;top:-1px">
+			<i class="fa fa-ban fa-stack-2x" ng-show="!mode.transit.nr[0]"></i>
 			</span>
           </label>
 		  

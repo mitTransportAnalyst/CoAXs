@@ -62,11 +62,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
   $scope.tabnav = 'R';
   $scope.mode = {
-    accessEgress: { bike 	: false,},
-	transit: {		bus 	: true,
-					lu		: true,
-					lo      : true,
-					nr		: true,}};
+    accessEgress: { bike 	: [false,false]},
+	transit: {		bus 	: [true,true],
+					lu		: [true,true],
+					lo      : [true,true],
+					nr		: [true,true],}};
 					
     // $scope.modeC = angular.copy(
 	// all: [],
@@ -497,10 +497,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       var routes = data.geoJsons;
       // iterate through routes and set the default scenario values
 	  for (var key in routes) {
-	    console.log(routes[key]);
         var tabnavAlt = routes[key][0].options.base.corName;
         var rewind = angular.copy($scope.scenario[tabnavAlt]);
-
         $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
         $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
         $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;

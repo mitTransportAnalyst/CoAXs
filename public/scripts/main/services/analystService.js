@@ -96,8 +96,6 @@ coaxsApp.service('analystService', function (supportService, $http) {
     if (compareIso) { map.removeLayer(compareIso); };
     optionC[c].scenario.modifications = []
 	// empty contents of the modifications list entirely
-	console.log(optionC);
-
   };
 
   this.killCompareIso = function (map) {
@@ -172,9 +170,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
   }
 
   this.modifyModes = function (modes, c) {
-    if (modes.accessEgress.bike == true) {
+	if (modes.accessEgress.bike[c] == true) {
 	optionC[c].accessModes = 'BICYCLE';
-    optionC[c].egressModes = 'BICYCLE';
+    optionC[c].egressModes = 'WALK';
 	optionC[c].directModes = 'BICYCLE';
 	}
 	else {
@@ -182,8 +180,39 @@ coaxsApp.service('analystService', function (supportService, $http) {
     optionC[c].egressModes = 'WALK';
 	optionC[c].directModes = 'WALK';
 	}
+	if (!modes.transit.bus[c] && !modes.transit.lu[c] && !modes.transit.lo[c] && !modes.transit.nr[c])
+	  {if (modes.accessEgress.bike[c] == true) {
+	optionC[c].transitModes = 'BICYCLE';
+    }
+	else {
+	optionC[c].transitModes = 'WALK';
+	} } else {
 	
+	if(!modes.transit.bus[c]){
 	
+	var modesMod = {
+      type      : 'remove-trip',
+      agencyId  : 'tfl',
+      routeId   : null,
+	  routeType : [3],
+      tripId    : null,
+    };
+    optionC[c].scenario.modifications.push(modesMod);
+	}
+	
+	if(!modes.transit.lu[c]){
+	
+	var modesMod = {
+      type      : 'remove-trip',
+      agencyId  : 'tfl',
+      routeId   : null,
+	  routeType : [0,1,2],
+      tripId    : null,
+    };
+    optionC[c].scenario.modifications.push(modesMod);
+	}
+	
+	}
   }
 
   this.loadExisting = function (poi, map, cb) {
@@ -208,9 +237,6 @@ coaxsApp.service('analystService', function (supportService, $http) {
   }
 
   this.singlePointComparison = function (marker, map, cb) {
-   	console.log(optionC[0]);
-	console.log(optionC[1]);
-	
 	analyst.singlePointComparison({
       lat : marker.lat,
       lng : marker.lng,
