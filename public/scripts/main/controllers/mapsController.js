@@ -361,7 +361,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
     // get mbta existing subway information
-	var gs = true;
+	var gs = false;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
