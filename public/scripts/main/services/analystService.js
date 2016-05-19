@@ -71,8 +71,12 @@ coaxsApp.service('analystService', function (supportService, $http) {
       modifications : []
     },
   };
-    
-  var allRoutes = ['R0','R1','R2','T1','J1'];
+  
+  var allRoutes = {'LO': ['R0','R1','R2','T1','J1'],
+				   'ble': ['B0','B1'],
+				   'tfl': ['bakerloo']
+				  };
+				   
   var agencyId = 'LO';
   var banExtraAgencies = [
     {
@@ -110,14 +114,20 @@ coaxsApp.service('analystService', function (supportService, $http) {
   // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes, c) { 
     keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
-    var rmRoutes = allRoutes.filter(function (route) { return keepRoutes.indexOf(route) < 0; });
-    var routesMod = {
+	
+	for (agency in allRoutes) {
+	
+    var rmRoutes = allRoutes[agency].filter(function (route) { return keepRoutes.indexOf(route) < 0; });
+    
+	
+	var routesMod = {
       type      : 'remove-trip',
-      agencyId  : rmRoutes.length > 0 ? agencyId : null,
+      agencyId  : rmRoutes.length > 0 ? agency : null,
       routeId   : rmRoutes,
       tripId    : null,
     };
     optionC[c].scenario.modifications.push(routesMod);
+    }
   };
 
   this.modifyDwells = function (keepRoutes, c) {
