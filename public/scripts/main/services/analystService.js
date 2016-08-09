@@ -91,6 +91,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
   // holds current states for different map layers, etc. (allows you to grab and remove, replace)
   var isoLayer   = null;
+  var isoLayerOld = null;
 
   var vectorIsos = null;
   var vecComIsos = null;
@@ -245,14 +246,21 @@ coaxsApp.service('analystService', function (supportService, $http) {
   }
   
   // actually run the SPA and handle results from library
-  this.singlePointRequest = function (marker, map, cb) {
+  this.singlePointRequest = function (marker, map, timeLimit, cb) {
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
     }, defaultGraph, defaultShapefile, optionC[0])
     .then(function (response) { 
-        isoLayer = analyst.updateSinglePointLayer(response.key);
-		isoLayer.addTo(map);  
+        isoLayer = analyst.updateSinglePointLayer(response.key, null, timeLimit);
+		isoLayer.addTo(map).on('load', function(e){
+			isoLayer.setOpacity(1);
+			isoLayerOld.setOpacity(0);
+			isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
+		});
+		isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
+		isoLayerOld.addTo(map);
+		console.log(isoLayer);
 	  var plotData = subjects.fields;
       for (key in subjects.fields) {
         var id = subjects.prefix+'.'+subjects.fields[key].id;
@@ -266,6 +274,13 @@ coaxsApp.service('analystService', function (supportService, $http) {
       console.log(err);
     });
   };
+  
+  this.updateTiles = function(map, key, timeLimit, cb) {
+	isoLayerOld.setOpacity(1);
+	isoLayer.setOpacity(0);
+	isoLayer = analyst.updateSinglePointLayer(key, null, timeLimit);
+	}
+  //
 
   // explicitly run request for vector isochrones
   this.vectorRequest = function (marker, compareTrue, cb) {
@@ -296,7 +311,8 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { isoLayer.setOpacity(0) };
+    if (isoLayer) { //isoLayer.setOpacity(0)
+	};
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
 

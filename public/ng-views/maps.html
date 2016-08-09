@@ -21,16 +21,11 @@
           <i class="fa fa-expand pull-right"></i>
         </h6>
       </div>
-      <div class="panel-body" ng-show="scenarioLegend &&  showVectorIsosOn">
-        Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
-        <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
-      </div>
-      <div class="panel-body" ng-show="scenarioScore.graphData&& scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
-        Travel Time by Transit
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Shorter</small>
-        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Longer</small>
-		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over 2 hours</small>
+      <div class="panel-body" ng-show="scenarioScore.graphData&& scenarioLegend && !scenarioCompare ">
+        Travel Time by Public Transport
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Under 5 min.</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEEC3"></i> <small>About {{ vectorIsos.val*5 | minuteConverter }}</small>
+		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Over {{ vectorIsos.val*5 | minuteConverter }} </small>
         <br><i class="fa fa-stop fa-border" style="color:#FFF"></i> <small>Inaccessible</small>
       </div>  
 	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">

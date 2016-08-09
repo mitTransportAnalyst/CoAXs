@@ -94,7 +94,7 @@ var Analyst = (function () {
     }
 
     this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 7200;
+    this.timeLimit = opts.timeLimit || 3600;
     this.showPoints = !!opts.showPoints;
     this.showIso = !!opts.showIso;
 
@@ -116,36 +116,51 @@ var Analyst = (function () {
 
   _createClass(Analyst, [{
     key: 'updateSinglePointLayer',
-    value: function updateSinglePointLayer(key, comparisonKey) {
+    value: function updateSinglePointLayer(key, comparisonKey, timeLimit) {
       var keyVal = key;
       if (comparisonKey) {
         keyVal = comparisonKey + '/' + keyVal;
       }
 
+	  if (timeLimit) {
+		this.timeLimit = timeLimit;
+	  }
+	  
       var url = this.tileUrl + '/single/' + keyVal + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
-
+	  
       if (!this.singlePointLayer) {
         debug('creating single point layer with url: ' + url);
         this.singlePointLayer = this.L.tileLayer(url, this.tileLayerOptions);
       } else {
         debug('updating single point layer to url: ' + url);
-        this.singlePointLayer.setUrl(url);
+		this.singlePointLayer.setUrl(url);
       }
-
       return this.singlePointLayer;
     }
 
-    /**
-     * Get all of the available shapefiles.
-     *
-     * @return {Promise} Resolves with a JSON list of shapefiles.
-     * @example
-     * analyst.shapefiles().then(function (shapefiles) {
-     *   console.log(shapefiles)
-     * })
-     */
 
   }, {
+	key: 'updateSinglePointLayerOld',
+    value: function updateSinglePointLayerOld(key, comparisonKey) {
+      var keyVal = key;
+      if (comparisonKey) {
+        keyVal = comparisonKey + '/' + keyVal;
+      }
+	  
+      var url = this.tileUrl + '/single/' + keyVal + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+
+	  if (!this.singlePointLayerOld) {
+        debug('creating single point layer with url: ' + url);
+        this.singlePointLayerOld = this.L.tileLayer(url, this.tileLayerOptions);
+      } else {
+        debug('updating single point layer to url: ' + url);
+		this.singlePointLayerOld.setUrl(url);
+      }
+      return this.singlePointLayerOld;
+
+      }
+  
+  },{
     key: 'shapefiles',
     value: function shapefiles() {
       debug('fetching available shapefiles');
