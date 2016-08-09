@@ -53,7 +53,7 @@
 <div class="topcol">
 
 
-  <div class="topleft" style="background-color:#696969" ng-show="scenarioScorecard">
+  <div class="topright" ng-show="scenarioScorecard">
     <h4>
       <i class="fa fa-bar-chart"></i>&nbsp Data for 
 	  <span ng-show="!combos.sel">Existing MBTA</span>
@@ -61,53 +61,6 @@
       <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard = false"></i>
     </h4>
     <div class="topinfo-body container" style="min-height:250px">
-
-<!--       <div class="pull-left" style="width: 100%; padding-right: 310px;">
-        <div class="row">
-          <div class="col-xs-5">
-            <h3>
-              <i class="fa fa-dot-circle-o"></i> {{ scenarioScore.bus.count }}
-              <h6>Stops</h6>
-            </h3>
-          </div>
-          <div class="col-xs-6">
-            <h3>
-              <i class="fa fa-usd"></i> {{ scenarioScore.bus.cost/1000000 | number:2 }}M
-              <h6>All Stations</h6>
-            </h3>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-5">
-            <h3>
-              <i class="fa fa-arrows-h"></i> {{ scenarioScore.length.count | number:1 }}
-              <h6>Miles</h6>
-            </h3>
-          </div>
-          <div class="col-xs-6">
-            <h3>
-              <i class="fa fa-usd"></i> {{ scenarioScore.length.cost/1000000 | number:2 }}M
-              <h6>All Lanes</h6>
-            </h3>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-5">
-            <h3>
-              <i class="fa fa-bus"></i> {{ scenarioScore.vehicles.count }}
-              <h6>Vehicles</h6>
-            </h3>
-          </div>
-          <div class="col-xs-6">
-            <h3>
-              <i class="fa fa-usd"></i> {{ scenarioScore.vehicles.cost/1000000 | number:2 }}M
-              <h6>Operations</h6>
-            </h3>
-          </div>
-        </div>
-      </div> -->
 
       <div style="height: 300px; position: absolute; left: 10px">
         <center>
@@ -135,88 +88,90 @@
     </div>
   </div>
 
-  <div class="topleft topinfo" ng-show="managerView">
-    <h4>
-      <i class="fa fa-cog fa-spin" ng-if="managerOperations"></i>Facilitator Options
-      <i class="fa fa-times-circle-o pull-right" ng-click="managerView=false"></i>
-    </h4>
-    <div class="topinfo-body container">
-      <h6>
-        Click to auto create baseline and gold standard scenarios. <span class="badge" ng-click="buildScenarios()">Run Create</span>
-      </h6>
-	  <h6>
-	  Show <span class="badge" ng-click="introPanel = true">Intro Panel</span>
-	  </h6>
-      <h6>
-        Current sensitivity level is: {{ sensitivity | number: 2 }} miles. 
-        <span class="badge" ng-click="sensitivity = sensitivity - 0.05">Decrease</span>
-        <span class="badge" ng-click="sensitivity = sensitivity + 0.05">Increase</span>
-      </h6>
-      <h6>
-        You currently have selected this JSON cache: 
-        <div class="btn-group" dropdown>
-          <button type="button" class="btn btn-default btn-xs">
-            {{ snapPoints.sel }}
-          </button>
-          <button type="button" class="btn btn-default btn-xs" dropdown-toggle>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="id in snapPoints.all" 
-                ng-click="setNewSnapCache(id)"
-                value="{{ id }}">
-              <a href="">{{ id }}</a>
-            </li>
-          </ul>
-        </div>
-      </h6>
-      <h6>
-        Click to auto sync preloaded GeoJSON data with spreadsheet. <span class="badge" ng-click="updateLocationCache(snapPoints.sel)">Run AutoSync</span>
-      </h6>
-      <h6>
-        Download session footprint. <span class="badge" ng-click="downloadSession()">Download</span>
-      </h6>
-	  	<h6>
-        Basemap (Left): <span class="badge" ng-click="changeTilesLeft('blank')">Basic</span>
-    		<span class="badge" ng-click="changeTilesLeft('base')">Neighborhoods and Parks</span>
-    		<span class="badge" ng-click="changeTilesLeft('collisions')">Crash Hotspots</span>
-      </h6>
-      <h6>
-        Basemap (Right): <span class="badge" ng-click="changeTilesRight('blank')">Basic</span>
-    		<span class="badge" ng-click="changeTilesRight('base')">Neighborhoods and Parks</span>
-    		<span class="badge" ng-click="changeTilesRight('collisions')">Crash Hotspots</span>
-      </h6>
-      <h6>
-        Cache current scenario. <span class="badge" ng-click="saveScenarioCache()">Run Caching</span>
-      </h6>
-    </div>
-  </div>
-</div>
+<!--Intro screen-->
 
-  <!--Intro screen-->
- <div class="introPan" ng-show="introPanel">
-   <div class="title">
+  <div class="topleft">
     <h4>
-      <b>CoAXs</b> | North-South Rail Link | Beta Version
+      <b>CoAXs</b> | Job Access in the Boston Area | Beta Version
 	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
 	</h4>
-    <div class="saveAlt-body container">
-	<div style="width:400px; float:right">
-	<img src="public/imgs/alignment.jpg" style="width:400px"/><br>
-	</div>
-	<div>	
-	<h4>How could a new rail link between North Station and South Station transform regional transit connectivity? </h4>
-	<br>
-	<br>
-	<h4>To Start</h4>
-	<h5>
-	  <ol>
-	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData ? 'faa-pulse animated' : ''" ></i> Time Map &nbsp </span> &nbsp to explore how far you can travel on transit today</li>
-	  <li>Move the <img src="public/imgs/start.png" style="height:18px"> Start Marker to try other locations</li>
-	  <li>Tap <span class="col-head-button" ng-click="visibleTabs.travel = !visibleTabs.travel"> &nbsp <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i> Combo Editor &nbsp </span> &nbsp to compare other scenarios</li>
-	  </ol>
-	</div>
-	<div style="clear:both">
+	<div class="topinfo-body container" style="min-height:250px">
+	
+      <div style="height: 600px">
+        <h4>Tap a station below to explore how transit connects jobs and workers</h4>
+		<br>
+		<h5>	
+		Jobs
+		<center>
+        </center>
+		<div style="width:100%">
+		<svg id="plot1" width="500" height="150"></svg>
+		</div>
+		Accessible Workers
+		<center>
+          <div class="btn-group" dropdown ng-show="scenarioScore.graphData">
+            <button id="split-button" type="button" class="btn btn-success"
+                    ng-click="drawGraph(scenarioScore.graphData)">
+              {{ scenarioScore.graphData.sel.verbose }}
+            </button>	
+            <button type="button" class="btn btn-success" dropdown-toggle>
+              <span class="caret"></span>
+              <span class="sr-only">Split button!</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
+                  ng-click="selectGraphData(id)"
+                  value="{{ id }}">
+                <a href="">{{ dataVal.verbose }}</a>
+              </li>
+            </ul>
+          </div>
+		</center>
+		<div style="width:100%">
+		<svg id="compPlot2" width="500" height="150"></svg>
+		</div>
+		</h5>
+		<div class="row station-list">
+			<div class="col-xs-3" ng-click="updateCordon('downtown')">
+				<div class="station-sign">
+					<div class="leaflet-popup-content">
+						<p style="background-color: #E87200">downtown</p>
+						<p style="background-color: white; padding-bottom:18px"></p>
+					</div>
+				</div>
+			</div>
+			<div class="col-s-1">
+			</div>
+			<div class="col-xs-3" ng-click="updateCordon('kendall')">
+				<div class="station-sign">
+					<div class="leaflet-popup-content">
+						<p style="background-color: #E12D27">kendall</p>
+						<p style="background-color: white; padding-bottom:4px;" ng-class= "selCordon === 'kendall' ? 'blackText' : ''"> selected <i class="fa fa-check-circle"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-s-1">
+			</div>
+			<div class="col-xs-3">
+				<div class="station-sign">
+					<div class="leaflet-popup-content">
+						<p style="background-color: #427B1D">LMA</p>
+						<p style="background-color: white; padding-bottom:18px"></p>
+					</div>
+				</div>
+			</div>			<div class="col-s-1">
+			</div>
+			<div class="col-xs-3">
+				<div class="station-sign">
+					<div class="leaflet-popup-content">
+						<p style="background-color: #555555">WTC</p>
+						<p style="background-color: white; padding-bottom:18px"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+      </div>
+<!-- 	<div>
 	<h4>More Info</h4>
 	 <ul>
 	 <li>CoAXs (Collaborative Access-based Stakeholder Engagement) is a project of the <br> Mobility Futures Collaborative at MIT: <a href="https://mfc.mit.edu/innovations-participatory-design-brt-systems"> mfc.mit.edu <img style="float: right; height: 100px" src="public/imgs/mfc_qr.png"></a></li>
@@ -224,138 +179,12 @@
 	 <li>Transport network analysis via <a href="http://conveyal.com/projects/analyst/"> Conveyal Transport Analyst</a></li>
 	 <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com/">Mapbox</a></li>
 	 </ul>
-	</h5>
 	<br>
 	<br>
+	</div> -->
 	</div>
-    </div>
   </div>
 </div>
-
-<div class="topcol right">
-  <div class="topleft" style="background-color: #{{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.routeColor }}" ng-show="routeScorecard" >
-    <h4>
-      <i class="fa fa-bar-chart"></i> Route Data
-      <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
-    </h4>
-    <div class="topinfo-body container">
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-dot-circle-o"></i> {{ routeScore.bus.count }}
-            <h6>Stops</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Standard:</b> {{ routeScore.bus.dist[0] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Upgraded:</b> {{ routeScore.bus.dist[1] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Full:</b> {{ routeScore.bus.dist[2] | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.bus.cost | number:0 }}
-            <h6>Station construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-arrows-h"></i> {{ routeScore.length.count | number:1 }}
-            <h6>Miles Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Shared:</b> {{ routeScore.length.dist.non | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Priority:</b> {{ routeScore.length.dist.ded | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.length.cost | number:0 }}
-            <h6>Dedicated lane construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-clock-o"></i> {{ routeScore.time.count | minuteConverter }}
-            <h6>Peak Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Moving:</b> {{ routeScore.time.dist.move | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Loading:</b> {{ routeScore.time.dist.load | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-		  <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.vehicles.cost | number:0 }}
-            <h6>Annual Cost of Operations</h6>
-          </h5>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <!--ROUTE INFO PROMPT-->
-
-  <div class="topleft" style="background-color: #{{ targetFeature.properties.routeColor }}" ng-show=false>
-    <h4>
-      {{ targetFeature.properties.varName }} Alignment
-      <i class="fa fa-times-circle-o pull-right" ng-click="routeDetails=false"></i>
-    </h4>
-    <div class="topinfo-body container">
-      <h6>
-        Corridor: {{ targetFeature.properties.corLonName }} | Alignment: {{ targetFeature.properties.varName }} | Length: {{ targetFeature.properties.length | number:2 }} miles
-      </h6>
-
-      <h6 ng-show="targetFeature.alternatives">
-        There are {{ targetFeature.alternatives.length/2 + variants[tabnav].length }} alignments for Corridor {{ targetFeature.properties.corName }}. Based on these alignments, {{ variants[tabnav].all | keyLength }} variations have been created this session: 
-        <span ng-repeat="(key, variant) in variants[tabnav].all">
-          <span class="badge"  style="color: #{{ targetFeature.properties.routeColor }}" 
-                ng-click="updateTargetFeature(variant)">
-            {{ variant.name }}
-          </span>
-        </span>
-      </h6>
-      
-      <button class="btn btn-choose pull-right" type="button" 
-              ng-show="scenario[tabnav].routeId !== targetFeature.properties.routeId"
-              ng-click="scenario[targetFeature.properties.corName].routeId = targetFeature.properties.routeId;
-                        createVar=true" 
-              style="background-color: #{{ targetFeature.properties.routeColor }}">
-        Use this path for the {{ targetFeature.properties.corLonName }} corridor
-      </button>
-
-      <button class="btn btn-choose pull-right" type="button" 
-              ng-show="scenario[targetFeature.properties.corName].routeId == targetFeature.properties.routeId"
-              style="background-color: #{{ targetFeature.properties.routeColor }}">
-        <i class="fa fa-check"></i>
-        Path selected
-      </button>
-    </div>
-  </div>
-</div>
-
 
 
 
@@ -481,7 +310,7 @@
           tiles    = "tiles_left"
           markers  = "markers_left"
 		  maxbounds = "maxBounds_left"
-          style="z-index: 0"
+          style="z-index: 1"
 		  >
 </leaflet>
 <leaflet  center   = "center_right"
@@ -494,7 +323,6 @@
 
 
 <div style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>
-
 
 <!-- 1 poi markers --> 
 <div class="leftNav">
