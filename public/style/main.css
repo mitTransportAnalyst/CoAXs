@@ -80,6 +80,7 @@ nav div.section {
   color: #FFF;
   z-index: 10;
   width: 50%;
+  min-height: 75%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
   padding-left: 45px;
@@ -89,6 +90,7 @@ nav div.section {
 .topleft {
   width            : 100%;
   overflow         : hidden;
+  background-color : #696969
 }
 .topinfo {
   background-color : #5F0D0A;
@@ -104,10 +106,10 @@ nav div.section {
   z-index          : 10;
   cursor           : pointer;
   width            : 50%;
-  float            : left;
+  right			   : 0px;
 }
 
-.topnav .legend {
+.topnav  .legend {
   width: 275px;
   height: 150px;
   top: 0px;
@@ -179,6 +181,12 @@ nav div.section {
 
 .introPan h4{
   margin-left: 4px; 
+}
+
+.introPan .station-list{
+  position: absolute;
+  bottom: 25px;
+  margin-left: 45px;
 }
 
 .bottomCol .saveVar{
@@ -475,6 +483,11 @@ background-color  : #696969;
 	padding-right: 15px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	text-align: center;
+}
+
+.station-sign .leaflet-popup-content .blackText {
+	color: black;
 }
 
 /*maps*/
@@ -482,6 +495,7 @@ background-color  : #696969;
   height           : 75.5%;
   width            : 50%;
   position         : absolute;
+  left : 50%;
 }
 #map_right {
   left : 50%;
