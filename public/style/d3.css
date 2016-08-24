@@ -8,8 +8,13 @@
 
 .axis text {
   font-family: 'Arial';
-  font-size: 10px;
-  fill: #CCC;
+  font-size: 12px;
+  fill: #EEE;
+}
+
+.stat {
+  font-size: 14px;
+  fill: #FFF;
 }
 
 .line {
@@ -27,4 +32,30 @@
  .title text {
   fill: #FFF;
   font-size: 20px;
+}
+
+#tooltip {
+    position: absolute;
+    text-align: center;
+    width: 190px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+#tooltip.hidden {
+    display: none;
+}
+#tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 14px;
+	color: #000;
 }

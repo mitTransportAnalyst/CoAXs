@@ -21,7 +21,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 30, sec : 0 },
   }
 
-  $scope.selField = 'jobs_tot';
+  $scope.selField = 'wt_finan3';
+  $scope.indicator = {sel:'wt_',all:{wt_:'Workforce'}};
   $scope.scenarioLegend = true;
   $scope.selCordon = null;
   
@@ -217,7 +218,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       all: poi.graphData,
       sel: poi.graphData.jobs_tot
     };
-    $scope.drawGraph($scope.scenarioScore.graphData);
+    drawGraph($scope.scenarioScore.graphData);
     leafletData.getMap('map_left').then(function(map) {
       analystService.resetAll(map, 0);
       analystService.loadExisting(poi, map, function(result) {
@@ -258,15 +259,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		analystService.singlePointComparison(marker, map, function(res, cres, plotData, cPlotData){
 		if (plotData) { 
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-              $scope.scenarioScore.graphData = {
-                all: cPlotData,
-                sel: cPlotData[$scope.selField],
-                com: {
-                  all: plotData,
-                  sel: plotData[$scope.selField],
-                }
-              };
-              $scope.drawGraph($scope.scenarioScore.graphData);
+              //set the data for the cumulative plot to be an array of the responses for the selected and comparison combos.			 		  
+			  $scope.scenarioScore.graphData = [
+			  { 'id': $scope.combos.sel,
+				'name': $scope.combos.all[$scope.combos.sel].name,
+				'data': cPlotData},
+			  {'id': $scope.combos.com,
+				'name': $scope.combos.all[$scope.combos.com].name ,
+				'data': plotData}
+			];
+              drawGraph($scope.scenarioScore.graphData);
 		}; 
 		
 			
@@ -294,12 +296,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		  $scope.key = key;
 		  if (plotData) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-            $scope.scenarioScore.graphData = {
-              all: plotData,
-              sel: plotData[$scope.selField],
-              com: false
-            };
-            $scope.drawGraph($scope.scenarioScore.graphData);
+            $scope.scenarioScore.graphData = [
+				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
+				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
+				'data': plotData}
+			];
+            drawGraph($scope.scenarioScore.graphData);
 			$scope.loadProgress.val = 100;
             setTimeout(function () { $scope.$apply (function () {
                 $scope.loadProgress.vis = false; // terminate progress bar viewport
@@ -309,6 +311,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         });
       }
     });
+  }
+  
+  drawGraph = function (graphData){
+	d3Service.drawGraph($scope.vectorIsos.val,graphData, $scope.indicator)
   }
   
   $scope.updateCutoff = function (newVal) {
@@ -341,14 +347,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if ($scope.scenarioScore.graphData.com) {
       $scope.scenarioScore.graphData.com.sel = $scope.scenarioScore.graphData.com.all[dataVal];
 	}
-	$scope.drawGraph($scope.scenarioScore.graphData);
-  }
-  $scope.drawGraph = function (graphData) {
-    if (!graphData.com) { 
-	  d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
-    } else {
-      d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data, graphData.com.sel.data);
-    }
+	d3Service.drawGraph($scope.vectorIsos.val,$scope.scenarioScore.graphData);
   }
 
   // filter for routes that match with the desired corridor
