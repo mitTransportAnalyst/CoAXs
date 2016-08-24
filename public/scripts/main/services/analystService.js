@@ -2,40 +2,43 @@
 coaxsApp.service('analystService', function (supportService, $http) {
 
 	
-  var defaultShapefile = '94e79c13-d758-470a-a447-adb4b3a30501',
+  var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
      defaultGraph = '70f850a5ea403be15aeb91ab07fc4162';  
 
   var subjects = {
-        prefix : 'epa_smart_location_database',
+        prefix : 'lodes',
 		fields : {
-		hh : { 
-		  id: 'counthu10',
-		  verbose : 'Households'
-		}, 
-		hh_zerocar: {
-          id: 'autoown0',
-          verbose: 'Households - Car-Free',
-        },
-        totpop: {
-          id: 'totpop10',
-          verbose: 'Residents',
-        },
-        jobs_tot: {
-          id: 'emptot',
-          verbose: 'Jobs',
-        },
-        retail: {
-          id: 'e8_ret10',
-          verbose: 'Jobs - Retail'
-        },
-        healthcare: {
-          id: 'e8_hlth10',
-          verbose: 'Jobs - Healthcare'
-        },
-        education: {
-          id: 'e8_ed10',
-          verbose: 'Jobs - Education'
-        }}
+		wt_const1	:	{id:"wt_const1"	,	verbose:	 'Manufact. & Constr. | $'	},
+		wt_const2	:	{id:"wt_const2"	,	verbose:	 'Manufact. & Constr. | $$'	},
+		wt_const3	:	{id:"wt_const3"	,	verbose:	 'Manufact. & Constr. | $$$'	},
+		wt_educa1	:	{id:"wt_educa1"	,	verbose:	 'Education | $'	},
+		wt_educa2	:	{id:"wt_educa2"	,	verbose:	 'Education | $$'	},
+		wt_educa3	:	{id:"wt_educa3"	,	verbose:	 'Education | $$$'	},
+		wt_finan1	:	{id:"wt_finan1"	,	verbose:	 'Finance | $'	},
+		wt_finan2	:	{id:"wt_finan2"	,	verbose:	 'Finance | $$'	},
+		wt_finan3	:	{id:"wt_finan3"	,	verbose:	 'Finance | $$$'	},
+		wt_healt1	:	{id:"wt_healt1"	,	verbose:	 'Health Care | $'	},
+		wt_healt2	:	{id:"wt_healt2"	,	verbose:	 'Health Care | $$'	},
+		wt_healt3	:	{id:"wt_healt3"	,	verbose:	 'Health Care | $$$'	},
+		wt_hospi1	:	{id:"wt_hospi1"	,	verbose:	 'Hospitality | $'	},
+		wt_hospi2	:	{id:"wt_hospi2"	,	verbose:	 'Hospitality | $$'	},
+		wt_hospi3	:	{id:"wt_hospi3"	,	verbose:	 'Hospitality | $$$'	},
+		wt_infor1	:	{id:"wt_infor1"	,	verbose:	 'Information Services | $'	},
+		wt_infor2	:	{id:"wt_infor2"	,	verbose:	 'Information Services | $$'	},
+		wt_infor3	:	{id:"wt_infor3"	,	verbose:	 'Information Services | $$$'	},
+		wt_profe1	:	{id:"wt_profe1"	,	verbose:	 'Professional Services | $'	},
+		wt_profe2	:	{id:"wt_profe2"	,	verbose:	 'Professional Services | $$'	},
+		wt_profe3	:	{id:"wt_profe3"	,	verbose:	 'Professional Services | $$$'	},
+		wt_publi1	:	{id:"wt_publi1"	,	verbose:	 'Public Administration | $'	},
+		wt_publi2	:	{id:"wt_publi2"	,	verbose:	 'Public Administration | $$'	},
+		wt_publi3	:	{id:"wt_publi3"	,	verbose:	 'Public Administration | $$$'	},
+		wt_trade1	:	{id:"wt_trade1"	,	verbose:	 'Retail & Wholesale | $'	},
+		wt_trade2	:	{id:"wt_trade2"	,	verbose:	 'Retail & Wholesale | $$'	},
+		wt_trade3	:	{id:"wt_trade3"	,	verbose:	 'Retail & Wholesale | $$$'	},
+		wt_trans1	:	{id:"wt_trans1"	,	verbose:	 'Utilities & Transport | $'	},
+		wt_trans2	:	{id:"wt_trans2"	,	verbose:	 'Utilities & Transport | $$'	},
+		wt_trans3	:	{id:"wt_trans3"	,	verbose:	 'Utilities & Transport | $$$'	},
+		}
   };
 
   this.isochrones = null;
