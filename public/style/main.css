@@ -83,8 +83,8 @@ nav div.section {
   min-height: 75%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
-  padding-left: 45px;
-  padding-right: 45px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .topleft {
