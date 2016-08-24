@@ -64,14 +64,17 @@ this.drawCordonGraph = function (dataset) {
 		height: 40
 	},
 	width = 400 - margins.left - margins.right,
-	height = 400 - margins.top - margins.bottom - legendPanel.height,
+	height = 400 - margins.top - margins.bottom - legendPanel.height;
+	
+	d3.select("#plot1").selectAll("*").remove();
 	
 	vis = d3.select("#plot1").append('g')
         .attr('width', width + margins.left + margins.right)
         .attr('height', height + margins.top + margins.bottom + legendPanel.height)
-        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')'),		
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');		
+	
     colors = d3.scale.category10();
-	vis.selectAll("*").remove();
+
 	
 	dataset = dataset.map(function (d) {
 		return d3.map(d.data).entries().map(function(e){
@@ -258,9 +261,16 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		},
 		
 		width = 440 - margins.left - margins.right,
-		height = 400 - margins.top - margins.bottom  - legendPanel.height,
+		height = 400 - margins.top - margins.bottom  - legendPanel.height;
 		
-		total = [],
+	d3.select("#compPlot2").selectAll("*").remove();
+	
+	vis1 = d3.select("#compPlot2").append('g')
+        .attr('width', width + margins.left + margins.right)
+        .attr('height', height + margins.top + margins.bottom + legendPanel.height)
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');	
+			
+	var total = [],
 		dataset = [],
 		compare = false;
 	
@@ -312,13 +322,8 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 	}),
 	indicators2 = dataset.map(function (d) {
         return d[0][0].x;
-	});
+	}),
    
-	vis1 = d3.select("#compPlot2").append('g')
-        .attr('width', width + margins.left + margins.right )
-        .attr('height', height + margins.top + margins.bottom + legendPanel.height)
-        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')'),		
-
     combined = total[1] ? total[0].concat(total[1]) : total[0],
 
     xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
@@ -326,8 +331,6 @@ this.drawGraph = function (cutoff, plotData, indicator) {
     yRange = d3.scale.linear().domain([0, 1500000//d3.max(combined, function (d) {   return d.y;})
     ]).range([height,0]);
 	  
-	vis1.selectAll("*").remove();
-
 	xScale2 = d3.scale.ordinal()
         .domain(indicators2)
         .rangeBands([width/3 + 5,width-10], .2),

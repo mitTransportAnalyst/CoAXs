@@ -320,8 +320,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.updateCutoff = function (newVal) {
 	leafletData.getMap('map_left').then(function(map) {
 	$scope.scenarioCompare ? analystService.showVectorIsos(300*newVal, map) : analystService.updateTiles(map, $scope.key, 300*newVal);
-	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
 	});
+	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
   }
 
   $scope.setCordon = function (cordonId) {
