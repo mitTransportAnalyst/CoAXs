@@ -81,14 +81,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
-  $scope.vectorIsos   = {vis:false, val:12};
-  $scope.scenarioScore = {graphData: false};
+  $scope.vectorIsos   = {vis:false, val:6};
+  $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
-    function() {
+    function(newVal) {
 		if ($scope.scenarioScore.graphData){
-			$scope.drawGraph($scope.scenarioScore.graphData);
-			$scope.showVectorIsos(300*$scope.vectorIsos.val);
+			$scope.updateCutoff(newVal);
 		};
   });
   
@@ -186,7 +185,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 500);
+	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 1000);
   };
   
   $scope.stopTimer = function () {
@@ -313,7 +312,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.updateCutoff = function (newVal) {
 	leafletData.getMap('map_left').then(function(map) {
-	analystService.updateTiles(map, $scope.key, 300*newVal);
+	$scope.scenarioCompare ? analystService.showVectorIsos(300*newVal, map) : analystService.updateTiles(map, $scope.key, 300*newVal);
+	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
 	});
   }
 
@@ -731,9 +731,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if($scope.scenarioScore.graphData){
 	if (!$scope.loadProgress.vis){
       $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-      leafletData.getMap('map_left').then(function (map) {
-        // if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
-        // if (!$scope.showVectorIsosOn) { analystService.resetAll(map, 0); };
+		console.log($scope.showVectorIsosOn);
+		leafletData.getMap('map_left').then(function (map) {
+        if ($scope.showVectorIsosOn && $scope.scenarioCompare)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
+        if (!$scope.showVectorIsosOn) { analystService.resetAll(map, 0); };
       });
 	}
   }};

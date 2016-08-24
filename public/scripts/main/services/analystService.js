@@ -279,6 +279,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
   };
   
   this.updateTiles = function(map, key, timeLimit, cb) {
+	isoLayerOld ? '' : isoLayerOld = isoLayer;
 	isoLayerOld.setOpacity(1);
 	isoLayer.setOpacity(0);
 	isoLayer = analyst.updateSinglePointLayer(key, null, timeLimit);
@@ -314,7 +315,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { //isoLayer.setOpacity(0)
+    if (isoLayer) { isoLayer.setOpacity(0)
 	};
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
