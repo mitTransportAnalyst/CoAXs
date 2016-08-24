@@ -530,11 +530,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     });
 	
     // load user points from phil's google spreadsheet
-    loadService.getUsersPoints(function (points, poiUsers) {
-      $scope.poiUsers = poiUsers;
-      poiUserPoints = points;
-      poiUserPoints.addTo(map);
-    });
+
   });
 
   // highlight a corridor, all routes within
