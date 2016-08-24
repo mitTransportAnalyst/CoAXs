@@ -16,6 +16,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 						 opacity:0,
 						 fillOpacity:0,
 						 id: cordonId,
+						 dashArray: 3,
 						 color: data[cordonId].features[0].properties.color}}));
 			cordonData[cordonId] = data[cordonId].features[0].properties;
 		}
