@@ -23,8 +23,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.selField = 'jobs_tot';
   $scope.scenarioLegend = true;
+  $scope.selCordon = null;
   
-  
+  $scope.cordons = {};
+    
   analystService.refreshCred();
   
   $interval(function () {
@@ -71,6 +73,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // left globals
   var subwaysLayer    = null,
       subStopsLayer   = null,
+	  cordonsLayer 	  = null,
       stopsLayer      = null,
       routesLayer     = null,
       poiUserPoints   = null,
@@ -167,7 +170,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     $scope.markers_left.main.lat = marker.model.lat;
     $scope.markers_left.main.lng = marker.model.lng;
-    $scope.preMarkerQuery(); 
+    $scope.setCordon(null);
+	$scope.preMarkerQuery(); 
   });
 
   $scope.preMarkerQuery = function () {
@@ -313,6 +317,22 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	});
   }
 
+  $scope.setCordon = function (cordonId) {
+	$scope.selCordon = cordonId;
+	d3Service.clearCharts();
+	targetService.targetCordons(cordonsLayer,cordonId);
+	if ($scope.selCordon){
+	d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
+			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
+			$scope.markers_left.main.lat = $scope.cordons[$scope.selCordon].centerLat;
+			$scope.markers_left.main.lng = $scope.cordons[$scope.selCordon].centerLon;
+			leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);})
+			$scope.preMarkerQuery();
+		
+	}}
+  }
+  
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
 	$scope.selField = dataVal;
@@ -458,11 +478,17 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
-    var gs=false;
+	
+	loadService.getCordons(function([cordonGeos, cordonData]){
+		cordonGeos.addTo(map);
+		cordonsLayer = cordonGeos;
+		$scope.cordons = cordonData;
+	});
+	
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
-    }, gs);
+    });
 
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {

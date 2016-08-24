@@ -3,6 +3,26 @@
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
 coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
+  this.getCordons = function (cb) {
+	 
+	$http.get('/geojson/cordons')	
+    .success(function (data, status) { 
+		cordonGeos = L.layerGroup();
+		var cordonData = {}; //new Array(numCordons);
+		for (cordonId in data){
+			cordonGeos.addLayer(
+				L.geoJson(data[cordonId],
+				{style: {weight: 1.5,
+						 opacity:0,
+						 fillOpacity:0,
+						 id: cordonId,
+						 color: data[cordonId].features[0].properties.color}}));
+			cordonData[cordonId] = data[cordonId].features[0].properties;
+		}
+	  cb([cordonGeos,cordonData]);
+	});
+  }
+
   this.getExisting = function (cb, gs) {
 	$http.get('/geojson/existing')	
     .success(function (data, status) {

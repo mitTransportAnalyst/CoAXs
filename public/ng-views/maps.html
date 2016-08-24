@@ -127,42 +127,16 @@
 		</div>
 		</h5>
 		<div class="row station-list">
-			<div class="col-xs-3" ng-click="updateCordon('downtown')">
-				<div class="station-sign">
+			<div class="col-xs-3" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">
+				<div class="station-sign" style="cursor: pointer;">
 					<div class="leaflet-popup-content">
-						<p style="background-color: #E87200">downtown</p>
-						<p style="background-color: white; padding-bottom:18px"></p>
+						<p style="background-color: {{cordon.color}}">{{cordonId}}</p>
+						<p style="background-color: white; padding-bottom:4px;" ng-class= "selCordon === cordonId ? 'blackText' : ''"> <i class="fa fa-check-circle" ng-show="scenarioScore.graphData"></i>
+						<i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData"></i>
 					</div>
 				</div>
-			</div>
 			<div class="col-s-1">
 			</div>
-			<div class="col-xs-3" ng-click="updateCordon('kendall')">
-				<div class="station-sign">
-					<div class="leaflet-popup-content">
-						<p style="background-color: #E12D27">kendall</p>
-						<p style="background-color: white; padding-bottom:4px;" ng-class= "selCordon === 'kendall' ? 'blackText' : ''"> selected <i class="fa fa-check-circle"></i>
-					</div>
-				</div>
-			</div>
-			<div class="col-s-1">
-			</div>
-			<div class="col-xs-3">
-				<div class="station-sign">
-					<div class="leaflet-popup-content">
-						<p style="background-color: #427B1D">LMA</p>
-						<p style="background-color: white; padding-bottom:18px"></p>
-					</div>
-				</div>
-			</div>			<div class="col-s-1">
-			</div>
-			<div class="col-xs-3">
-				<div class="station-sign">
-					<div class="leaflet-popup-content">
-						<p style="background-color: #555555">WTC</p>
-						<p style="background-color: white; padding-bottom:18px"></p>
-					</div>
-				</div>
 			</div>
 		</div>
       </div>
@@ -341,7 +315,7 @@
   <!-- 2 destination and time filters --> 
   <div class="colBody" style="width:275px"> 
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
-      <i class="fa fa-clock-o" ng-class="!scenarioScore.graphData && !visibleTabs.travel? 'faa-pulse animated' : ''" ></i>
+      <i class="fa fa-clock-o" ng-class="selCordon && !visibleTabs.travel? 'faa-flash animated' : ''" ></i>
 	  Time Map
     </div>
 
