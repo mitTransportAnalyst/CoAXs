@@ -93,42 +93,15 @@
       <b>CoAXs</b> | Job Access in the Boston Area | Beta Version
 	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
 	</h4>
-	<div class="topinfo-body container" style="min-height:250px">
+	<div class="topinfo-body container" style="min-height:75vh">
 	
-      <div style="height: 600px">
-        <h4>Tap a station below to explore how transit connects jobs and workers</h4>
+      <div style="height: 100%">
+        <h5>Innovation happens where the right people can work together. 
+		<br>Innovative companies need access to a wide workforce (e.g. labor pool 10x their number of employees).
 		<br>
-		<h5>	
-		Jobs
-		<center>
-        </center>
-		<div style="width:100%">
-		<svg id="plot1" width="500" height="150"></svg>
-		</div>
-		Accessible Workers
-		<center>
-          <div class="btn-group" dropdown ng-show="scenarioScore.graphData">
-            <button id="split-button" type="button" class="btn btn-success"
-                    ng-click="drawGraph(scenarioScore.graphData)">
-              {{ scenarioScore.graphData.sel.verbose }}
-            </button>	
-            <button type="button" class="btn btn-success" dropdown-toggle>
-              <span class="caret"></span>
-              <span class="sr-only">Split button!</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all" 
-                  ng-click="selectGraphData(id)"
-                  value="{{ id }}">
-                <a href="">{{ dataVal.verbose }}</a>
-              </li>
-            </ul>
-          </div>
-		</center>
-		<div style="width:100%">
-		<svg id="compPlot2" width="500" height="150"></svg>
-		</div>
-		</h5>
+		<br>Click a station to see how transit provides the <i>reach</i> and <i>capacity</i> required to connect workers and jobs.
+		<br>
+		<br>
 		<div class="row station-list">
 			<div class="col-xs-3" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">
 				<div class="station-sign" style="cursor: pointer;">
@@ -142,6 +115,23 @@
 			</div>
 			</div>
 		</div>
+		<br>
+		<br>
+		<div id="tooltip" class="hidden" style="z-index:10">
+			<p><span id="value"></span>
+			</p>
+		</div>
+		<div style="width:40%; float: right;" ng-show = "selCordon">
+		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
+		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
+		</div>
+		<div style="width:60%; float: left" ng-show = "scenarioScore.graphData">
+		{{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/start.png" style="height:14px" ng-show="!selCordon"><br>
+		within	{{vectorIsos.val*5}} minutes by public transit:
+		<svg id="compPlot2" width="440" height="400"></svg>
+		</div>
+		</h5>
+		
       </div>
 <!-- 	<div>
 	<h4>More Info</h4>
