@@ -137,8 +137,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   var tiles_global = tilesDict.base;
   
   var center_global = {
-    lat  : 42.36,
-    lng  : -71.092,
+
+   lat  : 42.355289,
+    lng  : -71.060479,
     zoom : 12,
   };
   // Assembling right map
