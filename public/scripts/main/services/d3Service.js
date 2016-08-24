@@ -71,7 +71,7 @@ this.drawCordonGraph = function (dataset) {
         .attr('height', height + margins.top + margins.bottom + legendPanel.height)
         .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')'),		
     colors = d3.scale.category10();
-	//vis.selectAll("*").remove();
+	vis.selectAll("*").remove();
 	
 	dataset = dataset.map(function (d) {
 		return d3.map(d.data).entries().map(function(e){
