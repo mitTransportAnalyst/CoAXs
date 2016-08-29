@@ -3,7 +3,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
 	
   var defaultShapefile = '6204ae67-0a51-415c-8b86-c57185a3a941',
-     defaultGraph = '4a97eb2b4709ed3dd3ce485dbce40145';  
+     defaultGraph = 'f3c3e969713befd772d9e67007af1021';  
 
   var subjects = {
         prefix : '2011___railplan_zones',
