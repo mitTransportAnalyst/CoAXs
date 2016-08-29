@@ -72,7 +72,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
     },
   };
   
-  var allRoutes = {'LO': ['R0','R1','R2','T1','J1'],
+  var allRoutes = {'LO': ['G0','G1','G2','T1','J1','E0','E1','W1'],
 				   'ble': ['B0','B1'],
 				   'tfl': ['bakerloo']
 				  };

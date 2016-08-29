@@ -41,13 +41,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           } , 3540000);
   
   $scope.scenario = {
-    'R' : angular.copy(scenarioBase),
+    'G' : angular.copy(scenarioBase),
 	'T' : angular.copy(scenarioBase),
 	'J' : angular.copy(scenarioBase),
 	'B' : angular.copy(scenarioBaseBak),
   }
   $scope.variants = {
-	'R' : { routeId : 'R1', sel : 0, all : {} },
+	'G' : { routeId : 'G1', sel : 0, all : {} },
 	'T' : { routeId : 'T1', sel : 0, all : {} },
 	'J' : { routeId : 'J1', sel : 0, all : {} },
 	'B' : { routeId : 'B1', sel : 0, all : {} },
@@ -60,7 +60,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     com : null,
     all : {},
   }
-  $scope.tabnav = 'R';
+  $scope.tabnav = 'G';
   $scope.mode = {
     accessEgress: { bike 	: [false,false]},
 	transit: {		bus 	: [true,true],
@@ -601,7 +601,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : name,
       created : Date.now(),
       sel     : {
-        'R' : $scope.variants['R'].sel,
+        'G' : $scope.variants['G'].sel,
 		'T' : $scope.variants['T'].sel,
         'J' : $scope.variants['J'].sel,
 		'B' : $scope.variants['B'].sel,
@@ -732,7 +732,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : 'Current Service',
       created : Date.now(),
       sel     : {
-		'R' : Object.keys($scope.variants['R'].all)[0],
+		'G' : Object.keys($scope.variants['G'].all)[0],
 		'T' : null,
 		'J' : null,
 		'B' : Object.keys($scope.variants['B'].all)[0],
@@ -758,7 +758,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : 'Full Closure',
       created : Date.now(),
       sel     : {
-		'R' : null,
+		'G' : null,
 	    'T' : Object.keys($scope.variants['T'].all)[0],
 		'J' : Object.keys($scope.variants['J'].all)[0],
 		'B' : Object.keys($scope.variants['B'].all)[0],
@@ -770,7 +770,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : 'Extension',
       created : Date.now(),
       sel     : {
-		'R' : Object.keys($scope.variants['R'].all)[2],
+		'G' : Object.keys($scope.variants['G'].all)[2],
 		'T' : null,
 		'J' : null,
 		'B' : Object.keys($scope.variants['B'].all)[0],
