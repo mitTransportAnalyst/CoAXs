@@ -81,7 +81,7 @@ var fileNames = {
   proposed_priority: 'priority.geojson',
   t_stops: 'stations.geojson',
   proposed_stops: 'stops.geojson',
-
+  cordons: 'cordon.json',
 }
 
 app.get('/geojson/:fileId', function (req, res) {

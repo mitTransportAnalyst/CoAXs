@@ -30,9 +30,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 4, sec : 0 },
   }
   
-  $scope.selField = 'dem_jobs';
+  $scope.selField = 'em_whitec2';
+  $scope.indicator = {sel:'em_',all:{em_:'Jobs'}};
   $scope.scenarioLegend = true;
+  $scope.selCordon = null;
   
+  $scope.cordons = {};
   
   analystService.refreshCred();
   
@@ -44,12 +47,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'G' : angular.copy(scenarioBase),
 	'T' : angular.copy(scenarioBase),
 	'J' : angular.copy(scenarioBase),
+	'E' : angular.copy(scenarioBase),
+	'W' : angular.copy(scenarioBase),
 	'B' : angular.copy(scenarioBaseBak),
   }
   $scope.variants = {
 	'G' : { routeId : 'G1', sel : 0, all : {} },
 	'T' : { routeId : 'T1', sel : 0, all : {} },
 	'J' : { routeId : 'J1', sel : 0, all : {} },
+	'E' : { routeId : 'E1', sel : 0, all : {} },
+	'W' : { routeId : 'W1', sel : 0, all : {} },
 	'B' : { routeId : 'B1', sel : 0, all : {} },
   }
   
@@ -86,13 +93,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
-  $scope.vectorIsos   = {vis:false, val:12};
+  $scope.vectorIsos   = {vis:false, val:9};
   $scope.scenarioScore = {graphData: false};
 
   $scope.$watch('vectorIsos.val',
     function() {
 		if ($scope.scenarioScore.graphData){
-			$scope.drawGraph($scope.scenarioScore.graphData);
+			drawGraph($scope.scenarioScore.graphData);
 			$scope.showVectorIsos(300*$scope.vectorIsos.val);
 		};
   });
@@ -182,10 +189,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     $scope.markers_left.main.lat = marker.model.lat;
     $scope.markers_left.main.lng = marker.model.lng;
+	$scope.setCordon(null);
     $scope.preMarkerQuery(); 
   });
 
   $scope.preMarkerQuery = function () {
+	d3Service.clearCharts();
 	runMarkerQuerys();
   }
   
@@ -197,7 +206,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 500);
+	$scope.showVectorIsos(300*$scope.vectorIsos.val);}, 1500);
   };
   
   $scope.stopTimer = function () {
@@ -267,15 +276,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		analystService.singlePointComparison(marker, map, function(res, cres, plotData, cPlotData){
 		if (plotData) { 
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-              $scope.scenarioScore.graphData = {
-                all: cPlotData,
-                sel: cPlotData[$scope.selField],
-                com: {
-                  all: plotData,
-                  sel: plotData[$scope.selField],
-                }
-              };
-              $scope.drawGraph($scope.scenarioScore.graphData);
+			//set the data for the cumulative plot to be an array of the responses for the selected and comparison combos.			 		  
+			  $scope.scenarioScore.graphData = [
+			  { 'id': $scope.combos.sel,
+				'name': $scope.combos.all[$scope.combos.sel].name,
+				'data': cPlotData},
+			  {'id': $scope.combos.com,
+				'name': $scope.combos.all[$scope.combos.com].name ,
+				'data': plotData}
+			];
+              drawGraph($scope.scenarioScore.graphData);
 		}; 
 		
 			
@@ -302,13 +312,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		  console.log("tile Request done for key " + key);
 		  if (plotData) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-            $scope.scenarioScore.graphData = {
-              all: plotData,
-              sel: plotData[$scope.selField],
-              com: false
-            };
-            $scope.drawGraph($scope.scenarioScore.graphData);
-          } 
+            $scope.scenarioScore.graphData = [
+				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
+				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
+				'data': plotData}
+			];
+            drawGraph($scope.scenarioScore.graphData);
+		  };
           if (!$scope.combos.sel) { existingMBTAKey = key }; 
           analystService.vectorRequest(marker, false, function (key, result) {
 			console.log("vector Request done for key " + key);
@@ -323,6 +333,32 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       }
     });
   }
+  
+  drawGraph = function (graphData){
+	d3Service.drawGraph($scope.vectorIsos.val,graphData, $scope.indicator)
+  }
+  
+  $scope.updateCutoff = function (newVal) {
+	leafletData.getMap('map_left').then(function(map) {
+	analystService.showVectorIsos(300*newVal, map)
+	});
+	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
+  }
+  
+  $scope.setCordon = function (cordonId) {
+	$scope.selCordon = cordonId;
+	targetService.targetCordons(cordonsLayer,cordonId);
+	if ($scope.selCordon){
+	//d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
+			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
+			$scope.markers_left.main.lat = $scope.cordons[$scope.selCordon].centerLat;
+			$scope.markers_left.main.lng = $scope.cordons[$scope.selCordon].centerLon;
+			leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);})
+			$scope.preMarkerQuery();
+		
+	}}
+  }
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
@@ -331,15 +367,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if ($scope.scenarioScore.graphData.com) {
       $scope.scenarioScore.graphData.com.sel = $scope.scenarioScore.graphData.com.all[dataVal];
 	}
-	$scope.drawGraph($scope.scenarioScore.graphData);
-  }
-  $scope.drawGraph = function (graphData) {
-    if (!graphData.com) { 
-	  d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data);
-    } else {
-      d3Service.drawGraph($scope.vectorIsos.val, graphData.sel.data, graphData.com.sel.data);
-    }
-  }
+	d3Service.drawGraph($scope.vectorIsos.val,$scope.scenarioScore.graphData);  }
+  
 
   // filter for routes that match with the desired corridor
   getKeepRoutes = function (selected) {
@@ -442,7 +471,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
-    var gs=false;
+    
+	console.log('ml');
+	
+	loadService.getCordons(function([cordonGeos, cordonData]){
+		cordonGeos.addTo(map);
+		cordonsLayer = cordonGeos;
+		$scope.cordons = cordonData;
+	});
+	
+	var gs=false;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
@@ -515,11 +553,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     });
 	
     // load user points from phil's google spreadsheet
-    loadService.getUsersPoints(function (points, poiUsers) {
-      $scope.poiUsers = poiUsers;
-      poiUserPoints = points;
-      poiUserPoints.addTo(map);
-    });
+    
   });
 
   // highlight a corridor, all routes within

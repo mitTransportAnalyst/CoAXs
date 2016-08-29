@@ -8,10 +8,6 @@ coaxsApp.service('analystService', function (supportService, $http) {
   var subjects = {
         prefix : '2011___railplan_zones',
 		fields : {
-		dem_jobs : { 
-		  id: 'dem_jobs',
-		  verbose : 'Jobs'
-		}, 
 		em_whitec2: {
           id: 'em_whitec2',
           verbose: 'Jobs | White Collar',
@@ -19,14 +15,6 @@ coaxsApp.service('analystService', function (supportService, $http) {
         em_bluec20: {
           id: 'em_bluec20',
           verbose: 'Jobs | Blue Collar',
-        },
-        dem_pop: {
-          id: 'dem_pop',
-          verbose: 'Residents',
-        },
-        dem_pworka: {
-          id: 'dem_pworka',
-          verbose: 'Residents | Working Age'
         },
         }
   };
@@ -169,7 +157,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
     });
   }
 
-  this.modifyModes = function (modes, c) {
+    this.modifyModes = function (modes, c) {
 	if (modes.accessEgress.bike[c] == true) {
 	optionC[c].accessModes = 'BICYCLE';
     optionC[c].egressModes = 'WALK';
@@ -213,7 +201,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 	}
 	
 	}
-  }
+}
 
   this.loadExisting = function (poi, map, cb) {
     vectorIsos = poi.isochrones;

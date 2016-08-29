@@ -80,15 +80,17 @@ nav div.section {
   color: #FFF;
   z-index: 10;
   width: 50%;
+  min-height: 75%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
-  padding-left: 45px;
-  padding-right: 45px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .topleft {
-  width            : 425px;
+  width            : 100%;
   overflow         : hidden;
+  background-color : #696969
 }
 .topinfo {
   background-color : #5F0D0A;
@@ -103,13 +105,11 @@ nav div.section {
   padding          : 10px;
   z-index          : 10;
   cursor           : pointer;
-  width: 960px;
-  width: -moz-calc(100% - 275px);
-  width: calc(100% - 275px);
-  float            : left;
+  width            : 50%;
+  right			   : 0px;
 }
 
-.topnav .legend {
+.topnav  .legend {
   width: 275px;
   height: 150px;
   top: 0px;
@@ -150,7 +150,9 @@ nav div.section {
   background-color : rgba(211,211,211,0.975);
   overflow         : hidden;
   height: 75%;
-  width: 275px;
+  width: 50%;
+  width: -moz-calc(50% + 2px);
+  width: calc(50% + 2px);
   z-index: 10;
   box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
@@ -179,6 +181,12 @@ nav div.section {
 
 .introPan h4{
   margin-left: 4px; 
+}
+
+.introPan .station-list{
+  position: absolute;
+  bottom: 25px;
+  margin-left: 45px;
 }
 
 .bottomCol .saveVar{
@@ -413,7 +421,7 @@ background-color  : #696969;
   padding: 0px 3px 0px 3px;
   position: relative;
   float: left;
-  width: 150px;
+  width: 250px;
   height: inherit;
   white-space: nowrap;
   z-index: 9;
@@ -422,11 +430,11 @@ background-color  : #696969;
 
 .scenario .subHead {
   margin:0px -3px 0px -3px;
-  background-color: rgba(255,165,0,0.5)
+  background-color: rgba(245,210,70,0.5)
 }
 
 .scenariosTable .selected {
-  background-color: rgba(255,165,0,0.5) !important;
+  background-color: rgba(245,210,70,0.5) !important;
 }
 
 .scenariosTable .cselected {
@@ -475,15 +483,19 @@ background-color  : #696969;
 	padding-right: 15px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	text-align: center;
+}
+
+.station-sign .leaflet-popup-content .blackText {
+	color: black;
 }
 
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width: 960px;
-  width: -moz-calc(100% - 275px);
-  width: calc(100% - 275px);
+  width            : 50%;
   position         : absolute;
+  left : 50%;
 }
 #map_right {
   left : 50%;

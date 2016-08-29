@@ -10,6 +10,14 @@ coaxsApp.service('targetService', function (leafletData) {
     }
   });
 
+    this.targetCordons = function(cordonLayer, id){
+		cordonLayer.eachLayer(function(boundary){
+			if (boundary.options.style.id == id) {
+				boundary.setStyle({opacity:0.75})}
+			else{boundary.setStyle({opacity:0})}
+		})
+	};
+	
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType, routeColor) {
     var stopTypeSizes = {0: 60, 1: 90, 2: 120};
