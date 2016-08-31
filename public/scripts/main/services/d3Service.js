@@ -1,23 +1,22 @@
 // this is the boiler to visualize the d3 graph
 coaxsApp.service('d3Service', function () {
 //Styling info.  TODO: Move to schema
-var attributes = [{ code: 'whitec2',  verbose: 'White Collar', color:'#CEF6FF'},	{code:'bluec20', verbose:'Blue Collar', color:'#9265C2'}, { code: 'bus',  verbose: 'Bus',  color:"#505099"},	{ code: 'heavyRail',  verbose: 'Subway',  color: "#9922DD"},
-{code: 'const1', verbose: 'Manufact. & Constr. | $', color: '#CE7E50'},	{code: 'const2', verbose: 'Manufact. & Constr. | $$', color: '#BA6A3C'},	{code: 'const3', verbose: 'Manufact. & Constr. | $$$', color: '#A65628'},
-{code: 'trade1', verbose: 'Retail & Wholesale | $', color: '#FF4244'},	{code: 'trade2', verbose: 'Retail & Wholesale | $$', color: '#F82E30'},	{code: 'trade3', verbose: 'Retail & Wholesale | $$$', color: '#E41A1C'},
-{code: 'trans1', verbose: 'Utilities & Transport | $', color: '#FFFF61'},	{code: 'trans2', verbose: 'Utilities & Transport | $$', color: '#FFFF47'},	{code: 'trans3', verbose: 'Utilities & Transport | $$$', color: '#FFFF33'},
-{code: 'infor1', verbose: 'Information Services | $', color: '#6EFFFB'},	{code: 'infor2', verbose: 'Information Services | $$', color: '#5AF3E7'},	{code: 'infor3', verbose: 'Information Services | $$$', color: '#46DFD3'},
-{code: 'finan1', verbose: 'Finance | $', color: '#28D236'},	{code: 'finan2', verbose: 'Finance | $$', color: '#14BE22'},	{code: 'finan3', verbose: 'Finance | $$$', color: '#00AA0E'},
-{code: 'profe1', verbose: 'Professional Services | $', color: '#CEF6FF'},	{code: 'profe2', verbose: 'Professional Services | $$', color: '#BAE2F7'},	{code: 'profe3', verbose: 'Professional Services | $$$', color: '#A6CEE3'},
-{code: 'educa1', verbose: 'Education | $', color: '#9265C2'},	{code: 'educa2', verbose: 'Education | $$', color: '#7E51AE'},	{code: 'educa3', verbose: 'Education | $$$', color: '#6A3D9A'},
-{code: 'healt1', verbose: 'Health Care | $', color: '#5097D2'},	{code: 'healt2', verbose: 'Health Care | $$', color: '#3C83BE'},	{code: 'healt3', verbose: 'Health Care | $$$', color: '#286FAA'},
-{code: 'hospi1', verbose: 'Hospitality | $', color: '#FFC2C1'},	{code: 'hospi2', verbose: 'Hospitality | $$', color: '#FFAEAD'},	{code: 'hospi3', verbose: 'Hospitality | $$$', color: '#FB9A99'},
-{code: 'publi1', verbose: 'Public Administration | $', color: '#FFA728'},	{code: 'publi2', verbose: 'Public Administration | $$', color: '#FF9314'},	{code: 'publi3', verbose: 'Public Administration | $$$', color: '#FF7F00'}];
+var attributes = [
+{code: 'agric', verbose: 'Agriculture', color: '#CE7E50'},	{code: 'minin', verbose: 'Mining', color: '#BA6A3C'},	
+{code: 'utili1', verbose: 'Utilities | Electric', color: '#FF4244'},	{code: 'utili2', verbose: 'Utilities | Water', color: '#F82E30'},	
+{code: 'manuf', verbose: 'Manufacturing', color: '#FFFF61'},	{code: 'const', verbose: 'Construction', color: '#FFFF47'},	{code: 'whole', verbose: 'Wholesale', color: '#FFFF33'},
+{code: 'trans', verbose: 'Transport', color: '#6EFFFB'},	{code: 'accom', verbose: 'Accommodations', color: '#5AF3E7'},	{code: 'infor', verbose: 'Information Services', color: '#46DFD3'},
+{code: 'finan', verbose: 'Finance', color: '#28D236'},	{code: 'reale', verbose: 'Real Estate', color: '#14BE22'},	{code: 'profe', verbose: 'Professional Services', color: '#00AA0E'},
+{code: 'admin', verbose: 'Administrative Services', color: '#CEF6FF'},	{code: 'publi', verbose: 'Public Administration', color: '#BAE2F7'},	{code: 'educa', verbose: 'Education', color: '#A6CEE3'},
+{code: 'healt', verbose: 'Human Health', color: '#9265C2'},
+{code: 'arten', verbose: 'Arts and Entertainment', color: '#5097D2'},
+{code: 'activ1', verbose: 'Other', color: '#FFC2C1'},	{code: 'activ2', verbose: 'Other', color: '#FFAEAD'}];
 
 //Map attributes so they can be get/set by code.
 attributes = d3.map(attributes, function(d){return d.code;});
 
 //Defaults
-var	selCode = 'whitec2',
+var	selCode = 'healt',
 	xScale = null;
 
 var updateSubsetTotal = function(){
@@ -261,7 +260,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		},
 		
 		width = 640 - margins.left - margins.right,
-		height = 400 - margins.top - margins.bottom  - legendPanel.height;
+		height = 375 - margins.top - margins.bottom  - legendPanel.height;
 		
 	d3.select("#compPlot2").selectAll("*").remove();
 	
@@ -328,7 +327,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 
     xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
 
-    yRange = d3.scale.linear().domain([0, 5500000//d3.max(combined, function (d) {   return d.y;})
+    yRange = d3.scale.linear().domain([0, 5000000//d3.max(combined, function (d) {   return d.y;})
     ]).range([height,0]);
 	  
 	xScale2 = d3.scale.ordinal()
@@ -462,7 +461,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.attr("id", "sliderLine")
 		.attr("x1", xRange1(cutoff*5))
 		.attr("y1", yRange(total[1][cutoff*5-1].y)-2)
-		.attr("x2", width/3+164)
+		.attr("x2", width/3+161)
 		.attr("y2", yRange(total[1][cutoff*5-1].y)-2)
 		.style("stroke", "rgba(255,255,255,0.25)");
 	
@@ -494,9 +493,9 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.attr("id", "sliderLine")
 		.attr("x1", xRange1(cutoff*5))
 		.attr("y1", yRange(total[0][cutoff*5-1].y)-2)
-		.attr("x2", width/3+25)
+		.attr("x2", width/3+27)
 		.attr("y2", yRange(total[0][cutoff*5-1].y)-2)
-		.style("stroke", "rgba(255,255,255,0.75)");
+		.style("stroke", "rgba(255,255,255,0.25)");
 	
 	
 	vis1.append("svg:line")
@@ -522,7 +521,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 			return yRange(d.y0+d.y);
 		})
         .attr('height', function (d) {
-			return (d.y*height/5500000);
+			return (d.y*height/5000000);
 		})
         .attr('width', function (d) {
 			return xScale2.rangeBand();
