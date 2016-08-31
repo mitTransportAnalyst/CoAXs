@@ -22,7 +22,7 @@
         </h6>
       </div>
 	  <div class="panel-body" ng-show="scenarioLegend && showVectorIsosOn  && scenarioCompare">
-        Time Boundary
+        Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
         <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
 	  </div>
@@ -96,28 +96,30 @@
 	<div class="topinfo-body container" style="min-height:75vh">
 	
       <div style="height: 100%">
-        <h5>New housing is most successful when it is well connected to at least half of London's 5 million jobs. 
+        <h5>New housing is most successful when it is well connected to London's 5 million jobs. 
 		<br>
-		<br>Click a station below to explore how well public transport connects workers.
+		<br>Click a station below to explore how public transport provides connectivity for workers.
 		<br>
 		<br>
 		<div class="row station-list">
-			<div class="col-xs-4" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">
-				<div class="station-sign" style="cursor: pointer;">
+			<div class="col-xs-4" ng-repeat="(cordonId, cordon) in cordons | limitTo:3" ng-click="setCordon(cordonId)">
+				<div class="station-sign" style="cursor: pointer; padding-bottom:10px">
 					<div class="leaflet-popup-content">
-						<p style="background-color: white; color:black">{{cordonId}}</p>
-						<p style="background-color: {{cordon.color}}; padding-bottom:4px;"> 
+						<p style="background-color: {{cordon.color}}; padding-bottom:4px;"></p>
+						<p style="background-color: white; color:black">{{cordonId}}
+						<span style="float:right">
 						<i class="fa fa-check-circle" ng-show="scenarioScore.graphData && selCordon === cordonId"></i>
-						<i class="fa fa-check-circle" style="color: {{cordon.color}}" ng-show="scenarioScore.graphData && selCordon !== cordonId"></i>
 						<i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData && selCordon === cordonId"></i>
-						<i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData && selCordon !== cordonId" style="color: {{cordon.color}}"></i>
+						</span>
+						</p>
 					</div>
 				</div>
 			<div class="col-s-1">
 			</div>
 			</div>
+			<br>
+
 		</div>
-		<br>
 		<br>
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
@@ -127,10 +129,14 @@
 		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
 		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
 		</div>
-		<div style="width:60%; float: left" ng-show = "scenarioScore.graphData">
-		{{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/start.png" style="height:14px" ng-show="!selCordon"><br>
-		within	{{vectorIsos.val*5}} minutes by public transit:
-		<svg id="compPlot2" width="640" height="400"></svg>
+		<div style="width:100%" ng-show = "scenarioScore.graphData">
+		{{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/start.png" style="height:14px" ng-show="!selCordon">
+		within	{{vectorIsos.val*5 | minuteConverter}} by public transport:
+		<svg id="compPlot2" width="640" height="300"></svg>
+		<div style="width:100%" clear="both">
+		These unofficial experimental results, which ignore important factors like crowding, are part of <a href="http://mfc.mit.edu/innovations-participatory-design-brt-systems">MIT</a> <a href="http://transitlab.mit.edu">research</a>.
+		<br>For official TfL connectivity tools and maps, see <a href="http://tfl.gov.uk/webcat">tfl.gov.uk/WebCAT</a>.
+		</div>
 		</div>
 		</h5>
 		
@@ -440,12 +446,12 @@
 			
 			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
 			ng-show="combos.sel !== combo._key && combos.com !== combo._key &&  scenarioCompare" ng-click="combos.com=combo._key; $event.stopPropagation(); preMarkerQuery()">
-                <i  ng-show = "!combos.com" class= "fa fa-circle-o faa-pulse animated"></i>
-				<i  ng-show = "combos.com" class= "fa fa-circle-o"></i>
+                <i  ng-show = "!combos.com" class= "fa fa-circle-o fa-2x faa-pulse animated"></i>
+				<i  ng-show = "combos.com" class= "fa fa-2x fa-circle-o"></i>
 			</div>
 			<div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
 			ng-show="combos.sel !== combo._key && combos.com == combo._key &&  scenarioCompare" ng-click="combos.com=null; $event.stopPropagation()">
-				<i  class = "fa fa-check-circle"></i>
+				<i  class = "fa fa-2x fa-check-circle"></i>
             </div>
           </div>
         </div>
