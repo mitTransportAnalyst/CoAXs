@@ -93,8 +93,13 @@ coaxsApp.service('analystService', function (supportService, $http) {
   };
 
   // filter through and remove routes that we don't want banned on each scenario SPA call
+  
+  this.setScenarioNames = function (scenarioName, c){
+	optionC[c].scenario.name = scenarioName;
+  };
+  
   this.modifyRoutes = function (keepRoutes, c) { 
-    keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
+	keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
 	
 	for (agency in allRoutes) {
 	
@@ -223,8 +228,14 @@ coaxsApp.service('analystService', function (supportService, $http) {
       cb(false);
     });;
   }
+  
+  this.prepCustomScenario = function (scenario, c) {
+	console.log('prepping custom scenario');
+	console.log(scenario);
+	optionC[c] = scenario;
+  };
 
-  this.singlePointComparison = function (marker, map, cb) {
+  this.singlePointComparison = function (marker, map, cordon, cb) {
 	analyst.singlePointComparison({
       lat : marker.lat,
       lng : marker.lng,
@@ -262,7 +273,8 @@ coaxsApp.service('analystService', function (supportService, $http) {
   }
   
   // actually run the SPA and handle results from library
-  this.singlePointRequest = function (marker, map, cb) {
+  this.singlePointRequest = function (marker, map, cordon, cb) {
+	spr = function () {
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
@@ -281,37 +293,100 @@ coaxsApp.service('analystService', function (supportService, $http) {
     })
     .catch(function (err) {
       console.log(err);
-    });
+	})
+	};
+  
+	if (cordon) {
+		$http.get('pregen/'+cordon+'/'+optionC[0].scenario.name).then(function successCallback(pregen){
+		  console.log('Pregenerated result at ' + cordon + ' found.');
+		  	  var plotData = subjects.fields;
+			  for (key in subjects.fields) {
+				var id = subjects.prefix+'.'+subjects.fields[key].id;
+				var tempArray = pregen.data.data[id].pointEstimate.sums.slice(0,120);
+				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
+				plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
+			  }
+			  cb(pregen.data.key, plotData);
+	    }, function errorCallback(){
+	      console.log('Pregenerated result at ' + cordon + ' not found, making request to Analyst Server.');
+		    spr();
+	  })} else {
+		spr();
+	  }
   };
 
   // explicitly run request for vector isochrones
-  this.vectorRequest = function (marker, compareTrue, cb) {
-	//single-point request for baseline scenario, with null destination shapefile null to retrieve vector isochrones
-	analyst.singlePointRequest({
+  this.vectorRequest = function (marker, compareTrue, cordon, cb) {
+	var firstPregenerated = false;
+	var secondPregenerated = false;
+	
+	//Pregenerated vector request
+	pvr = function (scenarioNumber, callback) {
+		$http.get('pregen/'+cordon+'/'+optionC[scenarioNumber].scenario.name+'_vector').then(function successCallback(pregen){
+			callback(pregen.data.key, pregen.data.isochrones);
+		}, function errorCallback(){
+	      console.log('Pregenerated vector result at ' + cordon + ' not found, making request to Analyst Server.');
+		  avr(scenarioNumber, callback);
+	  })
+	}
+	
+	//Analyst vector request
+	avr = function (scenarioNumber, callback){
+	  analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
-    }, defaultGraph, null, optionC[0])
+    }, defaultGraph, null, optionC[scenarioNumber])
     .then(function (response) {
-      //then, if a comparison, run a second single-point request for new scenario, with null destination shapefile null to retrieve vector isochrones
-	  if (compareTrue) { 
-		vecComIsos = response.isochrones;
-		analyst.singlePointRequest({
-			lat : marker.lat,
-			lng : marker.lng,
-		}, defaultGraph, null, optionC[1])
-		.then(function (response) {
-			vectorIsos = response.isochrones;
-			cb(response.key, true);
-		}
-	  )}
-      else { 
-		vectorIsos = response.isochrones; 
-		cb(response.key, true);
-	  }
-    });
+	    callback(response.key, response.isochrones);
+	    console.log(response);
+	})
+	};
+	
+	pvr(0, function (key, isochrones){
+	    if (compareTrue) {
+		   vecComIsos  = isochrones;
+		   pvr(1, function(key, isochrones) {
+		     vectorIsos = isochrones;
+			 cb(key, true);
+		   })
+  	 } else {
+		   vectorIsos = isochrones;
+		   cb(key, true);
+		 }
+	});
+	
+	
+	// //single-point request for baseline scenario, with destination shapefile null to retrieve vector isochrones
+	// analyst.singlePointRequest({
+      // lat : marker.lat,
+      // lng : marker.lng,
+    // }, defaultGraph, null, optionC[0])
+    // .then(function (response) {
+      // //then, if a comparison, run a second single-point request for new scenario, with destination shapefile null to retrieve vector isochrones
+	  // if (compareTrue) { 
+		// vecComIsos = response.isochrones;
+		// analyst.singlePointRequest({
+			// lat : marker.lat,
+			// lng : marker.lng,
+		// }, defaultGraph, null, optionC[1])
+		// .then(function (response) {
+			// vectorIsos = response.isochrones;
+			// cb(response.key, true);
+		// }
+	  // )}
+      // else { 
+		// vectorIsos = response.isochrones; 
+		// console.log(vectorIsos);
+		// cb(response.key, true);
+	  // }
+    // });
   };
 
   // swap between tile layer and vector isos layer
+  this.deleteTileIsos = function (map) {
+    if(isoLayer){map.removeLayer(isoLayer)};
+  }
+  
   this.showVectorIsos = function(timeVal, map) {
     if (isoLayer) { isoLayer.setOpacity(0) };
     if (currentIso) { map.removeLayer(currentIso); };

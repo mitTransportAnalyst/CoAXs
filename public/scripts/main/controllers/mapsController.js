@@ -195,6 +195,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.preMarkerQuery = function () {
 	d3Service.clearCharts();
+	leafletData.getMap('map_left').then(function(map) {analystService.deleteTileIsos(map)});
 	runMarkerQuerys();
   }
   
@@ -253,16 +254,35 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // what calls the SPA analysis and updates and tile and map components
   var runMarkerQuerys = function () {
-    $scope.showVectorIsosOn = false;
-    var marker = angular.copy($scope.markers_left.main);
+    //remove isochrone overlay from map
+	$scope.showVectorIsosOn = false;
+    
+	//get marker location, so that lat/lon can be sent to analyst
+	var marker = angular.copy($scope.markers_left.main);
 
+	//prepare scenario modifications
     this.runPrep = function (map, comboItem, c) {
-	  var toKeep = getKeepRoutes(comboItem);
-      analystService.resetAll(map, c);
-      analystService.modifyRoutes(toKeep, c);
-      analystService.modifyDwells(toKeep, c);
-      analystService.modifyFrequencies(toKeep, c);
-      analystService.modifyModes($scope.mode, c);
+	  analystService.resetAll(map, c);
+	  
+	  //if there is a combo specified
+	  if ($scope.combos.all[comboItem]){
+		//if the specified combo does not have a custom scenario request, prepare the scenario
+	    if(!$scope.combos.all[comboItem].customAnalystRequest) {
+	      var toKeep = getKeepRoutes(comboItem);
+          analystService.modifyRoutes(toKeep, c);
+          analystService.modifyDwells(toKeep, c);
+          analystService.modifyFrequencies(toKeep, c);
+	    }
+	    //otherwise, use the specified scenario
+		else{
+	      analystService.prepCustomScenario($scope.combos.all[comboItem].customAnalystRequest,c);
+		}
+	  } else {
+	      var toKeep = [{routeId:'bakerloo'},{routeId:'G0'},{routeId:'E0'}];
+          analystService.modifyRoutes(toKeep, c);
+	  }
+	  analystService.modifyModes($scope.mode, c);
+	  analystService.setScenarioNames(comboItem, c);
 	};
 
     animateProgressBar(); // start the progress bar
@@ -273,7 +293,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		console.log("running comparison...");
 		this.runPrep(map, $scope.combos.com, 0);
 		this.runPrep(map, $scope.combos.sel, 1);
-		analystService.singlePointComparison(marker, map, function(res, cres, plotData, cPlotData){
+		analystService.singlePointComparison(marker, map, $scope.selCordon, function(res, cres, plotData, cPlotData){
 		if (plotData) { 
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
 			//set the data for the cumulative plot to be an array of the responses for the selected and comparison combos.			 		  
@@ -289,7 +309,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		}; 
 		
 			
-			analystService.vectorRequest(marker, true, function (key, result) {
+			analystService.vectorRequest(marker, true, $scope.selCordon, function (key, result) {
 			console.log("vector Request done for key " + key);
             if (result) {
               $scope.loadProgress.val = 100;
@@ -308,7 +328,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
 		var shapefile = undefined;
-        analystService.singlePointRequest(marker, map, function (key, plotData) {
+        analystService.singlePointRequest(marker, map, $scope.selCordon, function (key, plotData) {
 		  console.log("tile Request done for key " + key);
 		  if (plotData) { 
             if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
@@ -320,7 +340,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
             drawGraph($scope.scenarioScore.graphData);
 		  };
           if (!$scope.combos.sel) { existingMBTAKey = key }; 
-          analystService.vectorRequest(marker, false, function (key, result) {
+          analystService.vectorRequest(marker, false, $scope.selCordon, function (key, result) {
 			console.log("vector Request done for key " + key);
             if (result) {
               $scope.loadProgress.val = 100;
@@ -355,9 +375,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 			$scope.markers_left.main.lng = $scope.cordons[$scope.selCordon].centerLon;
 			leafletData.getMap('map_left').then(function(map) {
 		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);})
-			$scope.preMarkerQuery();
-		
-	}}
+			$scope.changeTilesLeft($scope.cordons[$scope.selCordon].customBasemap); 
+	}} else {$scope.changeTilesLeft()}
+	$scope.preMarkerQuery();
   }
 
   // left d3 on scenario scorecard

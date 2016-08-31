@@ -84,6 +84,24 @@ var fileNames = {
   cordons: 'cordon.json',
 }
 
+app.get('/pregen/:cordonId/:scenarioId', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/data/' + req.params.cordonId,
+    'dotfiles' : 'deny',
+    'headers'  : {
+        'x-timestamp' : Date.now(),
+        'x-sent'      : true
+    }
+  };
+  var file = req.params.scenarioId + '.json';
+  res.sendFile(file, options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
 app.get('/geojson/:fileId', function (req, res) {
   var options = {
     'root'     : __dirname + '/public/routes/shapefiles/mapApp/',
