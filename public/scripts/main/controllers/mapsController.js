@@ -30,8 +30,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 4, sec : 0 },
   }
   
-  $scope.selField = 'em_whitec2';
-  $scope.indicator = {sel:'em_',all:{em_:'Jobs'}};
+  $scope.selField = 'finan';
+  $scope.indicator = {sel:'in_',all:{in_:'Jobs'}};
   $scope.scenarioLegend = true;
   $scope.selCordon = null;
   

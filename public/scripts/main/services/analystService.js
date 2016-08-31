@@ -2,19 +2,91 @@
 coaxsApp.service('analystService', function (supportService, $http) {
 
 	
-  var defaultShapefile = '6204ae67-0a51-415c-8b86-c57185a3a941',
+  var defaultShapefile = '6a2ed64e-55aa-4d70-bd27-6ecd59e11c2b',
      defaultGraph = 'f3c3e969713befd772d9e67007af1021';  
 
   var subjects = {
-        prefix : '2011___railplan_zones',
+        prefix : 'work',
 		fields : {
-		em_whitec2: {
-          id: 'em_whitec2',
-          verbose: 'Jobs | White Collar',
+		in_agric: {
+          id: 'in_a_agric',
+          verbose: 'Agriculture',
         },
-        em_bluec20: {
-          id: 'em_bluec20',
-          verbose: 'Jobs | Blue Collar',
+		in_minin: {
+          id: 'in_b_minin',
+          verbose: 'Mining',
+        },
+		in_manuf: {
+          id: 'in_c_manuf',
+          verbose: 'Manufacturing',
+        },
+		in_utili1: {
+          id: 'in_d_elect',
+          verbose: 'Utilities | Electricity',
+        },
+		in_utili2: {
+          id: 'in_e_water',
+          verbose: 'Utilities | Water',
+        },
+        in_const: {
+          id: 'in_f_const',
+          verbose: 'Construction',
+        },
+		in_whole: {
+          id: 'in_g_whole',
+          verbose: 'Wholesale',
+        },
+		in_trans: {
+          id: 'in_h_trans',
+          verbose: 'Transportation',
+        },
+		in_accom: {
+          id: 'in_i_accom',
+          verbose: 'Accommodations',
+        },
+		in_infor: {
+          id: 'in_j_infor',
+          verbose: 'Information Services',
+        },
+		in_finan: {
+          id: 'in_k_finan',
+          verbose: 'Finance',
+        },
+		in_reale: {
+          id: 'in_l_real',
+          verbose: 'Real Estate',
+        },
+		in_profe: {
+          id: 'in_m_profe',
+          verbose: 'Professional Services',
+        },
+		in_admin: {
+          id: 'in_n_admin',
+          verbose: 'Administrative Services',
+        },
+		in_publi: {
+          id: 'in_o_publi',
+          verbose: 'Public Administration',
+        },
+		in_educa: {
+          id: 'in_p_educa',
+          verbose: 'Education',
+        },
+		in_healt: {
+          id: 'in_q_human',
+          verbose: 'Human Health',
+        },
+		in_arten: {
+          id: 'in_r_s_art',
+          verbose: 'Arts and Entertainment',
+        },
+		in_activ1: {
+          id: 'in_t_activ',
+          verbose: 'Other',
+        },
+		in_activ2: {
+          id: 'in_u_activ',
+          verbose: 'Other',
         },
         }
   };
@@ -62,7 +134,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
   
   var allRoutes = {'LO': ['G0','G1','G2','T1','J1','E0','E1','W1'],
 				   'ble': ['B0','B1'],
-				   'tfl': ['bakerloo']
+				   //'tfl': ['bakerloo']
 				  };
 				   
   var agencyId = 'LO';
