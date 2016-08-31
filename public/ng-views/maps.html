@@ -26,11 +26,16 @@
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.all[combos.sel].name }}</small>
         <br><i class="fa fa-stop fa-border" style="color:#89cff0" ng-show="scenarioCompare"></i> <small>{{ combos.all[combos.com].name }}</small>
 	  </div>
-      <div class="panel-body" ng-show="scenarioScore.graphData&& scenarioLegend && !scenarioCompare ">
-        Reachability by Public Transit
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Reachable within {{ vectorIsos.val*5 | minuteConverter }}</small>
-		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Unreachable within {{ vectorIsos.val*5 | minuteConverter }} </small>
-      </div>  
+      <div class="panel-body" ng-show="scenarioScore.graphData && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
+		Time Boundary:  {{ vectorIsos.val*5 | minuteConverter }}
+		<br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>{{ combos.sel ? combos.all[combos.sel].name : 'Existing service'}}</small>
+      </div>
+	   <div class="panel-body" ng-show="scenarioScore.graphData && scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
+        Reachability by Public Transport
+        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i> <small>Easily reachable</small>
+        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i> <small>Reachable</small>
+		<br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i> <small>Unreachable within 2 hours</small>
+	  </div>
 	  <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
 		Travel Time Comparison<br>
 		<small>{{ combos.all[combos.sel].name }}...</small>
