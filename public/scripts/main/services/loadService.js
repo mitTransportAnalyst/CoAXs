@@ -4,13 +4,11 @@
 coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
   this.getCordons = function (cb) {
-	console.log('gc');
 	$http.get('/geojson/cordons')	
     .success(function (data, status) { 
 		cordonGeos = L.layerGroup();
 		var cordonData = {}; //new Array(numCordons);
 		for (cordonId in data){
-			console.log(cordonId);
 			cordonGeos.addLayer(
 				L.geoJson(data[cordonId],
 				{style: {weight: 1.5,
@@ -28,15 +26,15 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
   this.getExisting = function (cb, gs) {
 	$http.get('/geojson/existing')	
     .success(function (data, status) {
+	    console.log('got existing');
 		var subwayRoutes = L.geoJson(data, {
         style: function (feature, grayscale) {
 		  var col = "#AAAAAA";
 		  if (!gs){col = feature.properties.lines[feature.properties.lines.length-1].COLOR;}
 		  return {
             color     : col,
-            weight    : 0.5,
+            weight    : 0.75,
             opacity   : 0.35,
-            dashArray : 0,
           };
         }
       });
@@ -56,7 +54,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) { 
 			return { color: color, 
-				weight: 16, 
+				weight: 6, 
 				opacity: 0
 			}; 
 		},
@@ -78,15 +76,15 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
       for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i].properties;
         feature['length'] = supportService.getLength(data.features[i].geometry);
-		feature['num']=feature.id
+
         if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
         var color = '#' + feature.routeColor;
         routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color: color,
-              weight: 3,
-              opacity: 0.1,
+              weight: 4,
+              opacity: 0,
             };
           },
           onEachFeature: function (feature, layer) {
@@ -277,7 +275,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "HOME") {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
 			  homeLoc = [pois[n].lat, pois[n].lng];
             }
             else if (pois[n].poiTag == "missed-bus")  {
@@ -293,7 +291,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
             }
             var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
             marker['userId'] = userId;

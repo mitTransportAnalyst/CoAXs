@@ -100,6 +100,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     function() {
 		if ($scope.scenarioScore.graphData){
 			drawGraph($scope.scenarioScore.graphData);
+			!$scope.showVectorIsosOn ? $scope.toggleShowVectorIsos() : '';
 			$scope.showVectorIsos(300*$scope.vectorIsos.val);
 		};
   });
@@ -171,7 +172,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.center_left   = angular.copy(center_global);
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
-  $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
+  $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : false }};
 
   // snap point sensitivity
   $scope.sensitivity = 0.05;
@@ -179,6 +180,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.changeTilesLeft = function(tiles) {
 	if(tilesDict[tiles]){
 	$scope.tiles_left = tilesDict[tiles];}
+	else{$scope.tiles_left = tilesDict['base']}
   };
   
   $scope.changeTilesRight = function(tiles) {
@@ -189,8 +191,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
     $scope.markers_left.main.lat = marker.model.lat;
     $scope.markers_left.main.lng = marker.model.lng;
+	console.log($scope.markers_left);
 	$scope.setCordon(null);
-    $scope.preMarkerQuery(); 
   });
 
   $scope.preMarkerQuery = function () {
@@ -428,50 +430,51 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
     // get mbta existing subway information
-	var gs = false;
-    loadService.getExisting(function (subways) {
-      subways.addTo(map);
-      subwaysLayer = subways;
-    },gs);
+	// var gs = false;
+    // loadService.getExisting(function (subways) {
+      // subways.addTo(map);
+      // subwaysLayer = subways;
+	  // console.log(subwaysLayer);
+    // },gs);
 
 	// place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = [200, 300, 400];
-      var circleList = [];
-	  var stationNameList = [];
+    // loadService.getStops('/geojson/t_stops', function (stops) {
+      // var stopTypeSizes = [200, 300, 400];
+      // var circleList = [];
+	  // var stationNameList = [];
 
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.color,
-		    stationStroke = false,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station
+      // stops.eachLayer(function (marker) {
+        // var stationColor = marker.options.base.color,
+		    // stationStroke = false,
+            // stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            // size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            // strokeWeight = 20/(map.getZoom()^(1/10)),
+			// stationName = marker.options.base.station
 			
    
-		var stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+		// var stationNamePopup = L.popup({
+			  // closeButton: false,
+			  // className: 'station-sign'
+			// }).setContent('<p style="background-color:'
+            // +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
 
-		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+		// if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
 			
-		circleList.push(L.circle(stationLatLng, size, {
-          stroke: stationStroke,
-		  color: "#000000",
-		  weight: strokeWeight,
-		  opacity: 1,
-          fillColor: stationColor,
-          fillOpacity: 0.6,
-		}).bindPopup(stationNamePopup));
+		// circleList.push(L.circle(stationLatLng, size, {
+          // stroke: stationStroke,
+		  // color: "#000000",
+		  // weight: strokeWeight,
+		  // opacity: 1,
+          // fillColor: stationColor,
+          // fillOpacity: 0.6,
+		// }).bindPopup(stationNamePopup));
 	    
-	  });
+	  // });
 	
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
+      // subStopsLayer = L.layerGroup(circleList);
+      // subStopsLayer.addTo(map);
+    // });
 	
 	
     // get priority portions (do this first so it renders beneath other content)
@@ -483,17 +486,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
     // place stops over routes plots on map
-    loadService.getStops('/geojson/proposed_stops', function (stops) {
-      stops.addTo(map);
-      stopsLayer = stops;
-    });
+    // loadService.getStops('/geojson/proposed_stops', function (stops) {
+      // stops.addTo(map);
+      // stopsLayer = stops;
+    // });
   });
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
     
-	console.log('ml');
-	
 	loadService.getCordons(function([cordonGeos, cordonData]){
 		cordonGeos.addTo(map);
 		cordonsLayer = cordonGeos;
@@ -504,6 +505,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
+	  console.log(subways);
     }, gs);
 
 	// place stops over routes plots on map
@@ -664,7 +666,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.updateLeftRoutes(comboId);
     $scope.combos.sel = comboId;
     $scope.comboName = null;
-    runMarkerQuerys();
   }
 
   // how we update the scorecard on the right side, also bound to events like range slider
@@ -673,45 +674,46 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // updates on new selected scenario combo
   $scope.updateScenarioScorecard = function (id) {
-    if (!id) {
-      var tempScen = scorecardService.generateEmptyScore();
-      if ($scope.scenarioScore && $scope.scenarioScore.graphData) { 
-        tempScen.graphData = $scope.scenarioScore.graphData; 
-      }
-      $scope.scenarioScore = tempScen;
-    } else {
-      var allCorKeys = $scope.combos.all[id].sel;
-      var busTot = {count: 0, cost: 0};
-      var lenTot = {count: 0, cost: 0};
-      var vehTot = {count: 0, cost: 0};
+  
+    // if (!id) {
+      // var tempScen = scorecardService.generateEmptyScore();
+      // if ($scope.scenarioScore && $scope.scenarioScore.graphData) { 
+        // tempScen.graphData = $scope.scenarioScore.graphData; 
+      // }
+      // $scope.scenarioScore = tempScen;
+    // } else {
+      // var allCorKeys = $scope.combos.all[id].sel;
+      // var busTot = {count: 0, cost: 0};
+      // var lenTot = {count: 0, cost: 0};
+      // var vehTot = {count: 0, cost: 0};
 
-      for (cor in allCorKeys) {
-        var selCor = $scope.variants[cor].all[allCorKeys[cor]];
+      // for (cor in allCorKeys) {
+        // var selCor = $scope.variants[cor].all[allCorKeys[cor]];
 
-        if (selCor) {
-          var bus       = scorecardService.generateBusScore(stopsLayer, selCor.station, selCor.routeId);
-          busTot.count += bus.count;
-          busTot.cost  += bus.cost;
+        // if (selCor) {
+          // var bus       = scorecardService.generateBusScore(stopsLayer, selCor.station, selCor.routeId);
+          // busTot.count += bus.count;
+          // busTot.cost  += bus.cost;
 
-          var length    = scorecardService.generateLengthScore(routesLayer, selCor.routeId);
-          lenTot.count += length.count;
-          lenTot.cost  += length.cost;
+          // var length    = scorecardService.generateLengthScore(routesLayer, selCor.routeId);
+          // lenTot.count += length.count;
+          // lenTot.cost  += length.cost;
 
-          var frequencies = {
-            peak : selCor.peak.min*60 + selCor.peak.sec,
-            off  : selCor.offpeak.min*60 + selCor.offpeak.sec,
-          };
+          // var frequencies = {
+            // peak : selCor.peak.min*60 + selCor.peak.sec,
+            // off  : selCor.offpeak.min*60 + selCor.offpeak.sec,
+          // };
 
-          var vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, selCor.routeId);
-          vehTot.count += vehicles.count;
-          vehTot.cost  += vehicles.cost;
-        }
-      }
-      if (!$scope.scenarioScore) { $scope.scenarioScore = {}; }
-      $scope.scenarioScore.bus = busTot; 
-      $scope.scenarioScore.length = lenTot; 
-      $scope.scenarioScore.vehicles = vehTot;
-    }
+          // var vehicles  = scorecardService.generateVehiclesScore(routesLayer, frequencies, selCor.routeId);
+          // vehTot.count += vehicles.count;
+          // vehTot.cost  += vehicles.cost;
+        // }
+      // }
+      // if (!$scope.scenarioScore) { $scope.scenarioScore = {}; }
+      // $scope.scenarioScore.bus = busTot; 
+      // $scope.scenarioScore.length = lenTot; 
+      // $scope.scenarioScore.vehicles = vehTot;
+    // }
   }
 
   
@@ -778,63 +780,85 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // from manager control run create
   $scope.buildScenarios = function(foo) {  
 	//check if combos have already been created
-	for (prop in $scope.combos.all) {$scope.defaultsBuilt = true;}
-	
+		
 	if(!$scope.defaultsBuilt){
-	var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
+	$scope.combos.all['baseline'] = {
       name    : 'Current Service',
-      created : Date.now(),
-      sel     : {
-		'G' : Object.keys($scope.variants['G'].all)[0],
-		'T' : null,
-		'J' : null,
-		'B' : Object.keys($scope.variants['B'].all)[0],
-      }
-    };
-	
-	$scope.combos.sel = comboId;
-
-	
-	// var comboId = supportService.generateUUID();
-    // $scope.combos.all[comboId] = {
-      // name    : 'Part Closure',
-      // created : Date.now(),
-      // sel     : {
-		// 'R' : Object.keys($scope.variants['R'].all)[2],
-		// 'T' : Object.keys($scope.variants['T'].all)[0],
-		// 'J' : null,
-      // }
-    // };
-	
-	var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
-      name    : 'Full Closure',
-      created : Date.now(),
-      sel     : {
-		'G' : null,
-	    'T' : Object.keys($scope.variants['T'].all)[0],
-		'J' : Object.keys($scope.variants['J'].all)[0],
-		'B' : Object.keys($scope.variants['B'].all)[0],
-      }
-    };
-	
-	var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
-      name    : 'Extension',
       created : Date.now(),
       sel     : {
 		'G' : Object.keys($scope.variants['G'].all)[2],
 		'T' : null,
 		'J' : null,
-		'B' : Object.keys($scope.variants['B'].all)[0],
+		'E' : Object.keys($scope.variants['E'].all)[0],
+		'W' : null,
+		'B' : null,
       }
     };
 	
+	$scope.combos.sel = 'baseline';
+
+    $scope.combos.all['gob_ext'] = {
+      name    : 'GOB Extension',
+      created : Date.now(),
+      sel     : {
+		'G' : Object.keys($scope.variants['G'].all)[0],
+		'T' : null,
+		'J' : null,
+		'E' : Object.keys($scope.variants['E'].all)[0],
+		'W' : null,
+		'B' : null,
+      }
+    };
+	
+    $scope.combos.all['gob_full_closure'] = {
+      name    : 'GOB Full Closure',
+      created : Date.now(),
+      sel     : {
+		'G' : null,
+	    'T' : Object.keys($scope.variants['T'].all)[0],
+		'J' : Object.keys($scope.variants['J'].all)[0],
+		'E' : Object.keys($scope.variants['E'].all)[0],
+		'W' : null,
+		'B' : null,
+      }
+    };
+	
+    $scope.combos.all['ell_part_closure'] = {
+      name    : 'ELL Part Closure',
+      created : Date.now(),
+      sel     : {
+		'G' : Object.keys($scope.variants['G'].all)[2],
+		'T' : null,
+		'J' : null,
+		'E' : Object.keys($scope.variants['E'].all)[1],
+		'W' : Object.keys($scope.variants['W'].all)[0],
+		'B' : null,
+      },
+	  // customAnalystRequest: {
+		 // scenario: {
+		  // name: 'ell_part_closure',
+		  // modifications: [
+		    // {type: 'remove-trip',
+			 // agencyId: 'LO',
+			 // routeId: ['G1','G2','J1','T1','E0'],
+			 // tripId: null
+			// },
+			// {type: 'remove-trip',
+			 // agencyId: 'ble',
+			 // routeId: ['B0','B1'],
+			 // tripId: null
+			// }
+		  // ]
+		// }
+	  // }
+	};
+	
     console.log($scope.variants);
 	
-  $scope.defaultsBuilt = true;
   }
+  $scope.defaultsBuilt = true;
+  console.log($scope.combos);
+
   }
 
   $scope.setNewSnapCache = function (id) {

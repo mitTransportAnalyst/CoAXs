@@ -361,6 +361,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
         for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
         plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
       }
+	  //console.log(response);
       cb(response.key, plotData);
     })
     .catch(function (err) {
@@ -410,7 +411,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
     }, defaultGraph, null, optionC[scenarioNumber])
     .then(function (response) {
 	    callback(response.key, response.isochrones);
-	    console.log(response);
+	    //console.log(response);
 	})
 	};
 	

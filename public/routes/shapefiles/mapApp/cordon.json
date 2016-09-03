@@ -27,7 +27,7 @@
 "type": "FeatureCollection",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
 "features": [
-{"type": "Feature", "properties": {"verbose": "Crouch Hill", "color":"#E87200", "centerLat": 51.571188371306135, "centerLon":	-0.11745929718017578, "customBasemap":"CH", "dataset":[{"indicator":"Jobs by Industry","data":{	"educa1": 1590,"educa2": 1718,"educa3": 7499,"finan1": 39,"finan3": 745,"healt1": 119,"healt2": 168,"healt3": 159,"hospi1": 875,"hospi2": 1355,"hospi3": 714,"infor1": 76,"infor2": 72,"infor3": 2479,"const1": 33,"const2": 108,"const3": 2040,"profe1": 762,"profe2": 1130,"profe3": 16259,"publi1": 2,"publi2": 0,"publi3": 29,"trade1": 1047,"trade2": 553,"trade3": 2163,"trans1": 16,"trans2": 27,"trans3": 675}},{"indicator":"Parking Spaces","data":{"park": 23000}},	{"indicator":"Peak MBTA Capacity","data":{"bus": 4000, "heavyRail": 18000}}]
+{"type": "Feature", "properties": {"verbose": "Crouch Hill", "color":"#E87200", "centerLat": 51.571188371306135, "centerLon":	-0.11745929718017578, "dataset":[{"indicator":"Jobs by Industry","data":{	"educa1": 1590,"educa2": 1718,"educa3": 7499,"finan1": 39,"finan3": 745,"healt1": 119,"healt2": 168,"healt3": 159,"hospi1": 875,"hospi2": 1355,"hospi3": 714,"infor1": 76,"infor2": 72,"infor3": 2479,"const1": 33,"const2": 108,"const3": 2040,"profe1": 762,"profe2": 1130,"profe3": 16259,"publi1": 2,"publi2": 0,"publi3": 29,"trade1": 1047,"trade2": 553,"trade3": 2163,"trans1": 16,"trans2": 27,"trans3": 675}},{"indicator":"Parking Spaces","data":{"park": 23000}},	{"indicator":"Peak MBTA Capacity","data":{"bus": 4000, "heavyRail": 18000}}]
 }, "geometry": { "type": "Polygon", "coordinates": [] } }
 ]
 }
