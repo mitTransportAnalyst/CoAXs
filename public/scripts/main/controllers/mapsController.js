@@ -275,8 +275,26 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       }
 	};
 
-    animateProgressBar(); // start the progress bar
     leafletData.getMap('map_left').then(function(map) {
+	
+	analystService.deleteTileIsos(map);
+
+	if ($scope.pointToPoint) {
+		console.log($scope.combos);
+		this.runPrep(map, $scope.combos.sel, 0);	
+		analystService.ptpRequest(startMarker, endMarker, map, function(route, plotData){
+		  $scope.routeDesc = route;
+		  $scope.scenarioScore.graphData = [
+				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
+				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
+				'data': plotData}
+			];
+		  d3Service.drawTimeGraph($scope.scenarioScore.graphData);	
+		});	
+	}
+	else {
+ 
+		animateProgressBar(); // start the progress bar
 
       // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
       if ($scope.combos.com && $scope.scenarioCompare) {

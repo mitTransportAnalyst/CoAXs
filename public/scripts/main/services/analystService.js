@@ -54,6 +54,8 @@ coaxsApp.service('analystService', function (supportService, $http) {
     showIso        : true,
   });
 
+  ptpURL = 'http://coaxs.mit.edu:8080/otp/routers/default/profile'
+  
   this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
   
   var optionCurrent = {
@@ -208,6 +210,56 @@ var banExtraAgencies = [
     });;
   }
 
+  this.deleteTileIsos = function (map) {
+    if(isoLayer){map.removeLayer(isoLayer)};
+  }
+  
+  //point-to-point result
+  this.ptpRequest = function (startMarker, endMarker, map, cb) {
+    fromLat = startMarker.lat;
+	fromLng = startMarker.lng;
+	toLat = endMarker.lat;
+	toLng = endMarker.lng;
+  
+  $http.get('http://ansons.mit.edu:8080/plan?fromLat='+fromLat+'&fromLon='+fromLng+'&toLat='+toLat+'&toLon='+toLng+'&mode=WALK&full=true').then(function successCallback(res){
+	  console.log(res);
+  })
+  
+  $http.get(ptpURL+'?from='+fromLat+','+fromLng+'&to='+toLat+','+toLng+'&startTime=7:30&endTime=08:30&date=2015-10-19&accessModes=WALK&transitModes=TRANSIT&egressModes=WALK&maxWalkTime=10&limit=1').then(function successCallback(res){
+
+	  console.log(res.data);
+	  
+	  tRoute = null;
+	  wRoute = null;
+	  
+	  res.data.options.forEach(function(route) {
+	    route.transit ? tRoute = route : wRoute = route;
+	  })
+
+		  walkTime = tRoute.access[0].time + tRoute.egress[0].time
+		  waitTime = 0;
+		  rideTime = 0;
+		  
+		  tRoute.transit.forEach(function(t){
+		    average_rideTime = rideTime + t.rideStats.avg;
+			average_waitTime = waitTime + t.waitStats.avg;
+			worstca_rideTime = rideTime + t.rideStats.max;
+			worstca_waitTime = waitTime + t.waitStats.max;
+			walkTime = walkTime + t.walkTime;
+		  });
+		  
+		  plotData = {'Average':{'average_walkTime' : walkTime,
+			'average_waitTime' : average_waitTime,
+			'average_rideTime' : average_rideTime,},
+			'Worst Case':{'worstca_walkTime' : walkTime,
+			'worstca_waitTime' : worstca_waitTime,
+			'worstca_rideTime' : worstca_rideTime,}}
+		  
+		  cb(tRoute.summary, plotData);
+	}, function errorCallback(){
+		console.log('error in ptp')
+    })
+  }
   this.singlePointComparison = function (marker, map, cb) {
    	console.log(optionC[0]);
 	console.log(optionC[1]);
