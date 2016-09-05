@@ -6,7 +6,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
     document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
-    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 70 +1) + 'px';
+    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35 +1) + 'px';
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
@@ -17,9 +17,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	num		 : 0,
     station  : 2,
     routeId  : null,
-    peak     : { min : 15,  sec : 0 },
-    offpeak  : { min : 30, sec : 0 },
-  }
+    peak     : { min : 10,  sec : 0 },
+    offpeak  : { min : 20, sec : 0 },
+  };
 
   $scope.pointToPoint = false;
   
@@ -37,41 +37,37 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           } , 3540000);
   
   $scope.scenario = {
+    'A' : angular.copy(scenarioBase),
+	'B' : angular.copy(scenarioBase),
+    'C' : angular.copy(scenarioBase),
+    'D' : angular.copy(scenarioBase),
     'I' : angular.copy(scenarioBase),
-	'P' : angular.copy(scenarioBase),
-    'N' : angular.copy(scenarioBase),
-    'F' : angular.copy(scenarioBase),
-    'M' : angular.copy(scenarioBase),
-	'K' : angular.copy(scenarioBase),
-	'W' : angular.copy(scenarioBase),
-	'G' : angular.copy(scenarioBase),
-  }
+	}
   $scope.variants = {
-    'I' : { routeId : 'Fair', sel : 0, all : {} },
-	'P' : { routeId : 'NewRProv', sel : 0, all : {} },
-	'N' : { routeId : 'NeedHave', sel : 0, all : {} },
-	'F' : { routeId : 'FrankLow', sel : 0, all : {} },
-	'M' : { routeId : 'FitLake', sel : 0, all : {} },
-	'K' : { routeId : 'King', sel : 0, all : {} },
-	'W' : { routeId : 'Worc', sel : 0, all : {} },
-	'G' : { routeId : 'Gree', sel : 0, all : {} },
+    'A' : { sel : 0, all : {}, color: '#555555'},
+	'B' : { sel : null, all : {}, color: '#7DD5ED' },
+    'C' : { sel : null, all : {}, color: '#F3E05E' },
+    'D' : { sel : null, all : {}, color: '#E092DF' },
+    'I' : { sel : 0 , all : {}, color: '#8D6AA8' },
   }
   
-  $scope.defaultsBuilt = false
-  
-  $scope.combos = {
-    sel : null,
-    com : null,
-    all : {},
-  }
-  $scope.tabnav = 'I';
-  $scope.mode = {
+    $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
     bus: [0, 1, 3, 5, 6, 7],
     walking: [0, 1, 2, 3, 4, 5, 6, 7],
     selected: 'all'
-  };
+};
+  
+  $scope.combos = {
+    sel : null,
+    com : null,
+    all : {},
+}
+  
+  $scope.defaultsBuilt = false
+  
+  $scope.tabnav = 'A';
   
   // left globals
   var subwaysLayer    = null,
@@ -648,13 +644,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         'C' : $scope.variants['C'].sel,
         'D' : $scope.variants['D'].sel,
         'I' : $scope.variants['I'].sel,
-		'P' : $scope.variants['P'].sel,
-        'N' : $scope.variants['N'].sel,
-        'F' : $scope.variants['F'].sel,
-        'M' : $scope.variants['M'].sel,
-		'K' : $scope.variants['K'].sel,
-		'W' : $scope.variants['W'].sel,
-		'G' : $scope.variants['G'].sel,
       }
     };
     $scope.updateLeftRoutes(comboId);
