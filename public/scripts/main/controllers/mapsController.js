@@ -487,6 +487,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         var rewind = angular.copy($scope.scenario[tabnavAlt]);
 
         $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
+		$scope.scenario[tabnavAlt].num = routes[key][0].options.base.varId;
         $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
         $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
 
@@ -642,6 +643,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : name,
       created : Date.now(),
       sel     : {
+        'A' : $scope.variants['A'].sel,
+		'B' : $scope.variants['B'].sel,
+        'C' : $scope.variants['C'].sel,
+        'D' : $scope.variants['D'].sel,
         'I' : $scope.variants['I'].sel,
 		'P' : $scope.variants['P'].sel,
         'N' : $scope.variants['N'].sel,
@@ -788,35 +793,28 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if(!$scope.defaultsBuilt){
 	var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'Existing MBTA',
+      name    : 'BASELINE',
       created : Date.now(),
       sel     : {
-		'I' : null,
-        'P' : null,
-        'M' : null,
-        'F' : null,
-		'N' : null,
-		'W' : null,
-		'K' : null,
-		'G' : null,
+		'A' : $scope.variants['A'].sel,
+        'B' : null,
+        'C' : null,
+        'D' : null,
+        'I' : null,
       }
     };
-	$scope.combos.sel = comboId;
     var comboId = supportService.generateUUID();
     $scope.combos.all[comboId] = {
-      name    : 'North-South Rail Link',
+      name    : 'UPGRADES',
       created : Date.now(),
       sel     : {
-        'I' : Object.keys($scope.variants['I'].all)[0],
-		'P' : Object.keys($scope.variants['P'].all)[0],
-        'M' : Object.keys($scope.variants['M'].all)[0],
-        'F' : Object.keys($scope.variants['F'].all)[0],
-        'N' : Object.keys($scope.variants['N'].all)[0],
-		'W' : Object.keys($scope.variants['W'].all)[0],
-		'K' : Object.keys($scope.variants['K'].all)[0],
-		'G' : Object.keys($scope.variants['G'].all)[0],
+        'A' : Object.keys($scope.variants['A'].all)[0],
+		'B' : Object.keys($scope.variants['B'].all)[2],
+        'C' : Object.keys($scope.variants['C'].all)[1],
+        'D' : Object.keys($scope.variants['D'].all)[1],
+        'I' : null,
       }
-    };
+};
   $scope.defaultsBuilt = true;
   }
   }

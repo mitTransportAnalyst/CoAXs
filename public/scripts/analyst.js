@@ -32,7 +32,7 @@ var REQUEST_DEFAULTS = {
   egressModes: 'WALK',
   directModes: 'WALK',
   transitModes: 'TRANSIT',
-  date: "2016-03-02",
+  date: "2015-10-21",
   fromTime: 25200,
   toTime: 32400,
   walkSpeed: 1.3333333333333333,

@@ -78,18 +78,26 @@ nav div.section {
 .topcol {
   position: absolute;
   color: #FFF;
-  z-index: 10;
-  width: 50%;
-  min-height: 75%;
+  width: 100%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
   padding-left: 20px;
   padding-right: 20px;
 }
 
+.topright {
+  width            : 50%;
+  position		   : absolute;
+  left			   : 50%;
+  overflow         : hidden;  
+  z-index: 10;
+  background-color : #696969
+}
+
 .topleft {
-  width            : 100%;
+  width            : 50%;
   overflow         : hidden;
+  z-index: 10;
   background-color : #696969
 }
 .topinfo {
@@ -136,8 +144,8 @@ nav div.section {
   overflow         : hidden;
   height: 1000px;
   width: 995px;
-  width: -moz-calc(50% + 70px);
-  width: calc(50% + 70px);
+  width: -moz-calc(50% + 35px);
+  width: calc(50% + 35px);
   bottom: 0px;
   z-index: 10;
 }
@@ -195,8 +203,8 @@ nav div.section {
   background-color : #696969;
   overflow         : hidden;
   width: 960px;
-  width: -moz-calc(50% - 70px);
-  width: calc(50% - 70px);
+  width: -moz-calc(50% - 35px);
+  width: calc(50% - 35px);
   bottom: 0px;
 }
 
@@ -496,6 +504,7 @@ background-color  : #696969;
   width            : 50%;
   position         : absolute;
   left : 50%;
+  z-index 		   : 9;
 }
 #map_right {
   left : 50%;

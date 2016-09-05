@@ -3,7 +3,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
 
 	
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
-     defaultGraph = '70f850a5ea403be15aeb91ab07fc4162';  
+     defaultGraph = '620e6749074235d5450f969bf5878a83';  
 
   var subjects = {
         prefix : 'lodes',
@@ -82,9 +82,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
     },
   };
     
-  var allRoutes = ['Worc','King','Fair','FitLake','FrankLow','Gree','NeedHave','NewRProv'];
-  var agencyId = '99';
-  var banExtraAgencies = [
+var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
+var agencyId = 'MBTA+v6';
+var banExtraAgencies = [
     {
       type      : 'remove-trip',
       agencyId  : 'KM',
