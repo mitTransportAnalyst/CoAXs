@@ -21,6 +21,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     offpeak  : { min : 30, sec : 0 },
   }
 
+  $scope.pointToPoint = false;
+  
   $scope.selField = 'wt_finan3';
   $scope.indicator = {sel:'wt_',all:{wt_:'Workforce'}};
   $scope.scenarioLegend = true;
@@ -152,9 +154,37 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
   $scope.center_left   = angular.copy(center_global);
+  $scope.center_left_dest   = angular.copy(center_global);
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
-  $scope.markers_left  = { main: { lat: $scope.center_left.lat, lng: $scope.center_left.lng, draggable : true }};
+  $scope.markers  = { 
+	start: { 
+		lat: $scope.center_left.lat, 
+		lng: $scope.center_left.lng, 
+		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
+			   iconSize: [48,48],
+			   iconAnchor: [40,40],
+			   },
+		draggable : true },
+	end: { 
+		lat: $scope.center_left_dest.lat, 
+		lng: $scope.center_left.lng, 
+		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
+			   iconSize: [0,0],
+			   iconAnchor: [40,40],
+			   },
+		draggable : true }
+	};
+
+  $scope.togglePointToPoint = function() {
+	$scope.pointToPoint = !$scope.pointToPoint
+	if ($scope.pointToPoint){
+		$scope.markers.end.icon.iconSize = [48,48];
+	}
+	else {
+		$scope.markers.end.icon.iconSize = [0,0];
+	}
+  };
 
   // snap point sensitivity
   $scope.sensitivity = 0.05;
@@ -169,8 +199,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   // Handle left map queries
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
-    $scope.markers_left.main.lat = marker.model.lat;
-    $scope.markers_left.main.lng = marker.model.lng;
+	$scope.markers[marker.modelName].lat = marker.model.lat;
+    $scope.markers[marker.modelName].lng = marker.model.lng;
     $scope.setCordon(null);
 	$scope.preMarkerQuery(); 
   });
@@ -235,7 +265,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // what calls the SPA analysis and updates and tile and map components
   var runMarkerQuerys = function () {
     $scope.showVectorIsosOn = false;
-    var marker = angular.copy($scope.markers_left.main);
+    var startMarker = angular.copy($scope.markers.start);
+	var endMarker = angular.copy($scope.markers.end);
 
     this.runPrep = function (map, comboItem, c) {
 	  var toKeep = getKeepRoutes(comboItem);
@@ -256,7 +287,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		console.log("running comparison...");
 		this.runPrep(map, $scope.combos.com, 0);
 		this.runPrep(map, $scope.combos.sel, 1);
-		analystService.singlePointComparison(marker, map, function(res, cres, plotData, cPlotData){
+		analystService.singlePointComparison(startMarker, map, function(res, cres, plotData, cPlotData){
 		if (plotData) { 
               if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
               //set the data for the cumulative plot to be an array of the responses for the selected and comparison combos.			 		  
@@ -272,7 +303,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		}; 
 		
 			
-			analystService.vectorRequest(marker, true, function (key, result) {
+			analystService.vectorRequest(startMarker, true, function (key, result) {
 			console.log("vector Request done for key " + key);
             if (result) {
               $scope.loadProgress.val = 100;
@@ -291,7 +322,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         analystService.killCompareIso(map);
         var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
 		var shapefile = undefined;
-        analystService.singlePointRequest(marker, map, 300*$scope.vectorIsos.val, function (key, plotData) {
+        analystService.singlePointRequest(startMarker, map, 300*$scope.vectorIsos.val, function (key, plotData) {
 		  console.log("tile Request done for key " + key);
 		  $scope.key = key;
 		  if (plotData) { 
@@ -331,10 +362,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if ($scope.selCordon){
 	d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
 			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
-			$scope.markers_left.main.lat = $scope.cordons[$scope.selCordon].centerLat;
-			$scope.markers_left.main.lng = $scope.cordons[$scope.selCordon].centerLon;
+			$scope.markers.start.lat = $scope.cordons[$scope.selCordon].centerLat;
+			$scope.markers.start.lng = $scope.cordons[$scope.selCordon].centerLon;
 			leafletData.getMap('map_left').then(function(map) {
-		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);})
+		map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);})
 			$scope.preMarkerQuery();
 		
 	}}

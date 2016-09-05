@@ -11,7 +11,8 @@ var attributes = [{ code: 'park',  verbose: 'Parking', color:"#DD9955"},	{code:'
 {code: 'educa1', verbose: 'Education | $', color: '#9265C2'},	{code: 'educa2', verbose: 'Education | $$', color: '#7E51AE'},	{code: 'educa3', verbose: 'Education | $$$', color: '#6A3D9A'},
 {code: 'healt1', verbose: 'Health Care | $', color: '#5097D2'},	{code: 'healt2', verbose: 'Health Care | $$', color: '#3C83BE'},	{code: 'healt3', verbose: 'Health Care | $$$', color: '#286FAA'},
 {code: 'hospi1', verbose: 'Hospitality | $', color: '#FFC2C1'},	{code: 'hospi2', verbose: 'Hospitality | $$', color: '#FFAEAD'},	{code: 'hospi3', verbose: 'Hospitality | $$$', color: '#FB9A99'},
-{code: 'publi1', verbose: 'Public Administration | $', color: '#FFA728'},	{code: 'publi2', verbose: 'Public Administration | $$', color: '#FF9314'},	{code: 'publi3', verbose: 'Public Administration | $$$', color: '#FF7F00'}];
+{code: 'publi1', verbose: 'Public Administration | $', color: '#FFA728'},	{code: 'publi2', verbose: 'Public Administration | $$', color: '#FF9314'},	{code: 'publi3', verbose: 'Public Administration | $$$', color: '#FF7F00'},
+{code: 'walkTime', verbose: 'Time Walking', color: '#FFA728'},	{code: 'waitTime', verbose: 'Time Waiting', color: '#FF9314'},	{code: 'rideTime', verbose: 'Time Onboard', color: '#FF7F00'}];
 
 //Map attributes so they can be get/set by code.
 attributes = d3.map(attributes, function(d){return d.code;});
@@ -19,6 +20,8 @@ attributes = d3.map(attributes, function(d){return d.code;});
 //Defaults
 var	selCode = 'profe1',
 	xScale = null;
+
+colors = d3.scale.category10();
 
 var updateSubsetTotal = function(){
 	d3.selectAll("#subTotal")
@@ -72,9 +75,6 @@ this.drawCordonGraph = function (dataset) {
         .attr('width', width + margins.left + margins.right)
         .attr('height', height + margins.top + margins.bottom + legendPanel.height)
         .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');		
-	
-    colors = d3.scale.category10();
-
 	
 	dataset = dataset.map(function (d) {
 		return d3.map(d.data).entries().map(function(e){
@@ -246,6 +246,252 @@ this.drawCordonGraph = function (dataset) {
 	
 };
 
+
+this.drawTimeGraph = function(plotData, indicator) {
+  selCode = 'rideTime';
+  var margins = {
+			top: 50,
+			left: 45,
+			right: 150,
+			bottom: 125
+		},
+		
+		legendPanel = {
+			height: 40
+		},
+		
+		width = 440 - margins.left - margins.right,
+		height = 400 - margins.top - margins.bottom  - legendPanel.height;
+		
+	d3.select("#compPlot3").selectAll("*").remove();
+	
+	vis1 = d3.select("#compPlot3").append('g')
+        .attr('width', width + margins.left + margins.right)
+        .attr('height', height + margins.top + margins.bottom + legendPanel.height)
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');	
+			
+	var total = [],
+		dataset = [],
+		compare = false;
+	j = 0;
+	for (i = 0; i < plotData.length; i++){
+		for (tid in plotData[i].data){
+			dataset[j]={data: {}}
+			for (id in plotData[i].data[tid]){
+			dkey = id.substring(8);
+			dataset[j].indicator = tid + ', ' + plotData[i].name;
+			dataset[j].data[dkey] = plotData[i].data[tid][id];
+			}
+			j++;
+		};
+		//if (i>0){compare=true;}
+		compare = true;
+	}
+	
+	dataset = dataset.map(function (d) {
+		return d3.map(d.data).entries().map(function(e){
+			return {
+				attr: e.key,
+				val: [{
+					x: d.indicator,
+					y: e.value/60,
+                }]
+			}
+		})
+	});
+	
+	stack = d3.layout.stack().values(function(d){return d.val}).order('default');
+
+	dataset.forEach(function(e){
+	stack(e)});
+  	
+	dataset = dataset.map(function(e){
+		return e.map(function(g){
+			return g.val.map(function(d){
+				return {
+					x: d.x,
+					y: d.y,
+					y0: d.y0,
+					attr: g.attr,
+				};
+			});
+		});
+	}),
+	
+	yMax0 = d3.max(dataset[0], function (group) {
+		return d3.max(group, function (d) {
+            return d.y + d.y0;
+        });
+    }),
+	
+	yMax1 = d3.max(dataset[1], function (group) {
+		return d3.max(group, function (d) {
+            return d.y + d.y0;
+        });
+    }),
+	
+	yMax0 > yMax1 ? yMax = yMax0 : yMax = yMax1;
+	
+	indicators2 = dataset.map(function (d) {
+        return d[0][0].x;
+	}),
+   
+    xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
+
+    yRange = d3.scale.linear().domain([0, yMax //d3.max(combined, function (d) {   return d.y;})
+    ]).range([height,0]);
+	  
+	xScale2 = d3.scale.ordinal()
+        .domain(indicators2)
+        .rangeBands([0,width-10], .2),
+	  
+	xScale ? '': xScale = xScale2;
+	  
+	xAxis2 = d3.svg.axis()
+        .scale(xScale2)
+		.tickSize(0),
+  
+	groups =
+        vis1.selectAll('g')
+        .data(dataset[1] ? dataset[0].concat(dataset[1]) : dataset[0])
+        .enter()
+        .append('g')
+        .style('fill', function (d, i) {
+			if (attributes.get(d[0].attr)){
+				return attributes.get(d[0].attr).color}
+			else {return colors(i)}
+		});
+	  
+	rects = groups.selectAll('rect')
+        .data(function (d) {
+			return d;
+		})
+        .enter()
+        .append('rect')
+		.style('cursor','pointer')
+        .attr('x', function (d) {
+			return xScale2(d.x);
+		})
+        .attr('y', function (d, i) {
+			return yRange(d.y0+d.y);
+		})
+        .attr('height', function (d) {
+			return (d.y*height/yMax);
+		})
+        .attr('width', function (d) {
+			return xScale.rangeBand();
+		})
+		.on('click', function (d) {
+			selCode = d.attr;
+			updateSubsetLabels();
+			updateSubsetTotal();
+		})
+        .on('mouseover', function (d) {
+			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
+			var xPos = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2 +100;
+
+			d3.select('#tooltip')
+				.style('left', xPos + 'px')
+				.style('top', yPos + 'px')
+				.select('#value')
+				.html('<strong>'+ 
+					attributes.get(d.attr).verbose
+				+ '</strong><br> '
+				+ d3.format(",")(d3.round(d.y,1)));
+
+			d3.select('#tooltip').classed('hidden', false);
+		})
+        .on('mouseout', function () {
+			d3.select('#tooltip').classed('hidden', true);
+		});
+
+	vis1.append('g')
+        .attr('class', 'axis')
+		.attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis2)
+		.selectAll("text")
+		.style('text-anchor','start')
+		.attr('transform', 'rotate(30)');
+
+
+      yAxis1 = d3.svg.axis()
+        .scale(yRange)
+		.ticks(4)
+		.tickFormat(function (d) {
+          var prefix = d3.formatPrefix(d);
+          return prefix.scale(d) + prefix.symbol;
+        })
+        .orient("left")
+
+    vis1.append('g')
+      .attr("class", "y axis")
+      .call(yAxis1)
+	  .append("text")
+	  .text("Minutes")
+	  .style("text-anchor","middle")
+	  .attr("transform", 'translate(-45,'+height/2+')rotate(90)');
+
+	vis1.append("svg:g")
+		.attr("class", "stat")
+		.append("text")
+		.attr("y", 25-margins.top)
+        .attr("x", xScale2(indicators2[0])+xScale.rangeBand()-3)
+		.style("text-anchor","end")
+        .html( function (){
+		  return d3.format(",")(d3.round(yMax0,1));
+		});  
+
+	// vis1.append("svg:g")
+		// .selectAll("text")
+		// .data(dataset)
+		// .enter()
+		// .append("text")
+		// .attr("class", "stat")
+		// .attr("id","subTotal")
+		// .attr("y", 38-margins.top)
+        // .attr("x", function(d){
+			// return xScale2(d[0][0].x)+xScale.rangeBand()-3})
+		// .style("text-anchor","end");
+		
+	if (dataset[1]){
+	
+		vis1.append("svg:g")
+		.append("text")
+		.attr("class", "stat")
+		.attr("y", 25-margins.top)
+        .attr("x", xScale2(indicators2[1])+xScale.rangeBand()-3)
+		.style("text-anchor","end")
+		.html( function (){
+		  return d3.format(",")(d3.round(yMax1,1));
+		});  
+
+	}	
+		
+	vis1.append('g')
+		.append("text")
+		.attr("class","stat")
+		.attr("y", 25-margins.top)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+24)
+		.style("text-anchor","start")
+		.style("opacity", 0.75)
+        .html("minutes total");
+		  
+	vis1.append('g')
+		.append("text")
+		.attr("id","subsetLabel")
+		.attr("class","stat")
+		.attr("y", 38-margins.top)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+24)
+		.style("text-anchor","start")
+		.style("opacity", 0.75)
+		.style("fill", attributes.get(selCode).color)
+        .html( function (){
+		  return attributes.get(selCode).verbose.split('|')[0]});
+
+	updateSubsetLabels();
+	updateSubsetTotal();
+
+    };
 
 //Cumulative plot of accessible opportunities vs time, and stacked bar chart
 this.drawGraph = function (cutoff, plotData, indicator) {
