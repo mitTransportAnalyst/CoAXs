@@ -130,10 +130,15 @@
 		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
 		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
 		</div>
-		<div style="width:60%; float: left" ng-show = "scenarioScore.graphData">
-		{{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/start.png" style="height:14px" ng-show="!selCordon"><br>
-		within	{{vectorIsos.val*5}} minutes by public transit:
+		<div style="width:60%; float: left" ng-show = "scenarioScore.graphData && !pointToPoint">
+		{{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"><br>
+		within	{{vectorIsos.val*5 | minuteConverter}} by public transit:
 		<svg id="compPlot2" width="440" height="400"></svg>
+		</div>
+		<div style="width:60%; float: left" ng-show = "pointToPoint">
+		Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> 
+		<br>using {{routeDesc.substring(6)}}
+		<svg id="compPlot3" width="440" height="400"></svg>
 		</div>
 		</h5>
 		
@@ -275,7 +280,7 @@
           defaults = "defaults_left"
           id       = "map_left"
           tiles    = "tiles_left"
-          markers  = "markers_left"
+          markers  = "markers"
 		  maxbounds = "maxBounds_left"
           style="z-index: 1"
 		  >
