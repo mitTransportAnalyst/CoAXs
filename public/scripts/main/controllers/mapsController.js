@@ -660,6 +660,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // how we update the scorecard on the right side, also bound to events like range slider
   $scope.updateRouteScorecard = function (routeId, tabnav) {
+  if (!routeId && !tabnav) {
+      $scope.routeScore = scorecardService.generateEmptyScore();
+    } else {
+      var frequencies = {
+        peak : $scope.scenario[tabnav].peak.min*60 + $scope.scenario[tabnav].peak.sec,
+        off  : $scope.scenario[tabnav].offpeak.min*60 + $scope.scenario[tabnav].offpeak.sec,
+      };
+      var bus      = scorecardService.generateBusScore(stopsLayer, $scope.scenario[tabnav].station, routeId);
+      var length   = scorecardService.generateLengthScore(routesLayer, routeId);
+      var time     = scorecardService.generateTimeScore(routesLayer, routeId);
+      var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
+      $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
+} 
   }
 
   // updates on new selected scenario combo
