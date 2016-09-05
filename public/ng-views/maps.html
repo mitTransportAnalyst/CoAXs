@@ -430,9 +430,9 @@
 	
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px" ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-		  <span ng-class="loadProgress.vis || !scenarioScore.graphData ? 'unselected' : ''" -->
+		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
             <input type="range" min="1" max="24" class="isosRange"
-              ng-model="vectorIsos.val" ng-disabled="loadProgress.vis" />
+              ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn" />
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()" style="position: absolute; left: 10px; padding-right: 10px;"><i class="fa fa-step-backward fa-2x"></i></span>
             {{ vectorIsos.val*5 | minuteConverter }}

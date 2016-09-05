@@ -307,14 +307,14 @@ var banExtraAgencies = [
       lng : marker.lng,
     }, defaultGraph, defaultShapefile, optionC[0])
     .then(function (response) { 
-        isoLayer = analyst.updateSinglePointLayer(response.key, null, timeLimit);
+        isoLayer = analyst.updateSinglePointLayer(response.key, null, 7200);
 		isoLayer.addTo(map).on('load', function(e){
 			isoLayer.setOpacity(1);
-			isoLayerOld.setOpacity(0);
-			isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
+			//isoLayerOld.setOpacity(0);
+			//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
 		});
-		isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
-		isoLayerOld.addTo(map);
+		//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
+		//isoLayerOld.addTo(map);
 		console.log(isoLayer);
 	  var plotData = subjects.fields;
       for (key in subjects.fields) {
@@ -331,8 +331,8 @@ var banExtraAgencies = [
   };
   
   this.updateTiles = function(map, key, timeLimit, cb) {
-	isoLayerOld ? '' : isoLayerOld = isoLayer;
-	isoLayerOld.setOpacity(1);
+	//isoLayerOld ? '' : isoLayerOld = isoLayer;
+	//isoLayerOld.setOpacity(1);
 	isoLayer.setOpacity(0);
 	isoLayer = analyst.updateSinglePointLayer(key, null, timeLimit);
 	}
@@ -367,8 +367,8 @@ var banExtraAgencies = [
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { isoLayer.setOpacity(0)
-	};
+    if (isoLayer) { isoLayer.setOpacity(0)};
+	if (isoLayerOld) {isoLayerOld.setOpacity(0)};
     if (currentIso) { map.removeLayer(currentIso); };
     if (compareIso) { map.removeLayer(compareIso); };
 

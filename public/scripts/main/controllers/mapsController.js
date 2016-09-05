@@ -86,7 +86,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.$watch('vectorIsos.val',
     function(newVal) {
 		if ($scope.scenarioScore.graphData){
-			$scope.updateCutoff(newVal);
+			updateCutoff(newVal);
 		};
   });
   
@@ -319,7 +319,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 			
 			analystService.vectorRequest(startMarker, true, function (key, result) {
 			console.log("vector Request done for key " + key);
-            if (result) {
+			if (result) {
               $scope.loadProgress.val = 100;
               setTimeout(function () { $scope.$apply (function () {
                 $scope.loadProgress.vis = false; // terminate progress bar viewport
@@ -347,24 +347,33 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 				'data': plotData}
 			];
             drawGraph($scope.scenarioScore.graphData);
-			$scope.loadProgress.val = 100;
-            setTimeout(function () { $scope.$apply (function () {
-                $scope.loadProgress.vis = false; // terminate progress bar viewport
-            }) }, 1000)
+			
 		} 
-          
-        });
+          if (!$scope.combos.sel) { existingMBTAKey = key }; 
+		  
+          analystService.vectorRequest(startMarker, false, function (key, result) {
+		console.log("vector Request done for key " + key);
+            if (result) {
+              $scope.loadProgress.val = 100;
+              $scope.loadProgress.vis = false;
+			  $scope.toggleShowVectorIsos();
+              setTimeout(function () { $scope.$apply (function () {
+                 $scope.loadProgress.vis = false; // terminate progress bar viewport
+              }) }, 1000)
+            };
+          });
       }
-    });
+	)}}});
   }
   
   drawGraph = function (graphData){
 	d3Service.drawGraph($scope.vectorIsos.val,graphData, $scope.indicator)
   }
   
-  $scope.updateCutoff = function (newVal) {
+  updateCutoff = function (newVal) {
 	leafletData.getMap('map_left').then(function(map) {
-	$scope.scenarioCompare ? analystService.showVectorIsos(300*newVal, map) : analystService.updateTiles(map, $scope.key, 300*newVal);
+	//$scope.scenarioCompare ? 
+	analystService.showVectorIsos(300*newVal, map)// : //analystService.updateTiles(map, $scope.key, 300*newVal);
 	});
 	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
   }
@@ -425,9 +434,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // toggle the vectos isos for the left map
   $scope.showVectorIsos = function (timeVal) {
-    // leafletData.getMap('map_left').then(function (map) {
-      // if (!$scope.loadProgress.vis && $scope.showVectorIsosOn) { analystService.showVectorIsos(timeVal, map); };
-    // })
+    leafletData.getMap('map_left').then(function (map) {
+      if (!$scope.loadProgress.vis && $scope.showVectorIsosOn) { analystService.showVectorIsos(timeVal, map); };
+    })
   }
 
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
@@ -785,8 +794,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
 		console.log($scope.showVectorIsosOn);
 		leafletData.getMap('map_left').then(function (map) {
-        if ($scope.showVectorIsosOn && $scope.scenarioCompare)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); };
-        if (!$scope.showVectorIsosOn) { analystService.resetAll(map, 0); };
+        if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); }
+        else { analystService.resetAll(map, 0); };
       });
 	}
   }};
