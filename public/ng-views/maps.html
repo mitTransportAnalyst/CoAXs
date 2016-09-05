@@ -116,6 +116,11 @@
 			</div>
 		</div>
 		<br>
+		<div ng-click = "togglePointToPoint()" style="cursor: pointer;">
+		Point-to-point mode 
+		<i class="fa fa-check-square" ng-show="pointToPoint"></i>
+		<i class="fa fa-square" ng-show="!pointToPoint"></i>
+		</div>
 		<br>
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
