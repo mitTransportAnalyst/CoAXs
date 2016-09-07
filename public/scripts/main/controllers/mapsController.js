@@ -660,6 +660,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         'G' : $scope.variants['G'].sel,
 		'T' : $scope.variants['T'].sel,
         'J' : $scope.variants['J'].sel,
+		'E' : $scope.variants['E'].sel,
+		'W' : $scope.variants['W'].sel,
 		'B' : $scope.variants['B'].sel,
       }
     };

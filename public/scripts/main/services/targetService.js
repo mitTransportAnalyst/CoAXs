@@ -22,27 +22,27 @@ coaxsApp.service('targetService', function (leafletData) {
 	this.targetStops = function (stopsLayer, id, stationType, routeColor) {
     var stopTypeSizes = {0: 60, 1: 90, 2: 120};
 
-    stopsLayer.eachLayer(function (circle) {
-      if (circle.options.base.routeId == id) {
+    // stopsLayer.eachLayer(function (circle) {
+      // if (circle.options.base.routeId == id) {
 
-        var stationLatLng = [circle._latlng.lat, circle._latlng.lng],
-            stationStop = stopTypeSizes[stationType]; 
+        // var stationLatLng = [circle._latlng.lat, circle._latlng.lng],
+            // stationStop = stopTypeSizes[stationType]; 
 
-        circle.setStyle({
-          stroke: true,
-          weight: 2,
-          color: '#FFF',
-          opacity: 1.0,
-          fillColor: '#' + routeColor,
-          fillOpacity: 0.8,
-        });
-        circle.setRadius(stationStop);
-      } else {
-        circle.setStyle({stroke: false, fillOpacity: 0.0});
-        circle.setRadius(0);
-      }
-    });
-	  return stopsLayer;
+        // circle.setStyle({
+          // stroke: true,
+          // weight: 2,
+          // color: '#FFF',
+          // opacity: 1.0,
+          // fillColor: '#' + routeColor,
+          // fillOpacity: 0.8,
+        // });
+        // circle.setRadius(stationStop);
+      // } else {
+        // circle.setStyle({stroke: false, fillOpacity: 0.0});
+        // circle.setRadius(0);
+      // }
+    // });
+	  // return stopsLayer;
 	}
 	
 	this.targetPriority = function(priorityLayer, id) {
