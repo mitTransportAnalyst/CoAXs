@@ -224,8 +224,8 @@ var Analyst = (function () {
 
   }, {
     key: 'singlePointComparison',
-    value: function singlePointComparison(point, graphId, shapefileId, options, comparisonOptions) {
-      return Promise.all([this.singlePointRequest(point, graphId, shapefileId, options), this.singlePointRequest(point, graphId, shapefileId, comparisonOptions)]);
+    value: function singlePointComparison(point, graphId, comparisonGraphId, shapefileId, options, comparisonOptions) {
+      return Promise.all([this.singlePointRequest(point, graphId, shapefileId, options), this.singlePointRequest(point, comparisonGraphId, shapefileId, comparisonOptions)]);
     }
 
     /**
