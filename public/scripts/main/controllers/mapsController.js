@@ -267,13 +267,25 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     this.runPrep = function (map, comboItem, c) {
 	  var toKeep = getKeepRoutes(comboItem);
       analystService.resetAll(map, c);
-      analystService.modifyRoutes(toKeep, c);
-      analystService.modifyDwells(toKeep, c);
-      analystService.modifyFrequencies(toKeep, c);
-	  if ($scope.mode.selected != 'all') {
-        analystService.modifyModes($scope.mode[$scope.mode.selected], c);
-      }
-	};
+       if ($scope.combos.all[comboItem]){
+		//if the specified combo does not have a custom scenario request, prepare the scenario
+
+	    if(!$scope.combos.all[comboItem].customAnalystRequest) {
+          analystService.modifyRoutes(toKeep, c);
+          analystService.modifyDwells(toKeep, c);
+          analystService.modifyFrequencies(toKeep, c);
+	    }
+	    //otherwise, use the specified scenario
+		else{
+	      analystService.prepCustomScenario($scope.combos.all[comboItem].customAnalystRequest,c);
+		}
+	  } else {
+	      var toKeep = [];
+          analystService.modifyRoutes(toKeep, c);
+	  }
+	  //analystService.modifyModes($scope.mode, c);
+	  //analystService.setScenarioNames(comboItem, c);
+}
 
     leafletData.getMap('map_left').then(function(map) {
 	
@@ -792,7 +804,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if($scope.scenarioScore.graphData){
 	if (!$scope.loadProgress.vis){
       $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-		console.log($scope.showVectorIsosOn);
 		leafletData.getMap('map_left').then(function (map) {
         if ($scope.showVectorIsosOn)  { analystService.showVectorIsos(300*$scope.vectorIsos.val, map); }
         else { analystService.resetAll(map, 0); };
@@ -830,10 +841,61 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         'D' : Object.keys($scope.variants['D'].all)[1],
         'I' : null,
       }
+	};
+	
+	$scope.combos.all['Bus Only'] = {
+      name    : 'BUS/SUBWAY - SCHED',
+      created : Date.now(),
+      sel     : {
+		'A' : $scope.variants['A'].sel,
+		'B' : null,
+        'C' : null,
+        'D' : null,
+        'I' : null,
+      },
+	  customAnalystRequest :
+	  {scenario: {
+		id: 10,
+		description: 'BUS/SUBWAY - SCHED',
+		modifications: [
+		  {type: 'remove-trip',
+		  agencyId: '1',
+		  routeId: ['Green-B', 'Green-C','Green-D','Green-E','Mattapan'],
+		  tripId: null,
+		  routeType: null}
+		]
+	 }
+    }
+    }	
+    $scope.combos.all['Oct. 19'] = {
+      name    : 'BUS/SUBWAY - OCT 19',
+      created : Date.now(),
+      sel     : {
+		'A' : $scope.variants['A'].sel,
+		'B' : null,
+        'C' : null,
+        'D' : null,
+        'I' : null,
+      },
+	  customAnalystRequest :
+	  {graphId: '1ba8cae231c696bfbe5783f602f98e9c',
+	   scenario: {
+	    id: 11,
+		description: 'OCT 19',
+		modifications: [{type: 'remove-trip',
+		  agencyId: 'MBTA+v6',
+		  routeId: ['Green-B', 'Green-C','Green-D','Green-E','Mattapan'],
+		  tripId: null,
+		  routeType: null}]
+	  }
+     }
+	}
+	  
 };
+
+
   $scope.defaultsBuilt = true;
-  }
-  }
+}
 
   $scope.setNewSnapCache = function (id) {
     $scope.managerOperations = true;
