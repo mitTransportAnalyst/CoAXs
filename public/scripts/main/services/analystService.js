@@ -68,22 +68,16 @@ coaxsApp.service('analystService', function (supportService, $http) {
   
   var optionC = []
   
-  optionC[0] = {
+  for (i = 0; i < 2; i++){
+  optionC[i] = {
     scenario      : {
-      id            : 0,
-      description   : 'Scenario 0 from CoAXs',
+      id            : i,
+      description   : 'Scenario ' + i + ' from CoAXs',
       modifications : []
     }
   }; 
-  
-  optionC[1] = {
-    scenario      : {
-      id            : 1,
-      description   : 'Scenario 1 from CoAXs',
-      modifications : []
-    },
-  };
-    
+  }
+      
 var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
 var agencyId = 'MBTA+v6';
 var banExtraAgencies = [
@@ -120,6 +114,12 @@ var banExtraAgencies = [
     compareIso = null;
   };
 
+  
+  
+  this.setScenarioNames = function (scenarioName, c){
+	optionC[c].scenario.name = scenarioName;
+  };
+  
   // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes, c) { 
     keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
@@ -179,7 +179,7 @@ var banExtraAgencies = [
     });
   }
 
-  this.modifyModes = function (routeTypes) {
+  this.modifyModes = function (routeTypes, c) {
     optionC[c].scenario.modifications.push({
       type: 'remove-trip',
       agencyId: agencyId,
@@ -260,14 +260,29 @@ var banExtraAgencies = [
 		console.log('error in ptp')
     })
   }
+  
+  this.prepCustomScenario = function (customAnalystRequest, c) {
+	console.log('prepping custom scenario');
+	optionC[c] = null;
+	console.log(optionC);
+	optionC[c] = customAnalystRequest;
+	console.log(optionC);
+	optionC[c].scenario.modifications.push(banExtraAgencies[0])
+	console.log(optionC);
+  };
+  
   this.singlePointComparison = function (marker, map, cb) {
    	console.log(optionC[0]);
 	console.log(optionC[1]);
 	
+	optionC[0].graphId? graph0 = optionC[0].graphId : graph0 = defaultGraph;
+	optionC[1].graphId? graph1 = optionC[1].graphId : graph1 = defaultGraph;
+
+	
 	analyst.singlePointComparison({
       lat : marker.lat,
       lng : marker.lng,
-    }, defaultGraph, defaultShapefile, optionC[1], optionC[0])
+    }, graph1, graph0, defaultShapefile, optionC[1], optionC[0])
 		.then(function (response) {
 			var plotData = {};
 			var cPlotData = {};
@@ -302,10 +317,16 @@ var banExtraAgencies = [
   
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, timeLimit, cb) {
+	console.log(optionC[0])
+	
+	optionC[0].graphId? graph = optionC[0].graphId : graph = defaultGraph;
+	scenario = [];
+	scenario[0] = {'scenario': optionC[0].scenario};
+	
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
-    }, defaultGraph, defaultShapefile, optionC[0])
+    }, graph, defaultShapefile, scenario[0])
     .then(function (response) { 
         isoLayer = analyst.updateSinglePointLayer(response.key, null, 7200);
 		isoLayer.addTo(map).on('load', function(e){
@@ -315,7 +336,6 @@ var banExtraAgencies = [
 		});
 		//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
 		//isoLayerOld.addTo(map);
-		console.log(isoLayer);
 	  var plotData = subjects.fields;
       for (key in subjects.fields) {
         var id = subjects.prefix+'.'+subjects.fields[key].id;
