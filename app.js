@@ -8,18 +8,18 @@ var bodyParser = require('body-parser');
 
 var http = require('http');
 var path = require('path');
-
-var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET;
-
-var aws = require('aws-sdk');
-    aws.config = new aws.Config();
-    aws.config.accessKeyId = AWS_ACCESS_KEY;
-    aws.config.secretAccessKey = AWS_SECRET_KEY;
-var s3 = new aws.S3();
-
-console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
+//
+// var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+// var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+// var S3_BUCKET = process.env.S3_BUCKET;
+//
+// var aws = require('aws-sdk');
+//     aws.config = new aws.Config();
+//     aws.config.accessKeyId = AWS_ACCESS_KEY;
+//     aws.config.secretAccessKey = AWS_SECRET_KEY;
+// var s3 = new aws.S3();
+//
+// console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
@@ -43,8 +43,8 @@ var analystReqOpts = {
   method: 'POST',
   timeout: 10000,
   auth: {
-    'user' : process.env.analyst_key,
-	'pass' : process.env.analyst_secret
+    'user' : "5LLDMDIVJQYLQY8OYB4H5XEDK",
+	'pass' : "h9yZpW4Ga6h27ZZZgHcpXksa6YUS5l4bh5708O0jeDs"
   },
   headers : {
     'content-type'  : 'application/x-www-form-urlencoded'

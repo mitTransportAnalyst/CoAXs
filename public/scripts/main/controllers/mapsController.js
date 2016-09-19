@@ -14,7 +14,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-	num		 : 0,
+	  num		 : 0,
     station  : 2,
     routeId  : null,
     peak     : { min : 10,  sec : 0 },
@@ -141,6 +141,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     lng  : -71.060479,
     zoom : 12,
   };
+
   // Assembling right map
   $scope.defaults_right  = angular.copy(defaults_global);
   $scope.maxBounds_right  = angular.copy(maxBounds_global);
