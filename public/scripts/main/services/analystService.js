@@ -2,8 +2,8 @@
 coaxsApp.service('analystService', function (supportService, $http) {
 
 	
-  var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
-     defaultGraph = '620e6749074235d5450f969bf5878a83';  
+  var defaultShapefile = '82f834ea-ba6d-478e-b4a9-651018de00f2',
+     defaultGraph = '053e9cdd5d0f3ff13d49f3e2b28230d4';
 
   var subjects = {
         prefix : 'lodes',
@@ -45,9 +45,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
   
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
-    baseUrl		   : 'http://coaxs.mit.edu:9090',
-	apiUrl         : 'http://coaxs.mit.edu:9090/api',
-    tileUrl        : 'http://coaxs.mit.edu:9090/tile',
+    baseUrl		   : 'https://analyst-preview.conveyal.com',
+	apiUrl         : 'https://analyst-preview.conveyal.com/api',
+    tileUrl        : 'https://analyst-preview.conveyal.com/tile',
     shapefileId    : defaultShapefile,
     graphId        : defaultGraph,
 	//showPoints	   : true,
@@ -57,7 +57,9 @@ coaxsApp.service('analystService', function (supportService, $http) {
   ptpURL = 'http://coaxs.mit.edu:8080/otp/routers/default/profile'
   
   this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
-  
+
+
+
   var optionCurrent = {
     scenario      : {
       id            : 0,

@@ -39,12 +39,14 @@ var csv     = require('csv-streamify');
 var analystCreds = require('request');
 
 var analystReqOpts = {
-  url: 'http://coaxs.mit.edu:9090/oauth/token',
+  url: 'https://analyst-preview.conveyal.com/oauth/token',
   method: 'POST',
   timeout: 10000,
   auth: {
-    'user' : "5LLDMDIVJQYLQY8OYB4H5XEDK",
-	'pass' : "h9yZpW4Ga6h27ZZZgHcpXksa6YUS5l4bh5708O0jeDs"
+    'user' : process.env.analyst_key,
+    'pass' : process.env.analyst_secret
+   //  'user' : "15CNIW452U6H3G6Z6FIBYNS8Z",
+	// 'pass' : "c4mRG3swWFPTXJMaQu9scRQJAInSzCoWeB2isNniQWo"
   },
   headers : {
     'content-type'  : 'application/x-www-form-urlencoded'
@@ -61,9 +63,10 @@ var analystReqOpts = {
   if ( parseFloat(Date.now()) >= parseFloat(credExpiration)) {
     console.log('Requesting new credentials from analyst-server')
 	analystCreds(analystReqOpts, function (error, response, body){
-		clientCredentials = body;
+		console.log(error);
+	  clientCredentials = body;
 		credExpiration = 3600*1000+parseFloat(Date.now()-60000);
-		//console.log('New credentials received: ' + clientCredentials);
+		// console.log('New credentials received: ' + clientCredentials +',' + credExpiration);
 		console.log(clientCredentials);
 		res.send(clientCredentials);
 	});
