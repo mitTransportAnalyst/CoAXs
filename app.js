@@ -43,17 +43,21 @@ var analystReqOpts = {
   method: 'POST',
   timeout: 10000,
   auth: {
-    'user' : process.env.analyst_key,
-    'pass' : process.env.analyst_secret
-   //  'user' : "15CNIW452U6H3G6Z6FIBYNS8Z",
-	// 'pass' : "c4mRG3swWFPTXJMaQu9scRQJAInSzCoWeB2isNniQWo"
+    // 'user' : process.env.analyst_key,
+    // 'pass' : process.env.analyst_secret
+    'user' : "15CNIW452U6H3G6Z6FIBYNS8Z",
+    'pass' : "c4mRG3swWFPTXJMaQu9scRQJAInSzCoWeB2isNniQWo"
   },
   headers : {
-    'content-type'  : 'application/x-www-form-urlencoded'
+    'content-type'  : 'application/x-www-form-urlencoded',
+    'Access-Control-Allow-Origin': '*'
   },
   body: 'grant_type=client_credentials'
 };
-  
+
+
+
+
  app.get('/credentials', function (req, res) {
   var credExpiration = 0,
   clientCredentials = '';
@@ -66,7 +70,7 @@ var analystReqOpts = {
 		console.log(error);
 	  clientCredentials = body;
 		credExpiration = 3600*1000+parseFloat(Date.now()-60000);
-		// console.log('New credentials received: ' + clientCredentials +',' + credExpiration);
+		console.log('New credentials received: ' + clientCredentials +',' + credExpiration);
 		console.log(clientCredentials);
 		res.send(clientCredentials);
 	});
@@ -107,6 +111,52 @@ app.get('/geojson/:fileId', function (req, res) {
     }
   });
 });
+
+
+//get for scenario files
+app.get('/load/scenario/:fileName', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/scenario',
+    'dotfiles' : 'deny',
+    'headers'  : {
+      'x-timestamp' : Date.now(),
+      'x-sent'      : true
+    }
+  };
+  var file = req.params.fileName+".json";
+  res.sendFile(file, options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
+
+
+
+
+app.get('/load/routes', function (req, res) {
+  var path = __dirname + '/public/routes/shapefiles/mapApp/routes.geojson';
+  res.sendFile(path, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
+
+app.get('/load/trunks', function (req, res) {
+  var path = __dirname + '/public/routes/shapefiles/mapApp/trunks.geojson'
+  res.sendFile(path, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
 
 var globalGetDone = false;
 app.get('/startSnapCache/:fileId', function (req, res) {

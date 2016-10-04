@@ -1,7 +1,7 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
 coaxsApp.service('analystService', function (supportService, $http) {
 
-	
+
   var defaultShapefile = '82f834ea-ba6d-478e-b4a9-651018de00f2',
      defaultGraph = '053e9cdd5d0f3ff13d49f3e2b28230d4';
 
@@ -46,7 +46,7 @@ coaxsApp.service('analystService', function (supportService, $http) {
   var Analyst = window.Analyst;
   var analyst = new Analyst(window.L, {
     baseUrl		   : 'https://analyst-preview.conveyal.com',
-	apiUrl         : 'https://analyst-preview.conveyal.com/api',
+	  apiUrl         : 'https://analyst-preview.conveyal.com/api',
     tileUrl        : 'https://analyst-preview.conveyal.com/tile',
     shapefileId    : defaultShapefile,
     graphId        : defaultGraph,
@@ -55,8 +55,16 @@ coaxsApp.service('analystService', function (supportService, $http) {
   });
 
   ptpURL = 'http://coaxs.mit.edu:8080/otp/routers/default/profile'
-  
+
+
   this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
+
+
+
+
+
+
+
 
 
 
@@ -135,51 +143,117 @@ var banExtraAgencies = [
     optionC[c].scenario.modifications.push(routesMod);
   };
 
-  this.modifyDwells = function (keepRoutes, c) {
-    var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
-    var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
-    var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
 
-    var dwellMod = {
-      type: 'adjust-dwell-time',
-      agencyId: agencyId,
-      routeId: [],
-      tripId: null,
-      stopId: null,
-      dwellTime: 30,
-    };
-    if (dwell10.length > 0) {
-      dwellMod.routeId = dwell10; dwellMod.dwellTime = 10;
-      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-    };
-    if (dwell20.length > 0) {
-      dwellMod.routeId = dwell20; dwellMod.dwellTime = 20;
-      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-    };
-    if (dwell30.length > 0) {
-      dwellMod.routeId = dwell30; dwellMod.dwellTime = 30;
-      optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-    };
+
+
+
+  // New modification functions  corridorID: "A", "B", "C", "D", "E"  scale: the modification scale
+  this.modifyDwells = function (corridorId,scale,cb) {
+    $http.get('/load/scenario/'+corridorId)
+      .success(function (data, status) {
+        var scenarioJSON = [];
+        data.modifications.forEach(function(route){
+          if (route.type === "adjust-dwell-time"){
+            route.scale = scale;
+            scenarioJSON.push(route);
+          }
+          }
+        );
+        cb(scenarioJSON)
+      })
   };
 
-  this.modifyFrequencies = function (keepRoutes, c) {
-    keepRoutes = keepRoutes.map(function (route) { 
-      return {
-        routeId: route.routeId,
-        frequency: route.peak.min * 60 + route.peak.sec
-      };
-    });
 
-    keepRoutes.forEach(function (route) {
-      optionC[c].scenario.modifications.push({
-        type: 'adjust-headway',
-        agencyId: agencyId,
-        routeId: [route.routeId],
-        tripId: null,
-        headway: route.frequency,
-      });
-    });
-  }
+
+  this.modifySpeed = function (corridorId,scale,cb) {
+    $http.get('/load/scenario/'+corridorId)
+      .success(function (data, status) {
+        var scenarioJSON = [];
+        data.modifications.forEach(function(route){
+            if (route.type === "adjust-speed"){
+              route.scale = scale;
+              scenarioJSON.push(route);
+            }
+          }
+        );
+        cb(scenarioJSON)
+      })
+  };
+
+
+
+  this.modifyFrequency = function (corridorId,scale,cb) {
+    $http.get('/load/scenario/'+corridorId)
+      .success(function (data, status) {
+        var scenarioJSON = [];
+        data.modifications.forEach(function(route){
+            if (route.type === "adjust-frequency"){
+              route.entries.forEach(function (entry) {
+                entry.headwaySecs = entry.headwaySecs/scale ;
+              });
+              scenarioJSON.push(route);
+            }
+          }
+        );
+        cb(scenarioJSON)
+      })
+  };
+
+
+
+
+
+
+
+
+
+  //
+  //
+  // this.modifyDwells = function (keepRoutes, c) {
+  //   var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
+  //   var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
+  //   var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
+  //
+  //   var dwellMod = {
+  //     type: 'adjust-dwell-time',
+  //     agencyId: agencyId,
+  //     routeId: [],
+  //     tripId: null,
+  //     stopId: null,
+  //     dwellTime: 30,
+  //   };
+  //   if (dwell10.length > 0) {
+  //     dwellMod.routeId = dwell10; dwellMod.dwellTime = 10;
+  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
+  //   };
+  //   if (dwell20.length > 0) {
+  //     dwellMod.routeId = dwell20; dwellMod.dwellTime = 20;
+  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
+  //   };
+  //   if (dwell30.length > 0) {
+  //     dwellMod.routeId = dwell30; dwellMod.dwellTime = 30;
+  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
+  //   };
+  // };
+
+  // this.modifyFrequencies = function (keepRoutes, c) {
+  //   keepRoutes = keepRoutes.map(function (route) {
+  //     return {
+  //       routeId: route.routeId,
+  //       frequency: route.peak.min * 60 + route.peak.sec
+  //     };
+  //   });
+  //
+  //   keepRoutes.forEach(function (route) {
+  //     optionC[c].scenario.modifications.push({
+  //       type: 'adjust-headway',
+  //       agencyId: agencyId,
+  //       routeId: [route.routeId],
+  //       tripId: null,
+  //       headway: route.frequency,
+  //     });
+  //   });
+  // }
 
   this.modifyModes = function (routeTypes) {
     optionC[c].scenario.modifications.push({
@@ -215,6 +289,8 @@ var banExtraAgencies = [
   this.deleteTileIsos = function (map) {
     if(isoLayer){map.removeLayer(isoLayer)};
   }
+
+
   
   //point-to-point result
   this.ptpRequest = function (startMarker, endMarker, map, cb) {
@@ -222,8 +298,12 @@ var banExtraAgencies = [
 	fromLng = startMarker.lng;
 	toLat = endMarker.lat;
 	toLng = endMarker.lng;
-  
-  $http.get('http://ansons.mit.edu:8080/plan?fromLat='+fromLat+'&fromLon='+fromLng+'&toLat='+toLat+'&toLon='+toLng+'&mode=WALK&full=true').then(function successCallback(res){
+
+
+
+
+
+    $http.get('http://ansons.mit.edu:8080/plan?fromLat='+fromLat+'&fromLon='+fromLng+'&toLat='+toLat+'&toLon='+toLng+'&mode=WALK&full=true').then(function successCallback(res){
 	  console.log(res);
   })
   
@@ -262,6 +342,7 @@ var banExtraAgencies = [
 		console.log('error in ptp')
     })
   }
+
   this.singlePointComparison = function (marker, map, cb) {
    	console.log(optionC[0]);
 	console.log(optionC[1]);
@@ -328,7 +409,6 @@ var banExtraAgencies = [
       cb(response.key, plotData);
     })
     .catch(function (err) {
-      console.log(err);
     });
   };
   

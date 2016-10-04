@@ -5,11 +5,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
-    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 275 + 'px';
-    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35 +1) + 'px';
+    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 400 + 'px';
+    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35 +230) + 'px';
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
+
 
   // Management for current scenario
   var scenarioBase = {
@@ -41,15 +42,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	'B' : angular.copy(scenarioBase),
     'C' : angular.copy(scenarioBase),
     'D' : angular.copy(scenarioBase),
-    'I' : angular.copy(scenarioBase),
+    'E' : angular.copy(scenarioBase),
 	}
+
+
+
   $scope.variants = {
-    'A' : { sel : 0, all : {}, color: '#555555'},
-	'B' : { sel : null, all : {}, color: '#7DD5ED' },
-    'C' : { sel : null, all : {}, color: '#F3E05E' },
-    'D' : { sel : null, all : {}, color: '#E092DF' },
-    'I' : { sel : 0 , all : {}, color: '#8D6AA8' },
-  }
+    'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64', '70', '70A'],corName: "Mass Ave"},
+	  'B' : { sel : null, all : {}, color: '#7DD5ED', buslines:['111', '426', '428'],corName:"North Washington St" },
+    'C' : { sel : null, all : {}, color: '#F3E05E', buslines:['39', '66'], corName:"Huntington Ave" },
+    'D' : { sel : null, all : {}, color: '#E092DF' , buslines:['30', '34', '34E', '35', '36', '37', '40', '50', '51'], corName:"Roslindale/Forest Hills" },
+    'E' : { sel : 0 , all : {}, color: '#8D6AA8', buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave/Warren" }
+  };
   
     $scope.mode = {
     all: [],
@@ -67,7 +71,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.defaultsBuilt = false
   
-  $scope.tabnav = 'A';
+  $scope.tabnav = 'B';
   
   // left globals
   var subwaysLayer    = null,
@@ -147,6 +151,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.maxBounds_right  = angular.copy(maxBounds_global);
   $scope.center_right    = angular.copy(center_global);
   $scope.tiles_right     = angular.copy(tilesDict.blank);
+
   // Assembling left map
   $scope.defaults_left = angular.copy(defaults_global);
   $scope.maxBounds_left  = angular.copy(maxBounds_global);
@@ -394,7 +399,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		
 	}}
   }
-  
+
+
+
+
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
 	$scope.selField = dataVal;
@@ -443,11 +451,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
-	var gs = true;
-    loadService.getExisting(function (subways) {
-      subways.addTo(map);
-      subwaysLayer = subways;
-    },gs);
+	// var gs = true;
+   //  loadService.getExisting(function (subways) {
+   //    subways.addTo(map);
+   //    subwaysLayer = subways;
+   //  },gs);
+
+
+
+
 
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
@@ -488,40 +500,46 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subStopsLayer.addTo(map);
     });
 	
-	
-    // get priority portions (do this first so it renders beneath other content)
-    loadService.getProposedPriorityLanes(function (priorityLanes) {
-      priorityLanes.addTo(map);
-	  priorityLayer = priorityLanes;
-    })
+    //
+    // // get priority portions (do this first so it renders beneath other content)
+    // loadService.getProposedPriorityLanes(function (priorityLanes) {
+    //   priorityLanes.addTo(map);
+    // priorityLayer = priorityLanes;
+    // })
 
     // now pull the proposed routes
     loadService.getProposedRoutes(function (data) {
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
+
+
+
       // rbind routes to scope
       $scope.routes = data.geoJsons;
       var routes = data.geoJsons;
 
+
       // iterate through routes and set the default scenario values
       for (var key in routes) {
-        var tabnavAlt = routes[key][0].options.base.corName;
+        var tabnavAlt = routes[key].options.base.corridorId;
 
         var rewind = angular.copy($scope.scenario[tabnavAlt]);
 
-        $scope.scenario[tabnavAlt].name = routes[key][0].options.base.varName;
-		$scope.scenario[tabnavAlt].num = routes[key][0].options.base.varId;
-        $scope.scenario[tabnavAlt].routeId = routes[key][0].options.base.routeId;
-        $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
+        $scope.scenario[tabnavAlt].name = routes[key].options.base.pid;
+		$scope.scenario[tabnavAlt].num = routes[key].options.base.pid;
+        $scope.scenario[tabnavAlt].routeId = routes[key].options.base.shape_id;
 
-        var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
-        $scope.newVariant(tabnavAlt, isDefault);
-        if (!isDefault) {
-          $scope.scenario[tabnavAlt].name = rewind.name;
-          $scope.scenario[tabnavAlt].routeId = rewind.routeId;
-          $scope.scenario[tabnavAlt].station = rewind.station;
-        };
+
+        // $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
+
+        // var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
+        // $scope.newVariant(tabnavAlt, isDefault);
+        // if (!isDefault) {
+        //   $scope.scenario[tabnavAlt].name = rewind.name;
+        //   $scope.scenario[tabnavAlt].routeId = rewind.routeId;
+        //   $scope.scenario[tabnavAlt].station = rewind.station;
+        // };
       };
     });
 
@@ -541,10 +559,46 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		$scope.cordons = cordonData;
 	});
 	
-    loadService.getExisting(function (subways) {
-      subways.addTo(map);
-      subwaysLayer = subways;
+    // loadService.getExisting(function (subways) {
+    //   subways.addTo(map);
+    //   subwaysLayer = subways;
+    // });
+
+    loadService.getProposedRoutes(function (data) {
+      routesLayer = data.layerGroup;
+      routesLayer.addTo(map);
+
+      console.log(routesLayer);
+
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
+
+      // iterate through routes and set the default scenario values
+      for (var key in routes) {
+        var tabnavAlt = routes[key].options.base.corridorId;
+
+        var rewind = angular.copy($scope.scenario[tabnavAlt]);
+
+        $scope.scenario[tabnavAlt].name = routes[key].options.base.pid;
+        $scope.scenario[tabnavAlt].num = routes[key].options.base.pid;
+        $scope.scenario[tabnavAlt].routeId = routes[key].options.base.shape_id;
+
+
+        // $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
+
+        // var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
+        // $scope.newVariant(tabnavAlt, isDefault);
+        // if (!isDefault) {
+        //   $scope.scenario[tabnavAlt].name = rewind.name;
+        //   $scope.scenario[tabnavAlt].routeId = rewind.routeId;
+        //   $scope.scenario[tabnavAlt].station = rewind.station;
+        // };
+      };
     });
+
+
+
 
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
@@ -593,9 +647,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.targetCorridor = function (variant) {
     if(variant){
     targetService.targetCorridor(routesLayer, variant._key);
-    targetService.targetStops(stopsLayer, null);
-	targetService.targetPriority(priorityLayer, null);
+    // targetService.targetStops(stopsLayer, null);
+	// targetService.targetPriority(priorityLayer, null);
 	$scope.tabnav = variant._key;
+      console.log($scope.tabnav);
 	$scope.variants[$scope.tabnav].sel == null? $scope.routeScorecard=false : $scope.updateRouteScorecard($scope.scenario[$scope.tabnav].routeId, $scope.tabnav);}
   };
 
@@ -747,6 +802,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
 	$scope.saveAlt=!$scope.saveAlt;
   }
+
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
@@ -800,6 +856,64 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       });
 	}
   }};
+
+
+
+
+
+
+  //New modification test
+  var postJSON = {"destinationPointsetId":"82f834ea-ba6d-478e-b4a9-651018de00f2","graphId":"650b39507bce5c884334aa960deb093d","type":"analyst","profileRequest":{"fromLat":42.35448465106744,"fromLon":-71.05133056640625,"toLat":42.35448465106744,"toLon":-71.05133056640625,"date":"2015-12-22","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":20,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"analyst":true,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":220,"scenario":{ "id": 0,
+    "description": "LS_Scenario_Baseline",
+    "feedChecksums": {
+      "MBTA": 993571431
+    },
+    "modifications":[]}}};
+
+
+  console.log(postJSON);
+
+  var currentModificationJSON = [];
+
+  analystService.modifyDwells("A",5,function(modifyJSON){
+    modifyJSON.forEach(function (route) {
+      currentModificationJSON.push(route);
+    });
+      console.log(currentModificationJSON);
+  });
+
+
+  analystService.modifySpeed("A",10,function(modifyJSON){
+    modifyJSON.forEach(function (route) {
+      currentModificationJSON.push(route);
+    });
+    console.log(currentModificationJSON);
+  });
+
+
+
+  analystService.modifyFrequency("A",10,function(modifyJSON){
+    modifyJSON.forEach(function (route) {
+      currentModificationJSON.push(route);
+    });
+    console.log(currentModificationJSON);
+  });
+
+  //use for test
+  // window.setTimeout(function(){
+  //   postJSON.profileRequest.scenario.modifications = currentModificationJSON;
+  //   postJSON = JSON.stringify(postJSON);
+  //
+  //   console.log(postJSON);
+  //
+  // }, 2000);
+
+
+
+
+
+
+
 
   // MANAGER CONTROLS
   // from manager control run create

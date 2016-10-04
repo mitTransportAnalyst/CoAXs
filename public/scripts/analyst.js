@@ -188,7 +188,7 @@ var Analyst = (function () {
   }, {
     key: 'singlePointRequest',
     value: function singlePointRequest(point, graphId, shapefileId, options) {
-
+      console.log(point, graphId, shapefileId, options)
       var opts = Object.assign({}, this.requestOptions, options);
       opts.fromLat = opts.toLat = point.lat;
       opts.fromLon = opts.toLon = point.lng;
@@ -237,6 +237,7 @@ var Analyst = (function () {
     key: 'setClientCredentials',
     value: function setClientCredentials(clientCredentials) {
       this.clientCredentials = clientCredentials;
+      // console.log(clientCredentials.access_token)
     }
 
     /**
@@ -277,7 +278,7 @@ var Analyst = (function () {
           method: 'POST',
           headers: {
             'Accept': 'text/xml',
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
           withCredentials: false
         };
