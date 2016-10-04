@@ -1,62 +1,237 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
-coaxsApp.service('analystService', function (supportService, $http) {
+coaxsApp.service('analystService', function (supportService, $interval, $http, $q) {
 
-	
+  var token = null;	//oauth2 token for analyst-server login
+  var analystUrl = '';
+  var analystUrlBase = 'https://analyst-dev.conveyal.com/api/single?accessToken=';
+  var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/';
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
-     defaultGraph = '620e6749074235d5450f969bf5878a83';  
-
-  var subjects = {
-        prefix : 'lodes',
-		fields : {
-		wt_const1	:	{id:"wt_const1"	,	verbose:	 'Manufact. & Constr. | $'	},
-		wt_const2	:	{id:"wt_const2"	,	verbose:	 'Manufact. & Constr. | $$'	},
-		wt_const3	:	{id:"wt_const3"	,	verbose:	 'Manufact. & Constr. | $$$'	},
-		wt_educa1	:	{id:"wt_educa1"	,	verbose:	 'Education | $'	},
-		wt_educa2	:	{id:"wt_educa2"	,	verbose:	 'Education | $$'	},
-		wt_educa3	:	{id:"wt_educa3"	,	verbose:	 'Education | $$$'	},
-		wt_finan1	:	{id:"wt_finan1"	,	verbose:	 'Finance | $'	},
-		wt_finan2	:	{id:"wt_finan2"	,	verbose:	 'Finance | $$'	},
-		wt_finan3	:	{id:"wt_finan3"	,	verbose:	 'Finance | $$$'	},
-		wt_healt1	:	{id:"wt_healt1"	,	verbose:	 'Health Care | $'	},
-		wt_healt2	:	{id:"wt_healt2"	,	verbose:	 'Health Care | $$'	},
-		wt_healt3	:	{id:"wt_healt3"	,	verbose:	 'Health Care | $$$'	},
-		wt_hospi1	:	{id:"wt_hospi1"	,	verbose:	 'Hospitality | $'	},
-		wt_hospi2	:	{id:"wt_hospi2"	,	verbose:	 'Hospitality | $$'	},
-		wt_hospi3	:	{id:"wt_hospi3"	,	verbose:	 'Hospitality | $$$'	},
-		wt_infor1	:	{id:"wt_infor1"	,	verbose:	 'Information Services | $'	},
-		wt_infor2	:	{id:"wt_infor2"	,	verbose:	 'Information Services | $$'	},
-		wt_infor3	:	{id:"wt_infor3"	,	verbose:	 'Information Services | $$$'	},
-		wt_profe1	:	{id:"wt_profe1"	,	verbose:	 'Professional Services | $'	},
-		wt_profe2	:	{id:"wt_profe2"	,	verbose:	 'Professional Services | $$'	},
-		wt_profe3	:	{id:"wt_profe3"	,	verbose:	 'Professional Services | $$$'	},
-		wt_publi1	:	{id:"wt_publi1"	,	verbose:	 'Public Administration | $'	},
-		wt_publi2	:	{id:"wt_publi2"	,	verbose:	 'Public Administration | $$'	},
-		wt_publi3	:	{id:"wt_publi3"	,	verbose:	 'Public Administration | $$$'	},
-		wt_trade1	:	{id:"wt_trade1"	,	verbose:	 'Retail & Wholesale | $'	},
-		wt_trade2	:	{id:"wt_trade2"	,	verbose:	 'Retail & Wholesale | $$'	},
-		wt_trade3	:	{id:"wt_trade3"	,	verbose:	 'Retail & Wholesale | $$$'	},
-		wt_trans1	:	{id:"wt_trans1"	,	verbose:	 'Utilities & Transport | $'	},
-		wt_trans2	:	{id:"wt_trans2"	,	verbose:	 'Utilities & Transport | $$'	},
-		wt_trans3	:	{id:"wt_trans3"	,	verbose:	 'Utilities & Transport | $$$'	},
-		}
+     defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
+	 workerVersion =  'v1.5.0-68-ga7c6904';
+  var indicatorAttributes = {
+    jobs:[
+	 {id: 'jobs1',
+	  grid: 'Jobs_with_earnings__1250_per_month_or_less.grid',
+	  verbose: 'Jobs | $'},
+	 {id: 'jobs2',
+	  grid: 'Jobs_with_earnings__1251_-__3333_per_month.grid',
+	  verbose: 'Jobs | $$'},
+	 {id: 'jobs3',
+	  grid: 'Jobs_with_earnings_greater_than__3333_per_month.grid',
+	  verbose: 'Jobs | $$$'}],
+	workers:[
+	 {id: 'workers1',
+	  grid: 'Workers_with_earnings__1250_per_month_or_less.grid',
+	  verbose: 'Workers | $'},
+	 {id: 'workers2',
+	  grid: 'Workers_with_earnings__1251_-__3333_per_month.grid',
+	  verbose: 'Workers | $$'},
+	 {id: 'workers3',
+	  grid: 'Workers_with_earnings_greater_than__3333_per_month.grid',
+	  verbose: 'Workers | $$$'}]};
+  var attributeUrlArray = [];
+  var indicatorNameArray = [];  
+  var attributeNameArray = [];
+  var accessibilityIndicator = [];
+	
+  for (indicator in indicatorAttributes){
+    for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
+	  attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
+	  indicatorNameArray.push(indicator);
+	  attributeNameArray.push(indicatorAttributes[indicator][i]['id']);
+	}
   };
 
-  this.isochrones = null;
+  var isochrones[0] = [];
+  var isochrones[1] = [];
+  var plotData = [];
   
-  var Analyst = window.Analyst;
-  var analyst = new Analyst(window.L, {
-    baseUrl		   : 'http://coaxs.mit.edu:9090',
-	apiUrl         : 'http://coaxs.mit.edu:9090/api',
-    tileUrl        : 'http://coaxs.mit.edu:9090/tile',
-    shapefileId    : defaultShapefile,
-    graphId        : defaultGraph,
-	//showPoints	   : true,
-    showIso        : true,
-  });
+  var Browsochrones = window.Browsochrones;
+  var browsochrones = new Browsochrones();
 
-  ptpURL = 'http://coaxs.mit.edu:8080/otp/routers/default/profile'
+  refreshCred = function () {
+  return new Promise(function(resolve, reject){
+    console.log('getting token');
+	$http.get('/credentials-preview').success(function (t, status) { 
+      console.log ('token: ' + t.access_token);
+      token = t.access_token 
+	  analystUrl = '';
+	  analystUrl = analystUrlBase + token; 
+	  resolve();
+	});
+  })
+  };
+  this.refreshCred = refreshCred;
   
-  this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
+  var analystState = {
+  "transitive": null,
+  "isochrone": null,
+  "key": null,
+  "origin": [42.35042512243457,71.03485107421875],
+  "destination":[42.35042512243457,-71.03485107421875],
+  "staticRequest":
+	{"jobId": supportService.generateUUID(),
+	 "transportNetworkId": defaultGraph,
+	 "request": {
+		"date":"2015-12-22","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":20,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
+		"scenario":{id: 0}
+	  }
+	}
+  };
+  
+  	//to get transit network metadata
+    var metadataBody = JSON.stringify(
+	  {
+	    "type": 'static-metadata',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest
+	  }
+	);
+	
+	//to get stopTrees (walking distances from grid cells to nearby stops)
+	var stopTreesBody = JSON.stringify(
+	  {
+	    "type": 'static-stop-trees',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest
+	  }
+	);
+  
+  var checkWarmup = function(){
+    return new Promise(function(resolve, reject){
+      console.log('checking if analyst server is warmed up');
+	  refreshCred().then(function(){
+	  fetch(analystUrl,{
+		  method: 'POST',
+		  body: metadataBody
+	  }).then(function(res){
+		if(res.status == 200){
+		  console.log('analyst server is warmed up');
+	      resolve();
+		} else {
+		  setTimeout(function () {checkWarmup()} , 30000);
+		}
+	  })
+      })
+    })
+  };
+  
+  this.fetchMetadata = function () {  
+    checkWarmup().then(function(){
+	$q.all([ 
+		fetch(analystUrl,{
+		  method: 'POST',
+		  body: metadataBody
+		}).then(function(res){
+		  console.log('fetched metadata');
+		  return res.json()
+		}),
+		fetch(analystUrl,{
+		  method: 'POST',
+		  body: stopTreesBody
+		}).then(function(res){
+		  console.log('fetched stopTrees');
+		  return res.arrayBuffer()
+		})
+	  ])
+	  .then(function([metadata, stopTrees]){
+		browsochrones.setQuery(metadata);
+		browsochrones.setStopTrees(stopTrees);
+		browsochrones.setTransitiveNetwork(metadata.transitiveData);
+	  });
+	});
+	
+	//get destination grid data for calculating accessibility indicators
+	console.log('fetching grids');
+	
+	$q.all(attributeUrlArray.map(function(gridName){
+		return fetch(destinationUrlBase+gridName).then(function(res){
+		return res.arrayBuffer()})
+	  })).then( function(res){
+		for (i in attributeNameArray) {
+		  browsochrones.putGrid(attributeNameArray[i],res[i].slice(0));
+		}
+		})
+  };
+  
+  var minutes = [];
+  
+  for (i = 1; i <= 24; i++){minutes.push(i*5)};
+
+  var makeIsochrones = function(scenNum){
+    console.log('making isochrones')
+    $q.all(minutes.map(function(minute){
+      console.log(minute);
+	  return browsochrones.getIsochrone(minute)})
+	  )
+	  .then(function(res){
+        isochrones[scenNum] = res;
+	  })
+  };
+  
+  var makePlotData = function(minute, cb){
+      browsochrones.generateSurface(minute).then(function(){
+	    makeIsochrones();
+		for (i = 0; i < attributeNameArray; i++){
+		  browsochrones.getAccessibilityForGrid(attributeNameArray[i],minute).then(
+		    function(res){
+		    plotData.push(res)
+		  })
+		}})
+		if (minute < 60){
+		  minute = minute + 15;
+		  makePlotData(minute);
+		}
+		else{
+		  console.log(accessibilityIndicator);
+		}
+  };
+  
+  //called when start pin is moved
+  this.moveOrigin = function (marker, isComparison){
+    //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
+	var xy = browsochrones.latLonToOriginPoint(marker.getLatLng())
+    var staticBody = JSON.stringify(
+	  {
+	    "type": 'static',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest,
+		"x": xy.x,
+		"y": xy.y
+	  });
+	
+	//fetch a grid for travel times
+	
+	fetch(analystUrl,{
+		  method: 'POST',
+		  body: staticBody
+		}).then(function(res){
+		  return res.arrayBuffer()
+		}).then(function(buff){
+		  browsochrones.setOrigin(buff, xy)
+		  .then(function(){
+            console.log('making plot data');
+			makePlotData(60)
+		  })
+		})
+  }
+
+  
+  this.moveDestination = function (marker, isComparison, map){
+    var xy = browsochrones.latLonToOriginPoint(marker.getLatLng())
+    browsochrones.generateDestinationData(xy).
+	then(function(result){
+	  var transitive = result.transitive;
+	  transitive.journeys = transitive.journeys.slice(0,2);
+	  var transitiveLines = new Transitive({'data':transitive});
+	  var transitiveLayer = new L.TransitiveLayer(transitiveLines)
+	  map.addLayer(transitiveLayer);
+	  transitiveLayer._refresh();
+	});
+  }
   
   var optionCurrent = {
     scenario      : {
@@ -387,15 +562,7 @@ var banExtraAgencies = [
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { isoLayer.setOpacity(0)};
-	if (isoLayerOld) {isoLayerOld.setOpacity(0)};
-    if (currentIso) { map.removeLayer(currentIso); };
-    if (compareIso) { map.removeLayer(compareIso); };
-
-    var isosArray = vectorIsos.pointEstimate.features;
-    for (var i=0; i<isosArray.length; i++) { 
-      if (isosArray[i].properties.time == timeVal) { 
-        currentIso = L.geoJson(isosArray[i], {
+        currentIso = L.geoJson(isochrones[i], {
           style: {
             stroke      : true,
             fillColor   : '#FDB813',
@@ -407,7 +574,6 @@ var banExtraAgencies = [
         });
         currentIso.addTo(map);
       }
-    }
 
     if (vecComIsos) {
       var isosArray = vecComIsos.pointEstimate.features;

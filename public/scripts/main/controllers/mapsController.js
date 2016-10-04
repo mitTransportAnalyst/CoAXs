@@ -29,12 +29,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.selCordon = null;
   
   $scope.cordons = {};
-    
-  analystService.refreshCred();
+  
+  analystService.fetchMetadata();
   
   $interval(function () {
             analystService.refreshCred();
           } , 3540000);
+		 
   
   $scope.scenario = {
     'A' : angular.copy(scenarioBase),
@@ -195,13 +196,25 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   // Handle left map queries
   $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
+	
+	if (marker.modelName == 'start'){
+	  	analystService.moveOrigin(marker.leafletObject, $scope.compare)
+	}
+	
+	if (marker.modelName == 'end'){
+	  	leafletData.getMap('map_left').then(function(map) {
+		  analystService.moveDestination(marker.leafletObject, $scope.compare, map)
+		})
+	}
+	
 	$scope.markers[marker.modelName].lat = marker.model.lat;
     $scope.markers[marker.modelName].lng = marker.model.lng;
     $scope.setCordon(null);
-	$scope.preMarkerQuery(); 
+	//$scope.preMarkerQuery(); 
   });
 
   $scope.preMarkerQuery = function () {
+	analystService.fetchMetadata()
 	runMarkerQuerys();
   }
   
@@ -235,28 +248,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       return true;
     }
   };
-
-  var preloadedMarker = function (poi) {
-    $scope.showVectorIsosOn = false;
-    animateProgressBar();
-    if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-    $scope.scenarioScore.graphData = {
-      all: poi.graphData,
-      sel: poi.graphData.jobs_tot
-    };
-    drawGraph($scope.scenarioScore.graphData);
-    leafletData.getMap('map_left').then(function(map) {
-      analystService.resetAll(map, 0);
-      analystService.loadExisting(poi, map, function(result) {
-        if (result) {
-          $scope.loadProgress.val = 100;
-          setTimeout(function () { $scope.$apply (function () {
-            $scope.loadProgress.vis = false; // terminate progress bar viewport
-          }) }, 1000);
-        }
-      });
-    });
-  }
 
   // what calls the SPA analysis and updates and tile and map components
   var runMarkerQuerys = function () {
@@ -382,12 +373,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	d3Service.drawGraph($scope.vectorIsos.val,graphData, $scope.indicator)
   }
   
-  updateCutoff = function (newVal) {
+  updateCutoff = function (cutoff) {
 	leafletData.getMap('map_left').then(function(map) {
-	//$scope.scenarioCompare ? 
-	analystService.showVectorIsos(300*newVal, map)// : //analystService.updateTiles(map, $scope.key, 300*newVal);
+	analystService.showVectorIsos(cutoff, map)
 	});
-	d3Service.drawGraph(newVal, $scope.scenarioScore.graphData, $scope.indicator);
+	d3Service.drawGraph(cutoff, $scope.scenarioScore.graphData, $scope.indicator);
   }
 
   $scope.setCordon = function (cordonId) {

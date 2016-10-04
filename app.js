@@ -39,7 +39,7 @@ var csv     = require('csv-streamify');
 var analystCreds = require('request');
 
 var analystReqOpts = {
-  url: 'http://coaxs.mit.edu:9090/oauth/token',
+  url: 'https://analyst-dev.conveyal.com/oauth/token',
   method: 'POST',
   timeout: 10000,
   auth: {
@@ -51,7 +51,7 @@ var analystReqOpts = {
   },
   body: 'grant_type=client_credentials'
 };
-  
+
  app.get('/credentials', function (req, res) {
   var credExpiration = 0,
   clientCredentials = '';
@@ -69,8 +69,6 @@ var analystReqOpts = {
 	});
   };
 });
-
-
 
 app.get('/', function (req, res) {
   res.render('index.ejs', {
