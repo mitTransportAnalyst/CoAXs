@@ -595,7 +595,6 @@ var banExtraAgencies = [
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map, isComparison) {
-		console.log('time: ' + timeVal + ', compare:' +isComparison);
 		if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
 		if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
 		isochroneLayer0 = L.geoJson(isochrones[0][timeVal], {
