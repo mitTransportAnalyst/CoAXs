@@ -75,10 +75,33 @@ angular.module('coaxsFilters', [])
     if (input.length == 2) { return '0' + input }
     if (input.length > 2) { return input }
   }
-});
+})
 
+.filter('altNum', function () {
+  return function (input) {
+	return input.charAt(0);
+  }
+})
 
+.filter('altNumInc', function () {
+  return function (input) {
+   if(input){
+    return String.fromCharCode(input.charCodeAt(0)+1)+'|'+input.substring(2,input.length);}
+  }
+})
 
+.filter('altAbbrev', function () {
+  return function (input) {
+    if(input){
+	len = input.length;
+	if (len > 17) {name = input.substring(0,15)+'...';}
+	else{name = input};
+	return name;}
+  }
+})
 
-
-
+.filter('altName', function () {
+  return function (input) {
+    return input.substring(2,input.length);
+  }
+})

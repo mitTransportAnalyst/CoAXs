@@ -1,0 +1,2790 @@
+{
+  "id": 0,
+  "description": "LS Scenario v1",
+  "feedChecksums": {
+    "MBTA": 993571431
+  },
+  "modifications": [
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:30"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "30-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:34"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "34-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:35"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "35-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:36"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "36-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:37"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "37-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:4050"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "40/50-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:40"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "40-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:50"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "50-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:51"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "51-Dwell"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:30"
+      ],
+      "hops": [
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:797",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:6428"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:797",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:6428"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "30-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:34"
+      ],
+      "hops": [
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:605"
+        ],
+        [
+          "MBTA:605",
+          "MBTA:606"
+        ],
+        [
+          "MBTA:606",
+          "MBTA:607"
+        ],
+        [
+          "MBTA:607",
+          "MBTA:608"
+        ],
+        [
+          "MBTA:608",
+          "MBTA:609"
+        ],
+        [
+          "MBTA:609",
+          "MBTA:610"
+        ],
+        [
+          "MBTA:610",
+          "MBTA:611"
+        ],
+        [
+          "MBTA:611",
+          "MBTA:612"
+        ],
+        [
+          "MBTA:612",
+          "MBTA:10612"
+        ],
+        [
+          "MBTA:10612",
+          "MBTA:613"
+        ],
+        [
+          "MBTA:613",
+          "MBTA:614"
+        ],
+        [
+          "MBTA:614",
+          "MBTA:615"
+        ],
+        [
+          "MBTA:615",
+          "MBTA:616"
+        ],
+        [
+          "MBTA:616",
+          "MBTA:618"
+        ],
+        [
+          "MBTA:618",
+          "MBTA:10618"
+        ],
+        [
+          "MBTA:10618",
+          "MBTA:24619"
+        ],
+        [
+          "MBTA:24619",
+          "MBTA:99832"
+        ],
+        [
+          "MBTA:70618",
+          "MBTA:61871"
+        ],
+        [
+          "MBTA:61871",
+          "MBTA:71618"
+        ],
+        [
+          "MBTA:71618",
+          "MBTA:61872"
+        ],
+        [
+          "MBTA:61872",
+          "MBTA:619"
+        ],
+        [
+          "MBTA:619",
+          "MBTA:620"
+        ],
+        [
+          "MBTA:620",
+          "MBTA:621"
+        ],
+        [
+          "MBTA:621",
+          "MBTA:622"
+        ],
+        [
+          "MBTA:622",
+          "MBTA:623"
+        ],
+        [
+          "MBTA:623",
+          "MBTA:624"
+        ],
+        [
+          "MBTA:624",
+          "MBTA:625"
+        ],
+        [
+          "MBTA:625",
+          "MBTA:10625"
+        ],
+        [
+          "MBTA:10625",
+          "MBTA:626"
+        ],
+        [
+          "MBTA:626",
+          "MBTA:627"
+        ],
+        [
+          "MBTA:627",
+          "MBTA:628"
+        ],
+        [
+          "MBTA:628",
+          "MBTA:629"
+        ],
+        [
+          "MBTA:629",
+          "MBTA:630"
+        ],
+        [
+          "MBTA:630",
+          "MBTA:631"
+        ],
+        [
+          "MBTA:631",
+          "MBTA:632"
+        ],
+        [
+          "MBTA:632",
+          "MBTA:633"
+        ],
+        [
+          "MBTA:633",
+          "MBTA:10633"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:875",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:605"
+        ],
+        [
+          "MBTA:605",
+          "MBTA:606"
+        ],
+        [
+          "MBTA:606",
+          "MBTA:607"
+        ],
+        [
+          "MBTA:607",
+          "MBTA:608"
+        ],
+        [
+          "MBTA:608",
+          "MBTA:609"
+        ],
+        [
+          "MBTA:609",
+          "MBTA:610"
+        ],
+        [
+          "MBTA:610",
+          "MBTA:611"
+        ],
+        [
+          "MBTA:611",
+          "MBTA:612"
+        ],
+        [
+          "MBTA:612",
+          "MBTA:10612"
+        ],
+        [
+          "MBTA:10612",
+          "MBTA:613"
+        ],
+        [
+          "MBTA:613",
+          "MBTA:614"
+        ],
+        [
+          "MBTA:614",
+          "MBTA:615"
+        ],
+        [
+          "MBTA:615",
+          "MBTA:616"
+        ],
+        [
+          "MBTA:616",
+          "MBTA:618"
+        ],
+        [
+          "MBTA:618",
+          "MBTA:10618"
+        ],
+        [
+          "MBTA:10618",
+          "MBTA:24619"
+        ],
+        [
+          "MBTA:24619",
+          "MBTA:99832"
+        ],
+        [
+          "MBTA:70618",
+          "MBTA:61871"
+        ],
+        [
+          "MBTA:61871",
+          "MBTA:71618"
+        ],
+        [
+          "MBTA:71618",
+          "MBTA:61872"
+        ],
+        [
+          "MBTA:61872",
+          "MBTA:619"
+        ],
+        [
+          "MBTA:619",
+          "MBTA:620"
+        ],
+        [
+          "MBTA:620",
+          "MBTA:621"
+        ],
+        [
+          "MBTA:621",
+          "MBTA:622"
+        ],
+        [
+          "MBTA:622",
+          "MBTA:623"
+        ],
+        [
+          "MBTA:623",
+          "MBTA:624"
+        ],
+        [
+          "MBTA:624",
+          "MBTA:625"
+        ],
+        [
+          "MBTA:625",
+          "MBTA:10625"
+        ],
+        [
+          "MBTA:10625",
+          "MBTA:626"
+        ],
+        [
+          "MBTA:626",
+          "MBTA:627"
+        ],
+        [
+          "MBTA:627",
+          "MBTA:628"
+        ],
+        [
+          "MBTA:628",
+          "MBTA:629"
+        ],
+        [
+          "MBTA:629",
+          "MBTA:630"
+        ],
+        [
+          "MBTA:630",
+          "MBTA:631"
+        ],
+        [
+          "MBTA:631",
+          "MBTA:632"
+        ],
+        [
+          "MBTA:632",
+          "MBTA:633"
+        ],
+        [
+          "MBTA:633",
+          "MBTA:10633"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "34-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:35"
+      ],
+      "hops": [
+        [
+          "MBTA:794",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:794",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "35-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:36"
+      ],
+      "hops": [
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:875"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:875",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "36-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:37"
+      ],
+      "hops": [
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "37-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:4050"
+      ],
+      "hops": [
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:605"
+        ],
+        [
+          "MBTA:605",
+          "MBTA:606"
+        ],
+        [
+          "MBTA:606",
+          "MBTA:607"
+        ],
+        [
+          "MBTA:607",
+          "MBTA:608"
+        ],
+        [
+          "MBTA:608",
+          "MBTA:609"
+        ],
+        [
+          "MBTA:609",
+          "MBTA:610"
+        ],
+        [
+          "MBTA:610",
+          "MBTA:611"
+        ],
+        [
+          "MBTA:611",
+          "MBTA:612"
+        ],
+        [
+          "MBTA:612",
+          "MBTA:11613"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "40/50-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:40"
+      ],
+      "hops": [
+        [
+          "MBTA:625",
+          "MBTA:10625"
+        ],
+        [
+          "MBTA:10625",
+          "MBTA:626"
+        ],
+        [
+          "MBTA:626",
+          "MBTA:627"
+        ],
+        [
+          "MBTA:627",
+          "MBTA:628"
+        ],
+        [
+          "MBTA:628",
+          "MBTA:629"
+        ],
+        [
+          "MBTA:629",
+          "MBTA:630"
+        ],
+        [
+          "MBTA:630",
+          "MBTA:631"
+        ],
+        [
+          "MBTA:631",
+          "MBTA:632"
+        ],
+        [
+          "MBTA:632",
+          "MBTA:633"
+        ],
+        [
+          "MBTA:633",
+          "MBTA:10633"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:605"
+        ],
+        [
+          "MBTA:605",
+          "MBTA:606"
+        ],
+        [
+          "MBTA:606",
+          "MBTA:607"
+        ],
+        [
+          "MBTA:607",
+          "MBTA:608"
+        ],
+        [
+          "MBTA:608",
+          "MBTA:609"
+        ],
+        [
+          "MBTA:609",
+          "MBTA:610"
+        ],
+        [
+          "MBTA:610",
+          "MBTA:611"
+        ],
+        [
+          "MBTA:611",
+          "MBTA:612"
+        ],
+        [
+          "MBTA:612",
+          "MBTA:11613"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:625",
+          "MBTA:10625"
+        ],
+        [
+          "MBTA:10625",
+          "MBTA:626"
+        ],
+        [
+          "MBTA:626",
+          "MBTA:627"
+        ],
+        [
+          "MBTA:627",
+          "MBTA:628"
+        ],
+        [
+          "MBTA:628",
+          "MBTA:629"
+        ],
+        [
+          "MBTA:629",
+          "MBTA:630"
+        ],
+        [
+          "MBTA:630",
+          "MBTA:631"
+        ],
+        [
+          "MBTA:631",
+          "MBTA:632"
+        ],
+        [
+          "MBTA:632",
+          "MBTA:633"
+        ],
+        [
+          "MBTA:633",
+          "MBTA:10633"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:605"
+        ],
+        [
+          "MBTA:605",
+          "MBTA:606"
+        ],
+        [
+          "MBTA:606",
+          "MBTA:607"
+        ],
+        [
+          "MBTA:607",
+          "MBTA:608"
+        ],
+        [
+          "MBTA:608",
+          "MBTA:609"
+        ],
+        [
+          "MBTA:609",
+          "MBTA:610"
+        ],
+        [
+          "MBTA:610",
+          "MBTA:611"
+        ],
+        [
+          "MBTA:611",
+          "MBTA:612"
+        ],
+        [
+          "MBTA:612",
+          "MBTA:11613"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "40-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:50"
+      ],
+      "hops": [
+        [
+          "MBTA:2800",
+          "MBTA:10633"
+        ],
+        [
+          "MBTA:10633",
+          "MBTA:634"
+        ],
+        [
+          "MBTA:634",
+          "MBTA:635"
+        ],
+        [
+          "MBTA:635",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:6022"
+        ],
+        [
+          "MBTA:6022",
+          "MBTA:603"
+        ],
+        [
+          "MBTA:603",
+          "MBTA:10603"
+        ],
+        [
+          "MBTA:10603",
+          "MBTA:604"
+        ],
+        [
+          "MBTA:604",
+          "MBTA:2801"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "50-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:51"
+      ],
+      "hops": [
+        [
+          "MBTA:10642",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:797",
+          "MBTA:1867"
+        ],
+        [
+          "MBTA:11860",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:11860",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:11860",
+          "MBTA:795"
+        ],
+        [
+          "MBTA:795",
+          "MBTA:636"
+        ],
+        [
+          "MBTA:636",
+          "MBTA:637"
+        ],
+        [
+          "MBTA:637",
+          "MBTA:638"
+        ],
+        [
+          "MBTA:638",
+          "MBTA:639"
+        ],
+        [
+          "MBTA:639",
+          "MBTA:640"
+        ],
+        [
+          "MBTA:640",
+          "MBTA:641"
+        ],
+        [
+          "MBTA:641",
+          "MBTA:642"
+        ],
+        [
+          "MBTA:642",
+          "MBTA:10642"
+        ],
+        [
+          "MBTA:10642",
+          "MBTA:596"
+        ],
+        [
+          "MBTA:596",
+          "MBTA:597"
+        ],
+        [
+          "MBTA:597",
+          "MBTA:598"
+        ],
+        [
+          "MBTA:598",
+          "MBTA:599"
+        ],
+        [
+          "MBTA:599",
+          "MBTA:600"
+        ],
+        [
+          "MBTA:600",
+          "MBTA:601"
+        ],
+        [
+          "MBTA:601",
+          "MBTA:602"
+        ],
+        [
+          "MBTA:602",
+          "MBTA:797"
+        ],
+        [
+          "MBTA:797",
+          "MBTA:1867"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "51-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:45"
+      ],
+      "hops": [
+        [
+          "MBTA:11257",
+          "MBTA:1259"
+        ],
+        [
+          "MBTA:1259",
+          "MBTA:11323"
+        ],
+        [
+          "MBTA:11323",
+          "MBTA:1149"
+        ],
+        [
+          "MBTA:1149",
+          "MBTA:1146"
+        ],
+        [
+          "MBTA:1146",
+          "MBTA:1147"
+        ],
+        [
+          "MBTA:1147",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:64000",
+          "MBTA:1493"
+        ],
+        [
+          "MBTA:1493",
+          "MBTA:1495"
+        ],
+        [
+          "MBTA:1495",
+          "MBTA:1496"
+        ],
+        [
+          "MBTA:1496",
+          "MBTA:1577"
+        ],
+        [
+          "MBTA:1577",
+          "MBTA:1578"
+        ],
+        [
+          "MBTA:1578",
+          "MBTA:1579"
+        ],
+        [
+          "MBTA:1579",
+          "MBTA:1580"
+        ],
+        [
+          "MBTA:1580",
+          "MBTA:1581"
+        ],
+        [
+          "MBTA:1581",
+          "MBTA:1582"
+        ],
+        [
+          "MBTA:1582",
+          "MBTA:15820"
+        ],
+        [
+          "MBTA:15820",
+          "MBTA:1583"
+        ],
+        [
+          "MBTA:1583",
+          "MBTA:1584"
+        ],
+        [
+          "MBTA:1584",
+          "MBTA:1585"
+        ],
+        [
+          "MBTA:1585",
+          "MBTA:1586"
+        ],
+        [
+          "MBTA:1586",
+          "MBTA:413"
+        ],
+        [
+          "MBTA:413",
+          "MBTA:414"
+        ],
+        [
+          "MBTA:414",
+          "MBTA:1587"
+        ],
+        [
+          "MBTA:1587",
+          "MBTA:1565"
+        ],
+        [
+          "MBTA:1565",
+          "MBTA:383"
+        ],
+        [
+          "MBTA:383",
+          "MBTA:384"
+        ],
+        [
+          "MBTA:384",
+          "MBTA:385"
+        ],
+        [
+          "MBTA:385",
+          "MBTA:1566"
+        ],
+        [
+          "MBTA:1566",
+          "MBTA:15660"
+        ],
+        [
+          "MBTA:15660",
+          "MBTA:1567"
+        ],
+        [
+          "MBTA:1567",
+          "MBTA:15661"
+        ],
+        [
+          "MBTA:15661",
+          "MBTA:1569"
+        ],
+        [
+          "MBTA:1569",
+          "MBTA:1570"
+        ],
+        [
+          "MBTA:1570",
+          "MBTA:1571"
+        ],
+        [
+          "MBTA:1571",
+          "MBTA:1572"
+        ],
+        [
+          "MBTA:1572",
+          "MBTA:1573"
+        ],
+        [
+          "MBTA:1573",
+          "MBTA:1574"
+        ],
+        [
+          "MBTA:1574",
+          "MBTA:1575"
+        ],
+        [
+          "MBTA:1575",
+          "MBTA:1576"
+        ],
+        [
+          "MBTA:1576",
+          "MBTA:1487"
+        ],
+        [
+          "MBTA:1487",
+          "MBTA:1488"
+        ],
+        [
+          "MBTA:1488",
+          "MBTA:1489"
+        ],
+        [
+          "MBTA:1489",
+          "MBTA:1491"
+        ],
+        [
+          "MBTA:1491",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:1565",
+          "MBTA:383"
+        ],
+        [
+          "MBTA:383",
+          "MBTA:384"
+        ],
+        [
+          "MBTA:384",
+          "MBTA:385"
+        ],
+        [
+          "MBTA:385",
+          "MBTA:1566"
+        ],
+        [
+          "MBTA:1566",
+          "MBTA:15660"
+        ],
+        [
+          "MBTA:15660",
+          "MBTA:1567"
+        ],
+        [
+          "MBTA:1567",
+          "MBTA:15661"
+        ],
+        [
+          "MBTA:15661",
+          "MBTA:1569"
+        ],
+        [
+          "MBTA:1569",
+          "MBTA:1570"
+        ],
+        [
+          "MBTA:1570",
+          "MBTA:1571"
+        ],
+        [
+          "MBTA:1571",
+          "MBTA:1572"
+        ],
+        [
+          "MBTA:1572",
+          "MBTA:1573"
+        ],
+        [
+          "MBTA:1573",
+          "MBTA:1574"
+        ],
+        [
+          "MBTA:1574",
+          "MBTA:1575"
+        ],
+        [
+          "MBTA:1575",
+          "MBTA:1576"
+        ],
+        [
+          "MBTA:1576",
+          "MBTA:1487"
+        ],
+        [
+          "MBTA:1487",
+          "MBTA:1488"
+        ],
+        [
+          "MBTA:1488",
+          "MBTA:1489"
+        ],
+        [
+          "MBTA:1489",
+          "MBTA:1491"
+        ],
+        [
+          "MBTA:1491",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:64000",
+          "MBTA:1148"
+        ],
+        [
+          "MBTA:1148",
+          "MBTA:11149"
+        ],
+        [
+          "MBTA:11149",
+          "MBTA:11148"
+        ],
+        [
+          "MBTA:11148",
+          "MBTA:21148"
+        ],
+        [
+          "MBTA:1737",
+          "MBTA:381"
+        ],
+        [
+          "MBTA:381",
+          "MBTA:382"
+        ],
+        [
+          "MBTA:382",
+          "MBTA:383"
+        ],
+        [
+          "MBTA:383",
+          "MBTA:384"
+        ],
+        [
+          "MBTA:384",
+          "MBTA:385"
+        ],
+        [
+          "MBTA:385",
+          "MBTA:1566"
+        ],
+        [
+          "MBTA:1566",
+          "MBTA:15660"
+        ],
+        [
+          "MBTA:15660",
+          "MBTA:1567"
+        ],
+        [
+          "MBTA:1567",
+          "MBTA:15661"
+        ],
+        [
+          "MBTA:15661",
+          "MBTA:1569"
+        ],
+        [
+          "MBTA:1569",
+          "MBTA:1570"
+        ],
+        [
+          "MBTA:1570",
+          "MBTA:1571"
+        ],
+        [
+          "MBTA:1571",
+          "MBTA:1572"
+        ],
+        [
+          "MBTA:1572",
+          "MBTA:1573"
+        ],
+        [
+          "MBTA:1573",
+          "MBTA:1574"
+        ],
+        [
+          "MBTA:1574",
+          "MBTA:1575"
+        ],
+        [
+          "MBTA:1575",
+          "MBTA:1576"
+        ],
+        [
+          "MBTA:1576",
+          "MBTA:1487"
+        ],
+        [
+          "MBTA:1487",
+          "MBTA:1488"
+        ],
+        [
+          "MBTA:1488",
+          "MBTA:1489"
+        ],
+        [
+          "MBTA:1489",
+          "MBTA:1491"
+        ],
+        [
+          "MBTA:1491",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:64000",
+          "MBTA:1148"
+        ],
+        [
+          "MBTA:1148",
+          "MBTA:11149"
+        ],
+        [
+          "MBTA:11149",
+          "MBTA:11148"
+        ],
+        [
+          "MBTA:11148",
+          "MBTA:21148"
+        ],
+        [
+          "MBTA:11257",
+          "MBTA:1259"
+        ],
+        [
+          "MBTA:1259",
+          "MBTA:11323"
+        ],
+        [
+          "MBTA:11323",
+          "MBTA:11259"
+        ],
+        [
+          "MBTA:11259",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:64000",
+          "MBTA:1493"
+        ],
+        [
+          "MBTA:1493",
+          "MBTA:1495"
+        ],
+        [
+          "MBTA:1495",
+          "MBTA:1496"
+        ],
+        [
+          "MBTA:1496",
+          "MBTA:1577"
+        ],
+        [
+          "MBTA:1577",
+          "MBTA:1578"
+        ],
+        [
+          "MBTA:1578",
+          "MBTA:1579"
+        ],
+        [
+          "MBTA:1579",
+          "MBTA:1580"
+        ],
+        [
+          "MBTA:1580",
+          "MBTA:1581"
+        ],
+        [
+          "MBTA:1581",
+          "MBTA:1582"
+        ],
+        [
+          "MBTA:1582",
+          "MBTA:15820"
+        ],
+        [
+          "MBTA:15820",
+          "MBTA:1583"
+        ],
+        [
+          "MBTA:1583",
+          "MBTA:1584"
+        ],
+        [
+          "MBTA:1584",
+          "MBTA:1585"
+        ],
+        [
+          "MBTA:1585",
+          "MBTA:1586"
+        ],
+        [
+          "MBTA:1586",
+          "MBTA:413"
+        ],
+        [
+          "MBTA:413",
+          "MBTA:414"
+        ],
+        [
+          "MBTA:414",
+          "MBTA:415"
+        ],
+        [
+          "MBTA:415",
+          "MBTA:416"
+        ],
+        [
+          "MBTA:416",
+          "MBTA:417"
+        ],
+        [
+          "MBTA:417",
+          "MBTA:419"
+        ],
+        [
+          "MBTA:11257",
+          "MBTA:1259"
+        ],
+        [
+          "MBTA:1259",
+          "MBTA:11323"
+        ],
+        [
+          "MBTA:11323",
+          "MBTA:11259"
+        ],
+        [
+          "MBTA:11259",
+          "MBTA:64000"
+        ],
+        [
+          "MBTA:64000",
+          "MBTA:1493"
+        ],
+        [
+          "MBTA:1493",
+          "MBTA:1495"
+        ],
+        [
+          "MBTA:1495",
+          "MBTA:1496"
+        ],
+        [
+          "MBTA:1496",
+          "MBTA:1577"
+        ],
+        [
+          "MBTA:1577",
+          "MBTA:1578"
+        ],
+        [
+          "MBTA:1578",
+          "MBTA:1579"
+        ],
+        [
+          "MBTA:1579",
+          "MBTA:1580"
+        ],
+        [
+          "MBTA:1580",
+          "MBTA:1581"
+        ],
+        [
+          "MBTA:1581",
+          "MBTA:1582"
+        ],
+        [
+          "MBTA:1582",
+          "MBTA:15820"
+        ],
+        [
+          "MBTA:15820",
+          "MBTA:1583"
+        ],
+        [
+          "MBTA:1583",
+          "MBTA:1584"
+        ],
+        [
+          "MBTA:1584",
+          "MBTA:1585"
+        ],
+        [
+          "MBTA:1585",
+          "MBTA:1586"
+        ],
+        [
+          "MBTA:1586",
+          "MBTA:413"
+        ],
+        [
+          "MBTA:413",
+          "MBTA:414"
+        ],
+        [
+          "MBTA:414",
+          "MBTA:1587"
+        ],
+        [
+          "MBTA:1587",
+          "MBTA:1565"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "45-Speed"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:30",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "30-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 900,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28498997"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "30-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27953084"
+        }
+      ],
+      "comment": "30-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:34",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "34-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 450,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28499682"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "34-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 480,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27954457"
+        }
+      ],
+      "comment": "34-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:35",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "35-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 900,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27777718"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "35-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1350,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28361905"
+        }
+      ],
+      "comment": "35-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:36",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "36-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27950212"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "36-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28350868"
+        }
+      ],
+      "comment": "36-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:37",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "37-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1800,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28498560"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "37-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1350,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28498559"
+        }
+      ],
+      "comment": "37-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:40",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "40-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27776927"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "40-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1350,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27776928"
+        }
+      ],
+      "comment": "40-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:50",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "50-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28499608"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "50-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27954292"
+        }
+      ],
+      "comment": "50-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:51",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "51-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 900,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27954372"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "51-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28350213"
+        }
+      ],
+      "comment": "51-Frequency"
+    }
+  ]
+}
