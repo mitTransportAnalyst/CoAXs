@@ -509,7 +509,7 @@ input {
   height           : 75.5%;
   width            : 70%;
   position         : absolute;
-  left : 800px;
+  left : 1500px;
   z-index 		   : 9;
 }
 #map_right {
