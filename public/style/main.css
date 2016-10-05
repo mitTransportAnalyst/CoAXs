@@ -509,11 +509,11 @@ input {
   height           : 75.5%;
   width            : 70%;
   position         : absolute;
-  left : 1500px;
+  left : 1200px;
   z-index 		   : 9;
 }
 #map_right {
-  left : 800px;
+  left : 1200px;
 }
 .leaflet-container {
   background : -webkit-linear-gradient( #CDD2D4, #F5F5F3) !important; /* For Safari 5.1 to 6.0 */
