@@ -48,11 +48,10 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
     isochrones[1] = null;
   var isochroneLayer0 = null;
   var isochroneLayer1 = null;
-  var plotData = [];
-    plotData[0] = [];
-	plotData[1] = [];
-  for (var j = 0; j<=1 ; j++){
-  for (var i = 1; i<=120; i++){plotData[j][i] = [];plotData[0][i] = [];}}
+  var plotData = {};
+
+  // for (var j = 0; j<=1 ; j++){
+  // for (var i = 1; i<=120; i++){plotData[j][i] = [];plotData[0][i] = [];}}
   var transitiveLayer = null;
   var Browsochrones = window.Browsochrones;
   var browsochrones = [];
@@ -107,25 +106,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	  }
 	);
 	
-  scenario0 = {
-    "id": 0,
-	"feedChecksums": {
-	  "MBTA": 993571431
-	},
-    "modifications": []
-  }
-  
-  scenario1 = {
-    "id": 0,
-	"feedChecksums": {
-	  "MBTA": 993571431
-	},
-    "modifications": [
-	  {"type":"remove-trip",
-	   "routes":["MBTA:1"]
-      }]
-  }
-  
+ 
   var checkWarmup = function(){
     return new Promise(function(resolve, reject){
       console.log('checking if analyst server is warmed up');
@@ -240,7 +221,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   };
   
   //called when start pin is moved
-  this.moveOrigin = function (marker, isComparison){
+  this.moveOrigin = function (marker, isComparison, scenario0, scenario1){
 	return new Promise(function(resolve, reject){
     //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
 	isochrones[0] = null;
@@ -312,7 +293,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   })}
 
   
-  this.moveDestination = function (marker, isComparison, map){
+  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
     if(transitiveLayer){map.removeLayer(transitiveLayer)};
 	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
     browsochrones[0].generateDestinationData(xy).
@@ -320,6 +301,17 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	  var transitive = res.transitive;
 	  transitive.journeys = transitive.journeys.slice(0,2);
 	  console.log(res);
+	  
+	  plotData['Scenario 1'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+			'average_waitTime' : res.waitTime,
+			'average_rideTime' : res.inVehicleTravelTime};
+	  
+	  plotData['Scenario 2'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+			'average_waitTime' : res.waitTime,
+			'average_rideTime' : res.inVehicleTravelTime};
+	  
+	  cb(plotData);
+	  
 	  var transitiveLines = new Transitive({'data':transitive});
 	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
 	  map.addLayer(transitiveLayer);
@@ -332,7 +324,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	then(function(res){
 	  var transitive = res.transitive;
 	  transitive.journeys = transitive.journeys.slice(0,2);
-	  console.log(res);
+	  plotData['Scenario 2'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+			'average_waitTime' : res.waitTime,
+			'average_rideTime' : res.inVehicleTravelTime};
+	  
+	  cb(plotData);
 	  var transitiveLines = new Transitive({'data':transitive});
 	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
 	  map.addLayer(transitiveLayer);

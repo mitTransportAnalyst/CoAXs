@@ -309,7 +309,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   refreshDestination = function(marker){
   leafletData.getMap('map_left').then(function(map) {
-		  analystService.moveDestination(marker, $scope.scenarioCompare, map)
+		  analystService.moveDestination(
+		  function(plotData){
+		  $scope.scenarioScore.graphData = [
+				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
+				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
+				'data': plotData}
+			];
+		  d3Service.drawTimeGraph($scope.scenarioScore.graphData);	
+		},
+		  marker, $scope.scenarioCompare, map)
 		})
   };
   
@@ -408,16 +417,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 	if ($scope.pointToPoint) {
 		console.log($scope.combos);
-		this.runPrep(map, $scope.combos.sel, 0);	
-		analystService.ptpRequest(startMarker, endMarker, map, function(route, plotData){
-		  $scope.routeDesc = route;
-		  $scope.scenarioScore.graphData = [
-				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
-				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
-				'data': plotData}
-			];
-		  d3Service.drawTimeGraph($scope.scenarioScore.graphData);	
-		});	
 	}
 	else {
  
