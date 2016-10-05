@@ -71,7 +71,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
 
 
-  //!!!
+  
   this.getProposedRoutes = function (cb,variants) {
     $http.get('/load/routes')
     .success(function (data, status) {

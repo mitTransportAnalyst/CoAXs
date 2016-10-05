@@ -39,14 +39,12 @@ var csv     = require('csv-streamify');
 var analystCreds = require('request');
 
 var analystReqOpts = {
-  url: 'https://analyst-preview.conveyal.com/oauth/token',
+  url: 'https://analyst-dev.conveyal.com/oauth/token',
   method: 'POST',
   timeout: 10000,
   auth: {
-    // 'user' : process.env.analyst_key,
-    // 'pass' : process.env.analyst_secret
-    'user' : "15CNIW452U6H3G6Z6FIBYNS8Z",
-    'pass' : "c4mRG3swWFPTXJMaQu9scRQJAInSzCoWeB2isNniQWo"
+    'user' : process.env.analyst_key,
+    'pass' : process.env.analyst_secret
   },
   headers : {
     'content-type'  : 'application/x-www-form-urlencoded',
@@ -54,9 +52,6 @@ var analystReqOpts = {
   },
   body: 'grant_type=client_credentials'
 };
-
-
-
 
  app.get('/credentials', function (req, res) {
   var credExpiration = 0,
@@ -76,8 +71,6 @@ var analystReqOpts = {
 	});
   };
 });
-
-
 
 app.get('/', function (req, res) {
   res.render('index.ejs', {
@@ -267,10 +260,6 @@ app.get('/pois', function (req, res) {
     else { res.status(200).send(doc) }
   }));;
 })
-
-
-
-
 
 // this is how the app is actually started up, the port can be specified either in command line or will default to 3000
 var server = app.listen(process.env.PORT || 3000, function () {

@@ -1,73 +1,347 @@
 // this handles interactions with the analyst.js library, read the library's readme for further examples and details
-coaxsApp.service('analystService', function (supportService, $http) {
+coaxsApp.service('analystService', function (supportService, $interval, $http, $q) {
 
-
-  var defaultShapefile = '82f834ea-ba6d-478e-b4a9-651018de00f2',
-     defaultGraph = '053e9cdd5d0f3ff13d49f3e2b28230d4';
-
-  var subjects = {
-        prefix : 'lodes',
-		fields : {
-		wt_const1	:	{id:"wt_const1"	,	verbose:	 'Manufact. & Constr. | $'	},
-		wt_const2	:	{id:"wt_const2"	,	verbose:	 'Manufact. & Constr. | $$'	},
-		wt_const3	:	{id:"wt_const3"	,	verbose:	 'Manufact. & Constr. | $$$'	},
-		wt_educa1	:	{id:"wt_educa1"	,	verbose:	 'Education | $'	},
-		wt_educa2	:	{id:"wt_educa2"	,	verbose:	 'Education | $$'	},
-		wt_educa3	:	{id:"wt_educa3"	,	verbose:	 'Education | $$$'	},
-		wt_finan1	:	{id:"wt_finan1"	,	verbose:	 'Finance | $'	},
-		wt_finan2	:	{id:"wt_finan2"	,	verbose:	 'Finance | $$'	},
-		wt_finan3	:	{id:"wt_finan3"	,	verbose:	 'Finance | $$$'	},
-		wt_healt1	:	{id:"wt_healt1"	,	verbose:	 'Health Care | $'	},
-		wt_healt2	:	{id:"wt_healt2"	,	verbose:	 'Health Care | $$'	},
-		wt_healt3	:	{id:"wt_healt3"	,	verbose:	 'Health Care | $$$'	},
-		wt_hospi1	:	{id:"wt_hospi1"	,	verbose:	 'Hospitality | $'	},
-		wt_hospi2	:	{id:"wt_hospi2"	,	verbose:	 'Hospitality | $$'	},
-		wt_hospi3	:	{id:"wt_hospi3"	,	verbose:	 'Hospitality | $$$'	},
-		wt_infor1	:	{id:"wt_infor1"	,	verbose:	 'Information Services | $'	},
-		wt_infor2	:	{id:"wt_infor2"	,	verbose:	 'Information Services | $$'	},
-		wt_infor3	:	{id:"wt_infor3"	,	verbose:	 'Information Services | $$$'	},
-		wt_profe1	:	{id:"wt_profe1"	,	verbose:	 'Professional Services | $'	},
-		wt_profe2	:	{id:"wt_profe2"	,	verbose:	 'Professional Services | $$'	},
-		wt_profe3	:	{id:"wt_profe3"	,	verbose:	 'Professional Services | $$$'	},
-		wt_publi1	:	{id:"wt_publi1"	,	verbose:	 'Public Administration | $'	},
-		wt_publi2	:	{id:"wt_publi2"	,	verbose:	 'Public Administration | $$'	},
-		wt_publi3	:	{id:"wt_publi3"	,	verbose:	 'Public Administration | $$$'	},
-		wt_trade1	:	{id:"wt_trade1"	,	verbose:	 'Retail & Wholesale | $'	},
-		wt_trade2	:	{id:"wt_trade2"	,	verbose:	 'Retail & Wholesale | $$'	},
-		wt_trade3	:	{id:"wt_trade3"	,	verbose:	 'Retail & Wholesale | $$$'	},
-		wt_trans1	:	{id:"wt_trans1"	,	verbose:	 'Utilities & Transport | $'	},
-		wt_trans2	:	{id:"wt_trans2"	,	verbose:	 'Utilities & Transport | $$'	},
-		wt_trans3	:	{id:"wt_trans3"	,	verbose:	 'Utilities & Transport | $$$'	},
-		}
-  };
-
-  this.isochrones = null;
+  var token = null;	//oauth2 token for analyst-server login
+  var analystUrl = '';
+  var analystUrlBase = 'https://analyst-dev.conveyal.com/api/single?accessToken=';
+  var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/';
+  var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
+     defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
+	 workerVersion =  'v1.5.0-68-ga7c6904';
+  var indicatorAttributes = {
+    jobs:[
+	 {id: 'jobs1',
+	  grid: 'Jobs_with_earnings__1250_per_month_or_less.grid',
+	  verbose: 'Jobs | $'},
+	 {id: 'jobs2',
+	  grid: 'Jobs_with_earnings__1251_-__3333_per_month.grid',
+	  verbose: 'Jobs | $$'},
+	 {id: 'jobs3',
+	  grid: 'Jobs_with_earnings_greater_than__3333_per_month.grid',
+	  verbose: 'Jobs | $$$'}],
+	workers:[
+	 {id: 'workers1',
+	  grid: 'Workers_with_earnings__1250_per_month_or_less.grid',
+	  verbose: 'Workers | $'},
+	 {id: 'workers2',
+	  grid: 'Workers_with_earnings__1251_-__3333_per_month.grid',
+	  verbose: 'Workers | $$'},
+	 {id: 'workers3',
+	  grid: 'Workers_with_earnings_greater_than__3333_per_month.grid',
+	  verbose: 'Workers | $$$'}]};
+  var attributeUrlArray = [];
+  var indicatorNameArray = [];  
+  var attributeNameArray = [];
+  var accessibilityIndicator = [];
   
-  var Analyst = window.Analyst;
-  var analyst = new Analyst(window.L, {
-    baseUrl		   : 'https://analyst-preview.conveyal.com',
-	  apiUrl         : 'https://analyst-preview.conveyal.com/api',
-    tileUrl        : 'https://analyst-preview.conveyal.com/tile',
-    shapefileId    : defaultShapefile,
-    graphId        : defaultGraph,
-	//showPoints	   : true,
-    showIso        : true,
-  });
+  this.indicatorNameArray = indicatorNameArray;
+  
+  for (indicator in indicatorAttributes){
+    for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
+	  attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
+	  indicatorNameArray.push(indicator);
+	  attributeNameArray.push(indicatorAttributes[indicator][i]['id']);
+	}
+  };
+  var isochrones = []
+    isochrones[0] = null;
+    isochrones[1] = null;
+  var isochroneLayer0 = null;
+  var isochroneLayer1 = null;
+  var plotData = [];
+    plotData[0] = [];
+	plotData[1] = [];
+  for (var j = 0; j<=1 ; j++){
+  for (var i = 1; i<=120; i++){plotData[j][i] = [];plotData[0][i] = [];}}
+  var transitiveLayer = null;
+  var Browsochrones = window.Browsochrones;
+  var browsochrones = [];
+    browsochrones[0] = new Browsochrones();
+    browsochrones[1] = new Browsochrones();
+  
+  refreshCred = function () {
+  return new Promise(function(resolve, reject){
+  $http.get('/credentials').success(function (t, status) { 
+      token = t.access_token 
+	  analystUrl = '';
+	  analystUrl = analystUrlBase + token; 
+	  resolve();
+	});
+  })
+  };
+  this.refreshCred = refreshCred;
+  
+  var analystState = {
+  "transitive": null,
+  "isochrone": null,
+  "key": null,
+  "origin": [42.35042512243457,71.03485107421875],
+  "destination":[42.35042512243457,-71.03485107421875],
+  "staticRequest":
+	{"jobId": supportService.generateUUID(),
+	 "transportNetworkId": defaultGraph,
+	 "request": {
+		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
+		"scenario":{}
+	  }
+	}
+  };
+  
+  	//to get transit network metadata
+    var metadataBody = JSON.stringify(
+	  {
+	    "type": 'static-metadata',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest
+	  }
+	);
+	
+	//to get stopTrees (walking distances from grid cells to nearby stops)
+	var stopTreesBody = JSON.stringify(
+	  {
+	    "type": 'static-stop-trees',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest
+	  }
+	);
+	
+  scenario0 = {
+    "id": 0,
+	"feedChecksums": {
+	  "MBTA": 993571431
+	},
+    "modifications": []
+  }
+  
+  scenario1 = {
+    "id": 0,
+	"feedChecksums": {
+	  "MBTA": 993571431
+	},
+    "modifications": [
+	  {"type":"remove-trip",
+	   "routes":["MBTA:1"]
+      }]
+  }
+  
+  var checkWarmup = function(){
+    return new Promise(function(resolve, reject){
+      console.log('checking if analyst server is warmed up');
+	  refreshCred().then(function(){
+	  fetch(analystUrl,{
+		  method: 'POST',
+		  body: metadataBody
+	  }).then(function(res){
+		if(res.status == 200){
+		  console.log('analyst server is warmed up');
+	      resolve();
+		} else {
+		  setTimeout(function () {checkWarmup()} , 15000);
+		}
+	  })
+      })
+    })
+  };
+  
+  this.fetchMetadata = function () {  
+    return new Promise(function(resolve, reject){
+	checkWarmup().then(function(){
+	$q.all([ 
+		fetch(analystUrl,{
+		  method: 'POST',
+		  body: metadataBody
+		}).then(function(res){
+		  console.log('fetched metadata');
+		  return res.json()
+		}),
+		fetch(analystUrl,{
+		  method: 'POST',
+		  body: stopTreesBody
+		}).then(function(res){
+		  console.log('fetched stopTrees');
+		  return res.arrayBuffer()
+		})
+	  ])
+	  .then(function([metadata, stopTrees]){
+		browsochrones[0].setQuery(metadata);
+		browsochrones[0].setStopTrees(stopTrees);
+		browsochrones[0].setTransitiveNetwork(metadata.transitiveData);
+		browsochrones[1].setQuery(metadata);
+		browsochrones[1].setStopTrees(stopTrees);
+		browsochrones[1].setTransitiveNetwork(metadata.transitiveData);
+		resolve();
+		});
+	})
+	
+	//get destination grid data for calculating accessibility indicators
+	console.log('fetching grids');
+	
+	$q.all(attributeUrlArray.map(function(gridName){
+		return fetch(destinationUrlBase+gridName).then(function(res){
+		return res.arrayBuffer()})
+	  })).then( function(res){
+		for (i in attributeNameArray) {
+		  browsochrones[0].putGrid(attributeNameArray[i],res[i].slice(0));
+		  browsochrones[1].putGrid(attributeNameArray[i],res[i].slice(0));
+		}
+		})
+	});
+  };
+  
+  var minutes = [];
+  
+  for (i = 1; i <= 25; i++){minutes.push(i*5)};
 
-  ptpURL = 'http://coaxs.mit.edu:8080/otp/routers/default/profile'
+  var makeIsochrones = function(scenNum){
+    return new Promise(function(resolve, reject){
+    console.log('making isochrones')
+    $q.all(minutes.map(function(minute){
+	  return browsochrones[scenNum].getIsochrone(minute)})
+	  )
+	  .then(function(res){
+        isochrones[scenNum] = res;
+		resolve();
+	  })
+	})
+  };
+  
+  var makePlotData = function(minute, scenNum){
+    return new Promise(function(resolve, reject){
+    //if (minute < 60){
+	  console.log(minute);
+	  browsochrones[scenNum].generateSurface(minute).then(function(){
+	    //isochrones for all cutoff minute values can be generated once generateSurface is called for any cutoff value.
+		if (!isochrones[scenNum]){makeIsochrones(scenNum).then(function(res){resolve()})};
+	  
+		//get the accessibility results for all but the last attribute
+		for (i = 0; i < attributeNameArray.length-1; i++){
+		  browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[i],minute).then(
+		    function(res){
+		    plotData[scenNum][minute].push(res)
+		  })
+		}
+		//after getting the last attribute, increment to the next minute
+		browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[attributeNameArray.length-1],minute).then(
+		  function(res){
+		  plotData[scenNum][minute].push(res)
+		  console.log(plotData);
+		  if(isochrones[scenNum]){resolve()}
+		  // minute = minute + 10;
+		  // makePlotData(minute,cb);
+		})
+      })
+	// } else {
+	  // console.log(plotData);
+	  // cb;
+	// }
+  })
+  };
+  
+  //called when start pin is moved
+  this.moveOrigin = function (marker, isComparison){
+	return new Promise(function(resolve, reject){
+    //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
+	isochrones[0] = null;
+	isochrones[1] = null;
+	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+    var staticDefault = 
+	  {
+	    "type": 'static',
+	    "graphId": defaultGraph,
+		"workerVersion": workerVersion,
+	    "request": analystState.staticRequest,
+		"x": xy.x,
+		"y": xy.y
+	  };
+	
+	//set scenario
+	staticDefault.request.scenario = scenario0;
+	staticBody0 = JSON.stringify(staticDefault);
+	staticDefault.request.scenario = scenario1;
+	staticBody1 = JSON.stringify(staticDefault);
+	
+	//fetch a grid for travel times
+	
+	if(!isComparison){
+	  fetch(analystUrl,{
+		  method: 'POST',
+		  body: staticBody0
+		}).then(function(res){
+		  return res.arrayBuffer()
+		}).then(function(buff){
+		  browsochrones[0].setOrigin(buff, xy)
+		  .then(function(){
+            console.log('making plot data');
+			makePlotData(30,0).then(function(){resolve();})
+		  })
+		})
+	} else {
+//		$q.all([
+		// function(){return new Promise(function(resolve, reject){
+		fetch(analystUrl,{
+			  method: 'POST',
+			  body: staticBody0
+			}).then(function(res){
+			  return res.arrayBuffer()
+			}).then(function(buff){
+			  browsochrones[0].setOrigin(buff, xy)
+			  .then(function(){
+				console.log('making plot data');
+				makePlotData(30,0).then(function(){
+				//todo use $q.all
+				fetch(analystUrl,{
+			  method: 'POST',
+			  body: staticBody1
+			}).then(function(res){
+			  return res.arrayBuffer()
+			}).then(function(buff){
+			  browsochrones[1].setOrigin(buff, xy)
+			  .then(function(){
+				console.log('making plot data');
+				makePlotData(30,1).then(function(){resolve();})
+			  })
+			})
+				
+				
+				})
+			  })
+			})
+	}
+  })}
 
-
-  this.refreshCred = function () {$http.get('/credentials').success(function (token, status) { analyst.setClientCredentials(token); })};
-
-
-
-
-
-
-
-
-
-
+  
+  this.moveDestination = function (marker, isComparison, map){
+    if(transitiveLayer){map.removeLayer(transitiveLayer)};
+	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+    browsochrones[0].generateDestinationData(xy).
+	then(function(res){
+	  var transitive = res.transitive;
+	  transitive.journeys = transitive.journeys.slice(0,2);
+	  console.log(res);
+	  var transitiveLines = new Transitive({'data':transitive});
+	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
+	  map.addLayer(transitiveLayer);
+	  transitiveLayer._refresh();
+	});
+	if(isComparison){
+	  if(transitiveLayer){map.removeLayer(transitiveLayer)};
+	  
+	browsochrones[1].generateDestinationData(xy).
+	then(function(res){
+	  var transitive = res.transitive;
+	  transitive.journeys = transitive.journeys.slice(0,2);
+	  console.log(res);
+	  var transitiveLines = new Transitive({'data':transitive});
+	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
+	  map.addLayer(transitiveLayer);
+	  transitiveLayer._refresh();
+	});
+	  
+	}
+  }
+  
   var optionCurrent = {
     scenario      : {
       id            : 0,
@@ -78,22 +352,16 @@ coaxsApp.service('analystService', function (supportService, $http) {
   
   var optionC = []
   
-  optionC[0] = {
+  for (i = 0; i < 2; i++){
+  optionC[i] = {
     scenario      : {
-      id            : 0,
-      description   : 'Scenario 0 from CoAXs',
+      id            : i,
+      description   : 'Scenario ' + i + ' from CoAXs',
       modifications : []
     }
   }; 
-  
-  optionC[1] = {
-    scenario      : {
-      id            : 1,
-      description   : 'Scenario 1 from CoAXs',
-      modifications : []
-    },
-  };
-    
+  }
+      
 var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
 var agencyId = 'MBTA+v6';
 var banExtraAgencies = [
@@ -117,11 +385,9 @@ var banExtraAgencies = [
 
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
-    if (isoLayer)   { isoLayer.setOpacity(1); };
-    if (currentIso) { map.removeLayer(currentIso); };
-    if (compareIso) { map.removeLayer(compareIso); };
-    optionC[c].scenario.modifications = []
-	optionC[c].scenario.modifications.push(banExtraAgencies[0]); // empty contents of the modifications list entirely
+    if(transitiveLayer){map.removeLayer(transitiveLayer)};
+	if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
+	if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
   };
 
   this.killCompareIso = function (map) {
@@ -130,6 +396,12 @@ var banExtraAgencies = [
     compareIso = null;
   };
 
+  
+  
+  this.setScenarioNames = function (scenarioName, c){
+	optionC[c].scenario.name = scenarioName;
+  };
+  
   // filter through and remove routes that we don't want banned on each scenario SPA call
   this.modifyRoutes = function (keepRoutes, c) { 
     keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
@@ -142,10 +414,6 @@ var banExtraAgencies = [
     };
     optionC[c].scenario.modifications.push(routesMod);
   };
-
-
-
-
 
   // New modification functions  corridorID: "A", "B", "C", "D", "E"  scale: the modification scale
   this.modifyDwells = function (corridorId,scale,cb) {
@@ -199,63 +467,7 @@ var banExtraAgencies = [
       })
   };
 
-
-
-
-
-
-
-
-
-  //
-  //
-  // this.modifyDwells = function (keepRoutes, c) {
-  //   var dwell10 = keepRoutes.filter(function (route) { return route.station == 2; }).map(function (route) { return route.routeId; });
-  //   var dwell20 = keepRoutes.filter(function (route) { return route.station == 1; }).map(function (route) { return route.routeId; });
-  //   var dwell30 = keepRoutes.filter(function (route) { return route.station == 0; }).map(function (route) { return route.routeId; });
-  //
-  //   var dwellMod = {
-  //     type: 'adjust-dwell-time',
-  //     agencyId: agencyId,
-  //     routeId: [],
-  //     tripId: null,
-  //     stopId: null,
-  //     dwellTime: 30,
-  //   };
-  //   if (dwell10.length > 0) {
-  //     dwellMod.routeId = dwell10; dwellMod.dwellTime = 10;
-  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-  //   };
-  //   if (dwell20.length > 0) {
-  //     dwellMod.routeId = dwell20; dwellMod.dwellTime = 20;
-  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-  //   };
-  //   if (dwell30.length > 0) {
-  //     dwellMod.routeId = dwell30; dwellMod.dwellTime = 30;
-  //     optionC[c].scenario.modifications.push(angular.copy(dwellMod));
-  //   };
-  // };
-
-  // this.modifyFrequencies = function (keepRoutes, c) {
-  //   keepRoutes = keepRoutes.map(function (route) {
-  //     return {
-  //       routeId: route.routeId,
-  //       frequency: route.peak.min * 60 + route.peak.sec
-  //     };
-  //   });
-  //
-  //   keepRoutes.forEach(function (route) {
-  //     optionC[c].scenario.modifications.push({
-  //       type: 'adjust-headway',
-  //       agencyId: agencyId,
-  //       routeId: [route.routeId],
-  //       tripId: null,
-  //       headway: route.frequency,
-  //     });
-  //   });
-  // }
-
-  this.modifyModes = function (routeTypes) {
+  this.modifyModes = function (routeTypes, c) {
     optionC[c].scenario.modifications.push({
       type: 'remove-trip',
       agencyId: agencyId,
@@ -289,68 +501,29 @@ var banExtraAgencies = [
   this.deleteTileIsos = function (map) {
     if(isoLayer){map.removeLayer(isoLayer)};
   }
-
-
   
-  //point-to-point result
-  this.ptpRequest = function (startMarker, endMarker, map, cb) {
-    fromLat = startMarker.lat;
-	fromLng = startMarker.lng;
-	toLat = endMarker.lat;
-	toLng = endMarker.lng;
-
-
-
-
-
-    $http.get('http://ansons.mit.edu:8080/plan?fromLat='+fromLat+'&fromLon='+fromLng+'&toLat='+toLat+'&toLon='+toLng+'&mode=WALK&full=true').then(function successCallback(res){
-	  console.log(res);
-  })
+  this.prepCustomScenario = function (customAnalystRequest, c) {
+	console.log('prepping custom scenario');
+	optionC[c] = null;
+	console.log(optionC);
+	optionC[c] = customAnalystRequest;
+	console.log(optionC);
+	optionC[c].scenario.modifications.push(banExtraAgencies[0])
+	console.log(optionC);
+  };
   
-  $http.get(ptpURL+'?from='+fromLat+','+fromLng+'&to='+toLat+','+toLng+'&startTime=7:30&endTime=08:30&date=2015-10-19&accessModes=WALK&transitModes=TRANSIT&egressModes=WALK&maxWalkTime=10&limit=1').then(function successCallback(res){
-
-	  console.log(res.data);
-	  
-	  tRoute = null;
-	  wRoute = null;
-	  
-	  res.data.options.forEach(function(route) {
-	    route.transit ? tRoute = route : wRoute = route;
-	  })
-
-		  walkTime = tRoute.access[0].time + tRoute.egress[0].time
-		  waitTime = 0;
-		  rideTime = 0;
-		  
-		  tRoute.transit.forEach(function(t){
-		    average_rideTime = rideTime + t.rideStats.avg;
-			average_waitTime = waitTime + t.waitStats.avg;
-			worstca_rideTime = rideTime + t.rideStats.max;
-			worstca_waitTime = waitTime + t.waitStats.max;
-			walkTime = walkTime + t.walkTime;
-		  });
-		  
-		  plotData = {'Average':{'average_walkTime' : walkTime,
-			'average_waitTime' : average_waitTime,
-			'average_rideTime' : average_rideTime,},
-			'Worst Case':{'worstca_walkTime' : walkTime,
-			'worstca_waitTime' : worstca_waitTime,
-			'worstca_rideTime' : worstca_rideTime,}}
-		  
-		  cb(tRoute.summary, plotData);
-	}, function errorCallback(){
-		console.log('error in ptp')
-    })
-  }
-
   this.singlePointComparison = function (marker, map, cb) {
    	console.log(optionC[0]);
 	console.log(optionC[1]);
 	
+	optionC[0].graphId? graph0 = optionC[0].graphId : graph0 = defaultGraph;
+	optionC[1].graphId? graph1 = optionC[1].graphId : graph1 = defaultGraph;
+
+	
 	analyst.singlePointComparison({
       lat : marker.lat,
       lng : marker.lng,
-    }, defaultGraph, defaultShapefile, optionC[1], optionC[0])
+    }, graph1, graph0, defaultShapefile, optionC[1], optionC[0])
 		.then(function (response) {
 			var plotData = {};
 			var cPlotData = {};
@@ -385,10 +558,16 @@ var banExtraAgencies = [
   
   // actually run the SPA and handle results from library
   this.singlePointRequest = function (marker, map, timeLimit, cb) {
+	console.log(optionC[0])
+	
+	optionC[0].graphId? graph = optionC[0].graphId : graph = defaultGraph;
+	scenario = [];
+	scenario[0] = {'scenario': optionC[0].scenario};
+	
 	analyst.singlePointRequest({
       lat : marker.lat,
       lng : marker.lng,
-    }, defaultGraph, defaultShapefile, optionC[0])
+    }, graph, defaultShapefile, scenario[0])
     .then(function (response) { 
         isoLayer = analyst.updateSinglePointLayer(response.key, null, 7200);
 		isoLayer.addTo(map).on('load', function(e){
@@ -398,7 +577,6 @@ var banExtraAgencies = [
 		});
 		//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
 		//isoLayerOld.addTo(map);
-		console.log(isoLayer);
 	  var plotData = subjects.fields;
       for (key in subjects.fields) {
         var id = subjects.prefix+'.'+subjects.fields[key].id;
@@ -409,6 +587,7 @@ var banExtraAgencies = [
       cb(response.key, plotData);
     })
     .catch(function (err) {
+      console.log(err);
     });
   };
   
@@ -420,44 +599,11 @@ var banExtraAgencies = [
 	}
   //
 
-  // explicitly run request for vector isochrones
-  this.vectorRequest = function (marker, compareTrue, cb) {
-	//single-point request for baseline scenario, with null destination shapefile null to retrieve vector isochrones
-	analyst.singlePointRequest({
-      lat : marker.lat,
-      lng : marker.lng,
-    }, defaultGraph, null, optionC[0])
-    .then(function (response) {
-      //then, if a comparison, run a second single-point request for new scenario, with null destination shapefile null to retrieve vector isochrones
-	  if (compareTrue) { 
-		vecComIsos = response.isochrones;
-		analyst.singlePointRequest({
-			lat : marker.lat,
-			lng : marker.lng,
-		}, defaultGraph, null, optionC[1])
-		.then(function (response) {
-			vectorIsos = response.isochrones;
-			cb(response.key, true);
-		}
-	  )}
-      else { 
-		vectorIsos = response.isochrones; 
-		cb(response.key, true);
-	  }
-    });
-  };
-
   // swap between tile layer and vector isos layer
-  this.showVectorIsos = function(timeVal, map) {
-    if (isoLayer) { isoLayer.setOpacity(0)};
-	if (isoLayerOld) {isoLayerOld.setOpacity(0)};
-    if (currentIso) { map.removeLayer(currentIso); };
-    if (compareIso) { map.removeLayer(compareIso); };
-
-    var isosArray = vectorIsos.pointEstimate.features;
-    for (var i=0; i<isosArray.length; i++) { 
-      if (isosArray[i].properties.time == timeVal) { 
-        currentIso = L.geoJson(isosArray[i], {
+  this.showVectorIsos = function(timeVal, map, isComparison) {
+		if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
+		if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
+		isochroneLayer0 = L.geoJson(isochrones[0][timeVal], {
           style: {
             stroke      : true,
             fillColor   : '#FDB813',
@@ -467,34 +613,23 @@ var banExtraAgencies = [
             opacity     : 1
           }
         });
-        currentIso.addTo(map);
-      }
-    }
+        isochroneLayer0.addTo(map);
 
-    if (vecComIsos) {
-      var isosArray = vecComIsos.pointEstimate.features;
-      for (var i=0; i<isosArray.length; i++) { 
-        if (isosArray[i].properties.time == timeVal) { 
-          compareIso = L.geoJson(isosArray[i], {
-            style: {
-              stroke      : true,
-              fillColor   : '#89cff0',
-              color       : '#45b3e7',
-              weight      : 1,
-              fillOpacity : 0.25,
-              opacity     : 1
-            }
-          });
-          compareIso.addTo(map);
-        }
-      }  
+    if (isComparison) {
+      if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
+	  isochroneLayer1 = L.geoJson(isochrones[1][timeVal], {
+          style: {
+            stroke      : true,
+            fillColor   : '#89cff0',
+			color : '#45b3e7',
+            weight      : 1,
+            fillOpacity : 0.25,
+            opacity     : 1
+          }
+        });
+        isochroneLayer1.addTo(map);
+	  
     }
   };
 
 });
-
-
-
-
-
-

@@ -581,7 +581,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
         .domain(indicators2)
         .rangeBands([width/3 + 5,width-10], .2),
 	  
-	xScale ? '': xScale = xScale2;
+	xScale ? xScale3 = xScale : xScale3 = xScale2;
 	  
 	xAxis2 = d3.svg.axis()
         .scale(xScale2)
@@ -616,7 +616,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 			return (d.y*height/1500000);
 		})
         .attr('width', function (d) {
-			return xScale.rangeBand();
+			return xScale3.rangeBand();
 		})
 		.on('click', function (d) {
 			selCode = d.attr;
@@ -625,7 +625,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		})
         .on('mouseover', function (d) {
 			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
-			var xPos = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2 +100;
+			var xPos = parseFloat(d3.select(this).attr('x')) + xScale3.rangeBand() / 2 +100;
 
 			d3.select('#tooltip')
 				.style('left', xPos + 'px')
@@ -713,7 +713,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.attr("class", "stat")
 		.append("text")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[0])+xScale.rangeBand()-3)
+        .attr("x", xScale2(indicators2[0])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
         .html( function (){
 		  return d3.format(",")(d3.round(total[0][cutoff*5-1].y,-3));
@@ -728,7 +728,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.attr("id","subTotal")
 		.attr("y", 38-margins.top)
         .attr("x", function(d){
-			return xScale2(d[0][0].x)+xScale.rangeBand()-3})
+			return xScale2(d[0][0].x)+xScale3.rangeBand()-3})
 		.style("text-anchor","end");
 		
 	if (dataset[1]){
@@ -737,7 +737,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.append("text")
 		.attr("class", "stat")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[1])+xScale.rangeBand()-3)
+        .attr("x", xScale2(indicators2[1])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
 		.html( function (){
 		  return d3.format(",")(d3.round(total[1][cutoff*5-1].y,-3));
@@ -749,7 +749,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.append("text")
 		.attr("class","stat")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+14)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale3.rangeBand()+14)
 		.style("text-anchor","start")
 		.style("opacity", 0.75)
         .html("Total");
@@ -759,7 +759,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.attr("id","subsetLabel")
 		.attr("class","stat")
 		.attr("y", 38-margins.top)
-        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+14)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale3.rangeBand()+14)
 		.style("text-anchor","start")
 		.style("opacity", 0.75)
 		.style("fill", attributes.get(selCode).color)

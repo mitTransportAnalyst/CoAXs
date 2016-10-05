@@ -8,10 +8,10 @@
 
 <!-- hamburger menu topleft -->
 <div class="topnav">
-  <div class="fa-stack" ng-click="visibleTabs.routes=!visibleTabs.routes">
+<!--   <div class="fa-stack" ng-click="visibleTabs.routes=!visibleTabs.routes">
     <i class="fa fa-stop fa-stack-2x"></i>
     <i class="fa fa-bars fa-stack-1x fa-inverse"></i>
-  </div>
+  </div> -->
 
   <div class="legend">
     <div class="panel panel-default">
@@ -64,42 +64,6 @@
 <!-- upper views -->
 
 <div class="topcol">
-
-
-  <div class="topright" ng-show="scenarioScorecard">
-    <h4>
-      <i class="fa fa-bar-chart"></i>&nbsp Data for
-      <span ng-show="!combos.sel">Existing MBTA</span>
-      <span ng-show="combos.sel">Scenario: {{ combos.all[combos.sel].name }} </span>
-      <i class="fa fa-times-circle-o pull-right" ng-click="scenarioScorecard = false"></i>
-    </h4>
-    <div class="topinfo-body container" style="min-height:250px">
-
-      <div style="height: 300px; position: absolute; left: 10px">
-        <center>
-
-          <div class="btn-group" dropdown>
-            <button id="split-button" type="button" class="btn btn-success"
-                    ng-click="drawGraph(scenarioScore.graphData)">
-              {{ scenarioScore.graphData.sel.verbose }}
-            </button>
-            <button type="button" class="btn btn-success" dropdown-toggle>
-              <span class="caret"></span>
-              <span class="sr-only">Split button!</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="(id, dataVal) in scenarioScore.graphData.all"
-                  ng-click="selectGraphData(id)"
-                  value="{{ id }}">
-                <a href="">{{ dataVal.verbose }}</a>
-              </li>
-            </ul>
-          </div>
-        </center>
-        <svg id="compPlot" width="500" height="200"></svg>
-      </div>
-    </div>
-  </div>
 
   <div class="topright" style="background-color: {{variants[tabnav].color}}" ng-show="routeScorecard">
     <h4>
@@ -185,81 +149,72 @@
 
   <!--Intro screen-->
 
-  <div class="topleft">
+<div class="topleft">
     <h4>
-      <b>CoAXs</b> | Bus Priority | Beta Version
-      <i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
-    </h4>
-    <div class="topinfo-body container" style="min-height:75vh">
-
+      <b>CoAXs</b> | Bus Priority
+	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
+	</h4>
+	<div class="topinfo-body container" style="min-height:75vh">
+	
       <div style="height: 100%">
-        <h5>Innovation happens where the right people can work together.
-          <br>Innovative companies need access to a wide workforce.
-          <br>
-          <br>Click a station to see how transit provides the <i>reach</i> and <i>capacity</i> required to connect
-          workers and jobs.
-          <br>
-          <br>
-          <!--<div class="row station-list">-->
-            <!--<div class="col-xs-3" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">-->
-              <!--<div class="station-sign" style="cursor: pointer;">-->
-                <!--<div class="leaflet-popup-content">-->
-                  <!--<p style="background-color: {{cordon.color}}">{{cordonId}}</p>-->
-                  <!--<p style="background-color: white; padding-bottom:4px;"-->
-                     <!--ng-class="selCordon === cordonId ? 'blackText' : ''"><i class="fa fa-check-circle"-->
-                                                                             <!--ng-show="scenarioScore.graphData"></i>-->
-                    <!--<i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData"></i>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="col-s-1">-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <br>
-          <div ng-click="togglePointToPoint()" style="cursor: pointer;">
-            Point-to-point mode
-            <i class="fa fa-check-square" ng-show="pointToPoint"></i>
-            <i class="fa fa-square" ng-show="!pointToPoint"></i>
-          </div>
-          <br>
-          <div id="tooltip" class="hidden" style="z-index:10">
-            <p><span id="value"></span>
-            </p>
-          </div>
-          <div style="width:40%; float: right;" ng-show="selCordon">
-            Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
-            <svg id="plot1" width="400" height="400" style="z-index:2"></svg>
-          </div>
-          <div style="width:60%; float: left" ng-show="scenarioScore.graphData && !pointToPoint">
-            {{indicator.all[indicator.sel]}} reachable from {{cordons[selCordon].verbose}} <img
-            src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"><br>
-            within {{vectorIsos.val*5 | minuteConverter}} by public transit:
-            <svg id="compPlot2" width="440" height="400"></svg>
-          </div>
-          <div style="width:60%; float: left" ng-show="pointToPoint">
-            Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png"
-                                                                 style="height:24px" ng-show="!selCordon"> to <img
-            src="public/imgs/marker-flag-end-shadowed.png" style="height:24px">
-            <br>using {{routeDesc.substring(6)}}
-            <svg id="compPlot3" width="440" height="400"></svg>
-          </div>
-        </h5>
+		<h5 ng-show="!loadProgress.vis">Drag the map pin.</h5>
 
+		<div id="tooltip" class="hidden" style="z-index:10">
+			<p><span id="value"></span>
+			</p>
+		</div>
+		<div style="width:40%; float: right;" ng-show = "selCordon">
+		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
+		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
+		</div>
+		<div ng-show = "!pointToPoint">
+		<svg id="compPlot2" width="440" height="400"></svg>
+		<br>
+		<div class="btn-group" dropdown>
+            <button id="split-button" type="button" class="btn btn-success"
+                    ng-click="drawGraph(scenarioScore.graphData)">
+              {{ indicators.all[indicators.sel] }}
+            </button>
+            <button type="button" class="btn btn-success" dropdown-toggle>
+              <span class="caret"></span>
+              <span class="sr-only">Split button!</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-repeat="(id, verbose) in indicators.all" 
+                  ng-click="selectGraphData(id)"
+                  value="{{ id }}">
+                <a href="">{{ verbose }}</a>
+              </li>
+            </ul>
+        </div>
+		reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon">
+		within	{{vectorIsos.val*5 | minuteConverter}} by public transit
+		</div>
+		<div ng-show = "pointToPoint">
+			<svg id="compPlot3" width="440" height="400"></svg>
+			<br>
+			Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> 
+		</div>
+		          
+		
+		</h5>
+		
       </div>
-      <!-- 	<div>
-        <h4>More Info</h4>
-         <ul>
-         <li>CoAXs (Collaborative Access-based Stakeholder Engagement) is a project of the <br> Mobility Futures Collaborative at MIT: <a href="https://mfc.mit.edu/innovations-participatory-design-brt-systems"> mfc.mit.edu <img style="float: right; height: 100px" src="public/imgs/mfc_qr.png"></a></li>
-         <li>This preliminary analysis does not guarantee accuracy, and is not directly related to <a href="http://northsouthraillink.org">northsouthraillink.org</a></li>
-         <li>Transport network analysis via <a href="http://conveyal.com/projects/analyst/"> Conveyal Transport Analyst</a></li>
-         <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com/">Mapbox</a></li>
-         </ul>
-        <br>
-        <br>
-        </div> -->
-    </div>
+<!-- 	<div>
+	<h4>More Info</h4>
+	 <ul>
+	 <li>CoAXs (Collaborative Access-based Stakeholder Engagement) is a project of the <br> Mobility Futures Collaborative at MIT: <a href="https://mfc.mit.edu/innovations-participatory-design-brt-systems"> mfc.mit.edu <img style="float: right; height: 100px" src="public/imgs/mfc_qr.png"></a></li>
+	 <li>This preliminary analysis does not guarantee accuracy, and is not directly related to <a href="http://northsouthraillink.org">northsouthraillink.org</a></li>
+	 <li>Transport network analysis via <a href="http://conveyal.com/projects/analyst/"> Conveyal Transport Analyst</a></li>
+	 <li>Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com/">Mapbox</a></li>
+	 </ul>
+	<br>
+	<br>
+	</div> -->
+	</div>
   </div>
 </div>
+
 
 
 <div class="bottomCol">
@@ -481,7 +436,13 @@
 		  </span>
         </div>
       </div>
-
+	  <br>
+	  <br>
+	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;">
+		Point-to-point mode 
+		<i class="fa fa-check-square" ng-show="pointToPoint"></i>
+		<i class="fa fa-square" ng-show="!pointToPoint"></i>
+	  </div>
 
     </div>
   </div>
@@ -513,8 +474,7 @@
 
       <div class="btn-group btn-group-justified">
 
-        <label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'"
-               ng-click="scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison
+         <label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'" ng-click="resetMap(); scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison 
         </label>
 
 
