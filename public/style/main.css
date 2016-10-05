@@ -95,7 +95,7 @@ nav div.section {
 }
 
 .topleft {
-  width            : 635px;
+  width            : 650px;
   overflow         : hidden;
   z-index: 10;
   background-color : #696969
@@ -507,7 +507,7 @@ input {
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width            : 62.5%;
+  width            : 64%;
   position         : absolute;
   left : 650px;
   z-index 		   : 9;
