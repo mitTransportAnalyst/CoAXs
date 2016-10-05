@@ -927,11 +927,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
       },
       param   : {
-        'A' : {dwell:0.6, frequency:0.75, runningTime: 0.71},
-        'B' : {dwell:0.6, frequency:0.75, runningTime: 0.71},
-        'C' : {dwell:0.6, frequency:0.75, runningTime: 0.71},
-        'D' : {dwell:0.6, frequency:0.75, runningTime: 0.71},
-        'E' : {dwell:0.6, frequency:0.75, runningTime: 0.71}
+        'A' : {dwell:60, frequency:75, runningTime: 71},
+        'B' : {dwell:60, frequency:75, runningTime: 71},
+        'C' : {dwell:60, frequency:75, runningTime: 71},
+        'D' : {dwell:60, frequency:75, runningTime: 71},
+        'E' : {dwell:60, frequency:75, runningTime: 71}
       }
 };
 
