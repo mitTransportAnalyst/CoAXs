@@ -30,6 +30,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:100, frequency:100, runningTime: 100}
   };
 
+   
+  $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
   
   $scope.selField = 'wt_finan3';
@@ -299,7 +301,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   refreshOrigin = function (marker){
     animateProgressBar();
 		$scope.resetMap();
-		analystService.moveOrigin(marker, $scope.scenarioCompare).then(function(){
+		analystService.moveOrigin(marker, $scope.scenarioCompare, $scope.scenario0, $scope.scenario1).then(function(){
 		  finishProgressBar();
 		  $scope.showVectorIsosOn = true;
 		  $scope.loadProgress.vis = false;
@@ -318,7 +320,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 			];
 		  d3Service.drawTimeGraph($scope.scenarioScore.graphData);	
 		},
-		  marker, $scope.scenarioCompare, map)
+		  marker, $scope.scenarioCompare, map, $scope.scenario0, $scope.scenario1)
 		})
   };
   
@@ -937,54 +939,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
 
-  //New modification test
-  var postJSON = {"destinationPointsetId":"82f834ea-ba6d-478e-b4a9-651018de00f2","graphId":"650b39507bce5c884334aa960deb093d","type":"analyst","profileRequest":{"fromLat":42.35448465106744,"fromLon":-71.05133056640625,"toLat":42.35448465106744,"toLon":-71.05133056640625,"date":"2015-12-22","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":20,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"analyst":true,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":220,"scenario":{ "id": 0,
-    "description": "LS_Scenario_Baseline",
-    "feedChecksums": {
-      "MBTA": 993571431
-    },
-    "modifications":[]}}};
-
-
-  console.log(postJSON);
-
-  var currentModificationJSON = [];
-
-  analystService.modifyDwells("A",5,function(modifyJSON){
-    modifyJSON.forEach(function (route) {
-      currentModificationJSON.push(route);
-    });
-      console.log(currentModificationJSON);
-  });
-
-
-  analystService.modifySpeed("A",10,function(modifyJSON){
-    modifyJSON.forEach(function (route) {
-      currentModificationJSON.push(route);
-    });
-    console.log(currentModificationJSON);
-  });
-
-
-
-  analystService.modifyFrequency("A",10,function(modifyJSON){
-    modifyJSON.forEach(function (route) {
-      currentModificationJSON.push(route);
-    });
-    console.log(currentModificationJSON);
-  });
-
-  //use for test
-  // window.setTimeout(function(){
-  //   postJSON.profileRequest.scenario.modifications = currentModificationJSON;
-  //   postJSON = JSON.stringify(postJSON);
-  //
-  //   console.log(postJSON);
-  //
-  // }, 2000);
-
-
-
 
 
 
@@ -1163,5 +1117,113 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     saveAs(blob, "sessionSave.json");
   }
 
+  
+  $scope.letters = ['A','B','C','D','E'];
+
+
+  $scope.updateSelectScenario = function (comboIndex) {
+    var currentModificationJSON = [];
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  $scope.combos.all[comboIndex].param[key].dwell/100;
+      console.log(tempNum);
+
+      analystService.modifyDwells(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    })
+
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  1/($scope.combos.all[comboIndex].param[key].runningTime/100);
+      console.log(tempNum);
+
+      analystService.modifySpeed(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    });
+
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  $scope.combos.all[comboIndex].param[key].frequency/100;
+      console.log(tempNum);
+
+      analystService.modifyFrequency(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    });
+
+
+    $scope.scenario0.modifications = currentModificationJSON;
+
+    console.log($scope.scenario0);
+
+  }
+
+
+
+  $scope.updateComScenario = function (comboIndex) {
+    var currentModificationJSON = [];
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  $scope.combos.all[comboIndex].param[key].dwell/100;
+      console.log(tempNum);
+
+      analystService.modifyDwells(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    })
+
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  1/($scope.combos.all[comboIndex].param[key].runningTime/100);
+      console.log(tempNum);
+
+      analystService.modifySpeed(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    });
+
+
+    $scope.letters.forEach(function (key){
+
+      var tempNum =  $scope.combos.all[comboIndex].param[key].frequency/100;
+      console.log(tempNum);
+
+      analystService.modifyFrequency(key,tempNum,function(modifyJSON){
+        modifyJSON.forEach(function (route) {
+          currentModificationJSON.push(route);
+        });
+        console.log(currentModificationJSON);
+      });
+    });
+
+
+    $scope.scenario1.modifications = currentModificationJSON;
+
+    console.log($scope.scenario1);
+
+  }
+  
 
 });

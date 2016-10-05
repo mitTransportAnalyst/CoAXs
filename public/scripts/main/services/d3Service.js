@@ -338,7 +338,7 @@ this.drawTimeGraph = function(plotData, indicator) {
    
     xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
 
-    yRange = d3.scale.linear().domain([0, 120 //d3.max(combined, function (d) {   return d.y;})
+    yRange = d3.scale.linear().domain([0, yMax //d3.max(combined, function (d) {   return d.y;})
     ]).range([height,0]);
 	  
 	xScale2 = d3.scale.ordinal()

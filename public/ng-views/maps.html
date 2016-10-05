@@ -518,7 +518,7 @@
               </div>
             </div>
 
-            <div style="width:100%;position:absolute;left:22px;" ng-click="updateLeftRoutes(combo._key); combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateScenarioScorecard(combos.sel)">
+            <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateSelectScenario(combos.sel)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
                 <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | F:{{combo.param[variant._key].frequency}}  </small>
@@ -532,7 +532,7 @@
 
             <div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
                  ng-show="combos.sel !== combo._key && combos.com !== combo._key &&  scenarioCompare"
-                 ng-click="combos.com=combo._key; $event.stopPropagation(); preMarkerQuery()">
+                 ng-click="combos.com=combo._key; $event.stopPropagation(); preMarkerQuery();updateComScenario(combos.com)">
               <i ng-show="!combos.com" class="fa fa-circle-o faa-pulse animated"></i>
               <i ng-show="combos.com" class="fa fa-circle-o"></i>
             </div>

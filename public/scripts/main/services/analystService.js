@@ -200,13 +200,13 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		for (i = 0; i < attributeNameArray.length-1; i++){
 		  browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[i],minute).then(
 		    function(res){
-		    plotData[scenNum][minute].push(res)
+		    //plotData[scenNum][minute].push(res)
 		  })
 		}
 		//after getting the last attribute, increment to the next minute
 		browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[attributeNameArray.length-1],minute).then(
 		  function(res){
-		  plotData[scenNum][minute].push(res)
+		  //plotData[scenNum][minute].push(res)
 		  console.log(plotData);
 		  if(isochrones[scenNum]){resolve()}
 		  // minute = minute + 10;
