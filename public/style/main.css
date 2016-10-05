@@ -507,7 +507,7 @@ input {
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width            : 64%;
+  width            : 66%;
   position         : absolute;
   left : 650px;
   z-index 		   : 9;
