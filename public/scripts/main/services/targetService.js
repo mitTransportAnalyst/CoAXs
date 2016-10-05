@@ -57,18 +57,26 @@ coaxsApp.service('targetService', function (leafletData) {
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
   // pans to the bounds of that site, as well
-	this.targetCorridor = function (routesLayer, id) {
-	  console.log(id);
+	this.targetCorridor = function (routesLayer, trunkLayer,id) {
 	  leafletData.getMap('map_right').then(function(map) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
 	      if (layer.options.base.corridorId == id) {
-	        layer.setStyle({opacity: 0.6, weight: 4});
+	        layer.setStyle({opacity: 0.8, weight: 2, color:"#555555"});
 	        tempBounds = layer.getBounds();
 	      } else {
-	        layer.setStyle({opacity: 0.2, weight: 2});
+	        layer.setStyle({opacity: 0.1, weight: 0.5, color:"#555555"});
 	      }
 	    });
+      trunkLayer.eachLayer(function (layer) {
+        if (layer.options.base.corridorId == id) {
+          layer.setStyle({opacity: 0.8, weight: 10});
+          tempBounds = layer.getBounds();
+        } else {
+          layer.setStyle({opacity: 0.1, weight: 0.5});
+        }
+      });
+
 	    map.fitBounds(tempBounds);
 	  });
 	  return routesLayer

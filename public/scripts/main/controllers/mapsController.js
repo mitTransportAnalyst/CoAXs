@@ -5,7 +5,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
-    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 400 + 'px';
+    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 375 + 'px';
     document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35 +230) + 'px';
   };
   runScreenSetUp();
@@ -20,6 +20,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     routeId  : null,
     peak     : { min : 10,  sec : 0 },
     offpeak  : { min : 20, sec : 0 },
+  };
+
+  $scope.currentParam = {
+    'A' : {dwell:100, frequency:100, runningTime: 100},
+    'B' : {dwell:100, frequency:100, runningTime: 100},
+    'C' : {dwell:100, frequency:100, runningTime: 100},
+    'D' : {dwell:100, frequency:100, runningTime: 100},
+    'E' : {dwell:100, frequency:100, runningTime: 100}
   };
 
   $scope.pointToPoint = false;
@@ -79,6 +87,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	  cordonsLayer 	  = null,
       stopsLayer      = null,
       routesLayer     = null,
+      trunkLayer      = null,
       poiUserPoints   = null,
       existingMBTAKey = null;
 
@@ -451,11 +460,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
-	// var gs = true;
-   //  loadService.getExisting(function (subways) {
-   //    subways.addTo(map);
-   //    subwaysLayer = subways;
-   //  },gs);
+	var gs = true;
+    loadService.getExisting(function (subways) {
+      subways.addTo(map);
+      subwaysLayer = subways;
+    },gs);
 
 
 
@@ -512,36 +521,22 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
+
+    }, $scope.variants);
 
 
+    loadService.getTrunk(function (data) {
+      trunkLayer = data.layerGroup;
+      trunkLayer.addTo(map);
 
       // rbind routes to scope
       $scope.routes = data.geoJsons;
       var routes = data.geoJsons;
 
-
-      // iterate through routes and set the default scenario values
-      for (var key in routes) {
-        var tabnavAlt = routes[key].options.base.corridorId;
-
-        var rewind = angular.copy($scope.scenario[tabnavAlt]);
-
-        $scope.scenario[tabnavAlt].name = routes[key].options.base.pid;
-		$scope.scenario[tabnavAlt].num = routes[key].options.base.pid;
-        $scope.scenario[tabnavAlt].routeId = routes[key].options.base.shape_id;
-
-
-        // $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
-
-        // var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
-        // $scope.newVariant(tabnavAlt, isDefault);
-        // if (!isDefault) {
-        //   $scope.scenario[tabnavAlt].name = rewind.name;
-        //   $scope.scenario[tabnavAlt].routeId = rewind.routeId;
-        //   $scope.scenario[tabnavAlt].station = rewind.station;
-        // };
-      };
-    });
+    },$scope.variants);
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/proposed_stops', function (stops) {
@@ -558,7 +553,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		cordonsLayer = cordonGeos;
 		$scope.cordons = cordonData;
 	});
-	
+
     // loadService.getExisting(function (subways) {
     //   subways.addTo(map);
     //   subwaysLayer = subways;
@@ -568,7 +563,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       routesLayer = data.layerGroup;
       routesLayer.addTo(map);
 
-      console.log(routesLayer);
 
       // rbind routes to scope
       $scope.routes = data.geoJsons;
@@ -612,9 +606,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
             stationLatLng = [marker._latlng.lat, marker._latlng.lng],
             size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
             strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station
-			
-   
+			stationName = marker.options.base.station;
+
+
 		var stationNamePopup = L.popup({
 			  closeButton: false,
 			  className: 'station-sign'
@@ -623,7 +617,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
-			
+
 		circleList.push(L.circle(stationLatLng, size, {
           stroke: stationStroke,
 		  color: "#000000",
@@ -632,43 +626,27 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           fillColor: stationColor,
           fillOpacity: 0.9,
 		}).bindPopup(stationNamePopup));
-	    
+
 	  });
-	
+
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
-	
+
     // load user points from phil's google spreadsheet
 
   });
 
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (variant) {
-    if(variant){
-    targetService.targetCorridor(routesLayer, variant._key);
+    targetService.targetCorridor(routesLayer, trunkLayer ,variant._key);
     // targetService.targetStops(stopsLayer, null);
 	// targetService.targetPriority(priorityLayer, null);
 	$scope.tabnav = variant._key;
-      console.log($scope.tabnav);
-	$scope.variants[$scope.tabnav].sel == null? $scope.routeScorecard=false : $scope.updateRouteScorecard($scope.scenario[$scope.tabnav].routeId, $scope.tabnav);}
+	$scope.variants[$scope.tabnav].sel = true;
   };
 
-  // update a specific route within a corridor
-  $scope.updateTargetFeature = function (variant) {
-    var routeId = variant ? variant.routeId : undefined;
-    var station = variant ? variant.station : 2;
-    var routeColor = variant ? $scope.routes[variant.routeId][0].options.base.routeColor : undefined;
-	if(routeId){
-    targetService.targetCorridor(routesLayer, routeId);
-    targetService.targetStops(stopsLayer, routeId, station, routeColor);
-	targetService.targetPriority(priorityLayer, routeId);}
-    if (routeId) {
-      $scope.targetFeature = targetService.newTargetFeature(routeId, routesLayer);
-    } else {
-      $scope.targetFeature = {};
-    }
-  };
+
 
   // create a new route variant based off of existing scenario settings
   $scope.newVariant = function (tabnav, autoSet) {
@@ -715,24 +693,27 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }
   };
 
+  $scope.saveScenarioNum = 2;
   // create a new total scenario to send over to the left map
-  $scope.newCombo = function (name) {
+  $scope.newCombo = function () {
     var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
-      name    : name,
+    $scope.combos.all[$scope.saveScenarioNum] = {
+      name    : "Temp " + $scope.saveScenarioNum,
       created : Date.now(),
       sel     : {
-        'A' : $scope.variants['A'].sel,
-		'B' : $scope.variants['B'].sel,
-        'C' : $scope.variants['C'].sel,
-        'D' : $scope.variants['D'].sel,
-        'I' : $scope.variants['I'].sel,
-      }
+     //    'A' : $scope.variants['A'].sel,
+		// 'B' : $scope.variants['B'].sel,
+     //    'C' : $scope.variants['C'].sel,
+     //    'D' : $scope.variants['D'].sel,
+     //    'I' : $scope.variants['I'].sel,
+      },
+      param : $scope.currentParam
     };
-    $scope.updateLeftRoutes(comboId);
-    $scope.combos.sel = comboId;
-    $scope.comboName = null;
+    // $scope.combos.sel = comboId;
+    // $scope.comboName = null;
     runMarkerQuerys();
+    console.log($scope.combos);
+    $scope.saveScenarioNum += 1;
   }
 
   // how we update the scorecard on the right side, also bound to events like range slider
@@ -795,12 +776,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }
   }
 
-  
+  //save
   $scope.saveAltButton = function () {
-    if($scope.saveAlt) {
-	  $scope.newVariant($scope.tabnav,true);
-	}
-	$scope.saveAlt=!$scope.saveAlt;
+
+
+
+
+
+
   }
 
   // this is to control against having offpeak val lower than peak val
@@ -923,29 +906,36 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	
 	if(!$scope.defaultsBuilt){
 	var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
+    $scope.combos.all[0] = {
       name    : 'BASELINE',
       created : Date.now(),
       sel     : {
-		'A' : $scope.variants['A'].sel,
-        'B' : null,
-        'C' : null,
-        'D' : null,
-        'I' : null,
+      },
+      param   : {
+        'A' : {dwell:100, frequency:100, runningTime: 100},
+        'B' : {dwell:100, frequency:100, runningTime: 100},
+        'C' : {dwell:100, frequency:100, runningTime: 100},
+        'D' : {dwell:100, frequency:100, runningTime: 100},
+        'E' : {dwell:100, frequency:100, runningTime: 100}
       }
     };
     var comboId = supportService.generateUUID();
-    $scope.combos.all[comboId] = {
+    $scope.combos.all[1] = {
       name    : 'UPGRADES',
       created : Date.now(),
       sel     : {
-        'A' : Object.keys($scope.variants['A'].all)[0],
-		'B' : Object.keys($scope.variants['B'].all)[2],
-        'C' : Object.keys($scope.variants['C'].all)[1],
-        'D' : Object.keys($scope.variants['D'].all)[1],
-        'I' : null,
+
+      },
+      param   : {
+        'A' : {dwell:100, frequency:100, runningTime: 100},
+        'B' : {dwell:100, frequency:100, runningTime: 100},
+        'C' : {dwell:100, frequency:100, runningTime: 100},
+        'D' : {dwell:100, frequency:100, runningTime: 100},
+        'E' : {dwell:100, frequency:100, runningTime: 100}
       }
 };
+
+
   $scope.defaultsBuilt = true;
   }
   }

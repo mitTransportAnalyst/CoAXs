@@ -95,7 +95,7 @@ nav div.section {
 }
 
 .topleft {
-  width            : 50%;
+  width            : 535px;
   overflow         : hidden;
   z-index: 10;
   background-color : #696969
@@ -113,7 +113,7 @@ nav div.section {
   padding          : 10px;
   z-index          : 10;
   cursor           : pointer;
-  width            : 50%;
+  width            : 62%;
   right			   : 0px;
 }
 
@@ -379,7 +379,8 @@ background-color  : #696969;
 
 .bottomNav .setTimesTitle .right{
  float: right;
- width: 49%;
+ width: 70%;
+  margin-top: 5px;
 }
 
 
@@ -498,16 +499,21 @@ background-color  : #696969;
 	color: black;
 }
 
+input {
+  border: none;
+  background: transparent;
+}
+
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width            : 50%;
+  width            : 62.5%;
   position         : absolute;
-  left : 50%;
+  left : 535px;
   z-index 		   : 9;
 }
 #map_right {
-  left : 50%;
+  left : 535px;
 }
 .leaflet-container {
   background : -webkit-linear-gradient( #CDD2D4, #F5F5F3) !important; /* For Safari 5.1 to 6.0 */

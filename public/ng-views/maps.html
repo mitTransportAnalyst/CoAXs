@@ -200,21 +200,21 @@
           workers and jobs.
           <br>
           <br>
-          <div class="row station-list">
-            <div class="col-xs-3" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">
-              <div class="station-sign" style="cursor: pointer;">
-                <div class="leaflet-popup-content">
-                  <p style="background-color: {{cordon.color}}">{{cordonId}}</p>
-                  <p style="background-color: white; padding-bottom:4px;"
-                     ng-class="selCordon === cordonId ? 'blackText' : ''"><i class="fa fa-check-circle"
-                                                                             ng-show="scenarioScore.graphData"></i>
-                    <i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData"></i>
-                </div>
-              </div>
-              <div class="col-s-1">
-              </div>
-            </div>
-          </div>
+          <!--<div class="row station-list">-->
+            <!--<div class="col-xs-3" ng-repeat="(cordonId, cordon) in cordons" ng-click="setCordon(cordonId)">-->
+              <!--<div class="station-sign" style="cursor: pointer;">-->
+                <!--<div class="leaflet-popup-content">-->
+                  <!--<p style="background-color: {{cordon.color}}">{{cordonId}}</p>-->
+                  <!--<p style="background-color: white; padding-bottom:4px;"-->
+                     <!--ng-class="selCordon === cordonId ? 'blackText' : ''"><i class="fa fa-check-circle"-->
+                                                                             <!--ng-show="scenarioScore.graphData"></i>-->
+                    <!--<i class="fa fa-refresh faa-spin animated" ng-show="!scenarioScore.graphData"></i>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="col-s-1">-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
           <br>
           <div ng-click="togglePointToPoint()" style="cursor: pointer;">
             Point-to-point mode
@@ -519,9 +519,9 @@
         <label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'"
                ng-click="scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison
         </label>
-        <!--<label class="btn btn-xs" ng-class="saveCombo ? '' : 'active tiny'"-->
-               <!--ng-click="saveCombo = !saveCombo; introPanel=false"><i class="fa fa-plus-square"></i> New-->
-        <!--</label>-->
+        <label class="btn btn-xs" ng-class="saveCombo ? '' : 'active tiny'"
+               ng-click="saveCombo = !saveCombo; introPanel=false"><i class="fa fa-plus-square"></i> New
+        </label>
       </div>
 
       <div class="scenariosTable" style="margin-top:-18px;padding-top:18px;">
@@ -533,30 +533,35 @@
           <div class="scenario" style="display:inline-block;white-space:nowrap;"
                ng-class="combos.sel == combo._key ? 'selected' : (combos.com == combo._key ? 'cselected' : '')"
                ng-repeat="combo in combos.all | toArray | orderBy:'created'"
-               ng-click="updateLeftRoutes(combo._key); combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateScenarioScorecard(combos.sel)">
+               >
 
-            <div class="subHead">
+            <div class="subHead" ng-click='inputIsOn = true' ng-show='!inputIsOn'>
               {{ combo.name }}
             </div>
 
-            <!--<div style="width:20px;position:absolute">-->
-              <!--<div class="square" style="color:#FFF;background-color:{{variant.color}};"-->
-                   <!--ng-repeat="(key,variant) in variants | toArray | limitTo: 5">-->
-                <!--{{variant._key}}-->
-              <!--</div>-->
-            <!--</div>-->
+            <input class="subHead" ng-show='inputIsOn' ng-model > {{}} </input>
 
-            <!--<div style="width:100%;position:absolute;left:22px;">-->
-              <!--<div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">-->
-              <!--<span class="text-success" ng-show="combo.sel[variant._key]">-->
-                <!--<small>{{variant.all[combo.sel[variant._key]].num}} | {{ variant.all[combo.sel[variant._key]].name | altAbbrev }} </small>-->
+
+
+
+            <div style="width:20px;position:absolute">
+              <div class="square" style="color:#FFF;background-color:{{variant.color}};"
+                   ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
+                {{variant._key}}
+              </div>
+            </div>
+
+            <div style="width:100%;position:absolute;left:22px;" ng-click="updateLeftRoutes(combo._key); combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateScenarioScorecard(combos.sel)">
+              <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
+              <span class="text-success">
+                <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | F:{{combo.param[variant._key].frequency}}  </small>
               <!--</span>-->
                 <!--<span class="text-danger" ng-show="!combo.sel[variant._key]">-->
                 <!--<small>-</small>-->
               <!--</span>-->
-              <!--</div>-->
+              </div>
 
-            <!--</div>-->
+            </div>
 
             <div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
                  ng-show="combos.sel !== combo._key && combos.com !== combo._key &&  scenarioCompare"
@@ -592,7 +597,7 @@
 
       <div>
         <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};"
-             ng-click="targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
+             ng-click="targetCorridor(variant);" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
           {{variant._key}}
         </div>
       </div>
@@ -602,17 +607,14 @@
   <!-- 5 route table module -->
   <div class="colBody" id="rightDynamic1" style="width:50px; box-shadow: 0px 0px 0px;">
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
-      <span ng-show="introPanel">
+      <span ng-show="!variants[tabnav].sel">
         Corridor Editor
       </span>
-      <span ng-show="variants[tabnav].sel && !introPanel">
-        Corridor: {{ tabnav }} - {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }}
+      <span ng-show="variants[tabnav].sel">
+        {{ tabnav }} - {{ variants[tabnav].corName }}
       </span>
 
-      <span ng-show="!variants[tabnav].sel">
 
-        <i class="fa fa-exclamation-triangle"></i> Corridor {{ tabnav }}
-      </span>
 
 
       <!--<span ng-show="!variants[tabnav].sel">-->
@@ -630,21 +632,15 @@
 
     <div class="showToggle" ng-show="visibleTabs.routes">
 
-      <div class="btn-group btn-group-justified" ng-show="variants[tabnav].sel">
-        <label class="btn btn-xs" ng-class="routeScorecard ? '' : 'active tiny'"
-               ng-click="updateRouteScorecard(scenario[tabnav].routeId, tabnav) ; routeScorecard = !routeScorecard "
-               style="line-height:25px">
-          <i class="fa fa-bar-chart" >{{variants[tabnav].corName}}</i>
-        </label>
-      </div>
+      <!--<div class="">-->
+        <!--<label class="" style="line-height:8px">-->
+          <!--<b>Bus Routes</b>-->
+        <!--</label>-->
+      <!--</div>-->
 
 
 
-      <div class="btn-group btn-group-justified" ng-show="!variants[tabnav].sel">
-        <label class="btn btn-xs active tiny" style="line-height:25px">
-          {{variants[tabnav].corName}}
-        </label>
-      </div>
+
 
       <div style="height: 90%; overflow-y: auto">
         <table class="table table-condensed table-hover">
@@ -653,7 +649,7 @@
           </thead>
           <tbody>
           <tr ng-repeat="busline in variants[tabnav].buslines">
-            <td style="width: 35%; padding-left:0px" ng-click="setSelectedVariant(tabnav, variant._key); updateRouteScorecard(scenario[tabnav].routeId, tabnav); updateTargetFeature(variant);">{{
+            <td style="width: 35%; padding-left:0px">{{
               busline }}
             </td>
           </tr>
@@ -668,7 +664,7 @@
 
 
   <!-- 6 service editor module -->
-  <div class="colBody" style="width:710px">
+  <div class="colBody" style="width:685px">
     <div class="colHead"
          ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
       <i class="fa fa-pencil-square-o"></i> Service Editor
@@ -687,14 +683,14 @@
         <label class="btn btn-xs" style="background-color:
 		{{ variants[tabnav].color }}; color: #FFFFFF"
                ng-show="variants[tabnav].sel">
-          <i>{{ tabnav }} | {{ routes[variants[tabnav].all[variants[tabnav].sel].routeId][0].options.base.corLonName }} </i>
+          <i>{{ tabnav }} |  {{variants[tabnav].corName}}</i>
 
 
 
 
 
         </label>
-        <label class="btn btn-xs btn-info" style="line-height:25px" ng-click="saveAltButton()">
+        <label class="btn btn-xs btn-info" style="line-height:25px" ng-click="newCombo()">
           <i class="fa fa-save"></i> Save
         </label>
         </button>
@@ -731,57 +727,59 @@
       <!--<span ng-show="scenario[tabnav].station==2" style="margin-left:10px">Full Station</span>-->
       <div>
 
-        <div class="subHead">
-          Set Running Time
-        </div>
+
+        <!--<div class="subHead" >-->
+          <!--Set Dwell Time-->
+        <!--</div>-->
 
         <div class="setTimesTitle">
 
-          <div class="left">
-            <input type="range" min="1" max="60" value="5" class="isosRange"
-                   ng-model="scenario[tabnav].runningTime.min"
-                   ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                                updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-            x {{ scenario[tabnav].runningTime.min}}
+          <div>
+            <div style="padding-top: 0px;"><img
+              src="public/imgs/runningtime.png" style="height:35px">Running Time
+
+            <input type="range" min="50" max="150" value="100" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" />
+            x {{currentParam[tabnav].runningTime}}%
+            </div>
           </div>
         </div>
 
       </div>
 
-      <div style="margin-top: 35px;">
-        <div class="subHead" >
-          Set Dwell Time
-        </div>
+      <div style="margin-top: 5px;">
 
         <div class="setTimesTitle">
 
-          <div class="left">
-            <input type="range" min="1" max="60" value="5" class="isosRange"
-                   ng-model="scenario[tabnav].dwellTime.min"
-                   ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                                updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-            x {{ scenario[tabnav].dwellTime.min}}
+          <div>
+            <div style="padding-top: 5px;"><img
+              src="public/imgs/dwelltime.png" style="height:25px">Dwell Time
+
+              <input type="range" min="50" max="150" value="100" class="right" ng-model="currentParam[tabnav].dwell" />
+              x {{currentParam[tabnav].dwell}}%
+            </div>
           </div>
+
+
         </div>
 
       </div>
 
 
-      <div style="margin-top: 35px;">
-
-        <div class="subHead" >
-          Set Frequency
-        </div>
+      <div style="margin-top: 8px;">
 
         <div class="setTimesTitle">
 
-          <div class="left">
-            <input type="range" min="1" max="60" value="5" class="isosRange"
-                   ng-model="scenario[tabnav].Frequency.min"
-                   ng-click="updateOffPeakVal(scenario[tabnav].peak.min, tabnav);
-                                updateRouteScorecard(scenario[tabnav].routeId, tabnav)"/>
-            x {{ scenario[tabnav].Frequency.min}}
+
+          <div>
+            <div style="padding-top: 5px;"><img
+              src="public/imgs/frequency.png" style="height:25px">Frequency
+
+              <input type="range" min="50" max="150" value="100" class="right" ng-model="currentParam[tabnav].frequency" />
+              x {{currentParam[tabnav].frequency}}%
+            </div>
           </div>
+
+
         </div>
 
       </div>

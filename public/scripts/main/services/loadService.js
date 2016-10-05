@@ -69,7 +69,10 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     });
   };
 
-  this.getProposedRoutes = function (cb) {
+
+
+  //!!!
+  this.getProposedRoutes = function (cb,variants) {
     $http.get('/load/routes')
     .success(function (data, status) {
       var geojsonList   = [];
@@ -80,30 +83,17 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         feature['length'] = supportService.getLength(data.features[i].geometry);
 
         if (!routes[feature.pid]) { routes[feature.pid] = {} };
-        var color = '#' + feature.routeColor;
+        var color = variants[feature.corridorId].color;
         routes[feature.pid] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color: color,
-              weight: 3,
-              opacity: 0.1,
+              weight: 1,
+              opacity: 0.5
             };
           },
-          // onEachFeature: function (feature, layer) {
-          //   // per anson's request that when you click on a route it brings up the routes data, this is a hacky solution
-          //   layer.on({click: function (e) {
-          //     var route = e.target.feature.properties;
-          //
-          //     var appElement = document.querySelector('[ng-app=coaxsApp]');
-          //     var appScope = angular.element(appElement).scope().$$childHead;
-          //
-          //     appScope.tabnav = route.corName;
-          //     appScope.overview = true;
-          //   }});
-          // },
           base: feature
         });
-        // console.log(routes);
 
         geojsonList.push(routes[feature.pid]);
       }
@@ -112,6 +102,39 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
     });
   };
+
+
+
+  this.getTrunk = function (cb,variants) {
+    $http.get('/load/trunks')
+      .success(function (data, status) {
+        var geojsonList   = [];
+        var routes = {};
+
+        for (var i = 0; i < data.features.length; i++) {
+          var feature = data.features[i].properties;
+          feature['length'] = supportService.getLength(data.features[i].geometry);
+
+          var color = variants[feature.corridorId].color;
+          routes[i] = L.geoJson(data.features[i], {
+            style: function (feature) {
+              return {
+                color: color,
+                weight: 7,
+                opacity: 100
+              };
+            },
+            base: feature
+          });
+
+          geojsonList.push(routes[i]);
+        }
+        var routesLayer = L.layerGroup(geojsonList);
+        cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
+
+      });
+  };
+
 
   this.getStops = function (url, cb) {
     $http.get(url)
