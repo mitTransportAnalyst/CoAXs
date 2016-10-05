@@ -538,11 +538,18 @@
                ng-repeat="combo in combos.all | toArray | orderBy:'created'"
                >
 
-            <div class="subHead" ng-click='inputIsOn = true' ng-show='!inputIsOn'>
+
+            <div class="subHead">
               {{ combo.name }}
             </div>
 
-            <input class="subHead" ng-show='inputIsOn'>  </input>
+
+
+            <!--<div class="subHead" ng-click='inputIsOn = true' ng-show='!inputIsOn'>-->
+              <!--{{ combo.name }}-->
+            <!--</div>-->
+
+            <!--<input class="subHead" ng-show='inputIsOn'>  </input>-->
 
 
 
@@ -667,7 +674,7 @@
 
 
   <!-- 6 service editor module -->
-  <div class="colBody" style="width:760px">
+  <div class="colBody" style="width:810px">
     <div class="colHead"
          ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
       <i class="fa fa-pencil-square-o"></i> Service Editor
