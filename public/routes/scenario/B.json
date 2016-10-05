@@ -231,6 +231,63 @@
         }
       ],
       "comment": "111-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:426",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "sourceTrip": "MBTA:28878779",
+          "headwaySecs": 1800,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false
+        },
+        {
+          "sourceTrip": "MBTA:27936492",
+          "headwaySecs": 1800,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "426-Outbound"
+        }
+      ],
+      "comment": "426-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:428",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "sourceTrip": "MBTA:27936455",
+          "headwaySecs": 2700,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "428-IB"
+        }
+      ],
+      "comment": "428-Frequency"
     }
   ]
 }
