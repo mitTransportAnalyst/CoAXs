@@ -6,7 +6,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
     document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 375 + 'px';
-    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (275 + 35 +230) + 'px';
+    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (325 + 35 +230) + 'px';
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
