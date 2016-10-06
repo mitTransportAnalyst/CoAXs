@@ -1,18 +1,9 @@
 // this is the boiler to visualize the d3 graph
 coaxsApp.service('d3Service', function () {
 //Styling info.  TODO: Move to schema
-var attributes = [{ code: 'park',  verbose: 'Parking', color:"#DD9955"},	{code:'lightRail', verbose:'Green Line', color:'#258825'}, { code: 'bus',  verbose: 'Bus',  color:"#505099"},	{ code: 'heavyRail',  verbose: 'Subway',  color: "#9922DD"},
-{code: 'const1', verbose: 'Manufact. & Constr. | $', color: '#CE7E50'},	{code: 'const2', verbose: 'Manufact. & Constr. | $$', color: '#BA6A3C'},	{code: 'const3', verbose: 'Manufact. & Constr. | $$$', color: '#A65628'},
-{code: 'trade1', verbose: 'Retail & Wholesale | $', color: '#FF4244'},	{code: 'trade2', verbose: 'Retail & Wholesale | $$', color: '#F82E30'},	{code: 'trade3', verbose: 'Retail & Wholesale | $$$', color: '#E41A1C'},
-{code: 'trans1', verbose: 'Utilities & Transport | $', color: '#FFFF61'},	{code: 'trans2', verbose: 'Utilities & Transport | $$', color: '#FFFF47'},	{code: 'trans3', verbose: 'Utilities & Transport | $$$', color: '#FFFF33'},
-{code: 'infor1', verbose: 'Information Services | $', color: '#6EFFFB'},	{code: 'infor2', verbose: 'Information Services | $$', color: '#5AF3E7'},	{code: 'infor3', verbose: 'Information Services | $$$', color: '#46DFD3'},
-{code: 'finan1', verbose: 'Finance | $', color: '#28D236'},	{code: 'finan2', verbose: 'Finance | $$', color: '#14BE22'},	{code: 'finan3', verbose: 'Finance | $$$', color: '#00AA0E'},
-{code: 'profe1', verbose: 'Professional Services | $', color: '#CEF6FF'},	{code: 'profe2', verbose: 'Professional Services | $$', color: '#BAE2F7'},	{code: 'profe3', verbose: 'Professional Services | $$$', color: '#A6CEE3'},
-{code: 'educa1', verbose: 'Education | $', color: '#9265C2'},	{code: 'educa2', verbose: 'Education | $$', color: '#7E51AE'},	{code: 'educa3', verbose: 'Education | $$$', color: '#6A3D9A'},
-{code: 'healt1', verbose: 'Health Care | $', color: '#5097D2'},	{code: 'healt2', verbose: 'Health Care | $$', color: '#3C83BE'},	{code: 'healt3', verbose: 'Health Care | $$$', color: '#286FAA'},
-{code: 'hospi1', verbose: 'Hospitality | $', color: '#FFC2C1'},	{code: 'hospi2', verbose: 'Hospitality | $$', color: '#FFAEAD'},	{code: 'hospi3', verbose: 'Hospitality | $$$', color: '#FB9A99'},
-{code: 'publi1', verbose: 'Public Administration | $', color: '#FFA728'},	{code: 'publi2', verbose: 'Public Administration | $$', color: '#FF9314'},	{code: 'publi3', verbose: 'Public Administration | $$$', color: '#FF7F00'},
-{code: 'walkTime', verbose: 'Time Walking', color: '#FFA728'},	{code: 'waitTime', verbose: 'Time Waiting', color: '#FF9314'},	{code: 'rideTime', verbose: 'Time Onboard', color: '#FF7F00'}];
+var attributes = [
+{code: 'jobs1', verbose: 'Jobs | $', color: '#FFA728'},	{code: 'jobs2', verbose: 'Jobs | $$', color: '#FF9314'},	{code: 'jobs3', verbose: 'Jobs | $$$', color: '#FF7F00'},
+{code: 'walkTime', verbose: 'minutes walking', color: '#FFA728'},	{code: 'waitTime', verbose: 'minutes waiting', color: '#FF9314'},	{code: 'rideTime', verbose: 'minutes onboard', color: '#FF7F00'}];
 
 //Map attributes so they can be get/set by code.
 attributes = d3.map(attributes, function(d){return d.code;});
@@ -23,22 +14,22 @@ var	selCode = 'profe1',
 
 colors = d3.scale.category10();
 
-var updateSubsetTotal = function(){
+var updateSubsetTotal = function(roundTo){
 	d3.selectAll("#subTotal")
 	.html(function(d){
 		subsetTotal = 0;
 		d.forEach(function (e) {
-			if (e[0].attr.substring(0,4) == selCode.substring(0,4))
+			if (e[0].attr == selCode)
 				{subsetTotal = subsetTotal + e[0]['y']};
 		});
-		return d3.format(",")(d3.round(subsetTotal,-2));
+		return d3.format(",")(d3.round(subsetTotal,roundTo));
 	})};
 	
 var updateSubsetLabels = function () {
 	//put a black border around stacked bar elements when their parent attribute code selected
 	d3.selectAll("rect")
 		.style('stroke', function (d) {
-						if (d.attr.substring(0,4) == selCode.substring(0,4)) {return 'black'}
+						if (d.attr == selCode) {return 'black'}
 						else {return}});
 	//update the subtotal text 
 	d3.selectAll("#subsetLabel")
@@ -170,11 +161,11 @@ this.drawCordonGraph = function (dataset) {
 			if(d.x == indicators[0]) {
 				selCode = d.attr;
 				updateSubsetLabels();
-				updateSubsetTotal();
+				updateSubsetTotal(-2);
 			}
 		})
         .on('mouseover', function (d) {
-			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
+			var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
 			var xPos = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2+500;
 
 			d3.select('#tooltip')
@@ -182,9 +173,9 @@ this.drawCordonGraph = function (dataset) {
             .style('top', yPos + 'px')
             .select('#value')
             .html('<strong>'+ 
-				attributes.get(d.attr).verbose
+				d3.format(",")(d3.round(d.y,-1))
 				+ '</strong><br> '
-				+ d3.format(",")(d3.round(d.y,-1)));
+				+ attributes.get(d.attr).verbose);
 
 			d3.select('#tooltip').classed('hidden', false);
 		})
@@ -242,7 +233,7 @@ this.drawCordonGraph = function (dataset) {
 		  return attributes.get(selCode).verbose.split('|')[0]})
 
 	updateSubsetLabels();
-	updateSubsetTotal();
+	updateSubsetTotal(-2);
 	
 };
 
@@ -250,18 +241,18 @@ this.drawCordonGraph = function (dataset) {
 this.drawTimeGraph = function(plotData, indicator) {
   selCode = 'rideTime';
   var margins = {
-			top: 50,
+			top: 45,
 			left: 45,
-			right: 150,
-			bottom: 125
+			right: 10,
+			bottom: 10
 		},
 		
 		legendPanel = {
-			height: 40
+			height: 50
 		},
 		
-		width = 440 - margins.left - margins.right,
-		height = 400 - margins.top - margins.bottom  - legendPanel.height;
+		width = 300 - margins.left - margins.right,
+		height = 300 - margins.top - margins.bottom  - legendPanel.height;
 		
 	d3.select("#compPlot3").selectAll("*").remove();
 	
@@ -324,11 +315,11 @@ this.drawTimeGraph = function(plotData, indicator) {
         });
     }),
 	
-	yMax1 = d3.max(dataset[1], function (group) {
+	dataset[1] ? yMax1 = d3.max(dataset[1], function (group) {
 		return d3.max(group, function (d) {
             return d.y + d.y0;
         });
-    }),
+    }) : yMax1 = 0;
 	
 	yMax0 > yMax1 ? yMax = yMax0 : yMax = yMax1;
 	
@@ -338,12 +329,11 @@ this.drawTimeGraph = function(plotData, indicator) {
    
     xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
 
-    yRange = d3.scale.linear().domain([0, yMax //d3.max(combined, function (d) {   return d.y;})
-    ]).range([height,0]);
+    yRange = d3.scale.linear().domain([0, yMax]).range([height,0]);
 	  
 	xScale2 = d3.scale.ordinal()
         .domain(indicators2)
-        .rangeBands([0,width-10], .2),
+        .rangeBands([0,width-150], .05),
 	  
 	xScale ? '': xScale = xScale2;
 	  
@@ -384,7 +374,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.on('click', function (d) {
 			selCode = d.attr;
 			updateSubsetLabels();
-			updateSubsetTotal();
+			updateSubsetTotal(0);
 		})
         .on('mouseover', function (d) {
 			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
@@ -395,9 +385,9 @@ this.drawTimeGraph = function(plotData, indicator) {
 				.style('top', yPos + 'px')
 				.select('#value')
 				.html('<strong>'+ 
-					attributes.get(d.attr).verbose
+				d3.format(",")(d3.round(d.y,1))	
 				+ '</strong><br> '
-				+ d3.format(",")(d3.round(d.y,1)));
+				+ attributes.get(d.attr).verbose);
 
 			d3.select('#tooltip').classed('hidden', false);
 		})
@@ -429,8 +419,9 @@ this.drawTimeGraph = function(plotData, indicator) {
 	  .append("text")
 	  .text("Minutes")
 	  .style("text-anchor","middle")
-	  .attr("transform", 'translate(-45,'+height/2+')rotate(90)');
+	  .attr("transform", 'translate(-35,'+height/2+')rotate(90)');
 
+	//total time, scenario 0
 	vis1.append("svg:g")
 		.attr("class", "stat")
 		.append("text")
@@ -441,20 +432,20 @@ this.drawTimeGraph = function(plotData, indicator) {
 		  return d3.format(",")(d3.round(yMax0,1));
 		});  
 
-	// vis1.append("svg:g")
-		// .selectAll("text")
-		// .data(dataset)
-		// .enter()
-		// .append("text")
-		// .attr("class", "stat")
-		// .attr("id","subTotal")
-		// .attr("y", 38-margins.top)
-        // .attr("x", function(d){
-			// return xScale2(d[0][0].x)+xScale.rangeBand()-3})
-		// .style("text-anchor","end");
+	vis1.append("svg:g")
+		.selectAll("text")
+		.data(dataset)
+		.enter()
+		.append("text")
+		.attr("class", "stat")
+		.attr("id","subTotal")
+		.attr("y", 38-margins.top)
+        .attr("x", function(d){
+			return xScale2(d[0][0].x)+xScale.rangeBand()-3})
+		.style("text-anchor","end");
 		
 	if (dataset[1]){
-	
+	//total time, scenario 1
 		vis1.append("svg:g")
 		.append("text")
 		.attr("class", "stat")
@@ -486,10 +477,10 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.style("opacity", 0.75)
 		.style("fill", attributes.get(selCode).color)
         .html( function (){
-		  return attributes.get(selCode).verbose.split('|')[0]});
+		  return attributes.get(selCode).verbose});
 
 	updateSubsetLabels();
-	updateSubsetTotal();
+	updateSubsetTotal(0);
 
     };
 
@@ -621,10 +612,10 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.on('click', function (d) {
 			selCode = d.attr;
 			updateSubsetLabels();
-			updateSubsetTotal();
+			updateSubsetTotal(-2);
 		})
         .on('mouseover', function (d) {
-			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
+			var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
 			var xPos = parseFloat(d3.select(this).attr('x')) + xScale3.rangeBand() / 2 +100;
 
 			d3.select('#tooltip')
@@ -632,9 +623,9 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 				.style('top', yPos + 'px')
 				.select('#value')
 				.html('<strong>'+ 
-					attributes.get(d.attr).verbose
+				d3.format(",")(d3.round(d.y,-1))	
 				+ '</strong><br> '
-				+ d3.format(",")(d3.round(d.y,-1)));
+				+ attributes.get(d.attr).verbose);
 
 			d3.select('#tooltip').classed('hidden', false);
 		})
@@ -777,7 +768,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.style("opacity", 0.85);
 
 	updateSubsetLabels();
-	updateSubsetTotal();
+	updateSubsetTotal(-2);
 
     };
 
