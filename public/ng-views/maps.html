@@ -157,19 +157,19 @@
 	<div class="topinfo-body container" style="min-height:75vh">
 	
       <div style="height: 100%">
-		<h5>Showing door-to-door travel using public transit, with MBTA weekday morning schedule as baseline.</h5>
+		<h5>Showing door-to-door travel, with MBTA weekday morning schedule as baseline.</h5>
 		<h5 ng-show="!loadProgress.vis">Drag the pin to explore.</h5>
 
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
 			</p>
 		</div>
-		<div style="width:40%; float: right;" ng-show = "selCordon">
+<!-- 		<div style="width:40%; float: right;" ng-show = "selCordon">
 		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
-		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
-		</div>
-		<div ng-show = "!pointToPoint">
-		<svg id="compPlot2" width="440" height="400"></svg>
+		<svg id="plot1" width="200" height="300" style="z-index:2"></svg>
+		</div> -->
+		<div ng-show = "!pointToPoint  && scenarioScore.graphData">
+		<svg id="compPlot2" width="300" height="300"></svg>
 		<br>
 		<div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
@@ -191,10 +191,10 @@
 		reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon">
 		within	{{vectorIsos.val | minuteConverter}}
 		</div>
-		<div ng-show = "pointToPoint">
-			<svg id="compPlot3" width="440" height="400"></svg>
+		<div ng-show = "pointToPoint && scenarioScore.graphData">
+			<svg id="compPlot3" width="300" height="300"></svg>
 			<br>
-			Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> 
+			<h5>Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> </h5>
 		</div>
 		          
 		
