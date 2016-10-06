@@ -91,7 +91,7 @@ coaxsApp.service('scorecardService', function () {
 	});
     length.dist.non = (length.count-length.dist.ded)/length.count;
 	length.dist.ded = length.dist.ded/length.count;
-    return length;
+    return length; 
   }
 
   this.generateTimeScore = function (routesLayer, id) {

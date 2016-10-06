@@ -1,24 +1,447 @@
-// this is the analyst.js library, check out the 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Analyst = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
 
-},{}],2:[function(require,module,exports){
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _concatStream = require('concat-stream');
+
+var _concatStream2 = _interopRequireDefault(_concatStream);
+
+var _debug = require('debug');
+
+var _debug2 = _interopRequireDefault(_debug);
+
+var _https = require('https');
+
+var _https2 = _interopRequireDefault(_https);
+
+var LAYER_DEFAULTS = {};
+
+var REQUEST_DEFAULTS = {
+  accessModes: 'WALK',
+  egressModes: 'WALK',
+  directModes: 'WALK',
+  transitModes: 'TRANSIT',
+  date: "2015-10-21",
+  fromTime: 25200,
+  toTime: 32400,
+  walkSpeed: 1.3333333333333333,
+  bikeSpeed: 4.1,
+  carSpeed: 20,
+  streetTime: 90,
+  maxWalkTime: 20,
+  maxBikeTime: 45,
+  maxCarTime: 45,
+  minBikeTime: 10,
+  minCarTime: 10,
+  suboptimalMinutes: 0,
+  analyst: true,
+  bikeSafe: 1,
+  bikeSlope: 1,
+  bikeTime: 1
+};
+
+var debug = (0, _debug2['default'])('analyst.js');
+
+/**
+ * Create an instance of Analyst.js for use with single point requests.
+ *
+ * @param {Leaflet} L Pass in an instance of Leaflet so that it doesn't need to be packaged as a dependency.
+ * @param {Object} options Options object.
+ * @param {String} [options.baseUrl] The base url, will set the tile and api urls if they are left unset
+ * @param {String} [options.apiUrl]
+ * @param {String} [options.tileUrl]
+ * @param {String} [options.connectivityType]
+ * @param {Number} [options.timeLimit] Defaults to 3600
+ * @param {Boolean} [options.showPoints] Defaults to false
+ * @param {Boolean} [options.showIso] Defaults to true
+ * @param {Object} [options.requestOptions] Pass in default request options to be used.
+ * @param {Object} [options.tileLayerOptions] Pass in default tileLayerOptions to use.
+ * @example
+ * const analyst = new Analyst(window.L, {
+ *   apiUrl: 'http://localhost:3000/api',
+ *   tileUrl: 'http://localhost:4000/tile',
+ *   baseUrl: 'http://localhost:3000'
+ * })
+ */
+
+var Analyst = (function () {
+  function Analyst(L) {
+    var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    _classCallCheck(this, Analyst);
+
+    this.apiUrl = opts.apiUrl;
+    this.tileUrl = opts.tileUrl;
+    this.baseUrl = opts.baseUrl;
+
+    if (this.apiUrl === undefined) {
+      this.apiUrl = this.baseUrl + '/api';
+    }
+
+    if (this.tileUrl === undefined) {
+      this.tileUrl = this.baseUrl + '/tile';
+    }
+
+    this.connectivityType = opts.connectivityType || 'AVERAGE';
+    this.timeLimit = opts.timeLimit || 7200;
+    this.showPoints = !!opts.showPoints;
+    this.showIso = !!opts.showIso;
+
+    this.L = L;
+
+    this.requestOptions = Object.assign({}, REQUEST_DEFAULTS, opts.requestOptions);
+    this.tileLayerOptions = Object.assign({}, LAYER_DEFAULTS, opts.tileLayerOptions);
+  }
+
+  /**
+   * Update/create the single point layer for this Analyst.js instance.
+   *
+   * @param {String} key Key for accessing the single point layer tiles.
+   * @param {String} [comparisonKey] Key for the layer to compare against.
+   * @return {TileLayer} A Leaflet tile layer that pulls in the generated single point tiles.
+   * @example
+   * analyst.updateSinglePointLayer(key).redraw()
+   */
+
+  _createClass(Analyst, [{
+    key: 'updateSinglePointLayer',
+    value: function updateSinglePointLayer(key, comparisonKey, timeLimit) {
+      var keyVal = key;
+      if (comparisonKey) {
+        keyVal = comparisonKey + '/' + keyVal;
+      }
+
+	  if (timeLimit) {
+		this.timeLimit = timeLimit;
+	  }
+	  
+      var url = this.tileUrl + '/single/' + keyVal + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+	  
+      if (!this.singlePointLayer) {
+        debug('creating single point layer with url: ' + url);
+        this.singlePointLayer = this.L.tileLayer(url, this.tileLayerOptions);
+      } else {
+        debug('updating single point layer to url: ' + url);
+		this.singlePointLayer.setUrl(url);
+      }
+      return this.singlePointLayer;
+    }
+
+
+  }, {
+	key: 'updateSinglePointLayerOld',
+    value: function updateSinglePointLayerOld(key, comparisonKey) {
+      var keyVal = key;
+      if (comparisonKey) {
+        keyVal = comparisonKey + '/' + keyVal;
+      }
+	  
+      var url = this.tileUrl + '/single/' + keyVal + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
+
+	  if (!this.singlePointLayerOld) {
+        debug('creating single point layer with url: ' + url);
+        this.singlePointLayerOld = this.L.tileLayer(url, this.tileLayerOptions);
+      } else {
+        debug('updating single point layer to url: ' + url);
+		this.singlePointLayerOld.setUrl(url);
+      }
+      return this.singlePointLayerOld;
+
+      }
+  
+  },{
+    key: 'shapefiles',
+    value: function shapefiles() {
+      debug('fetching available shapefiles');
+      return this.get(this.apiUrl + '/shapefile').then(function (r) {
+        return r.json();
+      });
+    }
+
+    /**
+     * Run a single point request and generate a tile layer.
+     *
+     * @param {LatLng} point
+     * @param {String} graphId Graph ID to use for this request.
+     * @param {String} shapefileId Shapefile ID to be used with this request, set to null for vector request.
+     * @param {Object} [options] Options object.
+     * @return {Promise} Resolves with an object containing the results data.
+     * @example
+     * analyst
+     *   .singlePointRequest(marker.getLatLng())
+     *   .then(function (data) {
+     *     analyst.updateSinglePointLayer(data.key)
+     *   })
+     */
+
+  }, {
+    key: 'singlePointRequest',
+    value: function singlePointRequest(point, graphId, shapefileId, options) {
+      console.log(point, graphId, shapefileId, options)
+      var opts = Object.assign({}, this.requestOptions, options);
+      opts.fromLat = opts.toLat = point.lat;
+      opts.fromLon = opts.toLon = point.lng;
+
+      debug('making single point request to [' + point.lng + ', ' + point.lat + ']', opts);
+      return this.post(this.apiUrl + '/single', {
+        destinationPointsetId: shapefileId,
+        graphId: graphId,
+        profileRequest: opts
+      }).then(function (data) {
+        debug('single point request successful');
+
+        return data;
+      });
+    }
+
+    /**
+     * Compare two scenarios.
+     *
+     * @param {LatLng} point
+	 * @param {string} graphId  Graph ID to use for this request
+	 * @param {string} shapefileId Shapefile ID to be used with this request, set to null for vector request. 
+     * @param {Object} options
+     * @param {Object} [comparisonOptions]
+     * @return {Promise} Resolves with an array containing `[results, comparisonResults]`
+     * @example
+     * analyst
+     *   .singlePointComparison(marker.getLatLng(), { graphId: 'graph1' }, { graphId: 'graph2' })
+     *   .then(([res, cres]) => {
+     *     analyst.updateSinglePointLayer(res.key, cres.key)
+     *   })
+     */
+
+  }, {
+    key: 'singlePointComparison',
+    value: function singlePointComparison(point, graphId, comparisonGraphId, shapefileId, options, comparisonOptions) {
+      return Promise.all([this.singlePointRequest(point, graphId, shapefileId, options), this.singlePointRequest(point, comparisonGraphId, shapefileId, comparisonOptions)]);
+    }
+
+    /**
+     * Set the client credentials for this analyst.js instance
+     * @param {String} clientCredentials
+     */
+
+  }, {
+    key: 'setClientCredentials',
+    value: function setClientCredentials(clientCredentials) {
+      this.clientCredentials = clientCredentials;
+      // console.log(clientCredentials.access_token)
+    }
+
+    /**
+     * Get client credentials for this instance, optionally keeping them up-to-date automatically.
+     * Note that using this function on the client side requires your API key and secret to be sent to the client, which
+     * is non-ideal; a better pattern would be to keep the API key/secret on the server and only retrieve client credentials
+     * there, and then deliver only the client credentials to the client, setting them using setClientCredentials.
+     * Client credentials have a limited time to live, so they are less sensitive than API keys.
+     *
+     * @param {String} key Your API key
+     * @param {String} secret Your API secret
+     * @param {boolean} refresh if true (default), automatically update client credentials when they are about to expire.
+     * @return the client credentials. They will also be set as the client credentials for this analyst instance.
+     */
+
+  }, {
+    key: 'obtainClientCredentials',
+    value: function obtainClientCredentials(key, secret) {
+      var _this = this;
+
+      var refresh = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
+      return new Promise(function (resolve, reject) {
+        var url = _this.baseUrl + '/oauth/token';
+
+        var _url$match = url.match(getHostPortAndPath);
+
+        var _url$match2 = _slicedToArray(_url$match, 5);
+
+        var proto = _url$match2[1];
+        var host = _url$match2[2];
+        var port = _url$match2[3];
+        var path = _url$match2[4];
+
+        var params = {
+          host: host,
+          path: path,
+          method: 'POST',
+          headers: {
+            'Accept': 'text/xml',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          withCredentials: false
+        };
+
+        if (port !== undefined) {
+          params.port = port;
+        } else if (proto.toLowerCase() === 'https') {
+          debug('https');
+          params.port = 443;
+        }
+
+        var req = _https2['default'].request(params, function (res) {
+          res.on('error', reject);
+          res.pipe((0, _concatStream2['default'])(function (data) {
+            var parsed = {
+				expires_in: 3600,
+				token_type: 'Bearer',
+				access_token: data};
+            _this.setClientCredentials(data);
+			resolve(parsed);
+
+            // get new credentials two minutes before these expire
+            // note: does not create tail recursion problems as setTimeout puts it in a global executor loop and
+            // the call to obtainClientCredentials does not inherit the scope of the parent
+            if (refresh) {
+              setTimeout(function () {
+                _this.obtainClientCredentials(key, secret, true).then(function () {
+                  debug('refreshed client credentials');
+                })['catch'](function (e) {
+                  debug('failed to refresh client credentials');
+                  console.error(e);
+                });
+              }, (parsed.expires_in - 120) * 1000);
+            }
+          }));
+        });
+
+        req.on('error', reject);
+        req.write('grant_type=client_credentials&');
+        req.write('key=' + encodeURIComponent(key) + '&');
+        req.write('secret=' + encodeURIComponent(secret));
+        req.end();
+      });
+    }
+  }, {
+    key: 'post',
+    value: function post(url, data) {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        var _url$match3 = url.match(getHostPortAndPath);
+
+        var _url$match32 = _slicedToArray(_url$match3, 5);
+
+        var host = _url$match32[2];
+        var port = _url$match32[3];
+        var path = _url$match32[4];
+
+        if (_this2.clientCredentials !== undefined) {
+          if (path.indexOf('?') !== -1) {
+            path += '&accessToken=' + _this2.clientCredentials.access_token;
+          } else {
+            path += '?accessToken=' + _this2.clientCredentials.access_token;
+          }
+        }
+
+        var params = {
+          host: host,
+          path: path,
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          withCredentials: false
+        };
+
+        if (port !== undefined) params.port = port;
+
+        debug('POST', params);
+        var req = _https2['default'].request(params, function (res) {
+          res.on('error', reject);
+          res.pipe((0, _concatStream2['default'])(function (data) {
+            resolve(JSON.parse(data));
+          }));
+        });
+
+        req.on('error', reject);
+        req.write(JSON.stringify(data));
+        req.end();
+      });
+    }
+  }, {
+    key: 'get',
+    value: function get(url) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        var _url$match4 = url.match(getHostPortAndPath);
+
+        var _url$match42 = _slicedToArray(_url$match4, 5);
+
+        var host = _url$match42[2];
+        var port = _url$match42[3];
+        var path = _url$match42[4];
+
+        if (_this3.clientCredentials !== undefined) {
+          if (path.indexOf('?') !== -1) {
+            path += '&accessToken=' + _this3.clientCredentials;
+          } else {
+            path += '?accessToken=' + _this3.clientCredentials;
+          }
+        }
+
+        var params = {
+          host: host,
+          path: path,
+          method: 'GET',
+          headers: {},
+          withCredentials: false
+        };
+
+        if (port !== undefined) params.port = port;
+
+        _https2['default'].request(params, function (res) {
+          res.on('error', reject);
+          res.pipe((0, _concatStream2['default'])(function (data) {
+            resolve(JSON.parse(data));
+          }));
+        }).on('error', reject).end();
+      });
+    }
+  }]);
+
+  return Analyst;
+})();
+
+exports['default'] = Analyst;
+
+var getHostPortAndPath = new RegExp('^(.*)://([A-Za-z0-9\-\.]+):([0-9]+)?(.*)$');
+module.exports = exports['default'];
+
+},{"concat-stream":36,"debug":50,"https":11}],2:[function(require,module,exports){
+
+},{}],3:[function(require,module,exports){
+(function (global){
 /*!
  * The buffer module from node.js, for the browser.
  *
  * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
  * @license  MIT
  */
+/* eslint-disable no-proto */
 
 var base64 = require('base64-js')
 var ieee754 = require('ieee754')
-var isArray = require('is-array')
+var isArray = require('isarray')
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
 exports.INSPECT_MAX_BYTES = 50
 Buffer.poolSize = 8192 // not used by this implementation
 
-var kMaxLength = 0x3fffffff
 var rootParent = {}
 
 /**
@@ -29,32 +452,49 @@ var rootParent = {}
  * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
  * Opera 11.6+, iOS 4.2+.
  *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
  * Note:
  *
- * - Implementation must support adding new properties to `Uint8Array` instances.
- *   Firefox 4-29 lacked support, fixed in Firefox 30+.
- *   See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
  *
- *  - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
+ *     on objects.
  *
- *  - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *    incorrect length in some situations.
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
  *
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they will
- * get the Object implementation, which is slower but will work correctly.
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
  */
-Buffer.TYPED_ARRAY_SUPPORT = (function () {
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+function typedArraySupport () {
+  function Bar () {}
   try {
-    var buf = new ArrayBuffer(0)
-    var arr = new Uint8Array(buf)
+    var arr = new Uint8Array(1)
     arr.foo = function () { return 42 }
+    arr.constructor = Bar
     return arr.foo() === 42 && // typed array instances can be augmented
+        arr.constructor === Bar && // constructor can be set
         typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-        new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
   } catch (e) {
     return false
   }
-})()
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
 
 /**
  * Class: Buffer
@@ -122,8 +562,13 @@ function fromObject (that, object) {
     throw new TypeError('must start with number, buffer, array or string')
   }
 
-  if (typeof ArrayBuffer !== 'undefined' && object.buffer instanceof ArrayBuffer) {
-    return fromTypedArray(that, object)
+  if (typeof ArrayBuffer !== 'undefined') {
+    if (object.buffer instanceof ArrayBuffer) {
+      return fromTypedArray(that, object)
+    }
+    if (object instanceof ArrayBuffer) {
+      return fromArrayBuffer(that, object)
+    }
   }
 
   if (object.length) return fromArrayLike(that, object)
@@ -160,6 +605,18 @@ function fromTypedArray (that, array) {
   return that
 }
 
+function fromArrayBuffer (that, array) {
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    array.byteLength
+    that = Buffer._augment(new Uint8Array(array))
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromTypedArray(that, new Uint8Array(array))
+  }
+  return that
+}
+
 function fromArrayLike (that, array) {
   var length = checked(array.length) | 0
   that = allocate(that, length)
@@ -187,10 +644,16 @@ function fromJsonObject (that, object) {
   return that
 }
 
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+}
+
 function allocate (that, length) {
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     // Return an augmented `Uint8Array` instance, for best performance
     that = Buffer._augment(new Uint8Array(length))
+    that.__proto__ = Buffer.prototype
   } else {
     // Fallback: Return an object instance of the Buffer class
     that.length = length
@@ -206,9 +669,9 @@ function allocate (that, length) {
 function checked (length) {
   // Note: cannot use `length < kMaxLength` here because that fails when
   // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength) {
+  if (length >= kMaxLength()) {
     throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength.toString(16) + ' bytes')
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
   }
   return length | 0
 }
@@ -277,8 +740,6 @@ Buffer.concat = function concat (list, length) {
 
   if (list.length === 0) {
     return new Buffer(0)
-  } else if (list.length === 1) {
-    return list[0]
   }
 
   var i
@@ -300,29 +761,38 @@ Buffer.concat = function concat (list, length) {
 }
 
 function byteLength (string, encoding) {
-  if (typeof string !== 'string') string = String(string)
+  if (typeof string !== 'string') string = '' + string
 
-  if (string.length === 0) return 0
+  var len = string.length
+  if (len === 0) return 0
 
-  switch (encoding || 'utf8') {
-    case 'ascii':
-    case 'binary':
-    case 'raw':
-      return string.length
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return string.length * 2
-    case 'hex':
-      return string.length >>> 1
-    case 'utf8':
-    case 'utf-8':
-      return utf8ToBytes(string).length
-    case 'base64':
-      return base64ToBytes(string).length
-    default:
-      return string.length
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'binary':
+      // Deprecated
+      case 'raw':
+      case 'raws':
+        return len
+      case 'utf8':
+      case 'utf-8':
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
   }
 }
 Buffer.byteLength = byteLength
@@ -331,8 +801,7 @@ Buffer.byteLength = byteLength
 Buffer.prototype.length = undefined
 Buffer.prototype.parent = undefined
 
-// toString(encoding, start=0, end=buffer.length)
-Buffer.prototype.toString = function toString (encoding, start, end) {
+function slowToString (encoding, start, end) {
   var loweredCase = false
 
   start = start | 0
@@ -373,6 +842,13 @@ Buffer.prototype.toString = function toString (encoding, start, end) {
         loweredCase = true
     }
   }
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
 }
 
 Buffer.prototype.equals = function equals (b) {
@@ -438,13 +914,13 @@ Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
   throw new TypeError('val must be string, number or Buffer')
 }
 
-// `get` will be removed in Node 0.13+
+// `get` is deprecated
 Buffer.prototype.get = function get (offset) {
   console.log('.get() is deprecated. Access using array indexes instead.')
   return this.readUInt8(offset)
 }
 
-// `set` will be removed in Node 0.13+
+// `set` is deprecated
 Buffer.prototype.set = function set (v, offset) {
   console.log('.set() is deprecated. Access using array indexes instead.')
   return this.writeUInt8(v, offset)
@@ -585,20 +1061,99 @@ function base64Slice (buf, start, end) {
 }
 
 function utf8Slice (buf, start, end) {
-  var res = ''
-  var tmp = ''
   end = Math.min(buf.length, end)
+  var res = []
 
-  for (var i = start; i < end; i++) {
-    if (buf[i] <= 0x7F) {
-      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
-      tmp = ''
-    } else {
-      tmp += '%' + buf[i].toString(16)
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
     }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
   }
 
-  return res + decodeUtf8Char(tmp)
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
 }
 
 function asciiSlice (buf, start, end) {
@@ -887,7 +1442,7 @@ Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -904,7 +1459,7 @@ Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -918,7 +1473,7 @@ Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -940,7 +1495,7 @@ Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert
     this[offset + 3] = (value >>> 24)
     this[offset + 2] = (value >>> 16)
     this[offset + 1] = (value >>> 8)
-    this[offset] = value
+    this[offset] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, true)
   }
@@ -955,7 +1510,7 @@ Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -1008,7 +1563,7 @@ Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
   if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
   if (value < 0) value = 0xff + value + 1
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -1017,7 +1572,7 @@ Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -1031,7 +1586,7 @@ Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) 
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -1043,7 +1598,7 @@ Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
     this[offset + 2] = (value >>> 16)
     this[offset + 3] = (value >>> 24)
@@ -1062,7 +1617,7 @@ Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) 
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -1133,9 +1688,16 @@ Buffer.prototype.copy = function copy (target, targetStart, start, end) {
   }
 
   var len = end - start
+  var i
 
-  if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < len; i++) {
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; i--) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; i++) {
       target[i + targetStart] = this[i + start]
     }
   } else {
@@ -1211,7 +1773,7 @@ Buffer._augment = function _augment (arr) {
   // save reference to original Uint8Array set method before overwriting
   arr._set = arr.set
 
-  // deprecated, will be removed in node 0.13+
+  // deprecated
   arr.get = BP.get
   arr.set = BP.set
 
@@ -1267,7 +1829,7 @@ Buffer._augment = function _augment (arr) {
   return arr
 }
 
-var INVALID_BASE64_RE = /[^+\/0-9A-z\-]/g
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
 
 function base64clean (str) {
   // Node strips out invalid characters like \n and \t from the string, base64-js does not
@@ -1297,28 +1859,15 @@ function utf8ToBytes (string, units) {
   var length = string.length
   var leadSurrogate = null
   var bytes = []
-  var i = 0
 
-  for (; i < length; i++) {
+  for (var i = 0; i < length; i++) {
     codePoint = string.charCodeAt(i)
 
     // is surrogate component
     if (codePoint > 0xD7FF && codePoint < 0xE000) {
       // last char was a lead
-      if (leadSurrogate) {
-        // 2 leads in a row
-        if (codePoint < 0xDC00) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          leadSurrogate = codePoint
-          continue
-        } else {
-          // valid surrogate pair
-          codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
-          leadSurrogate = null
-        }
-      } else {
+      if (!leadSurrogate) {
         // no lead yet
-
         if (codePoint > 0xDBFF) {
           // unexpected trail
           if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
@@ -1327,17 +1876,29 @@ function utf8ToBytes (string, units) {
           // unpaired lead
           if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
           continue
-        } else {
-          // valid lead
-          leadSurrogate = codePoint
-          continue
         }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
       }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
     } else if (leadSurrogate) {
       // valid bmp char, but last char was a lead
       if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-      leadSurrogate = null
     }
+
+    leadSurrogate = null
 
     // encode utf8
     if (codePoint < 0x80) {
@@ -1356,7 +1917,7 @@ function utf8ToBytes (string, units) {
         codePoint >> 0x6 & 0x3F | 0x80,
         codePoint & 0x3F | 0x80
       )
-    } else if (codePoint < 0x200000) {
+    } else if (codePoint < 0x110000) {
       if ((units -= 4) < 0) break
       bytes.push(
         codePoint >> 0x12 | 0xF0,
@@ -1409,150 +1970,143 @@ function blitBuffer (src, dst, offset, length) {
   return i
 }
 
-function decodeUtf8Char (str) {
-  try {
-    return decodeURIComponent(str)
-  } catch (err) {
-    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-  }
-}
-
-},{"base64-js":3,"ieee754":4,"is-array":5}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"base64-js":4,"ieee754":5,"isarray":14}],4:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
-  'use strict';
+	'use strict';
 
   var Arr = (typeof Uint8Array !== 'undefined')
     ? Uint8Array
     : Array
 
-  var PLUS   = '+'.charCodeAt(0)
-  var SLASH  = '/'.charCodeAt(0)
-  var NUMBER = '0'.charCodeAt(0)
-  var LOWER  = 'a'.charCodeAt(0)
-  var UPPER  = 'A'.charCodeAt(0)
-  var PLUS_URL_SAFE = '-'.charCodeAt(0)
-  var SLASH_URL_SAFE = '_'.charCodeAt(0)
+	var PLUS   = '+'.charCodeAt(0)
+	var SLASH  = '/'.charCodeAt(0)
+	var NUMBER = '0'.charCodeAt(0)
+	var LOWER  = 'a'.charCodeAt(0)
+	var UPPER  = 'A'.charCodeAt(0)
+	var PLUS_URL_SAFE = '-'.charCodeAt(0)
+	var SLASH_URL_SAFE = '_'.charCodeAt(0)
 
-  function decode (elt) {
-    var code = elt.charCodeAt(0)
-    if (code === PLUS ||
-        code === PLUS_URL_SAFE)
-      return 62 // '+'
-    if (code === SLASH ||
-        code === SLASH_URL_SAFE)
-      return 63 // '/'
-    if (code < NUMBER)
-      return -1 //no match
-    if (code < NUMBER + 10)
-      return code - NUMBER + 26 + 26
-    if (code < UPPER + 26)
-      return code - UPPER
-    if (code < LOWER + 26)
-      return code - LOWER + 26
-  }
+	function decode (elt) {
+		var code = elt.charCodeAt(0)
+		if (code === PLUS ||
+		    code === PLUS_URL_SAFE)
+			return 62 // '+'
+		if (code === SLASH ||
+		    code === SLASH_URL_SAFE)
+			return 63 // '/'
+		if (code < NUMBER)
+			return -1 //no match
+		if (code < NUMBER + 10)
+			return code - NUMBER + 26 + 26
+		if (code < UPPER + 26)
+			return code - UPPER
+		if (code < LOWER + 26)
+			return code - LOWER + 26
+	}
 
-  function b64ToByteArray (b64) {
-    var i, j, l, tmp, placeHolders, arr
+	function b64ToByteArray (b64) {
+		var i, j, l, tmp, placeHolders, arr
 
-    if (b64.length % 4 > 0) {
-      throw new Error('Invalid string. Length must be a multiple of 4')
-    }
+		if (b64.length % 4 > 0) {
+			throw new Error('Invalid string. Length must be a multiple of 4')
+		}
 
-    // the number of equal signs (place holders)
-    // if there are two placeholders, than the two characters before it
-    // represent one byte
-    // if there is only one, then the three characters before it represent 2 bytes
-    // this is just a cheap hack to not do indexOf twice
-    var len = b64.length
-    placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
+		// the number of equal signs (place holders)
+		// if there are two placeholders, than the two characters before it
+		// represent one byte
+		// if there is only one, then the three characters before it represent 2 bytes
+		// this is just a cheap hack to not do indexOf twice
+		var len = b64.length
+		placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
 
-    // base64 is 4/3 + up to two characters of the original data
-    arr = new Arr(b64.length * 3 / 4 - placeHolders)
+		// base64 is 4/3 + up to two characters of the original data
+		arr = new Arr(b64.length * 3 / 4 - placeHolders)
 
-    // if there are placeholders, only get up to the last complete 4 chars
-    l = placeHolders > 0 ? b64.length - 4 : b64.length
+		// if there are placeholders, only get up to the last complete 4 chars
+		l = placeHolders > 0 ? b64.length - 4 : b64.length
 
-    var L = 0
+		var L = 0
 
-    function push (v) {
-      arr[L++] = v
-    }
+		function push (v) {
+			arr[L++] = v
+		}
 
-    for (i = 0, j = 0; i < l; i += 4, j += 3) {
-      tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-      push((tmp & 0xFF0000) >> 16)
-      push((tmp & 0xFF00) >> 8)
-      push(tmp & 0xFF)
-    }
+		for (i = 0, j = 0; i < l; i += 4, j += 3) {
+			tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
+			push((tmp & 0xFF0000) >> 16)
+			push((tmp & 0xFF00) >> 8)
+			push(tmp & 0xFF)
+		}
 
-    if (placeHolders === 2) {
-      tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-      push(tmp & 0xFF)
-    } else if (placeHolders === 1) {
-      tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-      push((tmp >> 8) & 0xFF)
-      push(tmp & 0xFF)
-    }
+		if (placeHolders === 2) {
+			tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
+			push(tmp & 0xFF)
+		} else if (placeHolders === 1) {
+			tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
+			push((tmp >> 8) & 0xFF)
+			push(tmp & 0xFF)
+		}
 
-    return arr
-  }
+		return arr
+	}
 
-  function uint8ToBase64 (uint8) {
-    var i,
-      extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-      output = "",
-      temp, length
+	function uint8ToBase64 (uint8) {
+		var i,
+			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
+			output = "",
+			temp, length
 
-    function encode (num) {
-      return lookup.charAt(num)
-    }
+		function encode (num) {
+			return lookup.charAt(num)
+		}
 
-    function tripletToBase64 (num) {
-      return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-    }
+		function tripletToBase64 (num) {
+			return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
+		}
 
-    // go through the array every three bytes, we'll deal with trailing stuff later
-    for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-      temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-      output += tripletToBase64(temp)
-    }
+		// go through the array every three bytes, we'll deal with trailing stuff later
+		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+			output += tripletToBase64(temp)
+		}
 
-    // pad the end with zeros, but make sure to not forget the extra bytes
-    switch (extraBytes) {
-      case 1:
-        temp = uint8[uint8.length - 1]
-        output += encode(temp >> 2)
-        output += encode((temp << 4) & 0x3F)
-        output += '=='
-        break
-      case 2:
-        temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-        output += encode(temp >> 10)
-        output += encode((temp >> 4) & 0x3F)
-        output += encode((temp << 2) & 0x3F)
-        output += '='
-        break
-    }
+		// pad the end with zeros, but make sure to not forget the extra bytes
+		switch (extraBytes) {
+			case 1:
+				temp = uint8[uint8.length - 1]
+				output += encode(temp >> 2)
+				output += encode((temp << 4) & 0x3F)
+				output += '=='
+				break
+			case 2:
+				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
+				output += encode(temp >> 10)
+				output += encode((temp >> 4) & 0x3F)
+				output += encode((temp << 2) & 0x3F)
+				output += '='
+				break
+		}
 
-    return output
-  }
+		return output
+	}
 
-  exports.toByteArray = b64ToByteArray
-  exports.fromByteArray = uint8ToBase64
+	exports.toByteArray = b64ToByteArray
+	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      nBits = -7,
-      i = isLE ? (nBytes - 1) : 0,
-      d = isLE ? -1 : 1,
-      s = buffer[offset + i]
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
 
   i += d
 
@@ -1578,14 +2132,14 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 }
 
 exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-      i = isLE ? 0 : (nBytes - 1),
-      d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
   value = Math.abs(value)
 
@@ -1628,41 +2182,6 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
   buffer[offset + i - d] |= s * 128
 }
-
-},{}],5:[function(require,module,exports){
-
-/**
- * isArray
- */
-
-var isArray = Array.isArray;
-
-/**
- * toString
- */
-
-var str = Object.prototype.toString;
-
-/**
- * Whether or not the given `val`
- * is an array.
- *
- * example:
- *
- *        isArray([]);
- *        // > true
- *        isArray(arguments);
- *        // > false
- *        isArray('');
- *        // > false
- *
- * @param {mixed} val
- * @return {bool}
- */
-
-module.exports = isArray || function (val) {
-  return !! val && '[object Array]' == str.call(val);
-};
 
 },{}],6:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
@@ -2113,7 +2632,7 @@ http.STATUS_CODES = {
     510 : 'Not Extended',               // RFC 2774
     511 : 'Network Authentication Required' // RFC 6585
 };
-},{"./lib/request":8,"events":6,"url":31}],8:[function(require,module,exports){
+},{"./lib/request":8,"events":6,"url":33}],8:[function(require,module,exports){
 var Stream = require('stream');
 var Response = require('./response');
 var Base64 = require('Base64');
@@ -2324,7 +2843,7 @@ var isXHR2Compatible = function (obj) {
     if (typeof FormData !== 'undefined' && obj instanceof FormData) return true;
 };
 
-},{"./response":9,"Base64":10,"inherits":11,"stream":29}],9:[function(require,module,exports){
+},{"./response":9,"Base64":10,"inherits":12,"stream":31}],9:[function(require,module,exports){
 var Stream = require('stream');
 var util = require('util');
 
@@ -2446,7 +2965,7 @@ var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{"stream":29,"util":33}],10:[function(require,module,exports){
+},{"stream":31,"util":35}],10:[function(require,module,exports){
 ;(function () {
 
   var object = typeof exports != 'undefined' ? exports : this; // #8: web workers
@@ -2509,6 +3028,22 @@ var isArray = Array.isArray || function (xs) {
 }());
 
 },{}],11:[function(require,module,exports){
+var http = require('http');
+
+var https = module.exports;
+
+for (var key in http) {
+    if (http.hasOwnProperty(key)) https[key] = http[key];
+};
+
+https.request = function (params, cb) {
+    if (!params) params = {};
+    params.scheme = 'https';
+    params.protocol = 'http:';
+    return http.request.call(this, params, cb);
+}
+
+},{"http":7}],12:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2533,12 +3068,31 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+/**
+ * Determine if an object is Buffer
+ *
+ * Author:   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * License:  MIT
+ *
+ * `npm install is-buffer`
+ */
+
+module.exports = function (obj) {
+  return !!(obj != null &&
+    (obj._isBuffer || // For Safari 5-7 (missing Object.prototype.constructor)
+      (obj.constructor &&
+      typeof obj.constructor.isBuffer === 'function' &&
+      obj.constructor.isBuffer(obj))
+    ))
+}
+
+},{}],14:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2571,7 +3125,9 @@ function drainQueue() {
         currentQueue = queue;
         queue = [];
         while (++queueIndex < len) {
-            currentQueue[queueIndex].run();
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
         }
         queueIndex = -1;
         len = queue.length;
@@ -2589,7 +3145,7 @@ process.nextTick = function (fun) {
         }
     }
     queue.push(new Item(fun, args));
-    if (!draining) {
+    if (queue.length === 1 && !draining) {
         setTimeout(drainQueue, 0);
     }
 };
@@ -2623,548 +3179,547 @@ process.binding = function (name) {
     throw new Error('process.binding is not supported');
 };
 
-// TODO(shtylman)
 process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.3.2 by @mathias */
 ;(function(root) {
 
-  /** Detect free variables */
-  var freeExports = typeof exports == 'object' && exports &&
-    !exports.nodeType && exports;
-  var freeModule = typeof module == 'object' && module &&
-    !module.nodeType && module;
-  var freeGlobal = typeof global == 'object' && global;
-  if (
-    freeGlobal.global === freeGlobal ||
-    freeGlobal.window === freeGlobal ||
-    freeGlobal.self === freeGlobal
-  ) {
-    root = freeGlobal;
-  }
+	/** Detect free variables */
+	var freeExports = typeof exports == 'object' && exports &&
+		!exports.nodeType && exports;
+	var freeModule = typeof module == 'object' && module &&
+		!module.nodeType && module;
+	var freeGlobal = typeof global == 'object' && global;
+	if (
+		freeGlobal.global === freeGlobal ||
+		freeGlobal.window === freeGlobal ||
+		freeGlobal.self === freeGlobal
+	) {
+		root = freeGlobal;
+	}
 
-  /**
-   * The `punycode` object.
-   * @name punycode
-   * @type Object
-   */
-  var punycode,
+	/**
+	 * The `punycode` object.
+	 * @name punycode
+	 * @type Object
+	 */
+	var punycode,
 
-  /** Highest positive signed 32-bit float value */
-  maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+	/** Highest positive signed 32-bit float value */
+	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
 
-  /** Bootstring parameters */
-  base = 36,
-  tMin = 1,
-  tMax = 26,
-  skew = 38,
-  damp = 700,
-  initialBias = 72,
-  initialN = 128, // 0x80
-  delimiter = '-', // '\x2D'
+	/** Bootstring parameters */
+	base = 36,
+	tMin = 1,
+	tMax = 26,
+	skew = 38,
+	damp = 700,
+	initialBias = 72,
+	initialN = 128, // 0x80
+	delimiter = '-', // '\x2D'
 
-  /** Regular expressions */
-  regexPunycode = /^xn--/,
-  regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
-  regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+	/** Regular expressions */
+	regexPunycode = /^xn--/,
+	regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+	regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
 
-  /** Error messages */
-  errors = {
-    'overflow': 'Overflow: input needs wider integers to process',
-    'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
-    'invalid-input': 'Invalid input'
-  },
+	/** Error messages */
+	errors = {
+		'overflow': 'Overflow: input needs wider integers to process',
+		'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+		'invalid-input': 'Invalid input'
+	},
 
-  /** Convenience shortcuts */
-  baseMinusTMin = base - tMin,
-  floor = Math.floor,
-  stringFromCharCode = String.fromCharCode,
+	/** Convenience shortcuts */
+	baseMinusTMin = base - tMin,
+	floor = Math.floor,
+	stringFromCharCode = String.fromCharCode,
 
-  /** Temporary variable */
-  key;
+	/** Temporary variable */
+	key;
 
-  /*--------------------------------------------------------------------------*/
+	/*--------------------------------------------------------------------------*/
 
-  /**
-   * A generic error utility function.
-   * @private
-   * @param {String} type The error type.
-   * @returns {Error} Throws a `RangeError` with the applicable error message.
-   */
-  function error(type) {
-    throw RangeError(errors[type]);
-  }
+	/**
+	 * A generic error utility function.
+	 * @private
+	 * @param {String} type The error type.
+	 * @returns {Error} Throws a `RangeError` with the applicable error message.
+	 */
+	function error(type) {
+		throw RangeError(errors[type]);
+	}
 
-  /**
-   * A generic `Array#map` utility function.
-   * @private
-   * @param {Array} array The array to iterate over.
-   * @param {Function} callback The function that gets called for every array
-   * item.
-   * @returns {Array} A new array of values returned by the callback function.
-   */
-  function map(array, fn) {
-    var length = array.length;
-    var result = [];
-    while (length--) {
-      result[length] = fn(array[length]);
-    }
-    return result;
-  }
+	/**
+	 * A generic `Array#map` utility function.
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} callback The function that gets called for every array
+	 * item.
+	 * @returns {Array} A new array of values returned by the callback function.
+	 */
+	function map(array, fn) {
+		var length = array.length;
+		var result = [];
+		while (length--) {
+			result[length] = fn(array[length]);
+		}
+		return result;
+	}
 
-  /**
-   * A simple `Array#map`-like wrapper to work with domain name strings or email
-   * addresses.
-   * @private
-   * @param {String} domain The domain name or email address.
-   * @param {Function} callback The function that gets called for every
-   * character.
-   * @returns {Array} A new string of characters returned by the callback
-   * function.
-   */
-  function mapDomain(string, fn) {
-    var parts = string.split('@');
-    var result = '';
-    if (parts.length > 1) {
-      // In email addresses, only the domain name should be punycoded. Leave
-      // the local part (i.e. everything up to `@`) intact.
-      result = parts[0] + '@';
-      string = parts[1];
-    }
-    // Avoid `split(regex)` for IE8 compatibility. See #17.
-    string = string.replace(regexSeparators, '\x2E');
-    var labels = string.split('.');
-    var encoded = map(labels, fn).join('.');
-    return result + encoded;
-  }
+	/**
+	 * A simple `Array#map`-like wrapper to work with domain name strings or email
+	 * addresses.
+	 * @private
+	 * @param {String} domain The domain name or email address.
+	 * @param {Function} callback The function that gets called for every
+	 * character.
+	 * @returns {Array} A new string of characters returned by the callback
+	 * function.
+	 */
+	function mapDomain(string, fn) {
+		var parts = string.split('@');
+		var result = '';
+		if (parts.length > 1) {
+			// In email addresses, only the domain name should be punycoded. Leave
+			// the local part (i.e. everything up to `@`) intact.
+			result = parts[0] + '@';
+			string = parts[1];
+		}
+		// Avoid `split(regex)` for IE8 compatibility. See #17.
+		string = string.replace(regexSeparators, '\x2E');
+		var labels = string.split('.');
+		var encoded = map(labels, fn).join('.');
+		return result + encoded;
+	}
 
-  /**
-   * Creates an array containing the numeric code points of each Unicode
-   * character in the string. While JavaScript uses UCS-2 internally,
-   * this function will convert a pair of surrogate halves (each of which
-   * UCS-2 exposes as separate characters) into a single code point,
-   * matching UTF-16.
-   * @see `punycode.ucs2.encode`
-   * @see <https://mathiasbynens.be/notes/javascript-encoding>
-   * @memberOf punycode.ucs2
-   * @name decode
-   * @param {String} string The Unicode input string (UCS-2).
-   * @returns {Array} The new array of code points.
-   */
-  function ucs2decode(string) {
-    var output = [],
-        counter = 0,
-        length = string.length,
-        value,
-        extra;
-    while (counter < length) {
-      value = string.charCodeAt(counter++);
-      if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-        // high surrogate, and there is a next character
-        extra = string.charCodeAt(counter++);
-        if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-          output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-        } else {
-          // unmatched surrogate; only append this code unit, in case the next
-          // code unit is the high surrogate of a surrogate pair
-          output.push(value);
-          counter--;
-        }
-      } else {
-        output.push(value);
-      }
-    }
-    return output;
-  }
+	/**
+	 * Creates an array containing the numeric code points of each Unicode
+	 * character in the string. While JavaScript uses UCS-2 internally,
+	 * this function will convert a pair of surrogate halves (each of which
+	 * UCS-2 exposes as separate characters) into a single code point,
+	 * matching UTF-16.
+	 * @see `punycode.ucs2.encode`
+	 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+	 * @memberOf punycode.ucs2
+	 * @name decode
+	 * @param {String} string The Unicode input string (UCS-2).
+	 * @returns {Array} The new array of code points.
+	 */
+	function ucs2decode(string) {
+		var output = [],
+		    counter = 0,
+		    length = string.length,
+		    value,
+		    extra;
+		while (counter < length) {
+			value = string.charCodeAt(counter++);
+			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+				// high surrogate, and there is a next character
+				extra = string.charCodeAt(counter++);
+				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+				} else {
+					// unmatched surrogate; only append this code unit, in case the next
+					// code unit is the high surrogate of a surrogate pair
+					output.push(value);
+					counter--;
+				}
+			} else {
+				output.push(value);
+			}
+		}
+		return output;
+	}
 
-  /**
-   * Creates a string based on an array of numeric code points.
-   * @see `punycode.ucs2.decode`
-   * @memberOf punycode.ucs2
-   * @name encode
-   * @param {Array} codePoints The array of numeric code points.
-   * @returns {String} The new Unicode string (UCS-2).
-   */
-  function ucs2encode(array) {
-    return map(array, function(value) {
-      var output = '';
-      if (value > 0xFFFF) {
-        value -= 0x10000;
-        output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-        value = 0xDC00 | value & 0x3FF;
-      }
-      output += stringFromCharCode(value);
-      return output;
-    }).join('');
-  }
+	/**
+	 * Creates a string based on an array of numeric code points.
+	 * @see `punycode.ucs2.decode`
+	 * @memberOf punycode.ucs2
+	 * @name encode
+	 * @param {Array} codePoints The array of numeric code points.
+	 * @returns {String} The new Unicode string (UCS-2).
+	 */
+	function ucs2encode(array) {
+		return map(array, function(value) {
+			var output = '';
+			if (value > 0xFFFF) {
+				value -= 0x10000;
+				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+				value = 0xDC00 | value & 0x3FF;
+			}
+			output += stringFromCharCode(value);
+			return output;
+		}).join('');
+	}
 
-  /**
-   * Converts a basic code point into a digit/integer.
-   * @see `digitToBasic()`
-   * @private
-   * @param {Number} codePoint The basic numeric code point value.
-   * @returns {Number} The numeric value of a basic code point (for use in
-   * representing integers) in the range `0` to `base - 1`, or `base` if
-   * the code point does not represent a value.
-   */
-  function basicToDigit(codePoint) {
-    if (codePoint - 48 < 10) {
-      return codePoint - 22;
-    }
-    if (codePoint - 65 < 26) {
-      return codePoint - 65;
-    }
-    if (codePoint - 97 < 26) {
-      return codePoint - 97;
-    }
-    return base;
-  }
+	/**
+	 * Converts a basic code point into a digit/integer.
+	 * @see `digitToBasic()`
+	 * @private
+	 * @param {Number} codePoint The basic numeric code point value.
+	 * @returns {Number} The numeric value of a basic code point (for use in
+	 * representing integers) in the range `0` to `base - 1`, or `base` if
+	 * the code point does not represent a value.
+	 */
+	function basicToDigit(codePoint) {
+		if (codePoint - 48 < 10) {
+			return codePoint - 22;
+		}
+		if (codePoint - 65 < 26) {
+			return codePoint - 65;
+		}
+		if (codePoint - 97 < 26) {
+			return codePoint - 97;
+		}
+		return base;
+	}
 
-  /**
-   * Converts a digit/integer into a basic code point.
-   * @see `basicToDigit()`
-   * @private
-   * @param {Number} digit The numeric value of a basic code point.
-   * @returns {Number} The basic code point whose value (when used for
-   * representing integers) is `digit`, which needs to be in the range
-   * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
-   * used; else, the lowercase form is used. The behavior is undefined
-   * if `flag` is non-zero and `digit` has no uppercase form.
-   */
-  function digitToBasic(digit, flag) {
-    //  0..25 map to ASCII a..z or A..Z
-    // 26..35 map to ASCII 0..9
-    return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
-  }
+	/**
+	 * Converts a digit/integer into a basic code point.
+	 * @see `basicToDigit()`
+	 * @private
+	 * @param {Number} digit The numeric value of a basic code point.
+	 * @returns {Number} The basic code point whose value (when used for
+	 * representing integers) is `digit`, which needs to be in the range
+	 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+	 * used; else, the lowercase form is used. The behavior is undefined
+	 * if `flag` is non-zero and `digit` has no uppercase form.
+	 */
+	function digitToBasic(digit, flag) {
+		//  0..25 map to ASCII a..z or A..Z
+		// 26..35 map to ASCII 0..9
+		return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+	}
 
-  /**
-   * Bias adaptation function as per section 3.4 of RFC 3492.
-   * http://tools.ietf.org/html/rfc3492#section-3.4
-   * @private
-   */
-  function adapt(delta, numPoints, firstTime) {
-    var k = 0;
-    delta = firstTime ? floor(delta / damp) : delta >> 1;
-    delta += floor(delta / numPoints);
-    for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
-      delta = floor(delta / baseMinusTMin);
-    }
-    return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
-  }
+	/**
+	 * Bias adaptation function as per section 3.4 of RFC 3492.
+	 * http://tools.ietf.org/html/rfc3492#section-3.4
+	 * @private
+	 */
+	function adapt(delta, numPoints, firstTime) {
+		var k = 0;
+		delta = firstTime ? floor(delta / damp) : delta >> 1;
+		delta += floor(delta / numPoints);
+		for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+			delta = floor(delta / baseMinusTMin);
+		}
+		return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+	}
 
-  /**
-   * Converts a Punycode string of ASCII-only symbols to a string of Unicode
-   * symbols.
-   * @memberOf punycode
-   * @param {String} input The Punycode string of ASCII-only symbols.
-   * @returns {String} The resulting string of Unicode symbols.
-   */
-  function decode(input) {
-    // Don't use UCS-2
-    var output = [],
-        inputLength = input.length,
-        out,
-        i = 0,
-        n = initialN,
-        bias = initialBias,
-        basic,
-        j,
-        index,
-        oldi,
-        w,
-        k,
-        digit,
-        t,
-        /** Cached calculation results */
-        baseMinusT;
+	/**
+	 * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+	 * symbols.
+	 * @memberOf punycode
+	 * @param {String} input The Punycode string of ASCII-only symbols.
+	 * @returns {String} The resulting string of Unicode symbols.
+	 */
+	function decode(input) {
+		// Don't use UCS-2
+		var output = [],
+		    inputLength = input.length,
+		    out,
+		    i = 0,
+		    n = initialN,
+		    bias = initialBias,
+		    basic,
+		    j,
+		    index,
+		    oldi,
+		    w,
+		    k,
+		    digit,
+		    t,
+		    /** Cached calculation results */
+		    baseMinusT;
 
-    // Handle the basic code points: let `basic` be the number of input code
-    // points before the last delimiter, or `0` if there is none, then copy
-    // the first basic code points to the output.
+		// Handle the basic code points: let `basic` be the number of input code
+		// points before the last delimiter, or `0` if there is none, then copy
+		// the first basic code points to the output.
 
-    basic = input.lastIndexOf(delimiter);
-    if (basic < 0) {
-      basic = 0;
-    }
+		basic = input.lastIndexOf(delimiter);
+		if (basic < 0) {
+			basic = 0;
+		}
 
-    for (j = 0; j < basic; ++j) {
-      // if it's not a basic code point
-      if (input.charCodeAt(j) >= 0x80) {
-        error('not-basic');
-      }
-      output.push(input.charCodeAt(j));
-    }
+		for (j = 0; j < basic; ++j) {
+			// if it's not a basic code point
+			if (input.charCodeAt(j) >= 0x80) {
+				error('not-basic');
+			}
+			output.push(input.charCodeAt(j));
+		}
 
-    // Main decoding loop: start just after the last delimiter if any basic code
-    // points were copied; start at the beginning otherwise.
+		// Main decoding loop: start just after the last delimiter if any basic code
+		// points were copied; start at the beginning otherwise.
 
-    for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+		for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
 
-      // `index` is the index of the next character to be consumed.
-      // Decode a generalized variable-length integer into `delta`,
-      // which gets added to `i`. The overflow checking is easier
-      // if we increase `i` as we go, then subtract off its starting
-      // value at the end to obtain `delta`.
-      for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+			// `index` is the index of the next character to be consumed.
+			// Decode a generalized variable-length integer into `delta`,
+			// which gets added to `i`. The overflow checking is easier
+			// if we increase `i` as we go, then subtract off its starting
+			// value at the end to obtain `delta`.
+			for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
 
-        if (index >= inputLength) {
-          error('invalid-input');
-        }
+				if (index >= inputLength) {
+					error('invalid-input');
+				}
 
-        digit = basicToDigit(input.charCodeAt(index++));
+				digit = basicToDigit(input.charCodeAt(index++));
 
-        if (digit >= base || digit > floor((maxInt - i) / w)) {
-          error('overflow');
-        }
+				if (digit >= base || digit > floor((maxInt - i) / w)) {
+					error('overflow');
+				}
 
-        i += digit * w;
-        t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+				i += digit * w;
+				t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
 
-        if (digit < t) {
-          break;
-        }
+				if (digit < t) {
+					break;
+				}
 
-        baseMinusT = base - t;
-        if (w > floor(maxInt / baseMinusT)) {
-          error('overflow');
-        }
+				baseMinusT = base - t;
+				if (w > floor(maxInt / baseMinusT)) {
+					error('overflow');
+				}
 
-        w *= baseMinusT;
+				w *= baseMinusT;
 
-      }
+			}
 
-      out = output.length + 1;
-      bias = adapt(i - oldi, out, oldi == 0);
+			out = output.length + 1;
+			bias = adapt(i - oldi, out, oldi == 0);
 
-      // `i` was supposed to wrap around from `out` to `0`,
-      // incrementing `n` each time, so we'll fix that now:
-      if (floor(i / out) > maxInt - n) {
-        error('overflow');
-      }
+			// `i` was supposed to wrap around from `out` to `0`,
+			// incrementing `n` each time, so we'll fix that now:
+			if (floor(i / out) > maxInt - n) {
+				error('overflow');
+			}
 
-      n += floor(i / out);
-      i %= out;
+			n += floor(i / out);
+			i %= out;
 
-      // Insert `n` at position `i` of the output
-      output.splice(i++, 0, n);
+			// Insert `n` at position `i` of the output
+			output.splice(i++, 0, n);
 
-    }
+		}
 
-    return ucs2encode(output);
-  }
+		return ucs2encode(output);
+	}
 
-  /**
-   * Converts a string of Unicode symbols (e.g. a domain name label) to a
-   * Punycode string of ASCII-only symbols.
-   * @memberOf punycode
-   * @param {String} input The string of Unicode symbols.
-   * @returns {String} The resulting Punycode string of ASCII-only symbols.
-   */
-  function encode(input) {
-    var n,
-        delta,
-        handledCPCount,
-        basicLength,
-        bias,
-        j,
-        m,
-        q,
-        k,
-        t,
-        currentValue,
-        output = [],
-        /** `inputLength` will hold the number of code points in `input`. */
-        inputLength,
-        /** Cached calculation results */
-        handledCPCountPlusOne,
-        baseMinusT,
-        qMinusT;
+	/**
+	 * Converts a string of Unicode symbols (e.g. a domain name label) to a
+	 * Punycode string of ASCII-only symbols.
+	 * @memberOf punycode
+	 * @param {String} input The string of Unicode symbols.
+	 * @returns {String} The resulting Punycode string of ASCII-only symbols.
+	 */
+	function encode(input) {
+		var n,
+		    delta,
+		    handledCPCount,
+		    basicLength,
+		    bias,
+		    j,
+		    m,
+		    q,
+		    k,
+		    t,
+		    currentValue,
+		    output = [],
+		    /** `inputLength` will hold the number of code points in `input`. */
+		    inputLength,
+		    /** Cached calculation results */
+		    handledCPCountPlusOne,
+		    baseMinusT,
+		    qMinusT;
 
-    // Convert the input in UCS-2 to Unicode
-    input = ucs2decode(input);
+		// Convert the input in UCS-2 to Unicode
+		input = ucs2decode(input);
 
-    // Cache the length
-    inputLength = input.length;
+		// Cache the length
+		inputLength = input.length;
 
-    // Initialize the state
-    n = initialN;
-    delta = 0;
-    bias = initialBias;
+		// Initialize the state
+		n = initialN;
+		delta = 0;
+		bias = initialBias;
 
-    // Handle the basic code points
-    for (j = 0; j < inputLength; ++j) {
-      currentValue = input[j];
-      if (currentValue < 0x80) {
-        output.push(stringFromCharCode(currentValue));
-      }
-    }
+		// Handle the basic code points
+		for (j = 0; j < inputLength; ++j) {
+			currentValue = input[j];
+			if (currentValue < 0x80) {
+				output.push(stringFromCharCode(currentValue));
+			}
+		}
 
-    handledCPCount = basicLength = output.length;
+		handledCPCount = basicLength = output.length;
 
-    // `handledCPCount` is the number of code points that have been handled;
-    // `basicLength` is the number of basic code points.
+		// `handledCPCount` is the number of code points that have been handled;
+		// `basicLength` is the number of basic code points.
 
-    // Finish the basic string - if it is not empty - with a delimiter
-    if (basicLength) {
-      output.push(delimiter);
-    }
+		// Finish the basic string - if it is not empty - with a delimiter
+		if (basicLength) {
+			output.push(delimiter);
+		}
 
-    // Main encoding loop:
-    while (handledCPCount < inputLength) {
+		// Main encoding loop:
+		while (handledCPCount < inputLength) {
 
-      // All non-basic code points < n have been handled already. Find the next
-      // larger one:
-      for (m = maxInt, j = 0; j < inputLength; ++j) {
-        currentValue = input[j];
-        if (currentValue >= n && currentValue < m) {
-          m = currentValue;
-        }
-      }
+			// All non-basic code points < n have been handled already. Find the next
+			// larger one:
+			for (m = maxInt, j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
+				if (currentValue >= n && currentValue < m) {
+					m = currentValue;
+				}
+			}
 
-      // Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
-      // but guard against overflow
-      handledCPCountPlusOne = handledCPCount + 1;
-      if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
-        error('overflow');
-      }
+			// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+			// but guard against overflow
+			handledCPCountPlusOne = handledCPCount + 1;
+			if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+				error('overflow');
+			}
 
-      delta += (m - n) * handledCPCountPlusOne;
-      n = m;
+			delta += (m - n) * handledCPCountPlusOne;
+			n = m;
 
-      for (j = 0; j < inputLength; ++j) {
-        currentValue = input[j];
+			for (j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
 
-        if (currentValue < n && ++delta > maxInt) {
-          error('overflow');
-        }
+				if (currentValue < n && ++delta > maxInt) {
+					error('overflow');
+				}
 
-        if (currentValue == n) {
-          // Represent delta as a generalized variable-length integer
-          for (q = delta, k = base; /* no condition */; k += base) {
-            t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
-            if (q < t) {
-              break;
-            }
-            qMinusT = q - t;
-            baseMinusT = base - t;
-            output.push(
-              stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
-            );
-            q = floor(qMinusT / baseMinusT);
-          }
+				if (currentValue == n) {
+					// Represent delta as a generalized variable-length integer
+					for (q = delta, k = base; /* no condition */; k += base) {
+						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+						if (q < t) {
+							break;
+						}
+						qMinusT = q - t;
+						baseMinusT = base - t;
+						output.push(
+							stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+						);
+						q = floor(qMinusT / baseMinusT);
+					}
 
-          output.push(stringFromCharCode(digitToBasic(q, 0)));
-          bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
-          delta = 0;
-          ++handledCPCount;
-        }
-      }
+					output.push(stringFromCharCode(digitToBasic(q, 0)));
+					bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+					delta = 0;
+					++handledCPCount;
+				}
+			}
 
-      ++delta;
-      ++n;
+			++delta;
+			++n;
 
-    }
-    return output.join('');
-  }
+		}
+		return output.join('');
+	}
 
-  /**
-   * Converts a Punycode string representing a domain name or an email address
-   * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
-   * it doesn't matter if you call it on a string that has already been
-   * converted to Unicode.
-   * @memberOf punycode
-   * @param {String} input The Punycoded domain name or email address to
-   * convert to Unicode.
-   * @returns {String} The Unicode representation of the given Punycode
-   * string.
-   */
-  function toUnicode(input) {
-    return mapDomain(input, function(string) {
-      return regexPunycode.test(string)
-        ? decode(string.slice(4).toLowerCase())
-        : string;
-    });
-  }
+	/**
+	 * Converts a Punycode string representing a domain name or an email address
+	 * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
+	 * it doesn't matter if you call it on a string that has already been
+	 * converted to Unicode.
+	 * @memberOf punycode
+	 * @param {String} input The Punycoded domain name or email address to
+	 * convert to Unicode.
+	 * @returns {String} The Unicode representation of the given Punycode
+	 * string.
+	 */
+	function toUnicode(input) {
+		return mapDomain(input, function(string) {
+			return regexPunycode.test(string)
+				? decode(string.slice(4).toLowerCase())
+				: string;
+		});
+	}
 
-  /**
-   * Converts a Unicode string representing a domain name or an email address to
-   * Punycode. Only the non-ASCII parts of the domain name will be converted,
-   * i.e. it doesn't matter if you call it with a domain that's already in
-   * ASCII.
-   * @memberOf punycode
-   * @param {String} input The domain name or email address to convert, as a
-   * Unicode string.
-   * @returns {String} The Punycode representation of the given domain name or
-   * email address.
-   */
-  function toASCII(input) {
-    return mapDomain(input, function(string) {
-      return regexNonASCII.test(string)
-        ? 'xn--' + encode(string)
-        : string;
-    });
-  }
+	/**
+	 * Converts a Unicode string representing a domain name or an email address to
+	 * Punycode. Only the non-ASCII parts of the domain name will be converted,
+	 * i.e. it doesn't matter if you call it with a domain that's already in
+	 * ASCII.
+	 * @memberOf punycode
+	 * @param {String} input The domain name or email address to convert, as a
+	 * Unicode string.
+	 * @returns {String} The Punycode representation of the given domain name or
+	 * email address.
+	 */
+	function toASCII(input) {
+		return mapDomain(input, function(string) {
+			return regexNonASCII.test(string)
+				? 'xn--' + encode(string)
+				: string;
+		});
+	}
 
-  /*--------------------------------------------------------------------------*/
+	/*--------------------------------------------------------------------------*/
 
-  /** Define the public API */
-  punycode = {
-    /**
-     * A string representing the current Punycode.js version number.
-     * @memberOf punycode
-     * @type String
-     */
-    'version': '1.3.2',
-    /**
-     * An object of methods to convert from JavaScript's internal character
-     * representation (UCS-2) to Unicode code points, and back.
-     * @see <https://mathiasbynens.be/notes/javascript-encoding>
-     * @memberOf punycode
-     * @type Object
-     */
-    'ucs2': {
-      'decode': ucs2decode,
-      'encode': ucs2encode
-    },
-    'decode': decode,
-    'encode': encode,
-    'toASCII': toASCII,
-    'toUnicode': toUnicode
-  };
+	/** Define the public API */
+	punycode = {
+		/**
+		 * A string representing the current Punycode.js version number.
+		 * @memberOf punycode
+		 * @type String
+		 */
+		'version': '1.3.2',
+		/**
+		 * An object of methods to convert from JavaScript's internal character
+		 * representation (UCS-2) to Unicode code points, and back.
+		 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+		 * @memberOf punycode
+		 * @type Object
+		 */
+		'ucs2': {
+			'decode': ucs2decode,
+			'encode': ucs2encode
+		},
+		'decode': decode,
+		'encode': encode,
+		'toASCII': toASCII,
+		'toUnicode': toUnicode
+	};
 
-  /** Expose `punycode` */
-  // Some AMD build optimizers, like r.js, check for specific condition patterns
-  // like the following:
-  if (
-    typeof define == 'function' &&
-    typeof define.amd == 'object' &&
-    define.amd
-  ) {
-    define('punycode', function() {
-      return punycode;
-    });
-  } else if (freeExports && freeModule) {
-    if (module.exports == freeExports) { // in Node.js or RingoJS v0.8.0+
-      freeModule.exports = punycode;
-    } else { // in Narwhal or RingoJS v0.7.0-
-      for (key in punycode) {
-        punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
-      }
-    }
-  } else { // in Rhino or a web browser
-    root.punycode = punycode;
-  }
+	/** Expose `punycode` */
+	// Some AMD build optimizers, like r.js, check for specific condition patterns
+	// like the following:
+	if (
+		typeof define == 'function' &&
+		typeof define.amd == 'object' &&
+		define.amd
+	) {
+		define('punycode', function() {
+			return punycode;
+		});
+	} else if (freeExports && freeModule) {
+		if (module.exports == freeExports) { // in Node.js or RingoJS v0.8.0+
+			freeModule.exports = punycode;
+		} else { // in Narwhal or RingoJS v0.7.0-
+			for (key in punycode) {
+				punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
+			}
+		}
+	} else { // in Rhino or a web browser
+		root.punycode = punycode;
+	}
 
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3250,7 +3805,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3337,16 +3892,16 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":15,"./encode":16}],18:[function(require,module,exports){
+},{"./decode":17,"./encode":18}],20:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":19}],19:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":21}],21:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3439,7 +3994,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":21,"./_stream_writable":23,"_process":13,"core-util-is":24,"inherits":11}],20:[function(require,module,exports){
+},{"./_stream_readable":23,"./_stream_writable":25,"_process":15,"core-util-is":26,"inherits":12}],22:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3487,7 +4042,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":22,"core-util-is":24,"inherits":11}],21:[function(require,module,exports){
+},{"./_stream_transform":24,"core-util-is":26,"inherits":12}],23:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4442,7 +4997,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":19,"_process":13,"buffer":2,"core-util-is":24,"events":6,"inherits":11,"isarray":12,"stream":29,"string_decoder/":30,"util":1}],22:[function(require,module,exports){
+},{"./_stream_duplex":21,"_process":15,"buffer":3,"core-util-is":26,"events":6,"inherits":12,"isarray":14,"stream":31,"string_decoder/":32,"util":2}],24:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4653,7 +5208,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":19,"core-util-is":24,"inherits":11}],23:[function(require,module,exports){
+},{"./_stream_duplex":21,"core-util-is":26,"inherits":12}],25:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5134,7 +5689,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":19,"_process":13,"buffer":2,"core-util-is":24,"inherits":11,"stream":29}],24:[function(require,module,exports){
+},{"./_stream_duplex":21,"_process":15,"buffer":3,"core-util-is":26,"inherits":12,"stream":31}],26:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5159,8 +5714,12 @@ function endWritable(stream, state, cb) {
 
 // NOTE: These type checking functions intentionally don't use `instanceof`
 // because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
+
+function isArray(arg) {
+  if (Array.isArray) {
+    return Array.isArray(arg);
+  }
+  return objectToString(arg) === '[object Array]';
 }
 exports.isArray = isArray;
 
@@ -5200,7 +5759,7 @@ function isUndefined(arg) {
 exports.isUndefined = isUndefined;
 
 function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
+  return objectToString(re) === '[object RegExp]';
 }
 exports.isRegExp = isRegExp;
 
@@ -5210,13 +5769,12 @@ function isObject(arg) {
 exports.isObject = isObject;
 
 function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
+  return objectToString(d) === '[object Date]';
 }
 exports.isDate = isDate;
 
 function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
+  return (objectToString(e) === '[object Error]' || e instanceof Error);
 }
 exports.isError = isError;
 
@@ -5235,19 +5793,17 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-function isBuffer(arg) {
-  return Buffer.isBuffer(arg);
-}
-exports.isBuffer = isBuffer;
+exports.isBuffer = Buffer.isBuffer;
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
-}).call(this,require("buffer").Buffer)
-},{"buffer":2}],25:[function(require,module,exports){
+
+}).call(this,{"isBuffer":require("../../../../insert-module-globals/node_modules/is-buffer/index.js")})
+},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":13}],27:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":20}],26:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":22}],28:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -5256,13 +5812,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":19,"./lib/_stream_passthrough.js":20,"./lib/_stream_readable.js":21,"./lib/_stream_transform.js":22,"./lib/_stream_writable.js":23,"stream":29}],27:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":21,"./lib/_stream_passthrough.js":22,"./lib/_stream_readable.js":23,"./lib/_stream_transform.js":24,"./lib/_stream_writable.js":25,"stream":31}],29:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":22}],28:[function(require,module,exports){
+},{"./lib/_stream_transform.js":24}],30:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":23}],29:[function(require,module,exports){
+},{"./lib/_stream_writable.js":25}],31:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5391,7 +5947,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":6,"inherits":11,"readable-stream/duplex.js":18,"readable-stream/passthrough.js":25,"readable-stream/readable.js":26,"readable-stream/transform.js":27,"readable-stream/writable.js":28}],30:[function(require,module,exports){
+},{"events":6,"inherits":12,"readable-stream/duplex.js":20,"readable-stream/passthrough.js":27,"readable-stream/readable.js":28,"readable-stream/transform.js":29,"readable-stream/writable.js":30}],32:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5614,7 +6170,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":2}],31:[function(require,module,exports){
+},{"buffer":3}],33:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6323,14 +6879,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":14,"querystring":17}],32:[function(require,module,exports){
+},{"punycode":16,"querystring":19}],34:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6920,7 +7476,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":32,"_process":13,"inherits":11}],34:[function(require,module,exports){
+},{"./support/isBuffer":34,"_process":15,"inherits":12}],36:[function(require,module,exports){
 (function (Buffer){
 var Writable = require('readable-stream').Writable
 var inherits = require('inherits')
@@ -7060,9 +7616,9 @@ function u8Concat (parts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":2,"inherits":35,"readable-stream":46,"typedarray":47}],35:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],36:[function(require,module,exports){
+},{"buffer":3,"inherits":37,"readable-stream":48,"typedarray":49}],37:[function(require,module,exports){
+arguments[4][12][0].apply(exports,arguments)
+},{"dup":12}],38:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -7070,19 +7626,19 @@ arguments[4][11][0].apply(exports,arguments)
 
 'use strict';
 
-module.exports = Duplex;
-
-/*<replacement>*/
-var processNextTick = require('process-nextick-args');
-/*</replacement>*/
-
-
 /*<replacement>*/
 var objectKeys = Object.keys || function (obj) {
   var keys = [];
   for (var key in obj) keys.push(key);
   return keys;
 }
+/*</replacement>*/
+
+
+module.exports = Duplex;
+
+/*<replacement>*/
+var processNextTick = require('process-nextick-args');
 /*</replacement>*/
 
 
@@ -7146,7 +7702,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":38,"./_stream_writable":40,"core-util-is":41,"inherits":35,"process-nextick-args":43}],37:[function(require,module,exports){
+},{"./_stream_readable":40,"./_stream_writable":42,"core-util-is":43,"inherits":37,"process-nextick-args":45}],39:[function(require,module,exports){
 // a passthrough stream.
 // basically just the most minimal sort of Transform stream.
 // Every written chunk gets output as-is.
@@ -7175,7 +7731,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":39,"core-util-is":41,"inherits":35}],38:[function(require,module,exports){
+},{"./_stream_transform":41,"core-util-is":43,"inherits":37}],40:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7197,10 +7753,10 @@ var Buffer = require('buffer').Buffer;
 
 Readable.ReadableState = ReadableState;
 
-var EE = require('events').EventEmitter;
+var EE = require('events');
 
 /*<replacement>*/
-if (!EE.listenerCount) EE.listenerCount = function(emitter, type) {
+var EElistenerCount = function(emitter, type) {
   return emitter.listeners(type).length;
 };
 /*</replacement>*/
@@ -7209,11 +7765,15 @@ if (!EE.listenerCount) EE.listenerCount = function(emitter, type) {
 
 /*<replacement>*/
 var Stream;
- (function (){try{
-Stream = require('st' + 'ream');
-}catch(_){Stream = require('events').EventEmitter;}}())
+(function (){try{
+  Stream = require('st' + 'ream');
+}catch(_){}finally{
+  if (!Stream)
+    Stream = require('events').EventEmitter;
+}}())
 /*</replacement>*/
 
+var Buffer = require('buffer').Buffer;
 
 /*<replacement>*/
 var util = require('core-util-is');
@@ -7223,9 +7783,10 @@ util.inherits = require('inherits');
 
 
 /*<replacement>*/
-var debug = require('util');
-if (debug && debug.debuglog) {
-  debug = debug.debuglog('stream');
+var debugUtil = require('util');
+var debug;
+if (debugUtil && debugUtil.debuglog) {
+  debug = debugUtil.debuglog('stream');
 } else {
   debug = function () {};
 }
@@ -7394,7 +7955,6 @@ function readableAddChunk(stream, state, chunk, encoding, addToFront) {
 }
 
 
-
 // if it's past the high water mark, we can push in some more.
 // Also, if we have no data yet, we can stand some
 // more bytes.  This is to work around cases where hwm=0,
@@ -7418,15 +7978,19 @@ Readable.prototype.setEncoding = function(enc) {
   return this;
 };
 
-// Don't raise the hwm > 128MB
+// Don't raise the hwm > 8MB
 var MAX_HWM = 0x800000;
-function roundUpToNextPowerOf2(n) {
+function computeNewHighWaterMark(n) {
   if (n >= MAX_HWM) {
     n = MAX_HWM;
   } else {
     // Get the next highest power of 2
     n--;
-    for (var p = 1; p < 32; p <<= 1) n |= n >> p;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
     n++;
   }
   return n;
@@ -7455,7 +8019,7 @@ function howMuchToRead(n, state) {
   // power of 2, to prevent increasing it excessively in tiny
   // amounts.
   if (n > state.highWaterMark)
-    state.highWaterMark = roundUpToNextPowerOf2(n);
+    state.highWaterMark = computeNewHighWaterMark(n);
 
   // don't have that much.  return null, unless we've ended.
   if (n > state.length) {
@@ -7721,6 +8285,7 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
   var ondrain = pipeOnDrain(src);
   dest.on('drain', ondrain);
 
+  var cleanedUp = false;
   function cleanup() {
     debug('cleanup');
     // cleanup event handlers once the pipe is broken
@@ -7732,6 +8297,8 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     src.removeListener('end', onend);
     src.removeListener('end', cleanup);
     src.removeListener('data', ondata);
+
+    cleanedUp = true;
 
     // if the reader is waiting for a drain event from this
     // specific writer, then it would cause it to never start
@@ -7748,9 +8315,16 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     debug('ondata');
     var ret = dest.write(chunk);
     if (false === ret) {
-      debug('false write response, pause',
-            src._readableState.awaitDrain);
-      src._readableState.awaitDrain++;
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      if (state.pipesCount === 1 &&
+          state.pipes[0] === dest &&
+          src.listenerCount('data') === 1 &&
+          !cleanedUp) {
+        debug('false write response, pause', src._readableState.awaitDrain);
+        src._readableState.awaitDrain++;
+      }
       src.pause();
     }
   }
@@ -7761,7 +8335,7 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     debug('onerror', er);
     unpipe();
     dest.removeListener('error', onerror);
-    if (EE.listenerCount(dest, 'error') === 0)
+    if (EElistenerCount(dest, 'error') === 0)
       dest.emit('error', er);
   }
   // This is a brutally ugly hack to make sure that our error handler
@@ -7772,7 +8346,6 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     dest._events.error.unshift(onerror);
   else
     dest._events.error = [onerror, dest._events.error];
-
 
 
   // Both close and finish should trigger unpipe, but only once.
@@ -7811,7 +8384,7 @@ function pipeOnDrain(src) {
     debug('pipeOnDrain', state.awaitDrain);
     if (state.awaitDrain)
       state.awaitDrain--;
-    if (state.awaitDrain === 0 && EE.listenerCount(src, 'data')) {
+    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
       state.flowing = true;
       flow(src);
     }
@@ -8027,7 +8600,6 @@ Readable.prototype.wrap = function(stream) {
 };
 
 
-
 // exposed for testing purposes only.
 Readable._fromList = fromList;
 
@@ -8052,6 +8624,8 @@ function fromList(n, state) {
     // read it all, truncate the array.
     if (stringMode)
       ret = list.join('');
+    else if (list.length === 1)
+      ret = list[0];
     else
       ret = Buffer.concat(list, length);
     list.length = 0;
@@ -8134,7 +8708,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":36,"_process":13,"buffer":2,"core-util-is":41,"events":6,"inherits":35,"isarray":42,"process-nextick-args":43,"string_decoder/":44,"util":1}],39:[function(require,module,exports){
+},{"./_stream_duplex":38,"_process":15,"buffer":3,"core-util-is":43,"events":6,"inherits":37,"isarray":44,"process-nextick-args":45,"string_decoder/":46,"util":2}],41:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -8333,9 +8907,9 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":36,"core-util-is":41,"inherits":35}],40:[function(require,module,exports){
+},{"./_stream_duplex":38,"core-util-is":43,"inherits":37}],42:[function(require,module,exports){
 // A bit simpler than readable streams.
-// Implement an async ._write(chunk, cb), and it'll handle all
+// Implement an async ._write(chunk, encoding, cb), and it'll handle all
 // the drain event emission and buffering.
 
 'use strict';
@@ -8360,14 +8934,25 @@ util.inherits = require('inherits');
 /*</replacement>*/
 
 
+/*<replacement>*/
+var internalUtil = {
+  deprecate: require('util-deprecate')
+};
+/*</replacement>*/
+
+
 
 /*<replacement>*/
 var Stream;
- (function (){try{
-Stream = require('st' + 'ream');
-}catch(_){Stream = require('events').EventEmitter;}}())
+(function (){try{
+  Stream = require('st' + 'ream');
+}catch(_){}finally{
+  if (!Stream)
+    Stream = require('events').EventEmitter;
+}}())
 /*</replacement>*/
 
+var Buffer = require('buffer').Buffer;
 
 util.inherits(Writable, Stream);
 
@@ -8479,12 +9064,15 @@ WritableState.prototype.getBuffer = function writableStateGetBuffer() {
   return out;
 };
 
+(function (){try {
 Object.defineProperty(WritableState.prototype, 'buffer', {
-  get: require('util-deprecate')(function() {
+  get: internalUtil.deprecate(function() {
     return this.getBuffer();
-  }, '_writableState.buffer is deprecated. Use ' +
-      '_writableState.getBuffer() instead.')
+  }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' +
+     'instead.')
 });
+}catch(_){}}());
+
 
 function Writable(options) {
   var Duplex = require('./_stream_duplex');
@@ -8553,7 +9141,7 @@ Writable.prototype.write = function(chunk, encoding, cb) {
     encoding = null;
   }
 
-  if (chunk instanceof Buffer)
+  if (Buffer.isBuffer(chunk))
     encoding = 'buffer';
   else if (!encoding)
     encoding = state.defaultEncoding;
@@ -8618,7 +9206,7 @@ function decodeChunk(state, chunk, encoding) {
 function writeOrBuffer(stream, state, chunk, encoding, cb) {
   chunk = decodeChunk(state, chunk, encoding);
 
-  if (chunk instanceof Buffer)
+  if (Buffer.isBuffer(chunk))
     encoding = 'buffer';
   var len = state.objectMode ? 1 : chunk.length;
 
@@ -8848,19 +9436,135 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":36,"buffer":2,"core-util-is":41,"events":6,"inherits":35,"process-nextick-args":43,"util-deprecate":45}],41:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"buffer":2,"dup":24}],42:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],43:[function(require,module,exports){
+},{"./_stream_duplex":38,"buffer":3,"core-util-is":43,"events":6,"inherits":37,"process-nextick-args":45,"util-deprecate":47}],43:[function(require,module,exports){
+(function (Buffer){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+
+function isArray(arg) {
+  if (Array.isArray) {
+    return Array.isArray(arg);
+  }
+  return objectToString(arg) === '[object Array]';
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = Buffer.isBuffer;
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+}).call(this,{"isBuffer":require("../../../../../../browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js")})
+},{"../../../../../../browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":13}],44:[function(require,module,exports){
+arguments[4][14][0].apply(exports,arguments)
+},{"dup":14}],45:[function(require,module,exports){
 (function (process){
 'use strict';
-module.exports = nextTick;
+
+if (!process.version ||
+    process.version.indexOf('v0.') === 0 ||
+    process.version.indexOf('v1.') === 0 && process.version.indexOf('v1.8.') !== 0) {
+  module.exports = nextTick;
+} else {
+  module.exports = process.nextTick;
+}
 
 function nextTick(fn) {
   var args = new Array(arguments.length - 1);
   var i = 0;
-  while (i < arguments.length) {
+  while (i < args.length) {
     args[i++] = arguments[i];
   }
   process.nextTick(function afterTick() {
@@ -8869,9 +9573,9 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":13}],44:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"buffer":2,"dup":30}],45:[function(require,module,exports){
+},{"_process":15}],46:[function(require,module,exports){
+arguments[4][32][0].apply(exports,arguments)
+},{"buffer":3,"dup":32}],47:[function(require,module,exports){
 (function (global){
 
 /**
@@ -8930,27 +9634,33 @@ function deprecate (fn, msg) {
  */
 
 function config (name) {
-  if (!global.localStorage) return false;
+  // accessing global.localStorage can trigger a DOMException in sandboxed iframes
+  try {
+    if (!global.localStorage) return false;
+  } catch (_) {
+    return false;
+  }
   var val = global.localStorage[name];
   if (null == val) return false;
   return String(val).toLowerCase() === 'true';
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],46:[function(require,module,exports){
-(function (){
+},{}],48:[function(require,module,exports){
+var Stream = (function (){
   try {
-    exports.Stream = require('st' + 'ream'); // hack to fix a circular dependency issue when used with browserify
+    return require('st' + 'ream'); // hack to fix a circular dependency issue when used with browserify
   } catch(_){}
 }());
 exports = module.exports = require('./lib/_stream_readable.js');
+exports.Stream = Stream || exports;
 exports.Readable = exports;
 exports.Writable = require('./lib/_stream_writable.js');
 exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":36,"./lib/_stream_passthrough.js":37,"./lib/_stream_readable.js":38,"./lib/_stream_transform.js":39,"./lib/_stream_writable.js":40}],47:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":38,"./lib/_stream_passthrough.js":39,"./lib/_stream_readable.js":40,"./lib/_stream_transform.js":41,"./lib/_stream_writable.js":42}],49:[function(require,module,exports){
 var undefined = (void 0); // Paranoia
 
 // Beyond this value, index getters/setters (i.e. array[0], array[1]) are so slow to
@@ -9582,7 +10292,7 @@ function packF32(v) { return packIEEE754(v, 8, 23); }
 
 }());
 
-},{}],48:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -9752,7 +10462,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":49}],49:[function(require,module,exports){
+},{"./debug":51}],51:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -9951,7 +10661,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":50}],50:[function(require,module,exports){
+},{"ms":52}],52:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -10078,312 +10788,5 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],51:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
+},{}]},{},[1])(1)
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var _concatStream = require('concat-stream');
-
-var _concatStream2 = _interopRequireDefault(_concatStream);
-
-var _debug = require('debug');
-
-var _debug2 = _interopRequireDefault(_debug);
-
-var _http = require('http');
-
-var _http2 = _interopRequireDefault(_http);
-
-var LAYER_DEFAULTS = {};
-
-var REQUEST_DEFAULTS = {
-  accessModes: 'WALK',
-  egressModes: 'WALK',
-  date: '2015-09-30', // new Date().toISOString().split('T')[0],
-  fromTime: 25200,
-  toTime: 32400,
-  walkSpeed: 1.3333333333333333,
-  bikeSpeed: 4.1,
-  carSpeed: 20,
-  streetTime: 90,
-  maxWalkTime: 60,
-  maxBikeTime: 45,
-  maxCarTime: 45,
-  minBikeTime: 10,
-  minCarTime: 10,
-  suboptimalMinutes: 5,
-  analyst: true,
-  bikeSafe: 1,
-  bikeSlope: 1,
-  bikeTime: 1
-};
-
-var debug = (0, _debug2['default'])('analyst.js');
-
-/**
- * Create an instance of Analyst.js for use with single point requests.
- *
- * @param {Leaflet} L Pass in an instance of Leaflet so that it doesn't need to be packaged as a dependency.
- * @param {Object} options Options object.
- * @param {String} [options.apiUrl]
- * @param {String} [options.tileUrl]
- * @param {String} [options.shapefileId]
- * @param {String} [options.graphId]
- * @param {Boolean} [options.profile] Defaults to true
- * @param {String} [options.connectivityType]
- * @param {Number} [options.timeLimit] Defaults to 3600
- * @param {Boolean} [options.showPoints] Defaults to false
- * @param {Boolean} [options.showIso] Defaults to true
- * @param {Object} [options.requestOptions] Pass in default request options to be used.
- * @param {Object} [options.tileLayerOptions] Pass in default tileLayerOptions to use.
- * @example
- * const analyst = new Analyst(window.L, {
- *   apiUrl: 'http://localhost:3000/api',
- *   tileUrl: 'http://localhost:4000/tile'
- * })
- */
-
-var Analyst = (function () {
-  function Analyst(L) {
-    var opts = arguments[1] === undefined ? {} : arguments[1];
-
-    _classCallCheck(this, Analyst);
-
-    this.apiUrl = opts.apiUrl;
-    this.tileUrl = opts.tileUrl;
-
-    this.shapefileId = opts.shapefileId;
-    this.graphId = opts.graphId;
-    this.profile = opts.profile === undefined ? true : opts.profile;
-
-    this.connectivityType = opts.connectivityType || 'AVERAGE';
-    this.timeLimit = opts.timeLimit || 7200;
-    this.showPoints = !!opts.showPoints;
-    this.showIso = !!opts.showIso;
-
-    this.L = L;
-
-    this.requestOptions = Object.assign({}, REQUEST_DEFAULTS, opts.requestOptions);
-    this.tileLayerOptions = Object.assign({}, LAYER_DEFAULTS, opts.tileLayerOptions);
-  }
-
-  _createClass(Analyst, [{
-    key: 'updateSinglePointLayer',
-
-    /**
-     * Update/create the single point layer for this Analyst.js instance.
-     *
-     * @return {TileLayer} A Leaflet tile layer that pulls in the generated single point tiles.
-     * @example
-     * analyst.key = 'NEW KEY'
-     * analyst.updateSinglePointLayer().redraw()
-     */
-
-    value: function updateSinglePointLayer(key1, key2) {
-      if (key2 !== undefined) {
-        var keyVals = key2 + '/' + key1;
-      } else {
-        var keyVals = key1;
-      }
-
-      var url = this.tileUrl + '/single/' + keyVals + '/{z}/{x}/{y}.png?which=' + this.connectivityType + '&timeLimit=' + this.timeLimit + '&showPoints=' + this.showPoints + '&showIso=' + this.showIso;
-
-      if (!this.singlePointLayer) {
-        debug('creating single point layer with url: ' + url);
-        this.singlePointLayer = this.L.tileLayer(url, this.tileLayerOptions);
-      } else {
-        debug('updating single point layer to url: ' + url);
-        this.singlePointLayer.setUrl(url);
-      }
-
-      return this.singlePointLayer;
-    }
-  }, {
-    key: 'shapefiles',
-
-    /**
-     * Get all of the available shapefiles.
-     *
-     * @return {Promise} Resolves with a JSON list of shapefiles.
-     * @example
-     * analyst.shapefiles().then(function (shapefiles) {
-     *   console.log(shapefiles)
-     * })
-     */
-
-    value: function shapefiles() {
-      debug('fetching available shapefiles');
-      return get(this.apiUrl + '/shapefile').then(function (r) {
-        return r.json();
-      });
-    }
-  }, {
-    key: 'singlePointRequest',
-
-    /**
-     * Run a single point request and generate a tile layer.
-     *
-     * @param {LatLng} point
-     * @param {Object} options Options object.
-     * @return {Promise} Resolves with an object containing the tile layer and the results data.
-     * @example
-     * analyst
-     *   .singlePointRequest(marker.getLatLng())
-     *   .then(function (response) {
-     *     response.tileLayer.addTo(map)
-     *   })
-     */
-
-    value: function singlePointRequest(point, compareKey) {
-      var _this = this;
-
-      var opts = arguments[2] === undefined ? {} : arguments[2];
-
-      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
-      if (!this.shapefileId) return Promise.reject(new Error('Shapefile ID required'));
-      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
-
-      var options = Object.assign({}, this.requestOptions, opts);
-      options.fromLat = options.toLat = point.lat;
-      options.fromLon = options.toLon = point.lng;
-
-      debug('making single point request to [' + point.lng + ', ' + point.lat + ']', options);
-      return post(this.apiUrl + '/single', {
-        destinationPointsetId: this.shapefileId,
-        graphId: this.graphId,
-        profile: this.profile,
-        options: options
-      }).then(function (data) {
-        debug('single point request successful');
-        _this.key = data.key;
-
-        return {
-          tileLayer: _this.updateSinglePointLayer(_this.key, compareKey),
-          results: data
-        };
-      });
-    }
-  }, {
-    key: 'vectorRequest',
-
-    /**
-     * Run a vector request and return a GeoJSON object.
-     *
-     * @param {LatLng} point
-     * @param {Object} options Options object.
-     * @return {Promise} Resolves with an object containing the GeoJSON object.
-     * @example
-     * analyst
-     *   .vectorRequest(marker.getLatLng())
-     *   .then(function (geojson) {
-     *     L.geoJson(geoJson).addTo(map)
-     *   })
-     */
-
-    value: function vectorRequest(point) {
-      var opts = arguments[1] === undefined ? {} : arguments[1];
-
-      if (!point) return Promise.reject(new Error('Lat/lng point required.'));
-      if (!this.graphId) return Promise.reject(new Error('Graph ID required'));
-
-      var options = Object.assign({}, this.requestOptions, opts);
-      options.fromLat = options.toLat = point.lat;
-      options.fromLon = options.toLon = point.lng;
-
-      debug('making vector request to [' + point.lng + ', ' + point.lat + ']', options);
-      return post(this.apiUrl + '/single', {
-        graphId: this.graphId,
-        profile: this.profile,
-        options: options
-      }).then(function (data) {
-        debug('vector request successful');
-
-        return data;
-      });
-    }
-  }]);
-
-  return Analyst;
-})();
-
-exports['default'] = Analyst;
-
-var getHostPortAndPath = new RegExp('^(.*)://([A-Za-z0-9-.]+)(:[0-9]+)?(.*)$');
-function post(url, data) {
-  return new Promise(function (resolve, reject) {
-    updateProgressBar(); // FOR PROGRRESS BAR
-    var _url$match = url.match(getHostPortAndPath);
-
-    var _url$match2 = _slicedToArray(_url$match, 5);
-
-    var host = _url$match2[2];
-    var port = _url$match2[3];
-    var path = _url$match2[4];
-
-    var params = {
-      host: host,
-      path: path,
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      withCredentials: false
-    };
-
-    if (port !== undefined) params.port = port;
-
-    debug('POST', params);
-    var req = _http2['default'].request(params, function (res) { 
-      updateProgressBar(); // FOR PROGRRESS BAR
-      res.on('error', reject);
-      res.pipe((0, _concatStream2['default'])(function (data) { 
-        updateProgressBar(); // FOR PROGRRESS BAR
-        resolve(JSON.parse(data));
-        updateProgressBar(); // FOR PROGRRESS BAR
-      }));
-    });
-
-    req.on('error', reject);
-    updateProgressBar(); // FOR PROGRRESS BAR
-    req.write(JSON.stringify(data));
-    updateProgressBar(); // FOR PROGRRESS BAR
-    req.end();
-  });
-}
-
-function get(url) {
-  return new Promise(function (resolve, reject) {
-    _http2['default'].get(url, function (res) {
-      res.on('error', reject);
-      res.pipe((0, _concatStream2['default'])(function (data) {
-        resolve(JSON.parse(data));
-      }));
-    }).on('error', reject);
-  });
-}
-module.exports = exports['default'];
-
-},{"concat-stream":34,"debug":48,"http":7}]},{},[51])(51)
-});
-
-
-function updateProgressBar() {
-  var appElement = document.querySelector('[ng-app=coaxsApp]');
-  var appScope = angular.element(appElement).scope().$$childHead;
-  if (appScope.loadProgress.val < 99) { appScope.loadProgress.val += 2; }
-}
-
-
-

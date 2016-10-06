@@ -3,6 +3,27 @@
 // here, in the service, is the boilerplate involved in interfacing with leaflet's api and putting the actual marker or route on the map
 coaxsApp.service('loadService', function ($q, $http, analystService, leafletData, targetService, supportService) {
 
+  this.getCordons = function (cb) {
+	 
+	$http.get('/geojson/cordons')
+    .success(function (data, status) { 
+		cordonGeos = L.layerGroup();
+		var cordonData = {}; //new Array(numCordons);
+		for (cordonId in data){
+			cordonGeos.addLayer(
+				L.geoJson(data[cordonId],
+				{style: {weight: 1.5,
+						 opacity:0,
+						 fillOpacity:0,
+						 id: cordonId,
+						 dashArray: 3,
+						 color: data[cordonId].features[0].properties.color}}));
+			cordonData[cordonId] = data[cordonId].features[0].properties;
+		}
+	  cb([cordonGeos,cordonData]);
+	});
+  }
+
   this.getExisting = function (cb, gs) {
 	$http.get('/geojson/existing')	
     .success(function (data, status) {
@@ -20,7 +41,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
       });
       cb(subwayRoutes);
     });    
-  }
+  };
 
   this.getProposedPriorityLanes = function (cb) {
     $http.get('/geojson/proposed_priority')
@@ -42,15 +63,18 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         });
         geojsonList.push(routes[feature.routeId][feature.direction]);
       }
+
       var priorityLayer = L.layerGroup(geojsonList);
 	  cb(priorityLayer);
     });
-  }
+  };
 
-  this.getProposedRoutes = function (cb) {
-    $http.get('/geojson/proposed')
+
+
+  
+  this.getProposedRoutes = function (cb,variants) {
+    $http.get('/load/routes')
     .success(function (data, status) {
-
       var geojsonList   = [];
       var routes = {};
 
@@ -58,37 +82,59 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         var feature = data.features[i].properties;
         feature['length'] = supportService.getLength(data.features[i].geometry);
 
-        if (!routes[feature.routeId]) { routes[feature.routeId] = {} };
-        var color = '#' + feature.routeColor;
-        routes[feature.routeId][feature.direction] = L.geoJson(data.features[i], {
+        if (!routes[feature.pid]) { routes[feature.pid] = {} };
+        var color = variants[feature.corridorId].color;
+        routes[feature.pid] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {
               color: color,
-              weight: 3,
-              opacity: 0.1,
+              weight: 1,
+              opacity: 0.5
             };
-          },
-          onEachFeature: function (feature, layer) {
-            // per anson's request that when you click on a route it brings up the routes data, this is a hacky solution
-            layer.on({click: function (e) {
-              var route = e.target.feature.properties;
-
-              var appElement = document.querySelector('[ng-app=coaxsApp]');
-              var appScope = angular.element(appElement).scope().$$childHead;
-
-              appScope.targetCorridor(route.corName);
-              appScope.tabnav = route.corName;
-              appScope.overview = true;
-            }});
           },
           base: feature
         });
 
-        geojsonList.push(routes[feature.routeId][feature.direction]);
+        geojsonList.push(routes[feature.pid]);
       }
+      var routesLayer = L.layerGroup(geojsonList);
       cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
-    });    
-  }
+
+    });
+  };
+
+
+
+  this.getTrunk = function (cb,variants) {
+    $http.get('/load/trunks')
+      .success(function (data, status) {
+        var geojsonList   = [];
+        var routes = {};
+
+        for (var i = 0; i < data.features.length; i++) {
+          var feature = data.features[i].properties;
+          feature['length'] = supportService.getLength(data.features[i].geometry);
+
+          var color = variants[feature.corridorId].color;
+          routes[i] = L.geoJson(data.features[i], {
+            style: function (feature) {
+              return {
+                color: color,
+                weight: 7,
+                opacity: 100
+              };
+            },
+            base: feature
+          });
+
+          geojsonList.push(routes[i]);
+        }
+        var routesLayer = L.layerGroup(geojsonList);
+        cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
+
+      });
+  };
+
 
   this.getStops = function (url, cb) {
     $http.get(url)
@@ -98,11 +144,6 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
       for (var i=0; i<data.features.length; i++) {
         var stop = data.features[i];
-
-        if (stop.properties.stopId) {
-          var stopId = stop.properties.stopId;
-          stop.properties['routeId'] = stopId.substr(stopId.indexOf('rte-')+4);
-        }
 
         stopList.push(L.circle([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], 0, {
           stroke: false,
@@ -262,10 +303,19 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
           for (var n=0; n<pois.length; n++) {
             var icon;
             if (pois[n].poiTag == "HOME") {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
 			  homeLoc = [pois[n].lat, pois[n].lng];
             }
-            else if (pois[n].poiTag == "HEALTHCARE")  {
+            else if (pois[n].poiTag == "missed-bus")  {
+              icon = new L.divIcon({className: 'missed-bus'});;  
+            }
+			else if (pois[n].poiTag == "missed-train")  {
+              icon = new L.divIcon({className: 'missed-train'});;  
+            }
+			else if (pois[n].poiTag == "HEALTHCARE")  {
+              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
+            }
+			else if (pois[n].poiTag == "HEALTHCARE")  {
               icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
             }
             else {

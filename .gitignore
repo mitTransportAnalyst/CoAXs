@@ -6,3 +6,4 @@ bower_components
 build
 credentials.js
 temporary.json
+npm-debug.log
