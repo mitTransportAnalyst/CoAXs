@@ -519,7 +519,7 @@
               </div>
             </div>
 
-            <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateSelectScenario(combos.sel)">
+            <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null;combos.sel=combo._key; updateSelectScenario(combos.sel)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
                 <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | F:{{combo.param[variant._key].frequency}}  </small>

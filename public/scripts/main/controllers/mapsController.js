@@ -648,45 +648,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		$scope.cordons = cordonData;
 	});
 
-    // loadService.getExisting(function (subways) {
-    //   subways.addTo(map);
-    //   subwaysLayer = subways;
-    // });
-
-    loadService.getProposedRoutes(function (data) {
-      routesLayer = data.layerGroup;
-      routesLayer.addTo(map);
-
-
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
-
-      // iterate through routes and set the default scenario values
-      for (var key in routes) {
-        var tabnavAlt = routes[key].options.base.corridorId;
-
-        var rewind = angular.copy($scope.scenario[tabnavAlt]);
-
-        $scope.scenario[tabnavAlt].name = routes[key].options.base.pid;
-        $scope.scenario[tabnavAlt].num = routes[key].options.base.pid;
-        $scope.scenario[tabnavAlt].routeId = routes[key].options.base.shape_id;
-
-
-        // $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
-
-        // var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
-        // $scope.newVariant(tabnavAlt, isDefault);
-        // if (!isDefault) {
-        //   $scope.scenario[tabnavAlt].name = rewind.name;
-        //   $scope.scenario[tabnavAlt].routeId = rewind.routeId;
-        //   $scope.scenario[tabnavAlt].station = rewind.station;
-        // };
-      };
+    loadService.getExisting(function (subways) {
+      subways.addTo(map);
+      subwaysLayer = subways;
     });
-
-
-
 
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
