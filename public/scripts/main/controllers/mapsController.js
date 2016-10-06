@@ -146,8 +146,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   var center_global = {
 
-   lat  : 42.355289,
-    lng  : -71.060479,
+   lat  : 42.35974896174244,
+    lng  : -71.09368801116943,
     zoom : 12,
   };
 
