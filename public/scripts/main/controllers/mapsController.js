@@ -5,8 +5,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
-    document.getElementById('leftDynamic').style.width = (window.innerWidth/2) - 375 + 'px';
-    document.getElementById('rightDynamic1').style.width = (window.innerWidth/2) - (450 + 35 +230) + 'px';
+    document.getElementById('leftDynamic').style.width = (window.innerWidth) - 900 + 'px';
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
@@ -147,8 +146,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   var center_global = {
 
-   lat  : 42.355289,
-    lng  : -71.060479,
+   lat  : 42.35974896174244,
+    lng  : -71.09368801116943,
     zoom : 12,
   };
 
@@ -650,83 +649,48 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	});
 
     // loadService.getExisting(function (subways) {
-    //   subways.addTo(map);
-    //   subwaysLayer = subways;
+      // subways.addTo(map);
+      // subwaysLayer = subways;
     // });
 
-    loadService.getProposedRoutes(function (data) {
-      routesLayer = data.layerGroup;
-      routesLayer.addTo(map);
-
-
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
-
-      // iterate through routes and set the default scenario values
-      for (var key in routes) {
-        var tabnavAlt = routes[key].options.base.corridorId;
-
-        var rewind = angular.copy($scope.scenario[tabnavAlt]);
-
-        $scope.scenario[tabnavAlt].name = routes[key].options.base.pid;
-        $scope.scenario[tabnavAlt].num = routes[key].options.base.pid;
-        $scope.scenario[tabnavAlt].routeId = routes[key].options.base.shape_id;
-
-
-        // $scope.scenario[tabnavAlt].station = routes[key][0].options.base.defaultStationType;
-
-        // var isDefault = routes[key][0].options.base.default || routes[key][1].options.base.default;
-        // $scope.newVariant(tabnavAlt, isDefault);
-        // if (!isDefault) {
-        //   $scope.scenario[tabnavAlt].name = rewind.name;
-        //   $scope.scenario[tabnavAlt].routeId = rewind.routeId;
-        //   $scope.scenario[tabnavAlt].station = rewind.station;
-        // };
-      };
-    });
-
-
-
-
 	// place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = [400, 600, 800];
-      var circleList = [];
-	  var stationNameList = [];
+    // loadService.getStops('/geojson/t_stops', function (stops) {
+      // var stopTypeSizes = [400, 600, 800];
+      // var circleList = [];
+	  // var stationNameList = [];
 
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.color,
-		    stationStroke = false,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station;
-
-
-		var stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
-
-		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+      // stops.eachLayer(function (marker) {
+        // var stationColor = marker.options.base.color,
+		    // stationStroke = false,
+            // stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            // size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            // strokeWeight = 20/(map.getZoom()^(1/10)),
+			// stationName = marker.options.base.station;
 
 
-		circleList.push(L.circle(stationLatLng, size, {
-          stroke: stationStroke,
-		  color: "#000000",
-		  weight: strokeWeight,
-		  opacity: 1,
-          fillColor: stationColor,
-          fillOpacity: 0.9,
-		}).bindPopup(stationNamePopup));
+		// var stationNamePopup = L.popup({
+			  // closeButton: false,
+			  // className: 'station-sign'
+			// }).setContent('<p style="background-color:'
+            // +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
 
-	  });
+		// if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
+
+		// circleList.push(L.circle(stationLatLng, size, {
+          // stroke: stationStroke,
+		  // color: "#000000",
+		  // weight: strokeWeight,
+		  // opacity: 1,
+          // fillColor: stationColor,
+          // fillOpacity: 0.9,
+		// }).bindPopup(stationNamePopup));
+
+	  // });
+
+      // subStopsLayer = L.layerGroup(circleList);
+      // subStopsLayer.addTo(map);
+    // });
 
     // load user points from phil's google spreadsheet
 
@@ -919,8 +883,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<24) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1} else {$scope.vectorIsos.val = 1}}}
-  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
+  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<120) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + (5-Number($scope.vectorIsos.val)%5) } else {$scope.vectorIsos.val = 1}}}
+  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - (Number($scope.vectorIsos.val)%5) }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {

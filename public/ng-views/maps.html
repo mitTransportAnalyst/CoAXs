@@ -30,7 +30,7 @@
       </div>
       <div class="panel-body"
            ng-show="scenarioScore.graphData && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
-        Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
+        Time Boundary: {{ vectorIsos.val | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
         <small>{{ combos.sel ? combos.all[combos.sel].name : 'Existing service'}}</small>
       </div>
@@ -157,18 +157,19 @@
 	<div class="topinfo-body container" style="min-height:75vh">
 	
       <div style="height: 100%">
-		<h5 ng-show="!loadProgress.vis">Drag the map pin.</h5>
+		<h5>Showing door-to-door travel, with MBTA weekday morning schedule as baseline.</h5>
+		<h5 ng-show="!loadProgress.vis">Drag the pin to explore.</h5>
 
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
 			</p>
 		</div>
-		<div style="width:40%; float: right;" ng-show = "selCordon">
+<!-- 		<div style="width:40%; float: right;" ng-show = "selCordon">
 		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
-		<svg id="plot1" width="400" height="400" style="z-index:2"></svg>
-		</div>
-		<div ng-show = "!pointToPoint">
-		<svg id="compPlot2" width="440" height="400"></svg>
+		<svg id="plot1" width="200" height="300" style="z-index:2"></svg>
+		</div> -->
+		<div ng-show = "!pointToPoint  && scenarioScore.graphData">
+		<svg id="compPlot2" width="300" height="300"></svg>
 		<br>
 		<div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
@@ -188,12 +189,12 @@
             </ul>
         </div>
 		reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon">
-		within	{{vectorIsos.val*5 | minuteConverter}} by public transit
+		within	{{vectorIsos.val | minuteConverter}}
 		</div>
-		<div ng-show = "pointToPoint">
-			<svg id="compPlot3" width="440" height="400"></svg>
+		<div ng-show = "pointToPoint && scenarioScore.graphData">
+			<svg id="compPlot3" width="300" height="300"></svg>
 			<br>
-			Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> 
+			<h5>Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> </h5>
 		</div>
 		          
 		
@@ -389,7 +390,7 @@
 <div class="bottomNav">
 
   <!-- 2 destination and time filters -->
-  <div class="colBody" style="width:250px">
+  <div class="colBody">
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
       <i class="fa fa-clock-o" ng-class="selCordon && !visibleTabs.travel? 'faa-flash animated' : ''"></i>
       Time Map
@@ -422,13 +423,13 @@
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
-            <input type="range" min="1" max="24" class="isosRange"
+            <input type="range" min="1" max="120" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
             style="position: absolute; left: 10px; padding-right: 10px;"><i
         class="fa fa-step-backward fa-2x"></i></span>
-            {{ vectorIsos.val*5 | minuteConverter }}
+            {{ vectorIsos.val | minuteConverter }}
             <span ng-click="stopTimer(); vectorTimeVal_add()"
                   style="position: absolute; right: 8px; padding-left: 10px;"><i
               class="fa fa-step-forward fa-2x"></i></span>
@@ -454,7 +455,7 @@
       <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i>
       <span ng-show="!combos.sel">Scenario: Existing MBTA</span>
       <span ng-show="combos.sel">
-        Scenario <span ng-show="scenarioCompare">Comparison</span>: {{ combos.all[combos.sel].name }}
+        Scenario<span ng-show="scenarioCompare"> Comparison</span>: {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
           <span ng-show="combos.com">vs. {{ combos.all[combos.com].name }}</span>
           <span ng-show="!combos.com">vs...</span>
@@ -518,14 +519,10 @@
               </div>
             </div>
 
-            <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null; scenarioCompare ? '': preMarkerQuery(); updateSelectScenario(combos.sel)">
+            <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null;combos.sel=combo._key; updateSelectScenario(combos.sel)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
                 <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | F:{{combo.param[variant._key].frequency}}  </small>
-              <!--</span>-->
-                <!--<span class="text-danger" ng-show="!combo.sel[variant._key]">-->
-                <!--<small>-</small>-->
-              <!--</span>-->
               </div>
 
             </div>
@@ -558,9 +555,6 @@
       </div>
     </div>
 
-
-
-
     <div class="showToggle" ng-show="visibleTabs.routes">
 
 
@@ -574,29 +568,17 @@
   </div>
 
   <!-- 5 route table module -->
-  <div class="colBody" id="rightDynamic1" style="width:50px; box-shadow: 0px 0px 0px;">
+  <div class="colBody" style="width:120px; box-shadow: 0px 0px 0px;">
     <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
-      <span ng-show="!variants[tabnav].sel">
-        Corridor Editor
-      </span>
-      <span ng-show="variants[tabnav].sel">
-        {{ tabnav }} - {{ variants[tabnav].corName }}
-      </span>
-
-
-
-
-      <!--<span ng-show="!variants[tabnav].sel">-->
-        <!--<i class="fa fa-exclamation-triangle"></i> Corridor {{ tabnav }} inactive-->
-      <!--</span>-->
+        Corridor
 
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.routes"
          ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
-      <div class="bigText">
-        <i class="fa fa-code-fork fa-rotate-270"></i>
-      </div>
+		<div class="bigText">
+			<i class="fa fa-code-fork fa-rotate-270" style="margin-left: -15px"></i>
+		</div>
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.routes">
@@ -607,11 +589,8 @@
         <!--</label>-->
       <!--</div>-->
 
-
-
-
       <div class="subHead">
-        Bus Routes
+        Routes
 
       </div>
       
@@ -637,7 +616,7 @@
 
 
   <!-- 6 service editor module -->
-  <div class="colBody" style="width:810px">
+  <div class="colBody" id="service-tab">
     <div class="colHead"
          ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
       <i class="fa fa-pencil-square-o"></i> Service Editor
