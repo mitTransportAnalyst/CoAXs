@@ -883,8 +883,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<24) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1} else {$scope.vectorIsos.val = 1}}}
-  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - 1 }}
+  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<120) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + (5-Number($scope.vectorIsos.val)%5) } else {$scope.vectorIsos.val = 1}}}
+  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - (Number($scope.vectorIsos.val)%5) }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {

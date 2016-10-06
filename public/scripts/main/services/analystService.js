@@ -173,7 +173,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   
   var minutes = [];
   
-  for (i = 1; i <= 25; i++){minutes.push(i*5)};
+  for (i = 1; i <= 120; i++){minutes.push(i)};
 
   var makeIsochrones = function(scenNum){
     return new Promise(function(resolve, reject){
@@ -188,30 +188,22 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	})
   };
   
-  var makePlotData = function(minute, scenNum){
+  var makeIsochronesAndPlotData = function(scenNum){
     return new Promise(function(resolve, reject){
-    //if (minute < 60){
-	  console.log(minute);
-	  browsochrones[scenNum].generateSurface(minute).then(function(){
-	    //isochrones for all cutoff minute values can be generated once generateSurface is called for any cutoff value.
+	  //first, generate a browsochrones surface
+	  browsochrones[scenNum].generateSurface().then(function(){
+	    //then make isochrones
 		if (!isochrones[scenNum]){makeIsochrones(scenNum).then(function(res){resolve()})};
 	  
-		//get the accessibility results for all but the last attribute
-		for (i = 0; i < attributeNameArray.length-1; i++){
-		  browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[i],minute).then(
-		    function(res){
-		    //plotData[scenNum][minute].push(res)
+		//and get an accessibility number for each destination attribute, to be plotted later
+		for (i = 0; i < attributeNameArray.length; i++){
+		  $q.all(minutes.map(function(minute){
+			  return browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[i],minute)})
+		  ).then(function(res){
+			plotData[scenNum] = res;
+			resolve();
 		  })
 		}
-		//after getting the last attribute, increment to the next minute
-		browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[attributeNameArray.length-1],minute).then(
-		  function(res){
-		  //plotData[scenNum][minute].push(res)
-		  console.log(plotData);
-		  if(isochrones[scenNum]){resolve()}
-		  // minute = minute + 10;
-		  // makePlotData(minute,cb);
-		})
       })
 	// } else {
 	  // console.log(plotData);
@@ -255,7 +247,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		  browsochrones[0].setOrigin(buff, xy)
 		  .then(function(){
             console.log('making plot data');
-			makePlotData(30,0).then(function(){resolve();})
+			makeIsochronesAndPlotData(0).then(function(){resolve();})
 		  })
 		})
 	} else {
@@ -270,7 +262,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 			  browsochrones[0].setOrigin(buff, xy)
 			  .then(function(){
 				console.log('making plot data');
-				makePlotData(30,0).then(function(){
+				makeIsochronesAndPlotData(0).then(function(){
 				//todo use $q.all
 				fetch(analystUrl,{
 			  method: 'POST',
@@ -281,7 +273,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 			  browsochrones[1].setOrigin(buff, xy)
 			  .then(function(){
 				console.log('making plot data');
-				makePlotData(30,1).then(function(){resolve();})
+				makeIsochronesAndPlotData(1).then(function(){resolve();})
 			  })
 			})
 				

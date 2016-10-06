@@ -30,7 +30,7 @@
       </div>
       <div class="panel-body"
            ng-show="scenarioScore.graphData && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
-        Time Boundary: {{ vectorIsos.val*5 | minuteConverter }}
+        Time Boundary: {{ vectorIsos.val | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
         <small>{{ combos.sel ? combos.all[combos.sel].name : 'Existing service'}}</small>
       </div>
@@ -189,7 +189,7 @@
             </ul>
         </div>
 		reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon">
-		within	{{vectorIsos.val*5 | minuteConverter}}
+		within	{{vectorIsos.val | minuteConverter}}
 		</div>
 		<div ng-show = "pointToPoint">
 			<svg id="compPlot3" width="440" height="400"></svg>
@@ -423,13 +423,13 @@
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
-            <input type="range" min="1" max="24" class="isosRange"
+            <input type="range" min="1" max="120" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
             style="position: absolute; left: 10px; padding-right: 10px;"><i
         class="fa fa-step-backward fa-2x"></i></span>
-            {{ vectorIsos.val*5 | minuteConverter }}
+            {{ vectorIsos.val | minuteConverter }}
             <span ng-click="stopTimer(); vectorTimeVal_add()"
                   style="position: absolute; right: 8px; padding-left: 10px;"><i
               class="fa fa-step-forward fa-2x"></i></span>
