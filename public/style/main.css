@@ -78,17 +78,27 @@ nav div.section {
 .topcol {
   position: absolute;
   color: #FFF;
-  z-index: 10;
-  width: 50%;
+  width: 100%;
 }
 .topcol h1, .topcol h2, .topcol h3, .topcol h4, .topcol h5, .topcol h6 {
-  padding-left: 45px;
-  padding-right: 45px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.topright {
+  width            : 50%;
+  position		   : absolute;
+  left			   : 50%;
+  overflow         : hidden;  
+  z-index: 10;
+  background-color : #696969
 }
 
 .topleft {
-  width            : 100%;
+  width            : 650px;
   overflow         : hidden;
+  z-index: 10;
+  background-color : #696969
 }
 .topinfo {
   background-color : #5F0D0A;
@@ -103,12 +113,12 @@ nav div.section {
   padding          : 10px;
   z-index          : 10;
   cursor           : pointer;
-  width            : 50%;
-  float            : left;
+  width            : 62%;
+  right			   : 0px;
 }
 
-.topnav .legend {
-  width: 200px;
+.topnav  .legend {
+  width: 275px;
   height: 150px;
   top: 0px;
   right: 0px;
@@ -137,6 +147,7 @@ nav div.section {
   width: -moz-calc(50% + 35px);
   width: calc(50% + 35px);
   bottom: 0px;
+  z-index: 10;
 }
 
 .introPan{
@@ -155,7 +166,7 @@ nav div.section {
 }
 
 .introPan ol , .introPan 	 ul {
-  line-height: 3;
+  line-height: 1.2;
 }
 
 .bottomCol .saveComb .title{
@@ -178,6 +189,12 @@ nav div.section {
 
 .introPan h4{
   margin-left: 4px; 
+}
+
+.introPan .station-list{
+  position: absolute;
+  bottom: 25px;
+  margin-left: 45px;
 }
 
 .bottomCol .saveVar{
@@ -224,10 +241,7 @@ background-color  : #696969;
   left             : 50%;
 }
 .unselected {
-  opacity          : 0.35;
-}
-.unselected.active, .unselected.focus, .unselected.hover, .unselected:active, .unselected:focus, .unselected:hover {
-  opacity          : 0.75;
+  opacity          : 0.5;
 }
 
 /* in app navigation */
@@ -281,7 +295,7 @@ background-color  : #696969;
   height: 100%;
   float: left;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   cursor: pointer;
   z-index: 5; 
   box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
@@ -353,13 +367,25 @@ background-color  : #696969;
   border-right-width: 1px;
 }
 
-
 .bottomNav .table {
   font-size: 0.75em;
 }
 
+.bottomNav .setTimesTitle .left{
+ position: absolute;
+ left: 0px;
+ width: 49%;
+}
+
+.bottomNav .setTimesTitle .right{
+ float: right;
+ width: 70%;
+  margin-top: 5px;
+}
+
+
 .bottomNav .isosRange {
-  margin: 2px 0px -2px 0px;
+  margin: 2px;
 }
 
 .colBody .smallColVal {
@@ -371,16 +397,25 @@ background-color  : #696969;
   width: inherit;
   padding: inherit;
   overflow: hidden;
+  position: relative;
 }
 
 .colBody .scenariosTable {
-  overflow-x: scroll;
   overflow-y: hidden;
+  overflow-x: auto;
   height: inherit;
 }
 
+.scenarioEntries {
+  margin-left:24px;
+  height:100%;
+  width:10000px;
+  overflow-y:auto;
+  overflow-x:auto;
+}
+
 .scenariosTable .square {
-  color: rgba(255,255,255,0.65);;
+  color: rgba(255,255,255,1);
   height: 18px;
   line-height: 18px;
   width: 18px;
@@ -388,13 +423,14 @@ background-color  : #696969;
   font-size: 10px;
   text-align: center;
   margin-bottom: 2px;
+  top: 2px;
 }
 
 .scenariosTable .scenario {
   padding: 0px 3px 0px 3px;
   position: relative;
   float: left;
-  max-width: 100px;
+  width: 150px;
   height: inherit;
   white-space: nowrap;
   z-index: 9;
@@ -408,6 +444,10 @@ background-color  : #696969;
 
 .scenariosTable .selected {
   background-color: rgba(255,165,0,0.5) !important;
+}
+
+.scenariosTable .cselected {
+  background-color: rgba(137,207,240,0.5) !important;
 }
 
 .scenariosTable .scenario:nth-child(odd) { 
@@ -452,22 +492,42 @@ background-color  : #696969;
 	padding-right: 15px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	text-align: center;
+}
+
+.station-sign .leaflet-popup-content .blackText {
+	color: black;
+}
+
+input {
+  border: none;
+  background: transparent;
 }
 
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width            : 50%;
+  width            : 66%;
   position         : absolute;
+  left : 650px;
+  z-index 		   : 9;
 }
 #map_right {
-  left : 50%;
+  left : 650px;
 }
 .leaflet-container {
   background : -webkit-linear-gradient( #CDD2D4, #F5F5F3) !important; /* For Safari 5.1 to 6.0 */
   background : -o-linear-gradient(      #CDD2D4, #F5F5F3) !important; /* For Opera 11.1 to 12.0 */
   background : -moz-linear-gradient(    #CDD2D4, #F5F5F3) !important; /* For Firefox 3.6 to 15 */
   background : linear-gradient(         #CDD2D4, #F5F5F3) !important; /* Standard syntax */
+}
+
+.missed-train{
+  background-color: rgba(36,200,100,0.5);
+}
+
+.missed-bus{
+  background-color: rgba(36,100,200,0.5);
 }
 
 .projects {

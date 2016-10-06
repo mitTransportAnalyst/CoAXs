@@ -10,6 +10,14 @@ coaxsApp.service('targetService', function (leafletData) {
     }
   });
 
+    this.targetCordons = function(cordonLayer, id){
+		cordonLayer.eachLayer(function(boundary){
+			if (boundary.options.style.id == id) {
+				boundary.setStyle({opacity:0.75})}
+			else{boundary.setStyle({opacity:0})}
+		})
+	};
+	
   // highlight the stops of a specific route
 	this.targetStops = function (stopsLayer, id, stationType, routeColor) {
     var stopTypeSizes = {0: 60, 1: 90, 2: 120};
@@ -39,7 +47,7 @@ coaxsApp.service('targetService', function (leafletData) {
 	
 	this.targetPriority = function(priorityLayer, id) {
 		priorityLayer.eachLayer(function (segment){
-			if (segment.options.base.routeId == id) {segment.setStyle({opacity: 0.1})}
+			if (segment.options.base.corridorId == id) {segment.setStyle({opacity: 0.1})}
 			else {segment.setStyle({opacity: 0});
 	      }
 		})
@@ -49,17 +57,26 @@ coaxsApp.service('targetService', function (leafletData) {
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
   // pans to the bounds of that site, as well
-	this.targetCorridor = function (routesLayer, id) {
+	this.targetCorridor = function (routesLayer, trunkLayer,id) {
 	  leafletData.getMap('map_right').then(function(map) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
-	      if (layer.options.base.corName == id || layer.options.base.routeId == id) {
-	        layer.setStyle({opacity: 0.6, weight: 4});
+	      if (layer.options.base.corridorId == id) {
+	        layer.setStyle({opacity: 0.8, weight: 2, color:"#555555"});
 	        tempBounds = layer.getBounds();
 	      } else {
-	        layer.setStyle({opacity: 0.2, weight: 2});
+	        layer.setStyle({opacity: 0.1, weight: 0.5, color:"#555555"});
 	      }
 	    });
+      trunkLayer.eachLayer(function (layer) {
+        if (layer.options.base.corridorId == id) {
+          layer.setStyle({opacity: 0.8, weight: 10});
+          tempBounds = layer.getBounds();
+        } else {
+          layer.setStyle({opacity: 0.1, weight: 0.5});
+        }
+      });
+
 	    map.fitBounds(tempBounds);
 	  });
 	  return routesLayer

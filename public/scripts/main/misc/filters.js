@@ -17,12 +17,9 @@ angular.module('coaxsFilters', [])
 
 .filter('avgWaitTime', function () {
   return function(input) {
-    var min = Math.floor(input/2);    
-    if (min < 10) { min = '0' + String(min) }
-    var sec = Math.floor((input%2)*30);
-    if (sec < 10) { sec = '0' + String(sec) }
-    if (!min) { sec = '00', min = "00"}         
-    return min + ':' + sec
+    var min = Math.ceil(input/2);
+	if (min <10) {min = '0' + String(min)};
+    return min;
   }
 })
 
@@ -52,12 +49,11 @@ angular.module('coaxsFilters', [])
   return function (input) {
     input = Math.floor(Number(input));
     if (input < 10) {
-      return String('0 hr., ' + '0' + input + ' min.');
+      return String(input + ' min.');
     } else if (input < 60) {
-      return String('0 hr., '  + input + ' min.');
+      return String(input + ' min.');
     } else {
       var minutes = Math.floor(input%60);
-      if (minutes < 10) { minutes = String('0' + minutes); }
       var hours = Math.floor(input/60);
       return String(hours + ' hr., ' + minutes + ' min.')
     }
@@ -79,10 +75,33 @@ angular.module('coaxsFilters', [])
     if (input.length == 2) { return '0' + input }
     if (input.length > 2) { return input }
   }
-});
+})
 
+.filter('altNum', function () {
+  return function (input) {
+	return input.charAt(0);
+  }
+})
 
+.filter('altNumInc', function () {
+  return function (input) {
+   if(input){
+    return String.fromCharCode(input.charCodeAt(0)+1)+'|'+input.substring(2,input.length);}
+  }
+})
 
+.filter('altAbbrev', function () {
+  return function (input) {
+    if(input){
+	len = input.length;
+	if (len > 17) {name = input.substring(0,15)+'...';}
+	else{name = input};
+	return name;}
+  }
+})
 
-
-
+.filter('altName', function () {
+  return function (input) {
+    return input.substring(2,input.length);
+  }
+})

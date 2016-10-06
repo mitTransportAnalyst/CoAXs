@@ -1,0 +1,293 @@
+{
+  "id": 0,
+  "description": "LS Scenario v1",
+  "feedChecksums": {
+    "MBTA": 993571431
+  },
+  "modifications": [
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:111"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "111-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:426"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "426-Dwell"
+    },
+    {
+      "type": "adjust-dwell-time",
+      "routes": [
+        "MBTA:428"
+      ],
+      "stops": null,
+      "scale": 0.6,
+      "comment": "428-Dwell"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:111"
+      ],
+      "hops": [
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ],
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ],
+        [
+          "MBTA:8310",
+          "MBTA:2832"
+        ],
+        [
+          "MBTA:2832",
+          "MBTA:2833"
+        ],
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ],
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ],
+        [
+          "MBTA:8310",
+          "MBTA:2832"
+        ],
+        [
+          "MBTA:2832",
+          "MBTA:2833"
+        ],
+        [
+          "MBTA:8310",
+          "MBTA:2832"
+        ],
+        [
+          "MBTA:2832",
+          "MBTA:2833"
+        ],
+        [
+          "MBTA:2833",
+          "MBTA:5611"
+        ],
+        [
+          "MBTA:2833",
+          "MBTA:5611"
+        ],
+        [
+          "MBTA:2833",
+          "MBTA:5611"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "111-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:426"
+      ],
+      "hops": [
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ],
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "426-Speed"
+    },
+    {
+      "type": "adjust-speed",
+      "routes": [
+        "MBTA:428"
+      ],
+      "hops": [
+        [
+          "MBTA:2829",
+          "MBTA:8310"
+        ]
+      ],
+      "scale": 1.4,
+      "comment": "428-Speed"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:1",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "1-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 420,
+          "startTimes": null,
+          "sourceTrip": "MBTA:27501555"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "1-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 420,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28258581"
+        }
+      ],
+      "comment": "1-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:111",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "111-OB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 660,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28655055"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "111OB2",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 450,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28894212"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "111-IB",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 1080,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28673770"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "111-IB2",
+          "startTime": 25200,
+          "endTime": 32400,
+          "headwaySecs": 420,
+          "startTimes": null,
+          "sourceTrip": "MBTA:28899568"
+        }
+      ],
+      "comment": "111-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:426",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "sourceTrip": "MBTA:28878779",
+          "headwaySecs": 1800,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false
+        },
+        {
+          "sourceTrip": "MBTA:27936492",
+          "headwaySecs": 1800,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "426-Outbound"
+        }
+      ],
+      "comment": "426-Frequency"
+    },
+    {
+      "type": "adjust-frequency",
+      "route": "MBTA:428",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "sourceTrip": "MBTA:27936455",
+          "headwaySecs": 2700,
+          "startTime": 25200,
+          "endTime": 32400,
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": false,
+          "sunday": false,
+          "name": "428-IB"
+        }
+      ],
+      "comment": "428-Frequency"
+    }
+  ]
+}
