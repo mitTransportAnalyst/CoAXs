@@ -29,7 +29,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:100, frequency:100, runningTime: 100}
   };
 
-   
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
   
@@ -53,8 +52,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'D' : angular.copy(scenarioBase),
     'E' : angular.copy(scenarioBase),
 	}
-
-
 
   $scope.variants = {
     'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64', '70', '70A'],corName: "Mass Ave"},
@@ -80,7 +77,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.defaultsBuilt = false
   
-  $scope.tabnav = 'B';
+  $scope.tabnav = 'A';
   
   // left globals
   var subwaysLayer    = null,
@@ -217,46 +214,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $interval(function () {
             analystService.refreshCred();
           } , 3540000);
-		 
-  
-  $scope.scenario = {
-    'A' : angular.copy(scenarioBase),
-	'B' : angular.copy(scenarioBase),
-    'C' : angular.copy(scenarioBase),
-    'D' : angular.copy(scenarioBase),
-    'I' : angular.copy(scenarioBase),
-	}
 
-    $scope.mode = {
-    all: [],
-    local: [3, 5, 6, 7],
-    bus: [0, 1, 3, 5, 6, 7],
-    walking: [0, 1, 2, 3, 4, 5, 6, 7],
-    selected: 'all'
-};
-  
-  $scope.combos = {
-    sel : null,
-    com : null,
-    all : {},
-}
-  
-  $scope.defaultsBuilt = false
-  
-  $scope.tabnav = 'A';
-  
-  // left globals
-  var subwaysLayer    = null,
-      subStopsLayer   = null,
-	  cordonsLayer 	  = null,
-      stopsLayer      = null,
-      routesLayer     = null,
-      poiUserPoints   = null,
-      existingMBTAKey = null;
-
-  $scope.snapPoints   = {all: [], sel: null, data: null},
-  $scope.vectorIsos   = {vis:false, val:6};
-  $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
     function(newVal) {

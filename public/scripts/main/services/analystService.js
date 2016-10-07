@@ -56,16 +56,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   this.refreshCred = refreshCred;
   
   var analystState = {
-  "transitive": null,
-  "isochrone": null,
-  "key": null,
-  "origin": [42.35042512243457,71.03485107421875],
-  "destination":[42.35042512243457,-71.03485107421875],
   "staticRequest":
 	{"jobId": supportService.generateUUID(),
 	 "transportNetworkId": defaultGraph,
 	 "request": {
-		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
+		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.4,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
 		"scenario":{}
 	  }
 	}
@@ -303,47 +298,6 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	})
   }
   
-  var optionCurrent = {
-    scenario      : {
-      id            : 0,
-      description   : 'Run on load from CoAXs SPA.',
-      modifications : [],
-    }
-  };
-  
-  var optionC = []
-  
-  for (i = 0; i < 2; i++){
-  optionC[i] = {
-    scenario      : {
-      id            : i,
-      description   : 'Scenario ' + i + ' from CoAXs',
-      modifications : []
-    }
-  }; 
-  }
-      
-var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
-var agencyId = 'MBTA+v6';
-var banExtraAgencies = [
-    {
-      type      : 'remove-trip',
-      agencyId  : 'KM',
-      routeId   : null,
-      tripId    : null,
-    }];
-
-  // holds current states for different map layers, etc. (allows you to grab and remove, replace)
-  var isoLayer   = null;
-  var isoLayerOld = null;
-
-  var vectorIsos = null;
-  var vecComIsos = null;
-  
-  var currentIso = null;
-  var compareIso = null;
-
-
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
     if(transitiveLayer){map.removeLayer(transitiveLayer)};
@@ -437,128 +391,6 @@ var banExtraAgencies = [
       routeType: routeTypes
     });
   }
-
-  this.loadExisting = function (poi, map, cb) {
-    vectorIsos = poi.isochrones;
-    analyst.singlePointRequest({
-      lat : poi.lat,
-      lng : poi.lng,
-    }, defaultGraph, defaultShapefile, optionCurrent)
-    .then(function (response) {
-      if (isoLayer) {
-        isoLayer.redraw(); 
-      } else {
-        isoLayer = response.tileLayer;
-        isoLayer.addTo(map);
-      }
-      cb(true);
-    })
-    .catch(function (err) {
-      console.log(err);
-      cb(false);
-    });;
-  }
-
-  this.deleteTileIsos = function (map) {
-    if(isoLayer){map.removeLayer(isoLayer)};
-  }
-  
-  this.prepCustomScenario = function (customAnalystRequest, c) {
-	console.log('prepping custom scenario');
-	optionC[c] = null;
-	console.log(optionC);
-	optionC[c] = customAnalystRequest;
-	console.log(optionC);
-	optionC[c].scenario.modifications.push(banExtraAgencies[0])
-	console.log(optionC);
-  };
-  
-  this.singlePointComparison = function (marker, map, cb) {
-   	console.log(optionC[0]);
-	console.log(optionC[1]);
-	
-	optionC[0].graphId? graph0 = optionC[0].graphId : graph0 = defaultGraph;
-	optionC[1].graphId? graph1 = optionC[1].graphId : graph1 = defaultGraph;
-
-	
-	analyst.singlePointComparison({
-      lat : marker.lat,
-      lng : marker.lng,
-    }, graph1, graph0, defaultShapefile, optionC[1], optionC[0])
-		.then(function (response) {
-			var plotData = {};
-			var cPlotData = {};
-			
-			//compile cumulative plot data for scenario 1
-			for (key in subjects.fields) {
-				var id = subjects.prefix+'.'+subjects.fields[key].id;
-				var tempArray = response[0].data[id].pointEstimate.sums.slice(0,120);
-				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-				cPlotData[key] = {
-					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'verbose' : subjects.fields[key].verbose
-					}
-				};
-			
-			//compile cumulative plot data for scenario 0
-			for (key in subjects.fields) {
-				var id = subjects.prefix+'.'+subjects.fields[key].id;
-				var tempArray = response[1].data[id].pointEstimate.sums.slice(0,120);
-				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-				plotData[key] = {
-					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'verbose' : subjects.fields[key].verbose
-					}
-				};
-			// };
-			isoLayer = analyst.updateSinglePointLayer(response[0].key, response[1].key);
-			isoLayer.addTo(map);
-		cb(response[0], response[1], plotData, cPlotData);
-		})
-  }
-  
-  // actually run the SPA and handle results from library
-  this.singlePointRequest = function (marker, map, timeLimit, cb) {
-	console.log(optionC[0])
-	
-	optionC[0].graphId? graph = optionC[0].graphId : graph = defaultGraph;
-	scenario = [];
-	scenario[0] = {'scenario': optionC[0].scenario};
-	
-	analyst.singlePointRequest({
-      lat : marker.lat,
-      lng : marker.lng,
-    }, graph, defaultShapefile, scenario[0])
-    .then(function (response) { 
-        isoLayer = analyst.updateSinglePointLayer(response.key, null, 7200);
-		isoLayer.addTo(map).on('load', function(e){
-			isoLayer.setOpacity(1);
-			//isoLayerOld.setOpacity(0);
-			//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
-		});
-		//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
-		//isoLayerOld.addTo(map);
-	  var plotData = subjects.fields;
-      for (key in subjects.fields) {
-        var id = subjects.prefix+'.'+subjects.fields[key].id;
-        var tempArray = response.data[id].pointEstimate.sums.slice(0,120);
-        for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-        plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
-      }
-      cb(response.key, plotData);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  };
-  
-  this.updateTiles = function(map, key, timeLimit, cb) {
-	//isoLayerOld ? '' : isoLayerOld = isoLayer;
-	//isoLayerOld.setOpacity(1);
-	isoLayer.setOpacity(0);
-	isoLayer = analyst.updateSinglePointLayer(key, null, timeLimit);
-	}
-  //
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map, isComparison) {
