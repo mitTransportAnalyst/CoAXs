@@ -422,8 +422,8 @@
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
-            <input type="range" min="1" max="120" class="isosRange"
+		  <span ng-class="pointToPoint ? 'unselected' : ''">
+            <input type="range" min="5" max="120" step="5" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"

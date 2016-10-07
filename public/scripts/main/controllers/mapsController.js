@@ -94,7 +94,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
-  $scope.vectorIsos   = {vis:false, val:6};
+  $scope.vectorIsos   = {vis:false, val:30};
   $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
@@ -198,7 +198,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           $scope.loadProgress.val += Math.floor(Math.random()*2);
         }
       });
-    }, 300)
+    }, 150)
   }
   finishProgressBar = function (){
     $scope.markers.start.draggable = true;
@@ -206,7 +206,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	
 	setTimeout(function () { $scope.$apply (function () {
                  $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 1000)
+              }) }, 200)
   }
   
   animateProgressBar();
@@ -360,7 +360,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos($scope.vectorIsos.val);}, 1000);
+	$scope.showVectorIsos($scope.vectorIsos.val);}, 100);
   };
   
   $scope.stopTimer = function () {
@@ -887,9 +887,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
   };
 
-  // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<120) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + (5-Number($scope.vectorIsos.val)%5) } else {$scope.vectorIsos.val = 1}}}
-  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - (Number($scope.vectorIsos.val)%5) }}
+  // increment isochrones by 5 minutes
+  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<119) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 } else {$scope.vectorIsos.val = 1}}}
+  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) -1 }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
