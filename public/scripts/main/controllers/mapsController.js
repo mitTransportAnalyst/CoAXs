@@ -29,6 +29,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:100, frequency:100, runningTime: 100}
   };
 
+  $scope.scenario0 = {}; 
+  $scope.scenario1 = {};
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
   
@@ -253,14 +255,17 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.tiles_right = tilesDict[tiles];
   };
   
-  $scope.resetMap = function(marker) {leafletData.getMap('map_left').then(function(map) {
+  $scope.resetMap = function() {
+    d3Service.clearCharts();
+	$scope.scenarioScore.graphData = false;
+    leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
 		})}
   
   refreshOrigin = function (marker){
     animateProgressBar();
 		$scope.resetMap();
-		analystService.moveOrigin(marker, $scope.scenarioCompare, $scope.scenario0, $scope.scenario1).then(function(){
+		analystService.moveOrigin(marker, $scope.scenarioCompare, [$scope.scenario0, $scope.scenario1]).then(function(){
 		  finishProgressBar();
 		  $scope.showVectorIsosOn = true;
 		  $scope.loadProgress.vis = false;
@@ -301,7 +306,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   });
 
   $scope.preMarkerQuery = function () {
-    
+    $scope.resetMap();
 	if($scope.pointToPoint){
 	  var tempMarker = L.marker([$scope.markers.start.lat,$scope.markers.start.lng]);
 	  console.log(tempMarker);
@@ -1051,7 +1056,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
   $scope.updateSelectScenario = function (comboIndex) {
-    var currentModificationJSON = [];
+    $scope.resetMap();
+	var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 
@@ -1104,7 +1110,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
   $scope.updateComScenario = function (comboIndex) {
-    var currentModificationJSON = [];
+    $scope.resetMap();
+	var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 
