@@ -168,7 +168,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
 			   iconSize: [48,48],
-			   iconAnchor: [40,40],
+			   iconAnchor: [46,40],
 			   },
 		draggable : true },
 	end: { 
@@ -176,7 +176,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
 			   iconSize: [0,0],
-			   iconAnchor: [40,40],
+			   iconAnchor: [46,40],
 			   },
 		draggable : true }
 	};
@@ -186,6 +186,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
 	$scope.markers.start.draggable = false;
+	$scope.markers.end.draggable = false;
     var runProgressBar = setInterval( function () {
       $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
@@ -199,6 +200,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
   finishProgressBar = function (){
     $scope.markers.start.draggable = true;
+	$scope.markers.end.draggable = true;
 	$scope.loadProgress.val = 100;
 	
 	setTimeout(function () { $scope.$apply (function () {
