@@ -7,7 +7,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/'; //base URL for destination grid data
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
      defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
-	 workerVersion =  'v1.5.0-68-ga7c6904';
+	 workerVersion =  'v1.5.0-71-gc0ea17b';
   var indicatorAttributes = {}
   
   this.setDestinationData = function(data){
