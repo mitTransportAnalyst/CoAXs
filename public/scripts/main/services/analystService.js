@@ -28,11 +28,12 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	  attributeNameArray.push(indicatorAttributes[indicator][i]['id']);
 	}
   };
-  var isochrones = []
+  var isochrones = [];
     isochrones[0] = null;
     isochrones[1] = null;
-  var isochroneLayer0 = null;
-  var isochroneLayer1 = null;
+  var isochroneLayer = [];
+    isochroneLayer[0] = null;
+    isochroneLayer[1] = null;
   var plotData = {};
 
   // for (var j = 0; j<=1 ; j++){
@@ -189,130 +190,117 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   };
   
   //called when start pin is moved
-  this.moveOrigin = function (marker, isComparison, scenario0, scenario1){
+  this.moveOrigin = function (marker, isComparison, scenarios){
 	return new Promise(function(resolve, reject){
     //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
-	isochrones[0] = null;
-	isochrones[1] = null;
-	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-    var staticDefault = 
-	  {
-	    "type": 'static',
-	    "graphId": defaultGraph,
-		"workerVersion": workerVersion,
-	    "request": analystState.staticRequest,
-		"x": xy.x,
-		"y": xy.y
-	  };
-	
-	//set scenario
-	staticDefault.request.scenario = scenario0;
-	staticBody0 = JSON.stringify(staticDefault);
-	staticDefault.request.scenario = scenario1;
-	staticBody1 = JSON.stringify(staticDefault);
+	var staticBody = [];
+	var xy = [];
+	for (var i=0; i<2; i++){
+		isochrones[i] = null;
+		xy[i] = browsochrones[i].latLonToOriginPoint(marker.getLatLng());
+		var staticDefault = [];
+		staticDefault[i] = 
+		  {
+			"type": 'static',
+			"graphId": defaultGraph,
+			"workerVersion": workerVersion,
+			"request": analystState.staticRequest,
+			"x": xy[i].x,
+			"y": xy[i].y
+		  };
+		
+		//set scenario
+		staticDefault[i].request.scenario = scenarios[i];
+		staticBody[i] = JSON.stringify(staticDefault[i]);
+    }
 	
 	//fetch a grid for travel times
-	
 	if(!isComparison){
 	  fetch(analystUrl,{
 		  method: 'POST',
-		  body: staticBody0
+		  body: staticBody[0]
 		}).then(function(res){
 		  return res.arrayBuffer()
 		}).then(function(buff){
-		  browsochrones[0].setOrigin(buff, xy)
+		  browsochrones[0].setOrigin(buff, xy[0])
 		  .then(function(){
             console.log('making plot data');
 			makeIsochronesAndPlotData(0).then(function(){resolve();})
 		  })
 		})
 	} else {
-//		$q.all([
-		// function(){return new Promise(function(resolve, reject){
+//todo fix callback hell
 		fetch(analystUrl,{
 			  method: 'POST',
-			  body: staticBody0
+			  body: staticBody[0]
 			}).then(function(res){
 			  return res.arrayBuffer()
 			}).then(function(buff){
-			  browsochrones[0].setOrigin(buff, xy)
+			  browsochrones[0].setOrigin(buff, xy[0])
 			  .then(function(){
-				console.log('making plot data');
 				makeIsochronesAndPlotData(0).then(function(){
-				//todo use $q.all
 				fetch(analystUrl,{
-			  method: 'POST',
-			  body: staticBody1
-			}).then(function(res){
-			  return res.arrayBuffer()
-			}).then(function(buff){
-			  browsochrones[1].setOrigin(buff, xy)
-			  .then(function(){
-				console.log('making plot data');
-				makeIsochronesAndPlotData(1).then(function(){resolve();})
-			  })
-			})
-				
-				
+					  method: 'POST',
+					  body: staticBody[1]
+					}).then(function(res){
+					  return res.arrayBuffer()
+					}).then(function(buff){
+					  browsochrones[1].setOrigin(buff, xy[1])
+					  .then(function(){
+						console.log('making plot data');
+						makeIsochronesAndPlotData(1).then(function(){resolve();})
+					  })
+					})
 				})
 			  })
 			})
 	}
   })}
 
-  
-  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
-    
-	if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	
-	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-    browsochrones[0].generateDestinationData(xy).
-	then(function(res){
-	  var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,2);
-	  plotData['1'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+  processTransitiveResult = function (res, scenNum) {
+    var transitive = res.transitive;
+	  transitive.journeys = transitive.journeys.slice(0,1);
+	  if (res.travelTime > 254){
+	    plotData[scenNum] = {'average_rideTime' : 999}
+	  } else {
+	  plotData[scenNum] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
 			'average_waitTime' : res.waitTime,
 			'average_rideTime' : res.inVehicleTravelTime};
-	  if(!isComparison){  
-	  cb(plotData);
+	  }
 	  var transitiveLines = new Transitive({'data':transitive});
 	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
+  }
+  
+  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
+	if(transitiveLayer){map.removeLayer(transitiveLayer)};
+	var xy0 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+	var xy1 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+    browsochrones[0].generateDestinationData(xy0).
+	then(function(res){
+	  processTransitiveResult(res,0);
+	  if(!isComparison){  
+	  cb(plotData);
 	  map.addLayer(transitiveLayer);
 	  transitiveLayer._refresh();
 	  } else { 
-		browsochrones[1].generateDestinationData(xy).
+		browsochrones[1].generateDestinationData(xy1).
 		then(function(res){
-		  var transitive = res.transitive;
-		  transitive.journeys = transitive.journeys.slice(0,2);
-		  plotData['2'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
-				'average_waitTime' : res.waitTime,
-				'average_rideTime' : res.inVehicleTravelTime};
+		  processTransitiveResult(res,1)
 		  cb(plotData);
-		  var transitiveLines = new Transitive({'data':transitive});
-		  transitiveLayer = new L.TransitiveLayer(transitiveLines)
 		  map.addLayer(transitiveLayer);
 		  transitiveLayer._refresh();
-	});
-	
-	}
+		});
+	  }
 	})
   }
   
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
     if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-	if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
+	if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+	if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
   };
 
-  this.killCompareIso = function (map) {
-    if (compareIso) { map.removeLayer(compareIso); };
-    vecComIsos = false;
-    compareIso = null;
-  };
-
-  
-  
   this.setScenarioNames = function (scenarioName, c){
 	optionC[c].scenario.name = scenarioName;
   };
@@ -363,8 +351,6 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
       })
   };
 
-
-
   this.modifyFrequency = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
@@ -394,9 +380,9 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map, isComparison) {
-		if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
-		if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-		isochroneLayer0 = L.geoJson(isochrones[0][timeVal], {
+		if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
+		if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+		isochroneLayer[0] = L.geoJson(isochrones[0][timeVal], {
           style: {
             stroke      : true,
             fillColor   : '#FDB813',
@@ -406,11 +392,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
             opacity     : 1
           }
         });
-        isochroneLayer0.addTo(map);
+        isochroneLayer[0].addTo(map);
 
     if (isComparison) {
-      if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-	  isochroneLayer1 = L.geoJson(isochrones[1][timeVal], {
+      if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+	  isochroneLayer[1] = L.geoJson(isochrones[1][timeVal], {
           style: {
             stroke      : true,
             fillColor   : '#89cff0',
@@ -420,7 +406,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
             opacity     : 1
           }
         });
-        isochroneLayer1.addTo(map);
+        isochroneLayer[1].addTo(map);
 	  
     }
   };
