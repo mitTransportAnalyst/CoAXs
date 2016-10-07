@@ -159,6 +159,7 @@
       <div style="height: 100%">
 		<h5>Showing door-to-door travel, with MBTA weekday morning schedule as baseline.</h5>
 		<h5 ng-show="!loadProgress.vis">Drag the pin to explore.</h5>
+		<h5 ng-show="loadProgress.vis">Loading...</h5>
 
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
@@ -422,8 +423,8 @@
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-		  <span ng-class="showVectorIsosOn ? '' : 'unselected'">
-            <input type="range" min="1" max="120" class="isosRange"
+		  <span ng-class="pointToPoint ? 'unselected' : ''">
+            <input type="range" min="5" max="120" step="5" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
@@ -529,7 +530,7 @@
 
             <div class="text-center" style="position:absolute;width:100%;z-index:10;bottom:2px;"
                  ng-show="combos.sel !== combo._key && combos.com !== combo._key &&  scenarioCompare"
-                 ng-click="combos.com=combo._key; $event.stopPropagation(); preMarkerQuery();updateComScenario(combos.com)">
+                 ng-click="combos.com=combo._key; $event.stopPropagation();updateComScenario(combos.com)">
               <i ng-show="!combos.com" class="fa fa-circle-o faa-pulse animated"></i>
               <i ng-show="combos.com" class="fa fa-circle-o"></i>
             </div>

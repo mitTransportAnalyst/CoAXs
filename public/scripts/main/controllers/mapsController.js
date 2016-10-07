@@ -29,7 +29,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:100, frequency:100, runningTime: 100}
   };
 
-   
+  $scope.scenario0 = {}; 
+  $scope.scenario1 = {};
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
   
@@ -53,8 +54,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'D' : angular.copy(scenarioBase),
     'E' : angular.copy(scenarioBase),
 	}
-
-
 
   $scope.variants = {
     'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64', '70', '70A'],corName: "Mass Ave"},
@@ -80,7 +79,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.defaultsBuilt = false
   
-  $scope.tabnav = 'B';
+  $scope.tabnav = 'A';
   
   // left globals
   var subwaysLayer    = null,
@@ -94,7 +93,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
-  $scope.vectorIsos   = {vis:false, val:6};
+  $scope.vectorIsos   = {vis:false, val:30};
   $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
@@ -171,7 +170,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
 			   iconSize: [48,48],
-			   iconAnchor: [40,40],
+			   iconAnchor: [46,40],
 			   },
 		draggable : true },
 	end: { 
@@ -179,7 +178,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
 			   iconSize: [0,0],
-			   iconAnchor: [40,40],
+			   iconAnchor: [46,40],
 			   },
 		draggable : true }
 	};
@@ -189,6 +188,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
 	$scope.markers.start.draggable = false;
+	$scope.markers.end.draggable = false;
     var runProgressBar = setInterval( function () {
       $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
@@ -198,15 +198,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           $scope.loadProgress.val += Math.floor(Math.random()*2);
         }
       });
-    }, 300)
+    }, 150)
   }
   finishProgressBar = function (){
     $scope.markers.start.draggable = true;
+	$scope.markers.end.draggable = true;
 	$scope.loadProgress.val = 100;
 	
 	setTimeout(function () { $scope.$apply (function () {
                  $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 1000)
+              }) }, 200)
   }
   
   animateProgressBar();
@@ -217,46 +218,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $interval(function () {
             analystService.refreshCred();
           } , 3540000);
-		 
-  
-  $scope.scenario = {
-    'A' : angular.copy(scenarioBase),
-	'B' : angular.copy(scenarioBase),
-    'C' : angular.copy(scenarioBase),
-    'D' : angular.copy(scenarioBase),
-    'I' : angular.copy(scenarioBase),
-	}
 
-    $scope.mode = {
-    all: [],
-    local: [3, 5, 6, 7],
-    bus: [0, 1, 3, 5, 6, 7],
-    walking: [0, 1, 2, 3, 4, 5, 6, 7],
-    selected: 'all'
-};
-  
-  $scope.combos = {
-    sel : null,
-    com : null,
-    all : {},
-}
-  
-  $scope.defaultsBuilt = false
-  
-  $scope.tabnav = 'A';
-  
-  // left globals
-  var subwaysLayer    = null,
-      subStopsLayer   = null,
-	  cordonsLayer 	  = null,
-      stopsLayer      = null,
-      routesLayer     = null,
-      poiUserPoints   = null,
-      existingMBTAKey = null;
-
-  $scope.snapPoints   = {all: [], sel: null, data: null},
-  $scope.vectorIsos   = {vis:false, val:6};
-  $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
     function(newVal) {
@@ -293,18 +255,25 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.tiles_right = tilesDict[tiles];
   };
   
-  $scope.resetMap = function(marker) {leafletData.getMap('map_left').then(function(map) {
+  $scope.resetMap = function() {
+    d3Service.clearCharts();
+	$scope.scenarioScore.graphData = false;
+    leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
 		})}
   
   refreshOrigin = function (marker){
     animateProgressBar();
 		$scope.resetMap();
-		analystService.moveOrigin(marker, $scope.scenarioCompare, $scope.scenario0, $scope.scenario1).then(function(){
+		analystService.moveOrigin(marker, $scope.scenarioCompare, [$scope.scenario0, $scope.scenario1]).then(function(){
 		  finishProgressBar();
-		  $scope.showVectorIsosOn = true;
-		  $scope.loadProgress.vis = false;
-		  $scope.showVectorIsos($scope.vectorIsos.val);
+		  if(!$scope.pointToPoint){
+		    $scope.showVectorIsosOn = true;
+		    $scope.loadProgress.vis = false;
+		    $scope.showVectorIsos($scope.vectorIsos.val);
+		  }else{
+		    refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
+		  }
 		})
   };
   
@@ -341,14 +310,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   });
 
   $scope.preMarkerQuery = function () {
-    
+    $scope.resetMap();
 	if($scope.pointToPoint){
-	  var tempMarker = L.marker([$scope.markers.start.lat,$scope.markers.start.lng]);
-	  console.log(tempMarker);
-	  refreshDestination(tempMarker);
+	  refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
 	} else{
-	  var tempMarker = L.marker([$scope.markers.end.lat,$scope.markers.end.lng]);
-	  refreshOrigin(tempMarker);
+	  refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng]));
 	}
   }
   
@@ -360,7 +326,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos($scope.vectorIsos.val);}, 1000);
+	$scope.showVectorIsos($scope.vectorIsos.val);}, 100);
   };
   
   $scope.stopTimer = function () {
@@ -560,10 +526,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subwaysLayer = subways;
     },gs);
 
-
-
-
-
+  loadService.getDestinationData('indicators',
+	  function(data){
+	  analystService.setDestinationData(data)}
+  );
+  
+  loadService.getDestinationData('chartLabels',
+	  function(data){d3Service.setChartLabels(data)}
+  );
+	
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = [200, 300, 400];
@@ -882,9 +853,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
   };
 
-  // holdover from before we had the range slider, still keeping around just incase we need again
-  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<120) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + (5-Number($scope.vectorIsos.val)%5) } else {$scope.vectorIsos.val = 1}}}
-  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) - (Number($scope.vectorIsos.val)%5) }}
+  // increment isochrones by 5 minutes
+  $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<119) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 } else {$scope.vectorIsos.val = 1}}}
+  $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) -1 }}
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
@@ -1086,7 +1057,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
   $scope.updateSelectScenario = function (comboIndex) {
-    var currentModificationJSON = [];
+    $scope.resetMap();
+	var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 
@@ -1139,7 +1111,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
   $scope.updateComScenario = function (comboIndex) {
-    var currentModificationJSON = [];
+    $scope.resetMap();
+	var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 

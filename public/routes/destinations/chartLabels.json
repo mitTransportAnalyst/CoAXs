@@ -1,0 +1,2 @@
+[{"code": "jobs1", "verbose": "Jobs | $", "color": "#FFA728"},	{"code": "jobs2", "verbose": "Jobs | $$", "color": "#FF9314"},	{"code": "jobs3", "verbose": "Jobs | $$$", "color": "#FF7F00"},
+{"code": "walkTime", "verbose": "minutes walking", "color": "#FFA728"},	{"code": "waitTime", "verbose": "minutes waiting", "color": "#FF9314"},	{"code": "rideTime", "verbose": "minutes onboard", "color": "#FF7F00"}]

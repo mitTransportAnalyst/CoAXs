@@ -1,15 +1,17 @@
 // this is the boiler to visualize the d3 graph
 coaxsApp.service('d3Service', function () {
-//Styling info.  TODO: Move to schema
-var attributes = [
-{code: 'jobs1', verbose: 'Jobs | $', color: '#FFA728'},	{code: 'jobs2', verbose: 'Jobs | $$', color: '#FF9314'},	{code: 'jobs3', verbose: 'Jobs | $$$', color: '#FF7F00'},
-{code: 'walkTime', verbose: 'minutes walking', color: '#FFA728'},	{code: 'waitTime', verbose: 'minutes waiting', color: '#FF9314'},	{code: 'rideTime', verbose: 'minutes onboard', color: '#FF7F00'}];
+//Styling info.
+var attributes = [];
+
+  this.setChartLabels = function(data){
+	attributes = data;
+	attributes = d3.map(attributes, function(d){return d.code;});
+  };
 
 //Map attributes so they can be get/set by code.
-attributes = d3.map(attributes, function(d){return d.code;});
 
 //Defaults
-var	selCode = 'profe1',
+var	selCode = 'jobs1',
 	xScale = null;
 
 colors = d3.scale.category10();

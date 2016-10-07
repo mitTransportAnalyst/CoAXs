@@ -8,18 +8,6 @@ var bodyParser = require('body-parser');
 
 var http = require('http');
 var path = require('path');
-//
-// var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-// var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-// var S3_BUCKET = process.env.S3_BUCKET;
-//
-// var aws = require('aws-sdk');
-//     aws.config = new aws.Config();
-//     aws.config.accessKeyId = AWS_ACCESS_KEY;
-//     aws.config.secretAccessKey = AWS_SECRET_KEY;
-// var s3 = new aws.S3();
-//
-// console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
 
 app.use(morgan('dev'));  
 app.use(bodyParser.json({limit: '50mb'}));
@@ -125,9 +113,24 @@ app.get('/load/scenario/:fileName', function (req, res) {
   });
 });
 
-
-
-
+//get for destination data
+app.get('/load/destinations/:fileName', function (req, res) {
+  var options = {
+    'root'     : __dirname + '/public/routes/destinations',
+    'dotfiles' : 'deny',
+    'headers'  : {
+      'x-timestamp' : Date.now(),
+      'x-sent'      : true
+    }
+  };
+  var file = req.params.fileName+".json";
+  res.sendFile(file, options, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
 
 app.get('/load/routes', function (req, res) {
   var path = __dirname + '/public/routes/shapefiles/mapApp/routes.geojson';
@@ -149,17 +152,6 @@ app.get('/load/trunks', function (req, res) {
     }
   });
 });
-
-app.get('/load/trunks', function (req, res) {
-  var path = __dirname + '/public/routes/shapefiles/mapApp/trunks.geojson'
-  res.sendFile(path, function (err) {
-    if (err) {
-      console.log('sendFile error:', err);
-      res.status(err.status).end();
-    }
-  });
-});
-
 
 var globalGetDone = false;
 app.get('/startSnapCache/:fileId', function (req, res) {

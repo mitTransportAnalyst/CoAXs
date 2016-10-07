@@ -8,27 +8,12 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
      defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
 	 workerVersion =  'v1.5.0-68-ga7c6904';
-  var indicatorAttributes = {
-    jobs:[
-	 {id: 'jobs1',
-	  grid: 'Jobs_with_earnings__1250_per_month_or_less.grid',
-	  verbose: 'Jobs | $'},
-	 {id: 'jobs2',
-	  grid: 'Jobs_with_earnings__1251_-__3333_per_month.grid',
-	  verbose: 'Jobs | $$'},
-	 {id: 'jobs3',
-	  grid: 'Jobs_with_earnings_greater_than__3333_per_month.grid',
-	  verbose: 'Jobs | $$$'}],
-	workers:[
-	 {id: 'workers1',
-	  grid: 'Workers_with_earnings__1250_per_month_or_less.grid',
-	  verbose: 'Workers | $'},
-	 {id: 'workers2',
-	  grid: 'Workers_with_earnings__1251_-__3333_per_month.grid',
-	  verbose: 'Workers | $$'},
-	 {id: 'workers3',
-	  grid: 'Workers_with_earnings_greater_than__3333_per_month.grid',
-	  verbose: 'Workers | $$$'}]};
+  var indicatorAttributes = {}
+  
+  this.setDestinationData = function(data){
+    indicatorAttributes = data;
+  };
+  
   var attributeUrlArray = [];
   var indicatorNameArray = [];  
   var attributeNameArray = [];
@@ -43,11 +28,12 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	  attributeNameArray.push(indicatorAttributes[indicator][i]['id']);
 	}
   };
-  var isochrones = []
+  var isochrones = [];
     isochrones[0] = null;
     isochrones[1] = null;
-  var isochroneLayer0 = null;
-  var isochroneLayer1 = null;
+  var isochroneLayer = [];
+    isochroneLayer[0] = null;
+    isochroneLayer[1] = null;
   var plotData = {};
 
   // for (var j = 0; j<=1 ; j++){
@@ -71,16 +57,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   this.refreshCred = refreshCred;
   
   var analystState = {
-  "transitive": null,
-  "isochrone": null,
-  "key": null,
-  "origin": [42.35042512243457,71.03485107421875],
-  "destination":[42.35042512243457,-71.03485107421875],
   "staticRequest":
 	{"jobId": supportService.generateUUID(),
 	 "transportNetworkId": defaultGraph,
 	 "request": {
-		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.3888888888888888,"bikeSpeed":4.166666666666667,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
+		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.4,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
 		"scenario":{}
 	  }
 	}
@@ -209,171 +190,117 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   };
   
   //called when start pin is moved
-  this.moveOrigin = function (marker, isComparison, scenario0, scenario1){
+  this.moveOrigin = function (marker, isComparison, scenarios){
 	return new Promise(function(resolve, reject){
     //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
-	isochrones[0] = null;
-	isochrones[1] = null;
-	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-    var staticDefault = 
-	  {
-	    "type": 'static',
-	    "graphId": defaultGraph,
-		"workerVersion": workerVersion,
-	    "request": analystState.staticRequest,
-		"x": xy.x,
-		"y": xy.y
-	  };
-	
-	//set scenario
-	staticDefault.request.scenario = scenario0;
-	staticBody0 = JSON.stringify(staticDefault);
-	staticDefault.request.scenario = scenario1;
-	staticBody1 = JSON.stringify(staticDefault);
+	var staticBody = [];
+	var xy = [];
+	for (var i=0; i<2; i++){
+		isochrones[i] = null;
+		xy[i] = browsochrones[i].latLonToOriginPoint(marker.getLatLng());
+		var staticDefault = [];
+		staticDefault[i] = 
+		  {
+			"type": 'static',
+			"graphId": defaultGraph,
+			"workerVersion": workerVersion,
+			"request": analystState.staticRequest,
+			"x": xy[i].x,
+			"y": xy[i].y
+		  };
+		
+		//set scenario
+		staticDefault[i].request.scenario = scenarios[i];
+		staticBody[i] = JSON.stringify(staticDefault[i]);
+    }
 	
 	//fetch a grid for travel times
-	
 	if(!isComparison){
 	  fetch(analystUrl,{
 		  method: 'POST',
-		  body: staticBody0
+		  body: staticBody[0]
 		}).then(function(res){
 		  return res.arrayBuffer()
 		}).then(function(buff){
-		  browsochrones[0].setOrigin(buff, xy)
+		  browsochrones[0].setOrigin(buff, xy[0])
 		  .then(function(){
             console.log('making plot data');
 			makeIsochronesAndPlotData(0).then(function(){resolve();})
 		  })
 		})
 	} else {
-//		$q.all([
-		// function(){return new Promise(function(resolve, reject){
+//todo fix callback hell
 		fetch(analystUrl,{
 			  method: 'POST',
-			  body: staticBody0
+			  body: staticBody[0]
 			}).then(function(res){
 			  return res.arrayBuffer()
 			}).then(function(buff){
-			  browsochrones[0].setOrigin(buff, xy)
+			  browsochrones[0].setOrigin(buff, xy[0])
 			  .then(function(){
-				console.log('making plot data');
 				makeIsochronesAndPlotData(0).then(function(){
-				//todo use $q.all
 				fetch(analystUrl,{
-			  method: 'POST',
-			  body: staticBody1
-			}).then(function(res){
-			  return res.arrayBuffer()
-			}).then(function(buff){
-			  browsochrones[1].setOrigin(buff, xy)
-			  .then(function(){
-				console.log('making plot data');
-				makeIsochronesAndPlotData(1).then(function(){resolve();})
-			  })
-			})
-				
-				
+					  method: 'POST',
+					  body: staticBody[1]
+					}).then(function(res){
+					  return res.arrayBuffer()
+					}).then(function(buff){
+					  browsochrones[1].setOrigin(buff, xy[1])
+					  .then(function(){
+						console.log('making plot data');
+						makeIsochronesAndPlotData(1).then(function(){resolve();})
+					  })
+					})
 				})
 			  })
 			})
 	}
   })}
 
-  
-  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
-    
-	if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	
-	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-    browsochrones[0].generateDestinationData(xy).
-	then(function(res){
-	  var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,2);
-	  plotData['1'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+  processTransitiveResult = function (res, scenNum) {
+    var transitive = res.transitive;
+	  transitive.journeys = transitive.journeys.slice(0,1);
+	  if (res.travelTime > 254){
+	    plotData[scenNum] = {'average_rideTime' : 999}
+	  } else {
+	  plotData[scenNum] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
 			'average_waitTime' : res.waitTime,
 			'average_rideTime' : res.inVehicleTravelTime};
-	  if(!isComparison){  
-	  cb(plotData);
+	  }
 	  var transitiveLines = new Transitive({'data':transitive});
 	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
+  }
+  
+  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
+	if(transitiveLayer){map.removeLayer(transitiveLayer)};
+	var xy0 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+	var xy1 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
+    browsochrones[0].generateDestinationData(xy0).
+	then(function(res){
+	  processTransitiveResult(res,0);
+	  if(!isComparison){  
+	  cb(plotData);
 	  map.addLayer(transitiveLayer);
 	  transitiveLayer._refresh();
 	  } else { 
-		browsochrones[1].generateDestinationData(xy).
+		browsochrones[1].generateDestinationData(xy1).
 		then(function(res){
-		  var transitive = res.transitive;
-		  transitive.journeys = transitive.journeys.slice(0,2);
-		  plotData['2'] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
-				'average_waitTime' : res.waitTime,
-				'average_rideTime' : res.inVehicleTravelTime};
+		  processTransitiveResult(res,1)
 		  cb(plotData);
-		  var transitiveLines = new Transitive({'data':transitive});
-		  transitiveLayer = new L.TransitiveLayer(transitiveLines)
 		  map.addLayer(transitiveLayer);
 		  transitiveLayer._refresh();
-	});
-	
-	}
+		});
+	  }
 	})
   }
   
-  var optionCurrent = {
-    scenario      : {
-      id            : 0,
-      description   : 'Run on load from CoAXs SPA.',
-      modifications : [],
-    }
-  };
-  
-  var optionC = []
-  
-  for (i = 0; i < 2; i++){
-  optionC[i] = {
-    scenario      : {
-      id            : i,
-      description   : 'Scenario ' + i + ' from CoAXs',
-      modifications : []
-    }
-  }; 
-  }
-      
-var allRoutes = ['CR-Fairmount', '749', '2b8cb87', '3c84732', '364b0b2', 'a3e69c4', '9d14048', '62e5305', 'a64adac', 'b35db84', '79d4855', '78cc24d'];
-var agencyId = 'MBTA+v6';
-var banExtraAgencies = [
-    {
-      type      : 'remove-trip',
-      agencyId  : 'KM',
-      routeId   : null,
-      tripId    : null,
-    }];
-
-  // holds current states for different map layers, etc. (allows you to grab and remove, replace)
-  var isoLayer   = null;
-  var isoLayerOld = null;
-
-  var vectorIsos = null;
-  var vecComIsos = null;
-  
-  var currentIso = null;
-  var compareIso = null;
-
-
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
     if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-	if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
+	if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+	if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
   };
 
-  this.killCompareIso = function (map) {
-    if (compareIso) { map.removeLayer(compareIso); };
-    vecComIsos = false;
-    compareIso = null;
-  };
-
-  
-  
   this.setScenarioNames = function (scenarioName, c){
 	optionC[c].scenario.name = scenarioName;
   };
@@ -424,8 +351,6 @@ var banExtraAgencies = [
       })
   };
 
-
-
   this.modifyFrequency = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
@@ -453,133 +378,11 @@ var banExtraAgencies = [
     });
   }
 
-  this.loadExisting = function (poi, map, cb) {
-    vectorIsos = poi.isochrones;
-    analyst.singlePointRequest({
-      lat : poi.lat,
-      lng : poi.lng,
-    }, defaultGraph, defaultShapefile, optionCurrent)
-    .then(function (response) {
-      if (isoLayer) {
-        isoLayer.redraw(); 
-      } else {
-        isoLayer = response.tileLayer;
-        isoLayer.addTo(map);
-      }
-      cb(true);
-    })
-    .catch(function (err) {
-      console.log(err);
-      cb(false);
-    });;
-  }
-
-  this.deleteTileIsos = function (map) {
-    if(isoLayer){map.removeLayer(isoLayer)};
-  }
-  
-  this.prepCustomScenario = function (customAnalystRequest, c) {
-	console.log('prepping custom scenario');
-	optionC[c] = null;
-	console.log(optionC);
-	optionC[c] = customAnalystRequest;
-	console.log(optionC);
-	optionC[c].scenario.modifications.push(banExtraAgencies[0])
-	console.log(optionC);
-  };
-  
-  this.singlePointComparison = function (marker, map, cb) {
-   	console.log(optionC[0]);
-	console.log(optionC[1]);
-	
-	optionC[0].graphId? graph0 = optionC[0].graphId : graph0 = defaultGraph;
-	optionC[1].graphId? graph1 = optionC[1].graphId : graph1 = defaultGraph;
-
-	
-	analyst.singlePointComparison({
-      lat : marker.lat,
-      lng : marker.lng,
-    }, graph1, graph0, defaultShapefile, optionC[1], optionC[0])
-		.then(function (response) {
-			var plotData = {};
-			var cPlotData = {};
-			
-			//compile cumulative plot data for scenario 1
-			for (key in subjects.fields) {
-				var id = subjects.prefix+'.'+subjects.fields[key].id;
-				var tempArray = response[0].data[id].pointEstimate.sums.slice(0,120);
-				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-				cPlotData[key] = {
-					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'verbose' : subjects.fields[key].verbose
-					}
-				};
-			
-			//compile cumulative plot data for scenario 0
-			for (key in subjects.fields) {
-				var id = subjects.prefix+'.'+subjects.fields[key].id;
-				var tempArray = response[1].data[id].pointEstimate.sums.slice(0,120);
-				for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-				plotData[key] = {
-					'data' : tempArray.map(function(count, i) { return { x : i, y : count } }),
-					'verbose' : subjects.fields[key].verbose
-					}
-				};
-			// };
-			isoLayer = analyst.updateSinglePointLayer(response[0].key, response[1].key);
-			isoLayer.addTo(map);
-		cb(response[0], response[1], plotData, cPlotData);
-		})
-  }
-  
-  // actually run the SPA and handle results from library
-  this.singlePointRequest = function (marker, map, timeLimit, cb) {
-	console.log(optionC[0])
-	
-	optionC[0].graphId? graph = optionC[0].graphId : graph = defaultGraph;
-	scenario = [];
-	scenario[0] = {'scenario': optionC[0].scenario};
-	
-	analyst.singlePointRequest({
-      lat : marker.lat,
-      lng : marker.lng,
-    }, graph, defaultShapefile, scenario[0])
-    .then(function (response) { 
-        isoLayer = analyst.updateSinglePointLayer(response.key, null, 7200);
-		isoLayer.addTo(map).on('load', function(e){
-			isoLayer.setOpacity(1);
-			//isoLayerOld.setOpacity(0);
-			//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
-		});
-		//isoLayerOld = analyst.updateSinglePointLayerOld(response.key, null);
-		//isoLayerOld.addTo(map);
-	  var plotData = subjects.fields;
-      for (key in subjects.fields) {
-        var id = subjects.prefix+'.'+subjects.fields[key].id;
-        var tempArray = response.data[id].pointEstimate.sums.slice(0,120);
-        for (var i = 1; i < tempArray.length; i++) { 	tempArray[i] = tempArray[i] + tempArray[i-1] };
-        plotData[key]['data'] = tempArray.map(function(count, i) { return { x : i, y : count } });
-      }
-      cb(response.key, plotData);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  };
-  
-  this.updateTiles = function(map, key, timeLimit, cb) {
-	//isoLayerOld ? '' : isoLayerOld = isoLayer;
-	//isoLayerOld.setOpacity(1);
-	isoLayer.setOpacity(0);
-	isoLayer = analyst.updateSinglePointLayer(key, null, timeLimit);
-	}
-  //
-
   // swap between tile layer and vector isos layer
   this.showVectorIsos = function(timeVal, map, isComparison) {
-		if(isochroneLayer0){map.removeLayer(isochroneLayer0)};
-		if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-		isochroneLayer0 = L.geoJson(isochrones[0][timeVal], {
+		if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
+		if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+		isochroneLayer[0] = L.geoJson(isochrones[0][timeVal], {
           style: {
             stroke      : true,
             fillColor   : '#FDB813',
@@ -589,11 +392,11 @@ var banExtraAgencies = [
             opacity     : 1
           }
         });
-        isochroneLayer0.addTo(map);
+        isochroneLayer[0].addTo(map);
 
     if (isComparison) {
-      if(isochroneLayer1){map.removeLayer(isochroneLayer1)};
-	  isochroneLayer1 = L.geoJson(isochrones[1][timeVal], {
+      if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
+	  isochroneLayer[1] = L.geoJson(isochrones[1][timeVal], {
           style: {
             stroke      : true,
             fillColor   : '#89cff0',
@@ -603,7 +406,7 @@ var banExtraAgencies = [
             opacity     : 1
           }
         });
-        isochroneLayer1.addTo(map);
+        isochroneLayer[1].addTo(map);
 	  
     }
   };
