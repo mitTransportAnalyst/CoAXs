@@ -267,9 +267,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		$scope.resetMap();
 		analystService.moveOrigin(marker, $scope.scenarioCompare, [$scope.scenario0, $scope.scenario1]).then(function(){
 		  finishProgressBar();
-		  $scope.showVectorIsosOn = true;
-		  $scope.loadProgress.vis = false;
-		  $scope.showVectorIsos($scope.vectorIsos.val);
+		  if(!$scope.pointToPoint){
+		    $scope.showVectorIsosOn = true;
+		    $scope.loadProgress.vis = false;
+		    $scope.showVectorIsos($scope.vectorIsos.val);
+		  }else{
+		    refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
+		  }
 		})
   };
   
@@ -308,12 +312,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.preMarkerQuery = function () {
     $scope.resetMap();
 	if($scope.pointToPoint){
-	  var tempMarker = L.marker([$scope.markers.start.lat,$scope.markers.start.lng]);
-	  console.log(tempMarker);
-	  refreshDestination(tempMarker);
+	  refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
 	} else{
-	  var tempMarker = L.marker([$scope.markers.end.lat,$scope.markers.end.lng]);
-	  refreshOrigin(tempMarker);
+	  refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng]));
 	}
   }
   
