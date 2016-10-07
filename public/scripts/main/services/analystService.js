@@ -8,27 +8,12 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
      defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
 	 workerVersion =  'v1.5.0-68-ga7c6904';
-  var indicatorAttributes = {
-    jobs:[
-	 {id: 'jobs1',
-	  grid: 'Jobs_with_earnings__1250_per_month_or_less.grid',
-	  verbose: 'Jobs | $'},
-	 {id: 'jobs2',
-	  grid: 'Jobs_with_earnings__1251_-__3333_per_month.grid',
-	  verbose: 'Jobs | $$'},
-	 {id: 'jobs3',
-	  grid: 'Jobs_with_earnings_greater_than__3333_per_month.grid',
-	  verbose: 'Jobs | $$$'}],
-	workers:[
-	 {id: 'workers1',
-	  grid: 'Workers_with_earnings__1250_per_month_or_less.grid',
-	  verbose: 'Workers | $'},
-	 {id: 'workers2',
-	  grid: 'Workers_with_earnings__1251_-__3333_per_month.grid',
-	  verbose: 'Workers | $$'},
-	 {id: 'workers3',
-	  grid: 'Workers_with_earnings_greater_than__3333_per_month.grid',
-	  verbose: 'Workers | $$$'}]};
+  var indicatorAttributes = {}
+  
+  this.setDestinationData = function(data){
+    indicatorAttributes = data;
+  };
+  
   var attributeUrlArray = [];
   var indicatorNameArray = [];  
   var attributeNameArray = [];

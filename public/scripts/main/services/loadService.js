@@ -214,8 +214,12 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     })
   };
 
-
-
+  this.getDestinationData = function (file, cb) {
+    $http.get('/load/destinations/'+file)
+    .success(function (data, status) {
+	  cb(data);
+	})
+  }
 });
 
 

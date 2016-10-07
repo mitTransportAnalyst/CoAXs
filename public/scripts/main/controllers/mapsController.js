@@ -560,10 +560,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subwaysLayer = subways;
     },gs);
 
-
-
-
-
+  loadService.getDestinationData('indicators',
+	  function(data){
+	  analystService.setDestinationData(data)}
+  );
+  
+  loadService.getDestinationData('chartLabels',
+	  function(data){d3Service.setChartLabels(data)}
+  );
+	
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = [200, 300, 400];
