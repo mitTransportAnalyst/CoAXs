@@ -267,8 +267,24 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 			'average_waitTime' : res.waitTime,
 			'average_rideTime' : res.inVehicleTravelTime};
 	  }
-	  var transitiveLines = new Transitive({'data':transitive});
-	  transitiveLayer = new L.TransitiveLayer(transitiveLines)
+	  var transitiveLines = new Transitive({
+	    data:transitive,
+		styles: {
+		  multipoints_merged: {
+		    r: 6
+		  },
+          stops_merged: {
+            r: 4
+          },
+		  places: {
+		    r: 6
+		  },
+		  labels: {
+		    display: 'none'
+		  }
+        }
+	  });
+	  transitiveLayer[scenNum] = new L.TransitiveLayer(transitiveLines)
   }
   
   this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
