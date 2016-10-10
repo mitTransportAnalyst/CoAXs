@@ -403,21 +403,23 @@
       </div>
     </div>
 
-    <div class="showToggle" ng-show="visibleTabs.travel">
-      <div class="btn-group btn-group-justified">
-        <label class="btn btn-info" ng-click="preMarkerQuery()">
-          <i class="fa fa-refresh" ng-show="!scenarioScore.graphData"
+    <div class="showToggle"  ng-show="visibleTabs.travel">
+      <div class="btn-group btn-group-justified" >
+        <label class="btn btn-info"  ng-click="preMarkerQuery()">
+          <i class="fa fa-refresh"   ng-show="!scenarioScore.graphData"
              ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-pulse animated'"></i>
-          <i class="fa fa-refresh" ng-show="scenarioScore.graphData" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
+          <i class="fa fa-refresh" ng-show="scenarioScore.graphData" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i> Update
         </label>
-        <label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''"
-               ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-          <i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>
-          <i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>
-        </label>
-        <label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''"
-               ng-click="toggleShowVectorIsos(); stopTimer()"><i class="fa fa-stop"></i>
-        </label>
+
+
+        <!--<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''"-->
+               <!--ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">-->
+          <!--<i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>-->
+          <!--<i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>-->
+        <!--</label>-->
+        <!--<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''"-->
+               <!--ng-click="toggleShowVectorIsos(); stopTimer()"><i class="fa fa-stop"></i>-->
+        <!--</label>-->
       </div>
 
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
@@ -549,20 +551,23 @@
   <!-- 4 route selector module -->
 
 
-  <div class="colBody text-center" style="width:30px; box-shadow: 0px 0px 0px;">
+  <div class="colBody text-center" style="width:100px; box-shadow: 0px 0px 0px;">
     <div class="colHead">
       <div class="fa-stack">
-        <i class="fa fa-code-fork fa-rotate-270"></i>
+        <!--<i class="fa fa-code-fork fa-rotate-270"></i>-->
       </div>
     </div>
 
-    <div class="showToggle" ng-show="visibleTabs.routes">
+    <div class="showToggle" ng-show="visibleTabs.customize">
+
 
 
       <div>
-        <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};"
+        <label class="btn btn-xs tiny" ng-class="" ng-click=""><i class="fa fa-plus"></i> Select All
+        </label>
+        <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};font-size: 15px;"
              ng-click="targetCorridor(variant);" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
-          {{variant._key}}
+          {{variant.corName}}
         </div>
       </div>
     </div>
@@ -570,19 +575,19 @@
 
   <!-- 5 route table module -->
   <div class="colBody" style="width:120px; box-shadow: 0px 0px 0px;">
-    <div class="colHead" ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
-        Corridor
+    <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
+
 
     </div>
 
-    <div class="placeHolder" ng-show="!visibleTabs.routes"
-         ng-click="visibleTabs.routes = !visibleTabs.routes; introPanel = false">
+    <div class="placeHolder" ng-show="!visibleTabs.customize"
+         ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
 		<div class="bigText">
-			<i class="fa fa-code-fork fa-rotate-270" style="margin-left: -15px"></i>
+			<!--<i class="fa fa-code-fork fa-rotate-270" style="margin-left: -15px"></i>-->
 		</div>
     </div>
 
-    <div class="showToggle" ng-show="visibleTabs.routes">
+    <div class="showToggle" ng-show="visibleTabs.customize">
 
       <!--<div class="">-->
         <!--<label class="" style="line-height:8px">-->
@@ -620,7 +625,7 @@
   <div class="colBody" id="service-tab">
     <div class="colHead"
          ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
-      <i class="fa fa-pencil-square-o"></i> Service Editor
+      <i class="fa fa-pencil-square-o"></i> Service Editor &nbsp&nbsp <i  ng-show="variants[tabnav].sel" > {{ tabnav }} |  {{variants[tabnav].corName}} </i>
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize || !variants[tabnav].sel"
@@ -631,18 +636,18 @@
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.customize && variants[tabnav].sel">
+
+
+
+
       <div class="btn-group btn-group-justified">
         <label class="btn btn-xs" ng-show="!variants[tabnav].sel"></label>
-        <label class="btn btn-xs" style="background-color:
-		{{ variants[tabnav].color }}; color: #FFFFFF"
-               ng-show="variants[tabnav].sel">
-          <i>{{ tabnav }} |  {{variants[tabnav].corName}}</i>
+        <!--<label class="btn btn-xs" style="background-color:-->
+		<!--{{ variants[tabnav].color }}; color: #FFFFFF"-->
+               <!--ng-show="variants[tabnav].sel">-->
+          <!--<i>{{ tabnav }} |  {{variants[tabnav].corName}}</i>-->
 
-
-
-
-
-        </label>
+        <!--</label>-->
         <label class="btn btn-xs btn-info" style="line-height:25px" ng-click="newCombo()">
           <i class="fa fa-save"></i> Save
         </label>

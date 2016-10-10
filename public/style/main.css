@@ -37,6 +37,7 @@ button {
 
 .tiny {
   background-color: #959595;
+  width: 100%
 }
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
@@ -394,7 +395,7 @@ background-color  : #696969;
 }
 
 .colBody .smallColVal {
-  padding: 7px 0px 7px 0px;
+  padding: 0px 0px 0px 0px;
 }
 
 .colBody .showToggle {
