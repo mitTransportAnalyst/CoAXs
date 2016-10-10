@@ -5,9 +5,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
-    document.getElementById('leftDynamic').style.width = (window.innerWidth) - 900 + 'px';
+    document.getElementById('leftDynamic').style.width = (window.innerWidth)/2 - 250 + 'px';
 
-    document.getElementById('service-tab').style.width = (window.innerWidth) - 850 + 'px';
+    document.getElementById('service-tab').style.width = (window.innerWidth)/2 - 275 + 'px';
 
 
 
