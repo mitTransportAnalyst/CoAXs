@@ -16,6 +16,7 @@ body {
 /*bs modification*/
 .btn {
   border-radius: 0px;
+  text-align: left;
 }
 
 button {
@@ -55,6 +56,14 @@ button {
 }
 i.fa {
   cursor: pointer;
+}
+
+.blink {
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
 }
 
 

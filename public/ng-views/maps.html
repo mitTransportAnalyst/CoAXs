@@ -158,7 +158,7 @@
       <div style="height: 100%">
 		<h5>Showing door-to-door travel, with MBTA weekday morning schedule as baseline.</h5>
 		<h5 ng-show="!loadProgress.vis">Drag the pin to explore.</h5>
-		<h5 ng-show="loadProgress.vis">Loading...</h5>
+		<h5 ng-show="loadProgress.vis" class="blink">Loading</h5>
 
 		<div id="tooltip" class="hidden" style="z-index:10">
 			<p><span id="value"></span>
@@ -406,13 +406,14 @@
       <div class="btn-group btn-group-justified">
         <label class="btn btn-info" ng-click="preMarkerQuery()">
           <i class="fa fa-refresh" ng-show="!scenarioScore.loaded"
-             ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-pulse animated'"></i>
+             ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-flash animated'"></i>
           <i class="fa fa-refresh" ng-show="scenarioScore.loaded" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
+		  <span ng-show="!loadProgress.vis"> Update</span>
+		  <span ng-show="loadProgress.vis"> Loading</span>
         </label>
-        <label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''"
-               ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-          <i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>
-          <i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>
+        <label class="btn" ng-class="showVectorIsosOn && !pointToPoint ? '' : 'active disabled'" ng-click="timerPlaying ? stopTimer() : startTimer()" >
+          <span ng-show="!timerPlaying"><i class="fa fa-play"></i> Start</span>
+          <span ng-show="timerPlaying"><i class="fa fa-pause"></i> Pause</span>
         </label>
 
       </div>
@@ -420,7 +421,7 @@
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
-		  <span ng-class="pointToPoint ? 'unselected' : ''">
+		  <span ng-class="!pointToPoint && scenarioScore.loaded ? '' : 'disabled unselected'">
             <input type="range" min="5" max="115" step="5" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
@@ -438,7 +439,7 @@
 	  <br>
 	  <br>
 	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;">
-		Point-to-point mode 
+		Point-to-point mode:  
 		<i class="fa fa-check-square" ng-show="pointToPoint"></i>
 		<i class="fa fa-square" ng-show="!pointToPoint"></i>
 	  </div>
@@ -473,12 +474,12 @@
 
       <div class="btn-group btn-group-justified">
 
-         <label class="btn btn-xs" ng-class="scenarioCompare ? '' : 'active tiny'" ng-click="resetMap(); scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Comparison 
+         <label class="btn" ng-class="scenarioCompare ? '' : 'active tiny'" ng-click="resetMap(); scenarioCompare = !scenarioCompare"><i class="fa fa-balance-scale"></i> Compare 
         </label>
 
 
-        <label class="btn btn-xs" ng-class="saveCombo ? '' : 'active tiny'"
-               ><i class="fa fa-plus-square"></i> New
+        <label class="btn" ng-class="saveCombo ? '' : 'active tiny'"
+               ><i class="fa fa-plus-square"></i> Rename
         </label>
 
       </div>

@@ -350,11 +350,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.timerPlaying = false;
   
   $scope.startTimer = function () {
+  if ($scope.scenarioScore.loaded){
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
 	$scope.showVectorIsos($scope.vectorIsos.val);}, 150);
-  };
+  }};
   
   $scope.stopTimer = function () {
     $scope.timerPlaying = false;
