@@ -427,7 +427,7 @@
 
     <div class="showToggle"  ng-show="visibleTabs.travel">
       <div class="btn-group btn-group-justified" >
-        <label class="btn btn-info"  ng-click="preMarkerQuery()">
+        <label class="btn btn-info"  ng-click="preMarkerQuery()" ng-disabled="loadProgress.vis">
           <i class="fa fa-refresh" ng-show="!scenarioScore.loaded"
              ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-flash animated'"></i>
           <i class="fa fa-refresh" ng-show="scenarioScore.loaded" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
