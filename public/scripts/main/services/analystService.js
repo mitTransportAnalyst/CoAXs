@@ -268,7 +268,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 
   processTransitiveResult = function (res, scenNum) {
     var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,2);
+	  transitive.journeys = transitive.journeys.slice(0,1);
 	  if (res.travelTime > 254){ //not a feasible journey
 	    plotData[scenNum] = {
 		  'walkTime' : 0,
@@ -302,8 +302,31 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		  },
 		  labels: {
 		    display: 'none'
+		  },
+		  segments: {
+		    'stroke-width': '4px',
+			'stroke-opacity': 0.8,
+			'stroke-dasharray': function(display, segment){
+			  if (segment.type === 'WALK'){return '6,8'}
+			}
+		  },
+		  'segments-halo': {
+		    'stroke-opacity': 0.4
 		  }
-        }
+        },
+		zoomFactors: [{
+          minScale: 0,
+          gridCellSize: 25,
+          internalVertexFactor: 50,
+          angleConstraint: 10,
+          mergeVertexThreshold: 50
+        }, {
+          minScale: 0.5,
+          gridCellSize: 0,
+          internalVertexFactor: 0,
+          angleConstraint: 5,
+          mergeVertexThreshold: 0
+        }]
 	  });
 	  transitiveLayer[scenNum] = new L.TransitiveLayer(transitiveLines)
   }
@@ -377,14 +400,14 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
       })
   };
   
-  this.modifyFrequency = function (corridorId,scale,cb) {
+  this.modifyHeadway = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
         var scenarioJSON = [];
         data.modifications.forEach(function(route){
             if (route.type === "adjust-frequency"){
               route.entries.forEach(function (entry) {
-                entry.headwaySecs = entry.headwaySecs/scale ;
+                entry.headwaySecs = entry.headwaySecs*scale ;
               });
               scenarioJSON.push(route);
             }
@@ -415,7 +438,8 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
             color       : '#F68B1F',
             weight      : 1,
             fillOpacity : 0.25,
-            opacity     : 1
+            opacity     : 1,
+			clickable   : false
           }
         });
         isochroneLayer[0].addTo(map);

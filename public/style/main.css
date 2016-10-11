@@ -16,6 +16,7 @@ body {
 /*bs modification*/
 .btn {
   border-radius: 0px;
+  text-align: left;
 }
 
 button {
@@ -57,6 +58,14 @@ i.fa {
   cursor: pointer;
 }
 
+.blink {
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+
 
 /*navigation*/
 nav {
@@ -87,10 +96,12 @@ nav div.section {
 }
 
 .topright {
-  width            : 50%;
+  width: 50%;
+  width: -moz-calc(100% - 300px);
+  width: calc(100% - 300px);
   position		   : absolute;
-  left			   : 50%;
-  overflow         : hidden;  
+  left			   : 300px;
+  overflow         : auto;  
   z-index: 10;
   background-color : #696969
 }
