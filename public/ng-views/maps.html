@@ -371,7 +371,7 @@
          maxbounds="maxBounds_left"
 >
 </leaflet>
-<leaflet ng-show="visibleTabs.routes"
+<leaflet ng-show="visibleTabs.customize"
          center="center_right"
          defaults="defaults_right"
          id="map_right"
@@ -579,9 +579,8 @@
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize"
-         ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true;  introPanel = false">
+         ng-click="visibleTabs.customize = !visibleTabs.customize">
       <div class="bigText">
-        <!--<i class="fa fa-code-fork fa-rotate-270" style="margin-left: -15px"></i>-->
       </div>
     </div>
 
@@ -602,9 +601,7 @@
 
   <!-- 5 route table module -->
   <div class="colBody" style="width:120px; box-shadow: 0px 0px 0px;">
-    <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true;  introPanel = false">
-
-
+    <div class="colHead" ng-click="visibleTabs.customize = !visibleTabs.customize">
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize"
@@ -629,7 +626,7 @@
   <!-- 6 service editor module -->
   <div class="colBody" id="service-tab">
     <div class="colHead"
-         ng-click="visibleTabs.customize = !visibleTabs.customize; visibleTabs.routes=true; introPanel = false">
+         ng-click="visibleTabs.customize = !visibleTabs.customize">
       <i class="fa fa-pencil-square-o"></i> Service Editor &nbsp&nbsp  </i>
     </div>
 
