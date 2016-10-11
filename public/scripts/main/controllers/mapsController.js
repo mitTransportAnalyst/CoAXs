@@ -335,129 +335,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if (angular.isDefined($scope.timer)) { $interval.cancel($scope.timer); }
   };
   
-  var compareToSnapPoints = function () { 
-    var sel = $scope.combos.sel;
-    if (sel) {
-      sel = $scope.combos.all[sel].sel;
-      for (route in sel) { 
-        if (sel[route] !== null) {
-          return false;
-        }
-      };
-      return true;
-    } else {
-      return true;
-    }
-  };
-
-  // what calls the SPA analysis and updates and tile and map components
-  var runMarkerQuerys = function () {
-    $scope.showVectorIsosOn = false;
-    var startMarker = angular.copy($scope.markers.start);
-	var endMarker = angular.copy($scope.markers.end);
-
-    this.runPrep = function (map, comboItem, c) {
-	  var toKeep = getKeepRoutes(comboItem);
-      analystService.resetAll(map, c);
-       if ($scope.combos.all[comboItem]){
-		//if the specified combo does not have a custom scenario request, prepare the scenario
-
-	    if(!$scope.combos.all[comboItem].customAnalystRequest) {
-          analystService.modifyRoutes(toKeep, c);
-          analystService.modifyDwells(toKeep, c);
-          analystService.modifyFrequencies(toKeep, c);
-	    }
-	    //otherwise, use the specified scenario
-		else{
-	      analystService.prepCustomScenario($scope.combos.all[comboItem].customAnalystRequest,c);
-		}
-	  } else {
-	      var toKeep = [];
-          analystService.modifyRoutes(toKeep, c);
-	  }
-	  //analystService.modifyModes($scope.mode, c);
-	  //analystService.setScenarioNames(comboItem, c);
-}
-
-    leafletData.getMap('map_left').then(function(map) {
-	
-	analystService.deleteTileIsos(map);
-
-	if ($scope.pointToPoint) {
-		console.log($scope.combos);
-	}
-	else {
- 
-		animateProgressBar(); // start the progress bar
-
-      // logic for handling when scenario compare is turned on and there is a selected scenario to compare against
-      if ($scope.combos.com && $scope.scenarioCompare) {
-		console.log("running comparison...");
-		this.runPrep(map, $scope.combos.com, 0);
-		this.runPrep(map, $scope.combos.sel, 1);
-		analystService.singlePointComparison(startMarker, map, function(res, cres, plotData, cPlotData){
-		if (plotData) { 
-              if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-              //set the data for the cumulative plot to be an array of the responses for the selected and comparison combos.			 		  
-			  $scope.scenarioScore.graphData = [
-			  { 'id': $scope.combos.sel,
-				'name': $scope.combos.all[$scope.combos.sel].name,
-				'data': cPlotData},
-			  {'id': $scope.combos.com,
-				'name': $scope.combos.all[$scope.combos.com].name ,
-				'data': plotData}
-			];
-              drawGraph($scope.scenarioScore.graphData);
-		}; 
-		
-			
-			analystService.vectorRequest(startMarker, true, function (key, result) {
-			console.log("vector Request done for key " + key);
-			if (result) {
-              $scope.loadProgress.val = 100;
-              setTimeout(function () { $scope.$apply (function () {
-                $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 1000)
-            };
-          })
-			
-		}
-		);
-
-      // logic if there is no scenario to compare against (if compare is on then compares against baseline, else just runs standard SPA)
-      } else {
-        this.runPrep(map, $scope.combos.sel, 0);
-        analystService.killCompareIso(map);
-        var compareKey = !$scope.combos.com && $scope.scenarioCompare ? existingMBTAKey : undefined;
-		var shapefile = undefined;
-        analystService.singlePointRequest(startMarker, map, 300*$scope.vectorIsos.val, function (key, plotData) {
-		  console.log("tile Request done for key " + key);
-		  $scope.key = key;
-		  if (plotData) { 
-            if (!$scope.scenarioScore) { $scope.updateScenarioScorecard(); };
-            $scope.scenarioScore.graphData = [
-				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
-				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
-				'data': plotData}
-			];
-            drawGraph($scope.scenarioScore.graphData);
-			
-		} 
-          if (!$scope.combos.sel) { existingMBTAKey = key }; 
-		  
-          analystService.vectorRequest(startMarker, false, function (key, result) {
-		console.log("vector Request done for key " + key);
-            if (result) {
-              $scope.loadProgress.val = 100;
-              $scope.loadProgress.vis = false;
-			  $scope.toggleShowVectorIsos();
-              setTimeout(function () { $scope.$apply (function () {
-                 $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 1000)
-            };
-          });
-      }
-	)}}});
+  drawGraph = function (){
+	var plotData = [];
+	$scope.scenarioScore.data.map(function(scen){
+	  plotData.push({
+	    name: scen.name,
+		data: scen.data[$scope.indicators.sel]
+	  })
+	});	
+	d3Service.drawGraph($scope.vectorIsos.val,plotData, $scope.indicators)
   }
   
   drawGraph = function (graphData){
@@ -484,9 +370,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		
 	}}
   }
-
-
-
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
@@ -943,109 +826,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       $scope.managerOperations = false;
     })
   }
-
-  // from manager control runautosync
-  $scope.updateLocationCache = function (selId) {
-    $scope.managerOperations = true;
-    loadService.loadSnapCache(selId)
-    .then(function (data) {
-      var differences = 0;
-      if (data) {
-        data.forEach(function (each, index) {
-          var match = 0;
-          $scope.poiUsers.forEach(function (user) {
-            user.points.forEach(function (point) {
-              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
-            });
-          });
-          if (match==0) {
-            differences += 1;
-            data.splice(index, 1);
-          }
-        });
-      }
-      if (differences > 0 || !data) {
-        if (!data) { data = [] };
-        $scope.poiUsers.forEach(function (user) {
-          user.points.forEach(function (point) {
-            var match = 0;
-            data.forEach(function (each, index) {
-              if (each.lat==point.lat && each.lng==point.lng) { match += 1; }
-            });
-            if (match==0) {
-              data.push({ lat: point.lat, lng: point.lng, id: point.poiTag })
-            }
-          });
-        });
-
-        loadService.updateLocationCache(data, selId)
-        .then(function (data) {
-          if (data) { alert('Data has been updated. Refresh page.'); }
-          $scope.managerOperations = false;
-        })
-      } else {
-        alert('Data was not updated, no changes found');
-        $scope.managerOperations = false;
-      }
-    })
-  };
-
-  // from manager control runautosync
-  $scope.saveScenarioCache = function () {
-    $scope.managerOperations = true;
-    var name = prompt("Please enter a name to save the file as (no spaces or special characters).", "foobar");
-    var desired = name.replace(/[^\w]/gi, '') + '.json';
-    if ($scope.snapPoints.all.indexOf(desired) > -1) {
-      alert('That name, ' + desired + ', already exists as a file. Try again.')
-    } else {
-      loadService.loadSnapCache('baseline.json')
-      .then(function (data) {
-
-        var runPrep = function (map, comboItem) {
-          var toKeep = getKeepRoutes(comboItem);
-          analystService.resetAll(map,c);
-          analystService.modifyRoutes(toKeep,c);
-          analystService.modifyDwells(toKeep,c);
-          analystService.modifyFrequencies(toKeep,c);
-          if ($scope.mode.selected != 'all') {
-            analystService.modifyModes($scope.mode[$scope.mode.selected],c);
-          }
-        };
-
-        var i = 0;
-        var poiUpdateSequence = function () {
-          leafletData.getMap('map_left').then(function(map) {
-            runPrep(map, $scope.combos.sel);
-
-            // welcome to callback hell
-            analystService.singlePointRequest(data[i], map, undefined, function (key, subjects) {
-              if (subjects) { 
-                data[i]['graphData'] = subjects; 
-                analystService.vectorRequest(data[i], false, function (result, isochrones) {
-                  if (result) {
-                    data[i]['isochrones'] = isochrones;
-                    i += 1;
-                    if (i < data.length) { poiUpdateSequence(); }
-                    else {
-                      var newPOIs = JSON.stringify(data);
-                      var url = '/cachedLocs/' + desired;
-                      $http.post(url, {newPOIs: newPOIs})
-                      .success(function (data) {
-                        alert('Datafile successfully produced');
-                      }).error(function(data, status, headers, config) {
-                        alert('Process failed. An error occurred during the iteration through points. Check console.');
-                      });
-                    }
-                  };
-                });
-              }
-            });
-          });
-        };
-        poiUpdateSequence();
-      });
-    }
-  };
 
   // from manager control run download
   $scope.downloadSession = function () {
