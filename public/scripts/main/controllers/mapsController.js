@@ -39,7 +39,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.scenario1 = {};
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
-  
+  $scope.routeScorecard = false;
   $scope.indicators = {sel:'jobs',all:{jobs:'Jobs',workers:'Workers'}};
   $scope.scenarioLegend = true;
   $scope.selCordon = null;

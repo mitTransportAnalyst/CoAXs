@@ -65,13 +65,26 @@
 
 <div class="topcol">
 
-  <div class="topright" style="background-color: {{variants[tabnav].color}}" ng-show="routeScorecard">
+  <div class="topright" ng-show="routeScorecard">
     <h4>
-      <i class="fa fa-bar-chart"></i> Route Data
+      <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}}
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
     <div class="topinfo-body container">
 
+	        <table class="table table-condensed table-hover">
+          <thead>
+
+          </thead>
+          <tbody>
+          <tr ng-repeat="busline in variants[tabnav].buslines">
+            <td style="width: 35%; padding-left:0px">{{
+              busline }}
+            </td>
+          </tr>
+          </tbody>
+      </table>
+	
       <div class="row">
         <div class="col-xs-5">
           <h3>
@@ -392,7 +405,7 @@
   <!-- 2 destination and time filters -->
   <div class="colBody">
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
-      <i class="fa fa-clock-o" ng-class="selCordon && !visibleTabs.travel? 'faa-flash animated' : ''"></i>
+      <i class="fa fa-clock-o" ng-class="scenarioScore.loaded && !visibleTabs.travel? 'faa-flash animated' : ''"></i>
       Time Map
     </div>
 
@@ -577,23 +590,16 @@
     </div>
 
     <div class="placeHolder" ng-show="!visibleTabs.customize"
-         ng-click="visibleTabs.customize = !visibleTabs.customize; introPanel = false">
-		<div class="bigText">
-			<!--<i class="fa fa-code-fork fa-rotate-270" style="margin-left: -15px"></i>-->
-		</div>
+         ng-click="visibleTabs.customize = !visibleTabs.customize">
     </div>
 
     <div class="showToggle" ng-show="visibleTabs.customize">
 
-      <!--<div class="">-->
-        <!--<label class="" style="line-height:8px">-->
-          <!--<b>Bus Routes</b>-->
-        <!--</label>-->
-      <!--</div>-->
-
-      <div class="subHead">
-        Routes
-
+	  <div class="btn-group btn-group-justified">
+         <label class="btn" ng-class="tabnav ? '' : 'disabled active'" ng-click="routeScorecard = !routeScorecard" style="background-color: {{variants[tabnav].color}}"><i class="fa fa-line-chart"></i> 
+		 <span ng-show="routeScorecard">Hide Data</span>
+		 <span ng-show="!routeScorecard">Show Data</span>
+        </label>
       </div>
       
       <div style="height: 90%; overflow-y: auto">
@@ -644,7 +650,7 @@
           <!--<i>{{ tabnav }} |  {{variants[tabnav].corName}}</i>-->
 
         <!--</label>-->
-        <label class="btn btn-xs btn-info" style="line-height:25px" ng-click="newCombo()">
+        <label class="btn btn-info" ng-click="newCombo()">
           <i class="fa fa-save"></i> Save
         </label>
         </button>

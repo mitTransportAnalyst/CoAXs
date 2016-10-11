@@ -96,10 +96,12 @@ nav div.section {
 }
 
 .topright {
-  width            : 50%;
+  width: 50%;
+  width: -moz-calc(100% - 300px);
+  width: calc(100% - 300px);
   position		   : absolute;
-  left			   : 50%;
-  overflow         : hidden;  
+  left			   : 300px;
+  overflow         : auto;  
   z-index: 10;
   background-color : #696969
 }
