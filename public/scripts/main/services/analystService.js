@@ -2,13 +2,15 @@
 coaxsApp.service('analystService', function (supportService, $interval, $http, $q) {
 
   var token = null;	//oauth2 token for analyst-server login
-  var analystUrlBase = 'https://analyst-dev.conveyal.com/api/single?accessToken='; //base URL for Conveyal Analyst-Server
+  var analystUrlBase = 'https://analyst-preview.conveyal.com/api/single?accessToken='; //base URL for Conveyal Analyst-Server
   var analystUrl = ''; //to take the base and the oauth2 token
   var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/'; //base URL for destination grid data
   var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
-     defaultGraph = '28ea738684a2829a3ca7dd73bb304b99',
-	 workerVersion =  'v1.5.0-68-ga7c6904';
-  var indicatorAttributes = {}
+     defaultGraph = '650b39507bce5c884334aa960deb093d',
+	 workerVersion =  'v1.5.0-74-geb0f8d0';
+  var indicatorAttributes = {};
+  var attributeUrlArray = [];
+  var attributeIdArray = [];
   
   this.setDestinationData = function(data){
     indicatorAttributes = data;
