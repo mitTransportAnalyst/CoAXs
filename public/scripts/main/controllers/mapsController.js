@@ -190,6 +190,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.loadProgress = {vis:true, val:0};
 	$scope.markers.start.draggable = false;
 	$scope.markers.end.draggable = false;
+	var stepValue = 150;
+	if($scope.scenarioCompare){stepValue = 300} //it takes twice as long to load two scenarios.
     var runProgressBar = setInterval( function () {
       $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
@@ -199,7 +201,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           $scope.loadProgress.val += Math.floor(Math.random()*2);
         }
       });
-    }, 150)
+    }, stepValue)
   }
   finishProgressBar = function (){
     $scope.markers.start.draggable = true;
@@ -211,22 +213,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
               }) }, 200)
   }
   
-  animateProgressBar();
-  analystService.fetchMetadata().then(function(){
-	finishProgressBar();
-  });
-  
   $interval(function () {
             analystService.refreshCred();
           } , 3540000);
 
-
-  $scope.$watch('vectorIsos.val',
-    function(newVal) {
-		if (true){
-			updateCutoff(newVal);
-		};
-  });
+  animateProgressBar();
+  analystService.setDestinationData()
+  .then(function (){analystService.fetchStopTreesAndGrids()
+  .then(function (){finishProgressBar()})});
+  
+  loadService.getDestinationData('chartLabels',
+	  function(data){d3Service.setChartLabels(data)}
+  );
   
   // right globals
   var geoJsonLeft = null,
@@ -261,14 +259,33 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.scenarioScore.graphData = false;
     leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
-		})}
+	})
+  }
+  
+  setScenarioScoreData = function (plotData) {
+    $scope.scenarioScore.loaded = true;
+		  var name = [];
+		  var sel = $scope.combos.sel;
+		  var com = $scope.combos.com;
+		  
+		  sel ? name[0] = $scope.combos.all[sel].name : name[0] = 'Baseline';
+		  com ? name[1] = $scope.combos.all[com].name : name[0] = 'Baseline';
+	
+	for (var i = 0; i < plotData.length; i ++){
+		  $scope.scenarioScore.data[i] =
+			{'name': name[i],
+			 'data': plotData[i]};
+    };
+  }
   
   refreshOrigin = function (marker){
     animateProgressBar();
 		$scope.resetMap();
-		analystService.moveOrigin(marker, $scope.scenarioCompare, [$scope.scenario0, $scope.scenario1]).then(function(){
+		analystService.moveOrigin(marker, [$scope.scenario0, $scope.scenario1], $scope.scenarioCompare, $scope.pointToPoint).then(function(plotData){
 		  finishProgressBar();
 		  if(!$scope.pointToPoint){
+		    setScenarioScoreData(plotData);
+			drawGraph();
 		    $scope.showVectorIsosOn = true;
 		    $scope.loadProgress.vis = false;
 		    $scope.showVectorIsos($scope.vectorIsos.val);
@@ -282,14 +299,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   leafletData.getMap('map_left').then(function(map) {
 		  analystService.moveDestination(
 		  function(plotData){
-		  $scope.scenarioScore.graphData = [
-				{'id': $scope.combos.sel ? $scope.combos.sel : 0,
-				'name': $scope.combos.sel? $scope.combos.all[$scope.combos.sel].name : 'Existing',
-				'data': plotData}
-			];
-		  d3Service.drawTimeGraph($scope.scenarioScore.graphData);	
+		  if (!plotData){
+		    refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng])) //we didn't get plot data, probably because an origin hasn't been set for point-to-point routing
+		  } else {
+		  setScenarioScoreData(plotData);
+		  d3Service.drawTimeGraph($scope.scenarioScore.data);	
+		}
 		},
-		  marker, $scope.scenarioCompare, map, $scope.scenario0, $scope.scenario1)
+		  marker, $scope.scenarioCompare, map)
 		})
   };
   
@@ -312,11 +329,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.preMarkerQuery = function () {
     $scope.resetMap();
-	if($scope.pointToPoint){
-	  refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
-	} else{
 	  refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng]));
-	}
   }
   
   //Vector Iso Autoplay timer
@@ -327,7 +340,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.timerPlaying = true;
 	$scope.timer = $interval (function (){
 	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos($scope.vectorIsos.val);}, 100);
+	$scope.showVectorIsos($scope.vectorIsos.val);}, 150);
   };
   
   $scope.stopTimer = function () {
@@ -571,7 +584,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
 
-
   // create a new route variant based off of existing scenario settings
   $scope.newVariant = function (tabnav, autoSet) {
     var uuid = supportService.generateUUID();
@@ -635,7 +647,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     };
     // $scope.combos.sel = comboId;
     // $scope.comboName = null;
-    runMarkerQuerys();
     console.log($scope.combos);
     $scope.saveScenarioNum += 1;
   }

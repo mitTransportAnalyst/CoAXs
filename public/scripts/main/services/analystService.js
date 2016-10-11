@@ -12,39 +12,37 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var attributeUrlArray = [];
   var attributeIdArray = [];
   
-  this.setDestinationData = function(data){
-    indicatorAttributes = data;
+  this.setDestinationData = function(){
+    return new Promise(function(resolve, reject){
+	  $http.get('/load/destinations/indicators')
+      .success(function (data, status) {
+	    indicatorAttributes = data;
+	      for (indicator in indicatorAttributes){
+            for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
+	          attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
+	          attributeIdArray.push(indicatorAttributes[indicator][i]['id']);
+	        }
+        };
+	    resolve();	  
+	  })
+	})
   };
   
-  var attributeUrlArray = [];
-  var indicatorNameArray = [];  
-  var attributeNameArray = [];
-  var accessibilityIndicator = [];
+  var minutes = [];
+  for (var i = 1; i <= 120; i++){minutes.push(i)};
   
-  this.indicatorNameArray = indicatorNameArray;
-  
-  for (indicator in indicatorAttributes){
-    for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
-	  attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
-	  indicatorNameArray.push(indicator);
-	  attributeNameArray.push(indicatorAttributes[indicator][i]['id']);
-	}
-  };
   var isochrones = [];
-    isochrones[0] = null;
-    isochrones[1] = null;
   var isochroneLayer = [];
-    isochroneLayer[0] = null;
-    isochroneLayer[1] = null;
-  var plotData = {};
-
-  // for (var j = 0; j<=1 ; j++){
-  // for (var i = 1; i<=120; i++){plotData[j][i] = [];plotData[0][i] = [];}}
-  var transitiveLayer = null;
+  var plotData = [];
+  var transitiveLayer = [];
   var Browsochrones = window.Browsochrones;
   var browsochrones = [];
-    browsochrones[0] = new Browsochrones();
-    browsochrones[1] = new Browsochrones();
+    
+  for (var i=0; i<2; i++){
+    isochrones[i] = null;
+	isochroneLayer[i] = null;
+	browsochrones[i] = new Browsochrones();
+  }
   
   refreshCred = function () {
   return new Promise(function(resolve, reject){
@@ -56,52 +54,48 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	});
   })
   };
+  
   this.refreshCred = refreshCred;
   
-  var analystState = {
-  "staticRequest":
-	{"jobId": supportService.generateUUID(),
-	 "transportNetworkId": defaultGraph,
-	 "request": {
-		"date":"2015-10-20","fromTime":25200,"toTime":28800,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.4,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":180,
+  var staticRequest = {
+    "jobId": supportService.generateUUID(),
+	"transportNetworkId": defaultGraph,
+	"request": {
+	  "date":"2015-10-20","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":240,
 		"scenario":{}
-	  }
 	}
   };
   
-  	//to get transit network metadata
-    var metadataBody = JSON.stringify(
-	  {
-	    "type": 'static-metadata',
-	    "graphId": defaultGraph,
-		"workerVersion": workerVersion,
-	    "request": analystState.staticRequest
-	  }
-	);
-	
-	//to get stopTrees (walking distances from grid cells to nearby stops)
-	var stopTreesBody = JSON.stringify(
-	  {
-	    "type": 'static-stop-trees',
-	    "graphId": defaultGraph,
-		"workerVersion": workerVersion,
-	    "request": analystState.staticRequest
-	  }
-	);
-	
+  //to get transit network metadata
+  var metadataBody = {
+    "type": 'static-metadata',
+	"graphId": defaultGraph,
+	"workerVersion": workerVersion,
+	"request": staticRequest
+  };
+
+  //to get stopTrees (walking distances from grid cells to nearby stops)
+  var stopTreesBody = JSON.stringify({
+    "type": 'static-stop-trees',
+	"graphId": defaultGraph,
+	"workerVersion": workerVersion,
+	"request": staticRequest
+  });
+  
+  var postToAnalyst = function(body,cb) {return fetch(analystUrl,{method: 'POST', body: body});
+  };
  
   var checkWarmup = function(){
     return new Promise(function(resolve, reject){
       console.log('checking if analyst server is warmed up');
-	  refreshCred().then(function(){
-	  fetch(analystUrl,{
-		  method: 'POST',
-		  body: metadataBody
-	  }).then(function(res){
-		if(res.status == 200){
+	  refreshCred()
+	  .then(function(){
+	    postToAnalyst(JSON.stringify(metadataBody))
+	  .then(function(res){
+	    if(res.status == 200){
 		  console.log('analyst server is warmed up');
 	      resolve();
-		} else {
+		}else{
 		  setTimeout(function () {checkWarmup()} , 15000);
 		}
 	  })
@@ -109,54 +103,56 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
     })
   };
   
-  this.fetchMetadata = function () {  
-    return new Promise(function(resolve, reject){
-	checkWarmup().then(function(){
-	$q.all([ 
-		fetch(analystUrl,{
-		  method: 'POST',
-		  body: metadataBody
-		}).then(function(res){
+  fetchMetadataIfNeeded = function (isPointToPoint, scenNum, scenarios){
+    var metadataBodyForScen = metadataBody;
+	metadataBodyForScen.request.request.scenario = scenarios[scenNum];
+	metadataBodyForScen.request.request.scenario.id = supportService.generateUUID()
+	return new Promise(function(resolve, reject){
+	  if(!isPointToPoint || browsochrones[scenNum].surfaceLoaded){ //if we're not in point-to-point mode, or if there is already a surface loaded, we don't need to get new metadata.transitiveData, so we can resolve immediately.  resetAll() below is used to set surfaceLoaded to null if the scenario changes.
+	    resolve();
+	  } else {
+	    postToAnalyst(JSON.stringify(metadataBodyForScen)).then(function(res){
 		  console.log('fetched metadata');
 		  return res.json()
-		}),
-		fetch(analystUrl,{
-		  method: 'POST',
-		  body: stopTreesBody
-		}).then(function(res){
-		  console.log('fetched stopTrees');
-		  return res.arrayBuffer()
+		}).then(function(metadata){
+		  browsochrones[scenNum].setTransitiveNetwork(metadata.transitiveData);
+		  resolve();
 		})
-	  ])
-	  .then(function([metadata, stopTrees]){
-		browsochrones[0].setQuery(metadata);
-		browsochrones[0].setStopTrees(stopTrees);
-		browsochrones[0].setTransitiveNetwork(metadata.transitiveData);
-		browsochrones[1].setQuery(metadata);
-		browsochrones[1].setStopTrees(stopTrees);
-		browsochrones[1].setTransitiveNetwork(metadata.transitiveData);
-		resolve();
-		});
-	})
-	
-	//get destination grid data for calculating accessibility indicators
-	console.log('fetching grids');
-	
-	$q.all(attributeUrlArray.map(function(gridName){
-		return fetch(destinationUrlBase+gridName).then(function(res){
-		return res.arrayBuffer()})
-	  })).then( function(res){
-		for (i in attributeNameArray) {
-		  browsochrones[0].putGrid(attributeNameArray[i],res[i].slice(0));
-		  browsochrones[1].putGrid(attributeNameArray[i],res[i].slice(0));
-		}
-		})
-	});
+	 }})
   };
   
-  var minutes = [];
-  
-  for (i = 1; i <= 120; i++){minutes.push(i)};
+  this.fetchStopTreesAndGrids = function () {  
+    return new Promise(function(resolve, reject){
+		checkWarmup().then(function(){
+			$q.all([
+			postToAnalyst(JSON.stringify(metadataBody)).then(function(res){
+			  console.log('fetched metadata');
+			  return res.json()}),
+			postToAnalyst(stopTreesBody).then(function(res){
+			  console.log('fetched stopTrees');
+			  return res.arrayBuffer();
+			})]).then(function([metadata, stopTrees]){
+			  browsochrones[0].setQuery(metadata);
+			  browsochrones[0].setStopTrees(stopTrees.slice(0));
+			  browsochrones[1].setQuery(metadata);
+			  browsochrones[1].setStopTrees(stopTrees.slice(0));
+			  resolve();
+			});
+		});
+		
+		//get destination grid data for calculating accessibility indicators
+		$q.all(attributeUrlArray.map(function(gridName){
+			return fetch(destinationUrlBase+gridName).then(function(res){
+			return res.arrayBuffer()})
+		  })).then( function(res){
+			console.log('fetched grids');
+			for (i in attributeIdArray) {
+			  browsochrones[0].putGrid(attributeIdArray[i],res[i].slice(0));
+			  browsochrones[1].putGrid(attributeIdArray[i],res[i].slice(0));
+			}
+			})
+	});
+  };
 
   var makeIsochrones = function(scenNum){
     return new Promise(function(resolve, reject){
@@ -171,103 +167,126 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	})
   };
   
-  var makeIsochronesAndPlotData = function(scenNum){
-    return new Promise(function(resolve, reject){
+  var makeIsochronesAndPlotData = function(scenNum, type){
+	return new Promise(function(resolve, reject){
 	  //first, generate a browsochrones surface
-	  browsochrones[scenNum].generateSurface().then(function(){
-	    //then make isochrones
-		if (!isochrones[scenNum]){makeIsochrones(scenNum).then(function(res){resolve()})};
-	  
-		//and get an accessibility number for each destination attribute, to be plotted later
-		for (i = 0; i < attributeNameArray.length; i++){
-		  $q.all(minutes.map(function(minute){
-			  return browsochrones[scenNum].getAccessibilityForGrid(attributeNameArray[i],minute)})
-		  ).then(function(res){
-			plotData[scenNum] = res;
+	  browsochrones[scenNum].generateSurface(type).then(function(){
+	    if(type == 'AVERAGE'){ //we requested average times for point-to-point mode, so we can resolve without making isochrones.
+		  resolve(); 
+		} else { //we requested median times because we want isochrones
+	    makeIsochrones(scenNum).then(function(){
+	    //and get an accessibility number for each destination attribute at each minte, to be plotted later
+        $q.all(
+		  attributeIdArray.map(function(attribute){
+		    return $q.all(minutes.map(function(minute){
+			  return browsochrones[scenNum].getAccessibilityForGrid(attribute,minute)}))
+		})).then(function(res){
+			plotDataTemp = {};
+			for (var i = 0; i < attributeIdArray.length; i++){
+			  plotDataTemp[attributeIdArray[i]] = res[i];
+			}
+			plotData[scenNum]={}
+			for (indicator in indicatorAttributes){
+              plotData[scenNum][indicator] = {};
+			  for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
+			    var attr = indicatorAttributes[indicator][i].id;
+			    plotData[scenNum][indicator][attr]={id: attr, verbose: indicatorAttributes[indicator][i].verbose, data: plotDataTemp[attr]}
+			  }
+			}
 			resolve();
 		  })
-		}
-      })
-  })
+	    })
+        }
+	  })
+    })
   };
   
   //called when start pin is moved
-  this.moveOrigin = function (marker, isComparison, scenarios){
+  this.moveOrigin = function (marker, scenarios, isComparison, isPointToPoint){
+	plotData = [];
+	var type = '';
+	isPointToPoint ? type = 'AVERAGE' : type = 'MEDIAN';
 	return new Promise(function(resolve, reject){
-    //browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
 	var staticBody = [];
+	var staticDefault = [];
 	var xy = [];
 	for (var i=0; i<2; i++){
 		isochrones[i] = null;
+		//browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
 		xy[i] = browsochrones[i].latLonToOriginPoint(marker.getLatLng());
-		var staticDefault = [];
 		staticDefault[i] = 
 		  {
 			"type": 'static',
 			"graphId": defaultGraph,
 			"workerVersion": workerVersion,
-			"request": analystState.staticRequest,
+			"request": staticRequest,
 			"x": xy[i].x,
 			"y": xy[i].y
 		  };
 		
 		//set scenario
-		staticDefault[i].request.scenario = scenarios[i];
+		staticDefault[i].request.request.scenario = scenarios[i];
+		staticDefault[i].request.request.scenario.id = supportService.generateUUID();
 		staticBody[i] = JSON.stringify(staticDefault[i]);
     }
-	
 	//fetch a grid for travel times
 	if(!isComparison){
-	  fetch(analystUrl,{
-		  method: 'POST',
-		  body: staticBody[0]
-		}).then(function(res){
+	  fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
+	  postToAnalyst(staticBody[0]).then(function(res){
 		  return res.arrayBuffer()
 		}).then(function(buff){
 		  browsochrones[0].setOrigin(buff, xy[0])
 		  .then(function(){
-            console.log('making plot data');
-			makeIsochronesAndPlotData(0).then(function(){resolve();})
+			makeIsochronesAndPlotData(0,type).then(function(){resolve(plotData);})
 		  })
-		})
+		}))
 	} else {
 //todo fix callback hell
-		fetch(analystUrl,{
-			  method: 'POST',
-			  body: staticBody[0]
-			}).then(function(res){
+		fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
+		postToAnalyst(staticBody[0]).then(function(res){
 			  return res.arrayBuffer()
 			}).then(function(buff){
 			  browsochrones[0].setOrigin(buff, xy[0])
 			  .then(function(){
-				makeIsochronesAndPlotData(0).then(function(){
-				fetch(analystUrl,{
-					  method: 'POST',
-					  body: staticBody[1]
-					}).then(function(res){
+				makeIsochronesAndPlotData(0,type).then(function(){
+				fetchMetadataIfNeeded(isPointToPoint, 1, scenarios).then(
+				postToAnalyst(staticBody[1]).then(function(res){
 					  return res.arrayBuffer()
 					}).then(function(buff){
 					  browsochrones[1].setOrigin(buff, xy[1])
 					  .then(function(){
-						console.log('making plot data');
-						makeIsochronesAndPlotData(1).then(function(){resolve();})
+						makeIsochronesAndPlotData(1,type).then(function(){resolve(plotData);})
 					  })
 					})
+				)
 				})
 			  })
 			})
+		)
 	}
   })}
 
   processTransitiveResult = function (res, scenNum) {
     var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,1);
-	  if (res.travelTime > 254){
-	    plotData[scenNum] = {'average_rideTime' : 999}
-	  } else {
-	  plotData[scenNum] = {'average_walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
-			'average_waitTime' : res.waitTime,
-			'average_rideTime' : res.inVehicleTravelTime};
+	  transitive.journeys = transitive.journeys.slice(0,2);
+	  if (res.travelTime > 254){ //not a feasible journey
+	    plotData[scenNum] = {
+		  'walkTime' : 0,
+		  'waitTime': 999, 
+		  'rideTime': 0
+		}
+	  } else if (res.waitTime > 254 && res.inVehicleTravelTime > 254) { //walk-only journey
+	    plotData[scenNum] = {
+		  'walkTime' : res.travelTime,
+		  'waitTime': 0,
+		  'rideTime': 0
+		}
+	  } else { //regular transit and walk journey
+	    plotData[scenNum] = {
+ 	      'walkTime' : res.travelTime-res.waitTime-res.inVehicleTravelTime,
+		  'waitTime' : res.waitTime,
+		  'rideTime' : res.inVehicleTravelTime
+	    }
 	  }
 	  var transitiveLines = new Transitive({
 	    data:transitive,
@@ -289,53 +308,44 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	  transitiveLayer[scenNum] = new L.TransitiveLayer(transitiveLines)
   }
   
-  this.moveDestination = function (cb, marker, isComparison, map, scenario0, scenario1){
-	if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	var xy0 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-	var xy1 = browsochrones[0].latLonToOriginPoint(marker.getLatLng())
-    browsochrones[0].generateDestinationData(xy0).
+  this.moveDestination = function (cb, marker, isComparison, map){
+    plotData = [];
+	if (browsochrones[0].surfaceLoaded ){ //time surface for origin already loaded
+	if(transitiveLayer[0]){map.removeLayer(transitiveLayer[0])};
+	if(transitiveLayer[1]){map.removeLayer(transitiveLayer[1])};
+	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng());
+    browsochrones[0].generateDestinationData(xy).
 	then(function(res){
 	  processTransitiveResult(res,0);
 	  if(!isComparison){  
 	  cb(plotData);
-	  map.addLayer(transitiveLayer);
-	  transitiveLayer._refresh();
+	  map.addLayer(transitiveLayer[0]);
+	  transitiveLayer[0]._refresh();
 	  } else { 
-		browsochrones[1].generateDestinationData(xy1).
+		browsochrones[1].generateDestinationData(xy).
 		then(function(res){
 		  processTransitiveResult(res,1)
 		  cb(plotData);
-		  map.addLayer(transitiveLayer);
-		  transitiveLayer._refresh();
+		  map.addLayer(transitiveLayer[1]);
+		  transitiveLayer[1] ._refresh();
 		});
 	  }
 	})
+	} else { //time surface for origin not yet loaded
+	  cb(null); //passing null to the callback function runs refresh origin
+	}
   }
   
   // clear out everything that already exists, reset opacities to defaults
   this.resetAll = function (map, c) {
-    if(transitiveLayer){map.removeLayer(transitiveLayer)};
-	if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
-	if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
-  };
-
-  this.setScenarioNames = function (scenarioName, c){
-	optionC[c].scenario.name = scenarioName;
+    for (var i = 0; i < 2; i++){
+	browsochrones[i].surfaceLoaded = false;
+	isochrones[i] = null;
+	if(transitiveLayer[i]){map.removeLayer(transitiveLayer[i])};
+	if(isochroneLayer[i]){map.removeLayer(isochroneLayer[i])};
+	}
   };
   
-  // filter through and remove routes that we don't want banned on each scenario SPA call
-  this.modifyRoutes = function (keepRoutes, c) { 
-    keepRoutes = keepRoutes.map(function (route) { return route.routeId;  }); // we just want an array of routeIds, remove all else
-    var rmRoutes = allRoutes.filter(function (route) { return keepRoutes.indexOf(route) < 0; });
-    var routesMod = {
-      type      : 'remove-trip',
-      agencyId  : rmRoutes.length > 0 ? agencyId : null,
-      routeId   : rmRoutes,
-      tripId    : null,
-    };
-    optionC[c].scenario.modifications.push(routesMod);
-  };
-
   // New modification functions  corridorID: "A", "B", "C", "D", "E"  scale: the modification scale
   this.modifyDwells = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
@@ -351,9 +361,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
         cb(scenarioJSON)
       })
   };
-
-
-
+  
   this.modifySpeed = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
@@ -368,7 +376,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
         cb(scenarioJSON)
       })
   };
-
+  
   this.modifyFrequency = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
@@ -385,7 +393,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
         cb(scenarioJSON)
       })
   };
-
+  
   this.modifyModes = function (routeTypes, c) {
     optionC[c].scenario.modifications.push({
       type: 'remove-trip',
@@ -394,9 +402,9 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
       tripId: null,
       routeType: routeTypes
     });
-  }
+  };
 
-  // swap between tile layer and vector isos layer
+  // show vector isochrones for selected cutoff timeVal
   this.showVectorIsos = function(timeVal, map, isComparison) {
 		if(isochroneLayer[0]){map.removeLayer(isochroneLayer[0])};
 		if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
@@ -411,9 +419,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
           }
         });
         isochroneLayer[0].addTo(map);
-
     if (isComparison) {
-      if(isochroneLayer[1]){map.removeLayer(isochroneLayer[1])};
 	  isochroneLayer[1] = L.geoJson(isochrones[1][timeVal], {
           style: {
             stroke      : true,
@@ -425,8 +431,6 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
           }
         });
         isochroneLayer[1].addTo(map);
-	  
     }
   };
-
 });
