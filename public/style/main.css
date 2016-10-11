@@ -370,7 +370,7 @@ background-color  : #696969;
 }
 .bottomNav:not(:first-child) .colBody {
   border: 0px solid #d3d3d3;
-  border-right-width: 1px;
+  border-right-width: 0px;
 }
 
 .bottomNav .table {
