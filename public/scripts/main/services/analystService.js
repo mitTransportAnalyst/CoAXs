@@ -415,7 +415,8 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
             color       : '#F68B1F',
             weight      : 1,
             fillOpacity : 0.25,
-            opacity     : 1
+            opacity     : 1,
+			clickable   : false
           }
         });
         isochroneLayer[0].addTo(map);
