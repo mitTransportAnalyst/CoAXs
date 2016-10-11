@@ -756,7 +756,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	else { 
 	leafletData.getMap('map_left').then(function(map) {
 		map.panTo([center_global.lat, center_global.lng]);
-		analystService.resetAll(map);
 	});	
 	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
 	}
