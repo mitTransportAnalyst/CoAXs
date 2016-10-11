@@ -34,7 +34,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
   
-  $scope.selField = 'wt_finan3';
   $scope.indicators = {sel:'jobs',all:{jobs:'Jobs',workers:'Workers'}};
   $scope.scenarioLegend = true;
   $scope.selCordon = null;
@@ -95,11 +94,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.snapPoints   = {all: [], sel: null, data: null},
   $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:30};
-  $scope.scenarioScore = {graphData: false}; //Initialize the scenario scorecard with no data for the cumulative plot.
+  $scope.scenarioScore = {loaded: false, data: []}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
     function(newVal) {
-		if ($scope.scenarioScore.graphData){
+		if ($scope.scenarioScore.loaded){
 			updateCutoff(newVal);
 		};
   });
@@ -263,7 +262,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.resetMap = function() {
     d3Service.clearCharts();
-	$scope.scenarioScore.graphData = false;
+	$scope.scenarioScore.loaded = false;
     leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
 	})
@@ -303,6 +302,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   
   refreshDestination = function(marker){
+  //$scope.resetMap();
   leafletData.getMap('map_left').then(function(map) {
 		  analystService.moveDestination(
 		  function(plotData){
@@ -366,13 +366,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	d3Service.drawGraph($scope.vectorIsos.val,plotData, $scope.indicators)
   }
   
-  drawGraph = function (graphData){
-	d3Service.drawGraph($scope.vectorIsos.val,graphData, $scope.indicator)
-  }
+  $scope.drawGraph = drawGraph;
   
   updateCutoff = function (cutoff) {
 	$scope.showVectorIsos(cutoff);
-	//d3Service.drawGraph(cutoff, $scope.scenarioScore.graphData, $scope.indicator);
+	drawGraph();
   }
 
   $scope.setCordon = function (cordonId) {
@@ -393,12 +391,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
-	$scope.selField = dataVal;
-	$scope.scenarioScore.graphData.sel = $scope.scenarioScore.graphData.all[dataVal];
-    if ($scope.scenarioScore.graphData.com) {
-      $scope.scenarioScore.graphData.com.sel = $scope.scenarioScore.graphData.com.all[dataVal];
-	}
-	d3Service.drawGraph($scope.vectorIsos.val,$scope.scenarioScore.graphData);
+	$scope.indicators.sel = dataVal;
+	drawGraph($scope.scenarioScore.data);
   }
 
   // filter for routes that match with the desired corridor
@@ -429,15 +423,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subways.addTo(map);
       subwaysLayer = subways;
     },gs);
-
-  loadService.getDestinationData('indicators',
-	  function(data){
-	  analystService.setDestinationData(data)}
-  );
-  
-  loadService.getDestinationData('chartLabels',
-	  function(data){d3Service.setChartLabels(data)}
-  );
 	
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
@@ -771,7 +756,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
-	if($scope.scenarioScore.graphData){
+	if($scope.scenarioScore.loaded){
 	if (!$scope.loadProgress.vis){
       $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
 		leafletData.getMap('map_left').then(function (map) {

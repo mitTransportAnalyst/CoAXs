@@ -266,37 +266,21 @@ this.drawTimeGraph = function(plotData, indicator) {
 	var total = [],
 		dataset = [],
 		compare = false;
-	j = 0;
-	for (i = 0; i < plotData.length; i++){
+	
+	for (var i = 0; i < plotData.length; i++){
+		dataset[i] = [];
 		for (tid in plotData[i].data){
-			dataset[j]={data: {}}
-			for (id in plotData[i].data[tid]){
-			dkey = id.substring(8);
-			dataset[j].indicator = tid + ', ' + plotData[i].name;
-			dataset[j].data[dkey] = plotData[i].data[tid][id];
-			}
-			j++;
+			  dataset[i].push({'attr':tid,'val':[]});
+			  dataset[i][dataset[i].length-1].val.push({'x': plotData[i].name, 'y': plotData[i].data[tid]});
 		};
-		//if (i>0){compare=true;}
-		compare = true;
 	}
 	
-	dataset = dataset.map(function (d) {
-		return d3.map(d.data).entries().map(function(e){
-			return {
-				attr: e.key,
-				val: [{
-					x: d.indicator,
-					y: e.value,
-                }]
-			}
-		})
-	});
-	
+	if (plotData.length > 1){compare=true;}
+		
 	stack = d3.layout.stack().values(function(d){return d.val}).order('default');
 
-	dataset.forEach(function(e){
-	stack(e)});
+	dataset.forEach(function(d){
+	stack(d)});
   	
 	dataset = dataset.map(function(e){
 		return e.map(function(g){
@@ -337,8 +321,6 @@ this.drawTimeGraph = function(plotData, indicator) {
         .domain(indicators2)
         .rangeBands([0,width-150], .05),
 	  
-	xScale ? '': xScale = xScale2;
-	  
 	xAxis2 = d3.svg.axis()
         .scale(xScale2)
 		.tickSize(0),
@@ -371,7 +353,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 			return (d.y*height/yMax);
 		})
         .attr('width', function (d) {
-			return xScale.rangeBand();
+			return xScale2.rangeBand();
 		})
 		.on('click', function (d) {
 			selCode = d.attr;
@@ -379,8 +361,8 @@ this.drawTimeGraph = function(plotData, indicator) {
 			updateSubsetTotal(0);
 		})
         .on('mouseover', function (d) {
-			var yPos = parseFloat(d3.select(this).attr('y')) + height +70;
-			var xPos = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2 +100;
+			var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
+			var xPos = parseFloat(d3.select(this).attr('x')) + xScale2.rangeBand() / 2 +100;
 
 			d3.select('#tooltip')
 				.style('left', xPos + 'px')
@@ -428,7 +410,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.attr("class", "stat")
 		.append("text")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[0])+xScale.rangeBand()-3)
+        .attr("x", xScale2(indicators2[0])+xScale2.rangeBand()-3)
 		.style("text-anchor","end")
         .html( function (){
 		  return d3.format(",")(d3.round(yMax0,1));
@@ -443,28 +425,27 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.attr("id","subTotal")
 		.attr("y", 38-margins.top)
         .attr("x", function(d){
-			return xScale2(d[0][0].x)+xScale.rangeBand()-3})
+			return xScale2(d[0][0].x)+xScale2.rangeBand()-3})
 		.style("text-anchor","end");
 		
-	if (dataset[1]){
+	if (compare){
 	//total time, scenario 1
 		vis1.append("svg:g")
 		.append("text")
 		.attr("class", "stat")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[1])+xScale.rangeBand()-3)
+        .attr("x", xScale2(indicators2[1])+xScale2.rangeBand()-3)
 		.style("text-anchor","end")
 		.html( function (){
 		  return d3.format(",")(d3.round(yMax1,1));
 		});  
-
 	}	
 		
 	vis1.append('g')
 		.append("text")
 		.attr("class","stat")
 		.attr("y", 25-margins.top)
-        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+24)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale2.rangeBand()+24)
 		.style("text-anchor","start")
 		.style("opacity", 0.75)
         .html("minutes total");
@@ -474,7 +455,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.attr("id","subsetLabel")
 		.attr("class","stat")
 		.attr("y", 38-margins.top)
-        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale.rangeBand()+24)
+        .attr("x", xScale2(indicators2[0])+(indicators2.length)*xScale2.rangeBand()+24)
 		.style("text-anchor","start")
 		.style("opacity", 0.75)
 		.style("fill", attributes.get(selCode).color)
@@ -488,19 +469,20 @@ this.drawTimeGraph = function(plotData, indicator) {
 
 //Cumulative plot of accessible opportunities vs time, and stacked bar chart
 this.drawGraph = function (cutoff, plotData, indicator) {
-	var margins = {
-			top: 50,
+	selCode = 'jobs1';
+  var margins = {
+			top: 45,
 			left: 45,
-			right: 150,
-			bottom: 125
+			right: 10,
+			bottom: 10
 		},
 		
 		legendPanel = {
-			height: 40
+			height: 50
 		},
 		
-		width = 440 - margins.left - margins.right,
-		height = 400 - margins.top - margins.bottom  - legendPanel.height;
+		width = 300 - margins.left - margins.right,
+		height = 300 - margins.top - margins.bottom  - legendPanel.height;
 		
 	d3.select("#compPlot2").selectAll("*").remove();
 	
@@ -515,16 +497,15 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 	
 	for (i = 0; i < plotData.length; i++){
 		total[i] = Array(120);
-		dataset[i]={data: {}, indicator: ' in ' + plotData[i].name + ' scenario'}
+		dataset[i]={data: {}, indicator: plotData[i].name}
 		for (j = 0; j < 120; j++){
-			total[i][j]={x:j, y:0};
+			total[i][j]={x:j+1, y:0};
 		}
 		for (id in plotData[i].data){
-			dkey = id.substring(3);
 			for (j = 0; j < 120; j++){
-			total[i][j]['y']=total[i][j]['y']+plotData[i].data[id].data[j]['y'];
-			if (j <= (cutoff*5)){
-				dataset[i].data[dkey] = plotData[i].data[id].data[j]['y'];};
+			total[i][j]['y']=total[i][j]['y']+plotData[i].data[id].data[j];
+			if (j <= (cutoff)){
+				dataset[i].data[id] = plotData[i].data[id].data[j];};
 		}
 		};
 		if (i>0){compare=true;}
@@ -565,16 +546,16 @@ this.drawGraph = function (cutoff, plotData, indicator) {
    
     combined = total[1] ? total[0].concat(total[1]) : total[0],
 
-    xRange1 = d3.scale.linear().range([0,width/3]).domain([0, 120]),
+    xRange1 = d3.scale.linear().range([0,0]).domain([0, 120]),
 
-    yRange = d3.scale.linear().domain([0, 1500000//d3.max(combined, function (d) {   return d.y;})
+    yRange = d3.scale.linear().domain([0,d3.max(combined, function (d) {   return d.y;})
     ]).range([height,0]);
 	  
 	xScale2 = d3.scale.ordinal()
         .domain(indicators2)
-        .rangeBands([width/3 + 5,width-10], .2),
+        .rangeBands([0, width-150], .05),
 	  
-	xScale ? xScale3 = xScale : xScale3 = xScale2;
+	xScale3 = xScale2;
 	  
 	xAxis2 = d3.svg.axis()
         .scale(xScale2)
@@ -606,7 +587,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 			return yRange(d.y0+d.y);
 		})
         .attr('height', function (d) {
-			return (d.y*height/1500000);
+			return (d.y*height/d3.max(combined, function (d) {   return d.y;}));
 		})
         .attr('width', function (d) {
 			return xScale3.rangeBand();
@@ -646,7 +627,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 	  
       xAxis1 = d3.svg.axis()
         .scale(xRange1)
-		.tickValues([0,30,60,90,120])
+		.tickValues([0,120])
         .tickSize(5)
 		.orient("bottom"),
 
@@ -658,47 +639,44 @@ this.drawGraph = function (cutoff, plotData, indicator) {
           return prefix.scale(d) + prefix.symbol;
         })
         .orient("left")
-	
 
-
-		
-   vis1.append('g')
-      .attr("class", "x axis")
-	  .attr('transform', 'translate(0,' + height + ')')
-      .call(xAxis1)
-	  .append("text")
-        .attr("dy", 32)
-		.attr("x",width/6)
-        .style("text-anchor", "middle")
-        .text("Minutes");
+   // vis1.append('g')
+      // .attr("class", "x axis")
+	  // .attr('transform', 'translate(0,' + height + ')')
+      // .call(xAxis1)
+	  // .append("text")
+        // .attr("dy", 32)
+		// .attr("x",width/6)
+        // .style("text-anchor", "middle")
+        // .text("Minutes");
 
     vis1.append('g')
       .attr("class", "y axis")
       .call(yAxis1)
 	  .append("text")
-	  .text("Total Workforce")
+	  .text(indicator.all[indicator.sel])
 	  .style("text-anchor","middle")
-	  .attr("transform", 'translate(-45,'+height/2+')rotate(90)');
+	  .attr("transform", 'translate(-35,'+height/2+')rotate(90)');
 
-    var lineFunc = d3.svg.line()
-    .x(function (d) {
-      return xRange1(d.x);
-    })
-    .y(function (d) {
-      return yRange(d.y);
-    })
-    .interpolate('basis');
+    // var lineFunc = d3.svg.line()
+    // .x(function (d) {
+      // return xRange1(d.x);
+    // })
+    // .y(function (d) {
+      // return yRange(d.y);
+    // })
+    // .interpolate('basis');
 
-  vis1.append("svg:path")
-    .attr("d", lineFunc(total[0]))
-    .attr("class", "line")
+  // vis1.append("svg:path")
+    // .attr("d", lineFunc(total[0]))
+    // .attr("class", "line")
 	
-		if (compare) { 
-    vis1.append("svg:path")
-      .attr("d", lineFunc(total[1]))
-      .attr("class", "lineC")
-	  .style("stroke-dasharray", ("3,3"))
-    }
+		// if (compare) { 
+    // vis1.append("svg:path")
+      // .attr("d", lineFunc(total[1]))
+      // .attr("class", "lineC")
+	  // .style("stroke-dasharray", ("3,3"))
+    // }
 
 	
 	
@@ -709,7 +687,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
         .attr("x", xScale2(indicators2[0])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
         .html( function (){
-		  return d3.format(",")(d3.round(total[0][cutoff*5-1].y,-3));
+		  return d3.format(",")(d3.round(total[0][cutoff].y,-3));
 		});  
 
 	vis1.append("svg:g")
@@ -733,7 +711,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
         .attr("x", xScale2(indicators2[1])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
 		.html( function (){
-		  return d3.format(",")(d3.round(total[1][cutoff*5-1].y,-3));
+		  return d3.format(",")(d3.round(total[1][cutoff].y,-3));
 		});  
 
 	}	
@@ -757,17 +735,17 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.style("opacity", 0.75)
 		.style("fill", attributes.get(selCode).color)
         .html( function (){
-		  return attributes.get(selCode).verbose.split('|')[0]});
+		  return attributes.get(selCode).verbose});
 	
-	vis1.append("svg:line")
-		.attr("id", "sliderLine")
-		.attr("class", "line")
-		.attr("x1", xRange1(cutoff*5))
-		.attr("y1", yRange(total[0][cutoff*5-1].y))
-		.attr("x2", xRange1(cutoff*5))
-		.attr("y2", height)
-		.style("stroke", "rgb(255,255,255)")
-		.style("opacity", 0.85);
+	// vis1.append("svg:line")
+		// .attr("id", "sliderLine")
+		// .attr("class", "line")
+		// .attr("x1", xRange1(cutoff))
+		// .attr("y1", yRange(total[0][cutoff].y))
+		// .attr("x2", xRange1(cutoff))
+		// .attr("y2", height)
+		// .style("stroke", "rgb(255,255,255)")
+		// .style("opacity", 0.85);
 
 	updateSubsetLabels();
 	updateSubsetTotal(-2);
