@@ -20,5 +20,7 @@
     "transitive-js": "^0.8.2"
   },
   "devDependencies": {},
-
+  "scripts": {
+    "start": "node app.js",
+  }
 }
