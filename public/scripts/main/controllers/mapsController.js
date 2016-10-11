@@ -237,9 +237,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.resetMap();
 	if ($scope.pointToPoint){
 		$scope.markers.end.icon.iconSize = [48,48];
-	}
-	else {
+		leafletData.getMap('map_left').then(function(map) {
+		  map.removeLayer(subStopsLayer);
+		  map.removeLayer(subwaysLayer_l);
+		})
+	}else {
 		$scope.markers.end.icon.iconSize = [0,0];
+		leafletData.getMap('map_left').then(function(map) {
+		  map.addLayer(subStopsLayer);
+		  map.addLayer(subwaysLayer_l);
+		})
 	}
   };
 
