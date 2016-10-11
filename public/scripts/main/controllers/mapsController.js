@@ -266,6 +266,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.resetMap = function() {
     d3Service.clearCharts();
+	$scope.stopTimer();
 	$scope.scenarioScore.loaded = false;
     leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
