@@ -5,11 +5,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     if (window.innerHeight < 680 || window.innerWidth < 1280) {
       alert('Warning: This tool is designed for use on screens greater than 1280x680 pixels. Screen sizes smaller than this may have undesirable side effects.')
     }
-    document.getElementById('leftDynamic').style.width = (window.innerWidth)/2 - 300 + 'px';
+    document.getElementById('leftDynamic').style.width = (window.innerWidth)/2 - 350 + 'px';
 
     document.getElementById('service-tab').style.width = (window.innerWidth)/2 - 275 + 'px';
-
-
 
 
   };
@@ -28,11 +26,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   $scope.currentParam = {
-    'A' : {dwell:100, frequency:100, runningTime: 100},
-    'B' : {dwell:100, frequency:100, runningTime: 100},
-    'C' : {dwell:100, frequency:100, runningTime: 100},
-    'D' : {dwell:100, frequency:100, runningTime: 100},
-    'E' : {dwell:100, frequency:100, runningTime: 100}
+    'A' : {dwell:0, frequency:0, runningTime: 0},
+    'B' : {dwell:0, frequency:0, runningTime: 0},
+    'C' : {dwell:0, frequency:0, runningTime: 0},
+    'D' : {dwell:0, frequency:0, runningTime: 0},
+    'E' : {dwell:0, frequency:0, runningTime: 0}
   };
 
   $scope.scenario0 = {}; 
@@ -160,7 +158,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.defaults_right  = angular.copy(defaults_global);
   $scope.maxBounds_right  = angular.copy(maxBounds_global);
   $scope.center_right    = angular.copy(center_global);
-  $scope.tiles_right     = angular.copy(tilesDict.blank);
+  $scope.tiles_right     = angular.copy(tiles_global);
 
   // Assembling left map
   $scope.defaults_left = angular.copy(defaults_global);
@@ -581,6 +579,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	$scope.variants[$scope.tabnav].sel = true;
   };
 
+  //highlight a busline
+  $scope.targetBusline = function (busline) {
+
+    targetService.targetBusline(routesLayer,busline);
+  };
 
   // create a new route variant based off of existing scenario settings
   $scope.newVariant = function (tabnav, autoSet) {
@@ -630,7 +633,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.saveScenarioNum = 2;
   // create a new total scenario to send over to the left map
   $scope.newCombo = function () {
-    var comboId = supportService.generateUUID();
+    // var comboId = supportService.generateUUID();
     $scope.combos.all[$scope.saveScenarioNum] = {
       name    : "Temp " + $scope.saveScenarioNum,
       created : Date.now(),
@@ -641,10 +644,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
      //    'D' : $scope.variants['D'].sel,
      //    'I' : $scope.variants['I'].sel,
       },
-      param : $scope.currentParam
+      param:{}
     };
     // $scope.combos.sel = comboId;
     // $scope.comboName = null;
+    $scope.combos.all[$scope.saveScenarioNum].param = angular.copy($scope.currentParam);
     console.log($scope.combos);
     $scope.saveScenarioNum += 1;
   }
@@ -796,11 +800,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       sel     : {
       },
       param   : {
-        'A' : {dwell:100, frequency:100, runningTime: 100},
-        'B' : {dwell:100, frequency:100, runningTime: 100},
-        'C' : {dwell:100, frequency:100, runningTime: 100},
-        'D' : {dwell:100, frequency:100, runningTime: 100},
-        'E' : {dwell:100, frequency:100, runningTime: 100}
+        'A' : {dwell:0, frequency:0, runningTime: 0},
+        'B' : {dwell:0, frequency:0, runningTime: 0},
+        'C' : {dwell:0, frequency:0, runningTime: 0},
+        'D' : {dwell:0, frequency:0, runningTime: 0},
+        'E' : {dwell:0, frequency:0, runningTime: 0}
       }
     };
     var comboId = supportService.generateUUID();

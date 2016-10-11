@@ -8,6 +8,7 @@
     "aws-sdk": "^2.1.45",
     "body-parser": "^1.12.4",
     "bower": "1.4.1",
+    "browsochrones": "~0.7.0",
     "csv-streamify": "^2.0.0",
     "debug": "^2.2.0",
     "ejs": "~0.8.5",
