@@ -50,9 +50,9 @@ coaxsApp.service('targetService', function (leafletData) {
 			if (segment.options.base.corridorId == id) {segment.setStyle({opacity: 0.1})}
 			else {segment.setStyle({opacity: 0});
 	      }
-		})
+		});
 		return priorityLayer;
-	}
+	};
 	
 
   // highlight a corridor or route that matches an id (id will dictate which gets highlighted)
@@ -62,25 +62,77 @@ coaxsApp.service('targetService', function (leafletData) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
 	      if (layer.options.base.corridorId == id) {
-	        layer.setStyle({opacity: 0.8, weight: 2, color:"#555555"});
+	        layer.setStyle({opacity: 0.7, weight: 2, color:"#555555"});
 	        tempBounds = layer.getBounds();
 	      } else {
 	        layer.setStyle({opacity: 0.1, weight: 0.5, color:"#555555"});
 	      }
+
 	    });
       trunkLayer.eachLayer(function (layer) {
         if (layer.options.base.corridorId == id) {
-          layer.setStyle({opacity: 0.8, weight: 10});
-          tempBounds = layer.getBounds();
+          layer.setStyle({opacity: 1, weight: 15});
+          // tempBounds = layer.getBounds();
         } else {
-          layer.setStyle({opacity: 0.1, weight: 0.5});
+          layer.setStyle({opacity: 0, weight: 0.5});
+
         }
       });
 
-	    map.fitBounds(tempBounds);
+	    map.fitBounds(tempBounds,{maxZoom: 12});
 	  });
 	  return routesLayer
-	}
+	};
+
+
+
+
+
+
+	//Highlignt the busline
+
+  this.targetBusline = function (routesLayer,busline) {
+    leafletData.getMap('map_right').then(function(map) {
+      if (busline === 'CT1'){
+        busline = '701';
+      }
+
+      var tempBounds = null;
+      routesLayer.eachLayer(function (layer) {
+        var compareNum = 0;
+        if (layer.options.base.shape_id.slice(0,1)==0){
+          compareNum = layer.options.base.shape_id.slice(1,2);
+          console.log("com"+layer.options.base.shape_id);
+          console.log(compareNum === busline);
+
+
+        }
+
+        if (layer.options.base.shape_id.length === 6 && layer.options.base.shape_id.slice(0,1)!=0){
+          compareNum = layer.options.base.shape_id.slice(0,2);
+        }
+
+        if (layer.options.base.shape_id.length === 7){
+          compareNum = layer.options.base.shape_id.slice(0,3);
+        }
+
+
+        if (compareNum === busline) {
+
+          layer.setStyle({opacity: 0.8, weight: 10, color:"#555555"});
+
+          tempBounds = layer.getBounds();
+        } else {
+          layer.setStyle({opacity: 0.1, weight: 0.5, color:"#555555"});
+        }
+
+      });
+
+      map.fitBounds(tempBounds,{maxZoom: 12});
+    });
+    return routesLayer
+  };
+
 
   // updates the target feature data and provides an object with its alternative as well
   this.newTargetFeature = function (routeId, routesLayer) {

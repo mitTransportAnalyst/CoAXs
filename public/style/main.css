@@ -274,6 +274,9 @@ background-color  : #696969;
   position: absolute;
   max-height: 65%;
   bottom: 25%;
+  left: 300px;
+  display: inline;
+
 }
 
 .leftNav .badge {
@@ -283,6 +286,8 @@ background-color  : #696969;
   cursor: pointer;
   background-color: orange;
   font-size: 0.65em;
+  left: 300px;
+
 }
 
 .introPan .badge {
@@ -338,9 +343,14 @@ background-color  : #696969;
   width: inherit;
   text-align: center;
   color: white;
-  white-space: nowrap;
-  box-shadow: 0px 5px 3px rgba(0,0,0,0.25);
+  btn  box-shadow: 0px 5px 3px rgba(0,0,0,0.25);
   z-index: 99;
+}
+
+.btn .small{
+  height: 20px;
+
+
 }
 
 #service-tab {
@@ -381,7 +391,7 @@ background-color  : #696969;
 }
 .bottomNav:not(:first-child) .colBody {
   border: 0px solid #d3d3d3;
-  border-right-width: 1px;
+  border-right-width: 0px;
 }
 
 .bottomNav .table {
@@ -556,4 +566,24 @@ input {
 .project-cards .panel-default:hover {
   background-color : #ff4500;
   color            : #FFF;
+}
+
+
+.card{
+  width: 15px;
+
+  height: 15px;
+
+  display: inline-table;
+
+  background-color: #959595;
+
+  background-size: 100%;
+
+  background-repeat: no-repeat;
+
+  margin: 5px 5px 5px 5px;
+
+
+
 }
