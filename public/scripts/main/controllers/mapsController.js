@@ -82,7 +82,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.tabnav = 'A';
   
   // left globals
-  var subwaysLayer    = null,
+  var subwaysLayer_l    = null,
+      subwaysLayer    = null,
       subStopsLayer   = null,
 	  cordonsLayer 	  = null,
       stopsLayer      = null,
@@ -537,7 +538,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = [200, 300, 400];
+      var stopTypeSizes = [200, 250, 300];
       var circleList = [];
 	  var stationNameList = [];
 
@@ -545,7 +546,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         var stationColor = marker.options.base.color,
 		    stationStroke = false,
             stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
             strokeWeight = 20/(map.getZoom()^(1/10)),
 			stationName = marker.options.base.station
 			
@@ -577,7 +578,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     //
     // // get priority portions (do this first so it renders beneath other content)
     // loadService.getProposedPriorityLanes(function (priorityLanes) {
-    //   priorityLanes.addTo(map);
+      // priorityLanes.addTo(map);
     // priorityLayer = priorityLanes;
     // })
 
@@ -619,49 +620,59 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		$scope.cordons = cordonData;
 	});
 
-    // loadService.getExisting(function (subways) {
-      // subways.addTo(map);
-      // subwaysLayer = subways;
-    // });
+	loadService.getTrunk(function (data) {
+      trunkLayer = data.layerGroup;
+      trunkLayer.addTo(map);
 
-	// place stops over routes plots on map
-    // loadService.getStops('/geojson/t_stops', function (stops) {
-      // var stopTypeSizes = [400, 600, 800];
-      // var circleList = [];
-	  // var stationNameList = [];
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
 
-      // stops.eachLayer(function (marker) {
-        // var stationColor = marker.options.base.color,
-		    // stationStroke = false,
-            // stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            // size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()^2),
-            // strokeWeight = 20/(map.getZoom()^(1/10)),
-			// stationName = marker.options.base.station;
+    },$scope.variants);
+	
+    loadService.getExisting(function (subways) {      
+      subwaysLayer_l = subways;
+	  subwaysLayer_l.addTo(map);
+    });
+
+	//place stops over routes plots on map
+    loadService.getStops('/geojson/t_stops', function (stops) {
+      var stopTypeSizes = [200, 250, 300];
+      var circleList = [];
+	  var stationNameList = [];
+
+      stops.eachLayer(function (marker) {
+        var stationColor = marker.options.base.color,
+		    stationStroke = false,
+            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
+            strokeWeight = 20/(map.getZoom()^(1/10)),
+			stationName = marker.options.base.station;
 
 
-		// var stationNamePopup = L.popup({
-			  // closeButton: false,
-			  // className: 'station-sign'
-			// }).setContent('<p style="background-color:'
-            // +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+		var stationNamePopup = L.popup({
+			  closeButton: false,
+			  className: 'station-sign'
+			}).setContent('<p style="background-color:'
+            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
 
-		// if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
 
-		// circleList.push(L.circle(stationLatLng, size, {
-          // stroke: stationStroke,
-		  // color: "#000000",
-		  // weight: strokeWeight,
-		  // opacity: 1,
-          // fillColor: stationColor,
-          // fillOpacity: 0.9,
-		// }).bindPopup(stationNamePopup));
+		circleList.push(L.circle(stationLatLng, size, {
+          stroke: stationStroke,
+		  color: "#000000",
+		  weight: strokeWeight,
+		  opacity: 1,
+          fillColor: stationColor,
+          fillOpacity: 0.9,
+		}).bindPopup(stationNamePopup));
 
-	  // });
+	  });
 
-      // subStopsLayer = L.layerGroup(circleList);
-      // subStopsLayer.addTo(map);
-    // });
+      subStopsLayer = L.layerGroup(circleList);
+      subStopsLayer.addTo(map);
+    });
 
     // load user points from phil's google spreadsheet
 
