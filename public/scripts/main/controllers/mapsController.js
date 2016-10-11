@@ -265,7 +265,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   
   $scope.resetMap = function() {
-    d3Service.clearCharts();
+    $scope.scenarioLegend = false;
+	d3Service.clearCharts();
 	$scope.stopTimer();
 	$scope.scenarioScore.loaded = false;
     leafletData.getMap('map_left').then(function(map) {
@@ -299,6 +300,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 			drawGraph();
 		    $scope.showVectorIsosOn = true;
 		    $scope.loadProgress.vis = false;
+			$scope.scenarioLegend = true;
 		    $scope.showVectorIsos($scope.vectorIsos.val);
 		  }else{
 		    refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
