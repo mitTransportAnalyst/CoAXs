@@ -1797,16 +1797,17 @@ function accessibilityForGrid(_ref) {
   var query = surface.query;
   var accessibility = 0;
 
-  // round cutoff to nearest 5 minutes, which is what we've calculated
-  // index 0 is five minutes
-  var cutoffIdx = Math.round(cutoff / 5) - 1;
-
   for (var y = 0, pixel = 0; y < query.height; y++) {
     for (var x = 0; x < query.width; x++, pixel++) {
-      var count = surface.access[cutoffIdx][pixel];
+      var travelTime = surface.surface[pixel];
 
       // ignore unreached locations
-      if (count === 0) continue;
+      // TODO in OTP/R5 we have a sigmoidal cutoff here to avoid "echoes" of high density locations
+      // at 60 minutes travel time from their origins.
+      // But maybe also we just want to not represent these things as hard edges since accessibility
+      // is a continuous phenomenon. No one is saying "ah, rats, it takes 60 minutes and 10 seconds
+      // to get work, I have to find a job that's 20 meters closer to home..."
+      if (travelTime > cutoff) continue;
 
       var gridx = x + query.west - grid.west;
       var gridy = y + query.north - grid.north;
@@ -1814,9 +1815,7 @@ function accessibilityForGrid(_ref) {
       // if condition below fails we're off the grid, value is zero, don't bother with calculations
       if (gridx >= 0 && gridx < grid.width && gridy >= 0 && gridy < grid.height) {
         // get value of this pixel from grid
-        var val = grid.data[gridy * grid.width + gridx];
-        var weight = count / surface.nMinutes;
-        accessibility += val * weight;
+        accessibility += grid.data[gridy * grid.width + gridx];
       }
     }
   }
@@ -1835,6 +1834,7 @@ exports.default = getSurface;
 exports.getTransitOffset = getTransitOffset;
 exports.computePixelValue = computePixelValue;
 exports.computeBestPixelValue = computeBestPixelValue;
+exports.computeMedianPixelValue = computeMedianPixelValue;
 exports.computeAveragePixelValue = computeAveragePixelValue;
 exports.computeWorstPixelValue = computeWorstPixelValue;
 
@@ -1842,14 +1842,20 @@ var _lodash = require('lodash.fill');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _debug = require('debug');
+
+var _debug2 = _interopRequireDefault(_debug);
+
 var _origin = require('./origin');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var debug = (0, _debug2.default)('browsochrones:get-surface');
+
 /**
  * Get a travel time surface and accessibility results for a particular origin.
  * Pass in references to the query (the JS object stored in query.json), the stopTreeCache, the origin file, the
- * x and y origin point relative to the query, what parameter you want (BEST_CASE, WORST_CASE or AVERAGE),
+ * x and y origin point relative to the query, what parameter you want (BEST_CASE, WORST_CASE or MEDIAN),
  * and a cutoff for accessibility calculations. Returns a travel time/accessibility surface which can be used by isochoroneTile and accessibilityForCutoff
  */
 function getSurface(_ref) {
@@ -1858,9 +1864,11 @@ function getSurface(_ref) {
   var stopTreeCache = _ref.stopTreeCache;
   var which = _ref.which;
 
+  debug('generating surface');
   var surface = new Uint8Array(query.width * query.height);
   var waitTimes = new Uint8Array(query.width * query.height);
   var inVehicleTravelTimes = new Uint8Array(query.width * query.height);
+  var walkTimes = new Uint8Array(query.width * query.height);
 
   var transitOffset = getTransitOffset(origin.data[0]);
 
@@ -1869,14 +1877,9 @@ function getSurface(_ref) {
   var travelTimesForDest = new Uint8Array(nMinutes); // the total travel time per iteration to reach a particular destination
   var waitTimesForDest = new Uint8Array(nMinutes); // wait time per iteration for particular destination
   var inVehicleTravelTimesForDest = new Uint8Array(nMinutes); // in-vehicle travel time per destination
+  var walkTimesForDest = new Uint8Array(nMinutes);
 
-  // store the number of minutes at which each cell is reached within the given cutoff
-  // so we can calculate accessibility with arbitrary grids later
-  var access = [];
-
-  for (var i = 0; i < 120 / 5; i++) {
-    access.push(new Uint8Array(query.width * query.height));
-  } // x and y refer to pixel not origins here
+  // x and y refer to pixel not origins here
   // loop over rows first
   for (var y = 0, pixelIdx = 0, stcOffset = 0; y < query.height; y++) {
     for (var x = 0; x < query.width; x++, pixelIdx++) {
@@ -1889,6 +1892,7 @@ function getSurface(_ref) {
       (0, _lodash2.default)(travelTimesForDest, nonTransitTime);
       (0, _lodash2.default)(waitTimesForDest, 255);
       (0, _lodash2.default)(inVehicleTravelTimesForDest, 255);
+      (0, _lodash2.default)(walkTimesForDest, 255);
 
       for (var stopIdx = 0; stopIdx < nStops; stopIdx++) {
         // read the stop ID
@@ -1907,10 +1911,13 @@ function getSurface(_ref) {
             // no need to check that travelTimeToPixel < 255 as travelTimesForDest[minute] is preinitialized to the nontransit time or 255
             if (travelTimesForDest[minute] > travelTimeToPixel) {
               travelTimesForDest[minute] = travelTimeToPixel;
-              inVehicleTravelTimesForDest[minute] = origin.data[offset + 1];
-              waitTimesForDest[minute] = origin.data[offset + 2];
-
-              if (origin.data[offset + 2] > 254) console.log('data value ' + origin.data[offset + 2]);
+              var inVehicle = inVehicleTravelTimesForDest[minute] = origin.data[offset + 1];
+              var wait = waitTimesForDest[minute] = origin.data[offset + 2];
+              // NB when we're talking about a particular trip, then walk + wait + inVehicle == total
+              // However if you calculate summary statistics for each of these individually, that may
+              // not be true. So we need to calculate walk here and explicitly calculate summary stats about it.
+              var walkTime = travelTimeToPixel - wait - inVehicle;
+              walkTimesForDest[minute] = walkTime;
             }
           }
         }
@@ -1919,21 +1926,17 @@ function getSurface(_ref) {
       // compute and set value for pixel
       surface[pixelIdx] = computePixelValue(which, travelTimesForDest);
       waitTimes[pixelIdx] = computePixelValue(which, waitTimesForDest);
+      walkTimes[pixelIdx] = computePixelValue(which, walkTimesForDest);
       inVehicleTravelTimes[pixelIdx] = computePixelValue(which, inVehicleTravelTimesForDest);
-
-      // compute access values
-      for (var _i = 0; _i < travelTimesForDest.length; _i++) {
-        for (var cutoffIdx = 0, cutoffTime = 5; cutoffIdx < access.length; cutoffIdx++, cutoffTime += 5) {
-          if (travelTimesForDest[_i] < cutoffTime) access[cutoffIdx][y * query.width + x]++;
-        }
-      }
     }
   }
 
+  debug('generating surface complete');
+
   return {
     surface: surface,
-    access: access,
     waitTimes: waitTimes,
+    walkTimes: walkTimes,
     inVehicleTravelTimes: inVehicleTravelTimes,
     query: query,
     nMinutes: nMinutes // TODO already present in query
@@ -1963,6 +1966,8 @@ function computePixelValue(which, travelTimes) {
   switch (which) {
     case 'BEST_CASE':
       return computeBestPixelValue(travelTimes);
+    case 'MEDIAN':
+      return computeMedianPixelValue(travelTimes);
     case 'AVERAGE':
       return computeAveragePixelValue(travelTimes);
     case 'WORST_CASE':
@@ -1992,19 +1997,38 @@ function computeBestPixelValue(travelTimes) {
  * @return {Number} pixel
  */
 
+function computeMedianPixelValue(travelTimes) {
+  // NB there may be some 255 values (unreachable/infinity) here but that's fine as they'll
+  // be sorted to the end of the list. If more than half of the values are infinite, the median will
+  // be infinite, which is fine and correct as long as the travel times are being censored at a value
+  // larger than the time cutoff used for accessibility.
+  travelTimes.sort();
+
+  if (travelTimes.length === 1) {
+    return travelTimes[0];
+  } else if (travelTimes.length % 2 === 1) {
+    // odd number, find the middle, keeping in mind the fencepost problem
+    return travelTimes[Math.floor(travelTimes.length / 2)];
+  } else {
+    var pos = travelTimes.length / 2;
+    // -1 because off-by-one
+    return (travelTimes[pos] + travelTimes[pos - 1]) / 2;
+  }
+}
+
 function computeAveragePixelValue(travelTimes) {
-  var sum = 0;
   var count = 0;
+  var sum = 0;
 
   for (var i = 0; i < travelTimes.length; i++) {
     if (travelTimes[i] !== 255) {
-      sum += travelTimes[i];
       count++;
+      sum += travelTimes[i];
     }
   }
 
-  // coerce to int
-  if (count > travelTimes.length / 2) return sum / count | 0;else return 255;
+  // TODO reachability threshold?
+  return count > 0 ? sum / count : 255;
 }
 
 /**
@@ -2022,7 +2046,7 @@ function computeWorstPixelValue(travelTimes) {
   return pixel;
 }
 
-},{"./origin":12,"lodash.fill":155}],7:[function(require,module,exports){
+},{"./origin":12,"debug":151,"lodash.fill":155}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2905,8 +2929,7 @@ var Browsochrones = function (_WebWorkerPromiseInte) {
     value: function generateSurface() {
       var _this2 = this;
 
-      var cutoff = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 60;
-      var which = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'AVERAGE';
+      var which = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'MEDIAN';
 
       if (!this.isLoaded()) {
         return _promise2.default.reject(new Error('Surface cannot be generated if Browsochrones is not fully loaded.'));
@@ -2915,7 +2938,6 @@ var Browsochrones = function (_WebWorkerPromiseInte) {
       return this.work({
         command: 'generateSurface',
         message: {
-          cutoff: cutoff,
           which: which
         }
       }).then(function (message) {
@@ -3496,6 +3518,14 @@ module.exports = (0, _webWorkerPromiseInterface.createHandler)({
   generateDestinationData: function generateDestinationData(ctx, message) {
     var point = message.point;
 
+
+    var travelTime = ctx.surface.surface[point.y * ctx.query.width + point.x];
+    var waitTime = ctx.surface.waitTimes[point.y * ctx.query.width + point.x];
+    // NB separate walk time surface because some summary statistics don't preserve stat(wait) +
+    //   stat(walk) + stat(inVehicle) = stat(total)
+    var walkTime = ctx.surface.walkTimes[point.y * ctx.query.width + point.x];
+    var inVehicleTravelTime = ctx.surface.inVehicleTravelTimes[point.y * ctx.query.width + point.x];
+
     return {
       paths: (0, _getTransitiveData.getPaths)({
         origin: ctx.origin,
@@ -3510,9 +3540,10 @@ module.exports = (0, _webWorkerPromiseInterface.createHandler)({
         stopTreeCache: ctx.stopTreeCache,
         to: point
       }),
-      travelTime: ctx.surface.surface[point.y * ctx.query.width + point.x],
-      waitTime: ctx.surface.waitTimes[point.y * ctx.query.width + point.x],
-      inVehicleTravelTime: ctx.surface.inVehicleTravelTimes[point.y * ctx.query.width + point.x]
+      travelTime: travelTime,
+      waitTime: waitTime,
+      inVehicleTravelTime: inVehicleTravelTime,
+      walkTime: walkTime
     };
   },
   generateTransitiveData: function generateTransitiveData(ctx, message) {

@@ -32,6 +32,7 @@
     2px -2px 0 #fff,
     -2px 2px 0 #fff,
      2px 2px 0 #fff;
+  display: none;
 }
 
 .Transitive > .schematic-map .transitive-segment-label {

@@ -29,13 +29,13 @@
         <small>{{ combos.all[combos.com].name }}</small>
       </div>
       <div class="panel-body"
-           ng-show="scenarioScore.graphData && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
+           ng-show="scenarioScore.loaded && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
         Time Boundary: {{ vectorIsos.val | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
         <small>{{ combos.sel ? combos.all[combos.sel].name : 'Existing service'}}</small>
       </div>
       <div class="panel-body"
-           ng-show="scenarioScore.graphData && scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
+           ng-show="scenarioScore.loaded && scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
         Reachability by Public Transport
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
         <small>Easily reachable</small>
@@ -152,7 +152,6 @@
 <div class="topleft">
     <h4>
       <b>CoAXs</b> | Bus Priority
-	<i class="fa fa-times-circle-o pull-right" ng-click="introPanel=false"></i>
 	</h4>
 	<div class="topinfo-body container" style="min-height:75vh">
 	
@@ -169,12 +168,12 @@
 		Jobs and Transport Capacity at <br> {{cordons[selCordon].verbose}}:
 		<svg id="plot1" width="200" height="300" style="z-index:2"></svg>
 		</div> -->
-		<div ng-show = "!pointToPoint  && scenarioScore.graphData">
+		<div ng-show = "!pointToPoint  && scenarioScore.loaded">
 		<svg id="compPlot2" width="300" height="300"></svg>
 		<br>
 		<div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
-                    ng-click="drawGraph(scenarioScore.graphData)">
+                    ng-click="drawGraph()">
               {{ indicators.all[indicators.sel] }}
             </button>
             <button type="button" class="btn btn-success" dropdown-toggle>
@@ -190,9 +189,9 @@
             </ul>
         </div>
 		reachable from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon">
-		within	{{vectorIsos.val | minuteConverter}}
+		<br>within	{{vectorIsos.val | minuteConverter}}
 		</div>
-		<div ng-show = "pointToPoint && scenarioScore.graphData">
+		<div ng-show = "pointToPoint && scenarioScore.loaded">
 			<svg id="compPlot3" width="300" height="300"></svg>
 			<br>
 			<h5>Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> </h5>
@@ -403,30 +402,26 @@
       </div>
     </div>
 
-    <div class="showToggle"  ng-show="visibleTabs.travel">
-      <div class="btn-group btn-group-justified" >
-        <label class="btn btn-info"  ng-click="preMarkerQuery()">
-          <i class="fa fa-refresh"   ng-show="!scenarioScore.graphData"
+    <div class="showToggle" ng-show="visibleTabs.travel">
+      <div class="btn-group btn-group-justified">
+        <label class="btn btn-info" ng-click="preMarkerQuery()">
+          <i class="fa fa-refresh" ng-show="!scenarioScore.loaded"
              ng-class="loadProgress.vis ? 'faa-spin animated' : 'faa-pulse animated'"></i>
-          <i class="fa fa-refresh" ng-show="scenarioScore.graphData" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i> Update
+          <i class="fa fa-refresh" ng-show="scenarioScore.loaded" ng-class="loadProgress.vis ? 'fa-spin' : ''"></i>
+        </label>
+        <label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''"
+               ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
+          <i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>
+          <i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>
         </label>
 
-
-        <!--<label class="btn btn-xs" ng-class="!showVectorIsosOn ? 'active tiny' : ''"-->
-               <!--ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">-->
-          <!--<i class="fa fa-play" ng-show="!timerPlaying" ng-click="showVectorIsosOn ? startTimer() : ''"></i>-->
-          <!--<i class="fa fa-pause" ng-show="timerPlaying" ng-click="stopTimer()"></i>-->
-        <!--</label>-->
-        <!--<label class="btn btn-xs" ng-class="showVectorIsosOn ? 'active tiny' : ''"-->
-               <!--ng-click="toggleShowVectorIsos(); stopTimer()"><i class="fa fa-stop"></i>-->
-        <!--</label>-->
       </div>
 
       <div style="width:100%; height:55px; overflow:hidden;padding-top:5px;">
         <div class="text-center" style="width: 100%; padding: 0px 8px 0px 8px"
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 		  <span ng-class="pointToPoint ? 'unselected' : ''">
-            <input type="range" min="5" max="120" step="5" class="isosRange"
+            <input type="range" min="5" max="115" step="5" class="isosRange"
                    ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
@@ -455,7 +450,7 @@
   <!-- 3 scenario table module -->
   <div class="colBody" id="leftDynamic">
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
-      <i class="fa fa-random " ng-class="scenarioScore.graphData && !defaultsBuilt? 'faa-pulse animated' : ''"></i>
+      <i class="fa fa-random " ng-class="scenarioScore.loaded && !defaultsBuilt? 'faa-pulse animated' : ''"></i>
       <span ng-show="!combos.sel">Scenario: Existing MBTA</span>
       <span ng-show="combos.sel">
         Scenario<span ng-show="scenarioCompare"> Comparison</span>: {{ combos.all[combos.sel].name }}
