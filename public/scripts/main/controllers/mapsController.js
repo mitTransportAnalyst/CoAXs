@@ -55,11 +55,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
 
   $scope.variants = {
-    'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64', '70', '70A'],corName: "Mass Ave"},
-	  'B' : { sel : null, all : {}, color: '#7DD5ED', buslines:['111', '426', '428'],corName:"North Washington St" },
+    'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64'],corName: "Mass Ave"},
+	  'B' : { sel : null, all : {}, color: '#7DD5ED', buslines:['111', '426', '428'],corName:"N. Washington St" },
     'C' : { sel : null, all : {}, color: '#F3E05E', buslines:['39', '66'], corName:"Huntington Ave" },
     'D' : { sel : null, all : {}, color: '#E092DF' , buslines:['30', '34', '34E', '35', '36', '37', '40', '50', '51'], corName:"Roslindale/Forest Hills" },
-    'E' : { sel : 0 , all : {}, color: '#8D6AA8', buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave/Warren" }
+    'E' : { sel : 0 , all : {}, color: '#8D6AA8', buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave" }
   };
   
     $scope.mode = {
