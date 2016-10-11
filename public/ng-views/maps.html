@@ -545,7 +545,7 @@
             <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null;combos.sel=combo._key; updateSelectScenario(combos.sel)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
-                <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | F:{{combo.param[variant._key].frequency}}  </small>
+                <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | H:{{combo.param[variant._key].headway}}  </small>
               </div>
 
             </div>
@@ -616,6 +616,10 @@
 		 <span ng-show="!routeScorecard">Show Data</span>
         </label>
       </div>
+	  
+	    <label class = "btn btn-xs card" ng-repeat="busline in variants[tabnav].buslines" ng-click="targetBusline(busline)">
+			{{busline}}
+		</label>
 
       <div class="bottomFixed" ng-show="!variants[tabnav].sel">
       </div>
@@ -662,7 +666,7 @@
             <div style="padding-top: 0px;"><img
               src="public/imgs/runningtime.png" style="height:35px">
 
-            <input type="range" min="0" max="60" value="0" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" />
+            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" />
             <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
             </div>
           </div>
@@ -682,7 +686,7 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/dwelltime.png" style="height:25px">
 
-              <input type="range" min="0" max="40" value="0" class="right" ng-model="currentParam[tabnav].dwell" />
+              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" />
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].dwell}}%
             </div>
           </div>
@@ -704,8 +708,8 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/frequency.png" style="height:25px">
 
-              <input type="range" min="0" max="75" value="0" class="right" ng-model="currentParam[tabnav].frequency" />
-              <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].frequency}}%
+              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" />
+              <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].headway}}%
             </div>
           </div>
 

@@ -26,11 +26,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   $scope.currentParam = {
-    'A' : {dwell:0, frequency:0, runningTime: 0},
-    'B' : {dwell:0, frequency:0, runningTime: 0},
-    'C' : {dwell:0, frequency:0, runningTime: 0},
-    'D' : {dwell:0, frequency:0, runningTime: 0},
-    'E' : {dwell:0, frequency:0, runningTime: 0}
+    'A' : {dwell:0, headway:0, runningTime: 0},
+    'B' : {dwell:0, headway:0, runningTime: 0},
+    'C' : {dwell:0, headway:0, runningTime: 0},
+    'D' : {dwell:0, headway:0, runningTime: 0},
+    'E' : {dwell:0, headway:0, runningTime: 0}
   };
 
   $scope.scenario0 = {}; 
@@ -636,7 +636,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.newCombo = function () {
     // var comboId = supportService.generateUUID();
     $scope.combos.all[$scope.saveScenarioNum] = {
-      name    : "Temp " + $scope.saveScenarioNum,
+      name    : "New " + $scope.saveScenarioNum,
       created : Date.now(),
       sel     : {
      //    'A' : $scope.variants['A'].sel,
@@ -801,11 +801,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       sel     : {
       },
       param   : {
-        'A' : {dwell:0, frequency:0, runningTime: 0},
-        'B' : {dwell:0, frequency:0, runningTime: 0},
-        'C' : {dwell:0, frequency:0, runningTime: 0},
-        'D' : {dwell:0, frequency:0, runningTime: 0},
-        'E' : {dwell:0, frequency:0, runningTime: 0}
+        'A' : {dwell:0, headway:0, runningTime: 0},
+        'B' : {dwell:0, headway:0, runningTime: 0},
+        'C' : {dwell:0, headway:0, runningTime: 0},
+        'D' : {dwell:0, headway:0, runningTime: 0},
+        'E' : {dwell:0, headway:0, runningTime: 0}
       }
     };
     var comboId = supportService.generateUUID();
@@ -816,11 +816,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
       },
       param   : {
-        'A' : {dwell:60, frequency:75, runningTime: 71},
-        'B' : {dwell:60, frequency:75, runningTime: 71},
-        'C' : {dwell:60, frequency:75, runningTime: 71},
-        'D' : {dwell:60, frequency:75, runningTime: 71},
-        'E' : {dwell:60, frequency:75, runningTime: 71}
+        'A' : {dwell:40, headway:25, runningTime: 40},
+        'B' : {dwell:40, headway:25, runningTime: 40},
+        'C' : {dwell:40, headway:25, runningTime: 40},
+        'D' : {dwell:40, headway:25, runningTime: 40},
+        'E' : {dwell:40, headway:25, runningTime: 40}
       }
 	};
 	
@@ -867,7 +867,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     $scope.letters.forEach(function (key){
 
-      var tempNum =  $scope.combos.all[comboIndex].param[key].dwell/100;
+      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
       console.log(tempNum);
 
       analystService.modifyDwells(key,tempNum,function(modifyJSON){
@@ -877,11 +877,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         console.log(currentModificationJSON);
       });
     })
-
-
+	
     $scope.letters.forEach(function (key){
 
-      var tempNum =  1/($scope.combos.all[comboIndex].param[key].runningTime/100);
+      var tempNum =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
       console.log(tempNum);
 
       analystService.modifySpeed(key,tempNum,function(modifyJSON){
@@ -895,10 +894,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     $scope.letters.forEach(function (key){
 
-      var tempNum =  $scope.combos.all[comboIndex].param[key].frequency/100;
+      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
       console.log(tempNum);
 
-      analystService.modifyFrequency(key,tempNum,function(modifyJSON){
+      analystService.modifyHeadway(key,tempNum,function(modifyJSON){
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
@@ -921,9 +920,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     $scope.letters.forEach(function (key){
 
-      var tempNum =  $scope.combos.all[comboIndex].param[key].dwell/100;
+      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
       console.log(tempNum);
-
+	  
       analystService.modifyDwells(key,tempNum,function(modifyJSON){
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
@@ -935,7 +934,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     $scope.letters.forEach(function (key){
 
-      var tempNum =  1/($scope.combos.all[comboIndex].param[key].runningTime/100);
+      var tempNum =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
       console.log(tempNum);
 
       analystService.modifySpeed(key,tempNum,function(modifyJSON){
@@ -949,10 +948,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     $scope.letters.forEach(function (key){
 
-      var tempNum =  $scope.combos.all[comboIndex].param[key].frequency/100;
+      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
       console.log(tempNum);
 
-      analystService.modifyFrequency(key,tempNum,function(modifyJSON){
+      analystService.modifyHeadway(key,tempNum,function(modifyJSON){
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });

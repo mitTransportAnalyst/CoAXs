@@ -377,14 +377,14 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
       })
   };
   
-  this.modifyFrequency = function (corridorId,scale,cb) {
+  this.modifyHeadway = function (corridorId,scale,cb) {
     $http.get('/load/scenario/'+corridorId)
       .success(function (data, status) {
         var scenarioJSON = [];
         data.modifications.forEach(function(route){
             if (route.type === "adjust-frequency"){
               route.entries.forEach(function (entry) {
-                entry.headwaySecs = entry.headwaySecs/scale ;
+                entry.headwaySecs = entry.headwaySecs*scale ;
               });
               scenarioJSON.push(route);
             }
