@@ -110,7 +110,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		};
   });
 
-  
+
+
+  $scope.trackClick = function(name, value){
+    var nowTime = Date();
+    var req = {
+      method: 'POST',
+      url: 'https://api.mlab.com/api/1/databases/tdm/collections/coax?apiKey=9zaMF9-feKwS1ZliH769u7LranDon3cC',
+      data: { name: name, value:value,time:nowTime }
+    };
+    $http(req);
+  };
+
+
     // Angular Leaflet Directive - base components
   var defaults_global = {
     minZoom: 9,
@@ -766,7 +778,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	// 	}
 	// }});
 
-	// $scope.preMarkerQuery();
+	$scope.preMarkerQuery();
 	// leafletData.getMap('map_left').then(function(map) {
 	// 	map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
 	// });

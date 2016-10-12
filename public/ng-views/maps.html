@@ -378,8 +378,10 @@
 
   <div class="badge"
        ng-repeat="user in users track by $index"
-       ng-click="targetPOIUsers($index)"
-       ng-class="$index == currentPOIUser ? '' : 'unselected'" >
+       ng-click="loadProgress.vis ?'': targetPOIUsers($index)"
+       ng-class="$index == currentPOIUser ? '' : 'unselected'"
+       ng-change="trackClick('user',$index)"
+    >
     <i class="fa fa-user"></i><br> {{ user.name }}
   </div>
   <!--<div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">-->
@@ -424,7 +426,7 @@
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 		  <span ng-class="!pointToPoint && scenarioScore.loaded ? '' : 'disabled unselected'">
             <input type="range" min="5" max="115" step="5" class="isosRange"
-                   ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
+                   ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn" ng-change="trackClick('changeTimeMap',vectorIsos.val)"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
             style="position: absolute; left: 10px; padding-right: 10px;"><i
@@ -439,7 +441,7 @@
       </div>
 	  <br>
 	  <br>
-	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;">
+	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;" >
 		Point-to-point mode:  
 		<i class="fa fa-check-square" ng-show="pointToPoint"></i>
 		<i class="fa fa-square" ng-show="!pointToPoint"></i>
@@ -646,7 +648,7 @@
             <div style="padding-top: 0px;"><img
               src="public/imgs/runningtime.png" style="height:35px">
 
-            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" />
+            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
             <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
             </div>
           </div>
@@ -666,7 +668,7 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/dwelltime.png" style="height:25px">
 
-              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" />
+              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].dwell}}%
             </div>
           </div>
@@ -688,7 +690,7 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/frequency.png" style="height:25px">
 
-              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" />
+              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].headway}}%
             </div>
           </div>
