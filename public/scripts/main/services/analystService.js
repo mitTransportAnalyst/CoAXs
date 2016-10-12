@@ -61,8 +61,8 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
     "jobId": supportService.generateUUID(),
 	"transportNetworkId": defaultGraph,
 	"request": {
-	  "date":"2015-10-20","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":240,
-		"scenario":{}
+	  "date":"2015-10-20","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":120,
+		"scenario":{"id":999}
 	}
   };
   
@@ -209,19 +209,21 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	return new Promise(function(resolve, reject){
 	var staticBody = [];
 	var staticDefault = [];
-	var xy = [];
-	for (var i=0; i<2; i++){
+	var xy = {};
+	var scenNumArray = []
+	for (var i=0; i<scenarios.length; i++){
+		scenNumArray.push(i);
 		isochrones[i] = null;
 		//browsochrones uses webmap x,y, which must be obtained from lat/lon of marker
-		xy[i] = browsochrones[i].latLonToOriginPoint(marker.getLatLng());
+		xy = browsochrones[i].latLonToOriginPoint(marker.getLatLng());
 		staticDefault[i] = 
 		  {
 			"type": 'static',
 			"graphId": defaultGraph,
 			"workerVersion": workerVersion,
 			"request": staticRequest,
-			"x": xy[i].x,
-			"y": xy[i].y
+			"x": xy.x,
+			"y": xy.y
 		  };
 		
 		//set scenario
@@ -230,41 +232,32 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		staticBody[i] = JSON.stringify(staticDefault[i]);
     }
 	//fetch a grid for travel times
+	
+
 	if(!isComparison){
 	  fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
 	  postToAnalyst(staticBody[0]).then(function(res){
-		  return res.arrayBuffer()
-		}).then(function(buff){
-		  browsochrones[0].setOrigin(buff, xy[0])
+		  return res.arrayBuffer()})
+		.then(function(buff){
+		  browsochrones[0].setOrigin(buff, xy)
 		  .then(function(){
 			makeIsochronesAndPlotData(0,type).then(function(){resolve(plotData);})
 		  })
 		}))
 	} else {
 //todo fix callback hell
-		fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
-		postToAnalyst(staticBody[0]).then(function(res){
-			  return res.arrayBuffer()
-			}).then(function(buff){
-			  browsochrones[0].setOrigin(buff, xy[0])
-			  .then(function(){
-				makeIsochronesAndPlotData(0,type).then(function(){
-				fetchMetadataIfNeeded(isPointToPoint, 1, scenarios).then(
-				postToAnalyst(staticBody[1]).then(function(res){
-					  return res.arrayBuffer()
-					}).then(function(buff){
-					  browsochrones[1].setOrigin(buff, xy[1])
-					  .then(function(){
-						makeIsochronesAndPlotData(1,type).then(function(){resolve(plotData);})
-					  })
-					})
-				)
-				})
-			  })
-			})
-		)
-	}
-  })}
+		$q.all(scenNumArray.map(function(i){
+		  return new Promise(function(resolve,reject){fetchMetadataIfNeeded(isPointToPoint, i, scenarios).then(
+		    postToAnalyst(staticBody[i]).then(function(res){
+			  return res.arrayBuffer()})
+			.then(function(buff){browsochrones[i].setOrigin(buff, xy)
+			.then(function(){
+			  makeIsochronesAndPlotData(i,type).then(function(){resolve();})})
+		  }))})}))
+		  .then(function(){resolve(plotData);})
+	 }
+	})
+  }
 
   processTransitiveResult = function (res, scenNum) {
     var transitive = res.transitive;
