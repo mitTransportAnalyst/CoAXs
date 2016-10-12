@@ -261,10 +261,10 @@ background-color  : #696969;
   border-radius: 0px;
   margin: 0px 0px 0px 0px;
   overflow: hidden;
-  position: fixed;
+  position: absolute;
   width: 100%;
-  top: 0px;
-  height: 10px;
+  top: 75%;
+  height: 25%;
   z-index: 100;
   background-color: #ff7f7f;
 }
