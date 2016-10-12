@@ -160,7 +160,7 @@
 		<svg id="plot1" width="200" height="300" style="z-index:2"></svg>
 		</div> -->
 		<div ng-show = "!pointToPoint  && scenarioScore.loaded">
-		<svg id="compPlot2" width="300" height="300"></svg>
+		<svg id="compPlot2" width="300" height="400"></svg>
 		<br>
 		<div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
@@ -183,7 +183,7 @@
 		<br>within	{{vectorIsos.val | minuteConverter}}
 		</div>
 		<div ng-show = "pointToPoint && scenarioScore.loaded">
-			<svg id="compPlot3" width="300" height="300"></svg>
+			<svg id="compPlot3" width="300" height="400"></svg>
 			<br>
 			<h5>Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> </h5>
 		</div>

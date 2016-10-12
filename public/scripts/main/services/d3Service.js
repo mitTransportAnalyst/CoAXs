@@ -16,6 +16,16 @@ var	selCode = 'jobs1',
 
 colors = d3.scale.category10();
 
+var formatAccStat = function (val) {
+  if (val < 1000) {
+    return val;
+  } else if (val < 1000000) {
+    return (d3.format(".1f")(val/1000) + ' k');
+  } else {
+    return (d3.format(".3f")(val/1000000) + ' M');
+  }
+}
+
 var updateSubsetTotal = function(roundTo){
 	d3.selectAll("#subTotal")
 	.html(function(d){
@@ -24,7 +34,7 @@ var updateSubsetTotal = function(roundTo){
 			if (e[0].attr == selCode)
 				{subsetTotal = subsetTotal + e[0]['y']};
 		});
-		return d3.format(",")(d3.round(subsetTotal,roundTo));
+		return formatAccStat(subsetTotal);
 	})};
 	
 var updateSubsetLabels = function () {
@@ -38,7 +48,7 @@ var updateSubsetLabels = function () {
 	.style("fill", function () {
 		  return attributes.get(selCode).color})
 	.text( function (){
-		  return attributes.get(selCode).verbose.split('|')[0]});;
+		  return attributes.get(selCode).verbose});;
 };
 
 this.clearCharts = function(){
@@ -163,7 +173,7 @@ this.drawCordonGraph = function (dataset) {
 			if(d.x == indicators[0]) {
 				selCode = d.attr;
 				updateSubsetLabels();
-				updateSubsetTotal(-2);
+				updateSubsetTotal();
 			}
 		})
         .on('mouseover', function (d) {
@@ -232,10 +242,10 @@ this.drawCordonGraph = function (dataset) {
 		.style("opacity", 0.75)
 		.style("fill", attributes.get(selCode).color)
 		.text( function (){
-		  return attributes.get(selCode).verbose.split('|')[0]})
+		  return attributes.get(selCode).verbose})
 
 	updateSubsetLabels();
-	updateSubsetTotal(-2);
+	updateSubsetTotal();
 	
 };
 
@@ -254,7 +264,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 		},
 		
 		width = 300 - margins.left - margins.right,
-		height = 300 - margins.top - margins.bottom  - legendPanel.height;
+		height = 400 - margins.top - margins.bottom  - legendPanel.height;
 		
 	d3.select("#compPlot3").selectAll("*").remove();
 	
@@ -358,26 +368,26 @@ this.drawTimeGraph = function(plotData, indicator) {
 		.on('click', function (d) {
 			selCode = d.attr;
 			updateSubsetLabels();
-			updateSubsetTotal(0);
+			updateSubsetTotal();
 		})
-        .on('mouseover', function (d) {
-			var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
-			var xPos = parseFloat(d3.select(this).attr('x')) + xScale2.rangeBand() / 2 +100;
+        // .on('mouseover', function (d) {
+			// var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
+			// var xPos = parseFloat(d3.select(this).attr('x')) + xScale2.rangeBand() / 2 +100;
 
-			d3.select('#tooltip')
-				.style('left', xPos + 'px')
-				.style('top', yPos + 'px')
-				.select('#value')
-				.html('<strong>'+ 
-				d3.format(",")(d3.round(d.y,1))	
-				+ '</strong><br> '
-				+ attributes.get(d.attr).verbose);
+			// d3.select('#tooltip')
+				// .style('left', xPos + 'px')
+				// .style('top', yPos + 'px')
+				// .select('#value')
+				// .html('<strong>'+ 
+				// d3.format(",")(d3.round(d.y,1))	
+				// + '</strong><br> '
+				// + attributes.get(d.attr).verbose);
 
-			d3.select('#tooltip').classed('hidden', false);
-		})
-        .on('mouseout', function () {
-			d3.select('#tooltip').classed('hidden', true);
-		});
+			// d3.select('#tooltip').classed('hidden', false);
+		// })
+        // .on('mouseout', function () {
+			// d3.select('#tooltip').classed('hidden', true);
+		// });
 
 	vis1.append('g')
         .attr('class', 'axis')
@@ -403,7 +413,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 	  .append("text")
 	  .text("Minutes")
 	  .style("text-anchor","middle")
-	  .attr("transform", 'translate(-35,'+height/2+')rotate(90)');
+	  .attr("transform", 'translate(-45,'+height/2+')rotate(90)');
 
 	//total time, scenario 0
 	vis1.append("svg:g")
@@ -463,13 +473,19 @@ this.drawTimeGraph = function(plotData, indicator) {
 		  return attributes.get(selCode).verbose});
 
 	updateSubsetLabels();
-	updateSubsetTotal(0);
+	updateSubsetTotal();
 
     };
 
 //Cumulative plot of accessible opportunities vs time, and stacked bar chart
 this.drawGraph = function (cutoff, plotData, indicator) {
-	selCode = 'jobs1';
+  
+  selCode = 'jobs1';
+  
+  if (indicator.sel === 'workers'){
+	selCode = 'workers1';
+  };
+  
   var margins = {
 			top: 45,
 			left: 45,
@@ -482,7 +498,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		},
 		
 		width = 300 - margins.left - margins.right,
-		height = 300 - margins.top - margins.bottom  - legendPanel.height;
+		height = 400 - margins.top - margins.bottom  - legendPanel.height;
 		
 	d3.select("#compPlot2").selectAll("*").remove();
 	
@@ -553,7 +569,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 	  
 	xScale2 = d3.scale.ordinal()
         .domain(indicators2)
-        .rangeBands([0, width-150], .05),
+        .rangeBands([0, width-100], .05),
 	  
 	xScale3 = xScale2;
 	  
@@ -595,26 +611,26 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		.on('click', function (d) {
 			selCode = d.attr;
 			updateSubsetLabels();
-			updateSubsetTotal(-2);
+			updateSubsetTotal();
 		})
-        .on('mouseover', function (d) {
-			var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
-			var xPos = parseFloat(d3.select(this).attr('x')) + xScale3.rangeBand() / 2 +100;
+        // .on('mouseover', function (d) {
+			// var yPos = parseFloat(d3.select(this).attr('y')) + height +10;
+			// var xPos = parseFloat(d3.select(this).attr('x')) + xScale3.rangeBand() / 2 +100;
 
-			d3.select('#tooltip')
-				.style('left', xPos + 'px')
-				.style('top', yPos + 'px')
-				.select('#value')
-				.html('<strong>'+ 
-				d3.format(",")(d3.round(d.y,-1))	
-				+ '</strong><br> '
-				+ attributes.get(d.attr).verbose);
+			// d3.select('#tooltip')
+				// .style('left', xPos + 'px')
+				// .style('top', yPos + 'px')
+				// .select('#value')
+				// .html('<strong>'+ 
+				// d3.format(",")(d3.round(d.y,-1))	
+				// + '</strong><br> '
+				// + attributes.get(d.attr).verbose);
 
-			d3.select('#tooltip').classed('hidden', false);
-		})
-        .on('mouseout', function () {
-			d3.select('#tooltip').classed('hidden', true);
-		});
+			// d3.select('#tooltip').classed('hidden', false);
+		// })
+        // .on('mouseout', function () {
+			// d3.select('#tooltip').classed('hidden', true);
+		// });
     
 	vis1.append('g')
         .attr('class', 'axis')
@@ -656,7 +672,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 	  .append("text")
 	  .text(indicator.all[indicator.sel])
 	  .style("text-anchor","middle")
-	  .attr("transform", 'translate(-35,'+height/2+')rotate(90)');
+	  .attr("transform", 'translate(-45,'+height/2+')rotate(90)');
 
     // var lineFunc = d3.svg.line()
     // .x(function (d) {
@@ -687,7 +703,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
         .attr("x", xScale2(indicators2[0])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
         .html( function (){
-		  return d3.format(",")(d3.round(total[0][cutoff].y,-3));
+		  return formatAccStat(total[0][cutoff].y);
 		});  
 
 	vis1.append("svg:g")
@@ -711,7 +727,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
         .attr("x", xScale2(indicators2[1])+xScale3.rangeBand()-3)
 		.style("text-anchor","end")
 		.html( function (){
-		  return d3.format(",")(d3.round(total[1][cutoff].y,-3));
+		  return formatAccStat(total[1][cutoff].y);
 		});  
 
 	}	
@@ -748,7 +764,7 @@ this.drawGraph = function (cutoff, plotData, indicator) {
 		// .style("opacity", 0.85);
 
 	updateSubsetLabels();
-	updateSubsetTotal(-2);
+	updateSubsetTotal();
 
     };
 
