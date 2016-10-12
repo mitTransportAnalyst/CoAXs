@@ -120,8 +120,8 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
             style: function (feature) {
               return {
                 color: color,
-                weight: 8,
-                opacity: 0.8
+                weight: 10,
+                opacity: 0.4
               };
             },
             base: feature
