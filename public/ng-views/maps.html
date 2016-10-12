@@ -48,95 +48,51 @@
       <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}}
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
-    <div class="topinfo-body container">
+    <div class="topinfo-body container" style="display:inline-block; overflow-y: auto">
 
-	        <table class="table table-condensed table-hover">
-          <thead>
+      <div style="width: 200px; display:inline-block">
+		  <h3>
+            <i class="fa fa-arrows-h"></i> {{variants[tabnav].segmentData.length}} mi.
+            <h6>Segment Length</h6>
+          </h3>
+      </div>
 
-          </thead>
-          <tbody>
-          <tr ng-repeat="busline in variants[tabnav].buslines">
-            <td style="width: 35%; padding-left:0px">{{
-              busline }}
+      <div style="display:inline-block; overflow-y: auto">
+        <table>
+		<tbody>
+		 <thead>
+            <tr>
+			<th style="width: 80px;">
+			</th>
+			<th style="width: 240px; padding-left:0px; text-align:center"  ng-repeat="busline in variants[tabnav].buslines">
+			<span class="card">{{ busline }}</span><br>
+            <span style="width: 115px; display:inline-block; text-align:center">
+			Base
+			</span>
+            <span style="width: 115px; display:inline-block; text-align:center">
+			Revised
+            </span>
+			</th>
+			</tr>
+		 </thead>
+		 <tfoot>
+		 <tr>
+		   <td>Headway (minutes)</td>
+			<td style="width: 240px; padding-left:5px; text-align: right"  ng-repeat="busline in variants[tabnav].buslines">
+			<span style="width: 115px; display:inline-block; text-align:center">
+			{{(variants[tabnav].routeData[busline].baseHeadway).toFixed(1)}}
+			</span>
+            <span style="width: 115px; display:inline-block; text-align:center">{{(variants[tabnav].routeData[busline].baseHeadway * (100-currentParam[tabnav].headway)/100).toFixed(1)}}
+            </span>
+            </span>
             </td>
-          </tr>
-          </tbody>
-      </table>
-	
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-dot-circle-o"></i> {{ routeScore.bus.count }}
-            <h6>Stops</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Standard:</b> {{ routeScore.bus.dist[0] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Upgraded:</b> {{ routeScore.bus.dist[1] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Full:</b> {{ routeScore.bus.dist[2] | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.bus.cost | number:0 }}
-            <h6>Station construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-arrows-h"></i> {{ routeScore.length.count | number:1 }}
-            <h6>Miles Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Shared:</b> {{ routeScore.length.dist.non | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Priority:</b> {{ routeScore.length.dist.ded | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.length.cost | number:0 }}
-            <h6>Dedicated lane construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-clock-o"></i> {{ routeScore.time.count | minuteConverter }}
-            <h6>Peak Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Moving:</b> {{ routeScore.time.dist.move | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Loading:</b> {{ routeScore.time.dist.load | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.vehicles.cost | number:0 }}
-            <h6>Annual Cost of Operations</h6>
-          </h5>
-        </div>
-      </div>
-
+		 </tr>
+		</tfoot>
+        </tbody>
+		</table>
+		</div>
+	</div>
     </div>
-  </div>
 
   <!--Intro screen-->
 
