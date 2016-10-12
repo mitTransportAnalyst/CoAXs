@@ -16,7 +16,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
   $scope.users =
-    [{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]}];
+    [{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]},
+	{name:"CF",homeLoc:[42.3466875,-71.1051336],workLoc:[42.3577002,-71.0632255]},{name:"KL",homeLoc:[42.3747013,-71.1306015],workLoc:[42.3745698,-71.1284254]},{name:"LM",homeLoc:[42.3862377,-71.1113838],workLoc:[42.3896347,-71.1169921]},{name:"JZ",homeLoc:[42.3708078,-71.0718046],workLoc:[42.3622698,-71.0837989]},{name:"RD",homeLoc:[42.3733821,-71.0981386],workLoc:[42.3603595,-71.1024657]},{name:"ME",homeLoc:[42.3225994,-71.0984173],workLoc:[42.350101,-71.0773375]},{name:"RG",homeLoc:[42.2865609,-71.1303834],workLoc:[42.3532572,-71.0568642]},{name:"JM",homeLoc:[42.343579,-71.1260609],workLoc:[42.3603595,-71.1024657]},{name:"SS",homeLoc:[42.3505074,-71.0825773],workLoc:[42.3534452,-71.0765612]}];
 
   // Management for current scenario
   var scenarioBase = {
