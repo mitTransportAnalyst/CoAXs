@@ -385,25 +385,25 @@
 
 <!-- 1 poi markers -->
 <div class="leftNav" style="z-index: 10000">
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(XZ)">
-    <i class="fa fa-user"></i><br> XZ
-  </div>
-
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
-    <i class="fa fa-user"></i><br> AS
-  </div>
-
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
-    <i class="fa fa-user"></i><br> PD
-  </div>
-
-
-  <!--<div class="badge"-->
-       <!--ng-repeat="user in poiUsers track by $index"-->
-       <!--ng-click="targetPOIUsers(user.userId)"-->
-       <!--ng-class="user.userId == currentPOIUser ? '' : 'unselected'">-->
-    <!--<i class="fa fa-user"></i><br> {{ user.userId }}-->
+  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(XZ)">-->
+    <!--<i class="fa fa-user"></i><br> XZ-->
   <!--</div>-->
+
+  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">-->
+    <!--<i class="fa fa-user"></i><br> AS-->
+  <!--</div>-->
+
+  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">-->
+    <!--<i class="fa fa-user"></i><br> PD-->
+  <!--</div>-->
+
+
+  <div class="badge"
+       ng-repeat="user in users track by $index"
+       ng-click="targetPOIUsers($index)"
+       ng-class="$index == currentPOIUser ? '' : 'unselected'" >
+    <i class="fa fa-user"></i><br> {{ user.name }}
+  </div>
   <!--<div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">-->
     <!--<i class="fa fa-user"></i><br> Clear-->
   <!--</div>-->
@@ -501,8 +501,8 @@
         </label>
 
 
-        <label class="btn" ng-class="saveCombo ? '' : 'active tiny'"
-               ><i class="fa fa-plus-square"></i> Rename
+        <label class="btn" ng-class="rename ? '' : 'active tiny'"
+               ng-click="rename = !rename"><i class="fa fa-plus-square"></i> Rename
         </label>
 
 
@@ -520,10 +520,12 @@
                >
 
 
-            <div class="subHead">
+            <div ng-show="!rename" class="subHead">
               {{ combo.name }}
             </div>
 
+            <input type ="text" ng-show="rename" class="subHead" ng-model="combo.name">
+            </input>
 
 
             <!--<div class="subHead" ng-click='inputIsOn = true' ng-show='!inputIsOn'>-->

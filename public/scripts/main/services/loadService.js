@@ -220,6 +220,16 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 	  cb(data);
 	})
   }
+
+
+  this.getHomelocationData = function (cb) {
+
+    $http.get('/load/homelocation')
+      .success(function (data, status) {
+        cb(data);
+      })
+  }
+
 });
 
 

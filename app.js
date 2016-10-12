@@ -143,6 +143,16 @@ app.get('/load/routes', function (req, res) {
 });
 
 
+app.get('/load/homelocation', function (req, res) {
+  var path = __dirname + '/public/routes/shapefiles/mapApp/homelocation.json';
+  res.sendFile(path, function (err) {
+    if (err) {
+      console.log('sendFile error:', err);
+      res.status(err.status).end();
+    }
+  });
+});
+
 app.get('/load/trunks', function (req, res) {
   var path = __dirname + '/public/routes/shapefiles/mapApp/trunks.geojson';
   res.sendFile(path, function (err) {

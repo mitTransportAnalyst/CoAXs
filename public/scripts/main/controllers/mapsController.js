@@ -15,6 +15,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   window.onresize = function(event) { runScreenSetUp(); };
 
 
+  $scope.users =
+    [{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]}];
+
   // Management for current scenario
   var scenarioBase = {
     name     : null,
@@ -174,7 +177,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
 			   iconSize: [48,48],
-			   iconAnchor: [46,40],
+			   iconAnchor: [46,40]
 			   },
 		draggable : true },
 	end: { 
@@ -182,7 +185,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
 			   iconSize: [0,0],
-			   iconAnchor: [46,40],
+			   iconAnchor: [46,40]
 			   },
 		draggable : true }
 	};
@@ -228,6 +231,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   loadService.getDestinationData('chartLabels',
 	  function(data){d3Service.setChartLabels(data)}
   );
+
+
   
   // right globals
   var geoJsonLeft = null,
@@ -732,6 +737,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     };
   }
 
+
+
   $scope.clearPOIUsers = function () {
     $scope.currentPOIUser = false;
 	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(0) });
@@ -739,28 +746,37 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-	if (id) { 
-	leftService.targetPOIUsers(poiUserPoints, id); 
-	$scope.poiUsers.forEach(function (user) {
-	if (user.userId == id) {
-		if (user.homeLoc[0] && user.homeLoc[1]){
-			$scope.markers_left.main.lat = user.homeLoc[0];
-			$scope.markers_left.main.lng = user.homeLoc[1];
-		}
-	}});
-	$scope.preMarkerQuery();
-	leafletData.getMap('map_left').then(function(map) {
-		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
-	});
-	}
-	else { 
-	leafletData.getMap('map_left').then(function(map) {
-		map.panTo([center_global.lat, center_global.lng]);
-		$scope.resetMap();
-	});	
-	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
-	}
+    console.log(id);
+	// if (id) {
+	// leftService.targetPOIUsers(poiUserPoints, id);
+
+  $scope.markers.start.lat = $scope.users[id].homeLoc[0];
+  $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+
+
+	// $scope.poiUsers.forEach(function (user) {
+	// if (user.userId == id) {
+	// 	if (user.homeLoc[0] && user.homeLoc[1]){
+	// 		$scope.markers_left.main.lat = user.homeLoc[0];
+	// 		$scope.markers_left.main.lng = user.homeLoc[1];
+	// 	}
+	// }});
+
+	// $scope.preMarkerQuery();
+	// leafletData.getMap('map_left').then(function(map) {
+	// 	map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
+	// });
+	// }
+	// else {
+	// leafletData.getMap('map_left').then(function(map) {
+	// 	map.panTo([center_global.lat, center_global.lng]);
+	// 	$scope.resetMap();
+	// });
+	// poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+	// }
   };
+
+
 
   // increment isochrones by 5 minutes
   $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<119) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 } else {$scope.vectorIsos.val = 1}}}
