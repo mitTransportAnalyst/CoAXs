@@ -270,9 +270,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   
   $scope.resetMap = function() {
-    d3Service.clearCharts();
+    $scope.scenarioLegend = false;
+	d3Service.clearCharts();
 	$scope.stopTimer();
 	$scope.scenarioScore.loaded = false;
+	$scope.scenarioScore.data = [];
     leafletData.getMap('map_left').then(function(map) {
 		  analystService.resetAll(map);
 	})
@@ -297,13 +299,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   refreshOrigin = function (marker){
     animateProgressBar();
 		$scope.resetMap();
-		analystService.moveOrigin(marker, [$scope.scenario0, $scope.scenario1], $scope.scenarioCompare, $scope.pointToPoint).then(function(plotData){
+		var scenariosToSend = [];
+		$scope.scenarioCompare ? scenariosToSend = [$scope.scenario0, $scope.scenario1] : scenariosToSend = [$scope.scenario0];
+		analystService.moveOrigin(marker, scenariosToSend, $scope.scenarioCompare, $scope.pointToPoint).then(function(plotData){
 		  finishProgressBar();
 		  if(!$scope.pointToPoint){
 		    setScenarioScoreData(plotData);
 			drawGraph();
 		    $scope.showVectorIsosOn = true;
 		    $scope.loadProgress.vis = false;
+			$scope.scenarioLegend = true;
 		    $scope.showVectorIsos($scope.vectorIsos.val);
 		  }else{
 		    refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
@@ -656,7 +661,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     // $scope.combos.sel = comboId;
     // $scope.comboName = null;
     $scope.combos.all[$scope.saveScenarioNum].param = angular.copy($scope.currentParam);
-    console.log($scope.combos);
     $scope.saveScenarioNum += 1;
   }
 
@@ -891,7 +895,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     })
 	
@@ -904,7 +907,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     });
 
@@ -918,7 +920,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     });
 
@@ -944,7 +945,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     })
 
@@ -958,7 +958,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     });
 
@@ -972,7 +971,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
         });
-        console.log(currentModificationJSON);
       });
     });
 

@@ -29,32 +29,10 @@
         <small>{{ combos.all[combos.com].name }}</small>
       </div>
       <div class="panel-body"
-           ng-show="scenarioScore.loaded && scenarioLegend && showVectorIsosOn && !scenarioCompare ">
+           ng-show="scenarioLegend && showVectorIsosOn && !scenarioCompare ">
         Time Boundary: {{ vectorIsos.val | minuteConverter }}
         <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
         <small>{{ combos.sel ? combos.all[combos.sel].name : 'Existing service'}}</small>
-      </div>
-      <div class="panel-body"
-           ng-show="scenarioScore.loaded && scenarioLegend && !showVectorIsosOn && !scenarioCompare ">
-        Reachability by Public Transport
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
-        <small>Easily reachable</small>
-        <br><i class="fa fa-stop fa-border" style="color:#FEEDC2"></i>
-        <small>Reachable</small>
-        <br><i class="fa fa-stop fa-border" style="color:#B0B0B0"></i>
-        <small>Unreachable within 2 hours</small>
-      </div>
-      <div class="panel-body" ng-show="scenarioLegend && !showVectorIsosOn && scenarioCompare ">
-        Travel Time Comparison<br>
-        <small>{{ combos.all[combos.sel].name }}...</small>
-        <br><i class="fa fa-stop fa-border" style="color:#FDB813"></i>
-        <small>Same as or slower than...</small>
-        <br><i class="fa fa-stop fa-border" style="color:#e4d3f4"></i>
-        <small>Faster than...</small>
-        <br><i class="fa fa-stop fa-border" style="color:#9651d5"></i>
-        <small>Much faster than...</small>
-        <br>
-        <small>{{ combos.all[combos.com].name }}</small>
       </div>
     </div>
   </div>
@@ -182,7 +160,7 @@
 		<svg id="plot1" width="200" height="300" style="z-index:2"></svg>
 		</div> -->
 		<div ng-show = "!pointToPoint  && scenarioScore.loaded">
-		<svg id="compPlot2" width="300" height="300"></svg>
+		<svg id="compPlot2" width="300" height="400"></svg>
 		<br>
 		<div class="btn-group" dropdown>
             <button id="split-button" type="button" class="btn btn-success"
@@ -205,7 +183,7 @@
 		<br>within	{{vectorIsos.val | minuteConverter}}
 		</div>
 		<div ng-show = "pointToPoint && scenarioScore.loaded">
-			<svg id="compPlot3" width="300" height="300"></svg>
+			<svg id="compPlot3" width="300" height="400"></svg>
 			<br>
 			<h5>Travel time from {{cordons[selCordon].verbose}} <img src="public/imgs/marker-flag-start-shadowed.png" style="height:24px" ng-show="!selCordon"> to <img src="public/imgs/marker-flag-end-shadowed.png" style="height:24px"> </h5>
 		</div>
