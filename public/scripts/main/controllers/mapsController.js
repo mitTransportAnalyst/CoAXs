@@ -15,11 +15,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   window.onresize = function(event) { runScreenSetUp(); };
 
 
-  $scope.users =
-    [{name:"CF",homeLoc:[42.3466875,-71.1051336],workLoc:[42.3577002,-71.0632255]},{name:"KL",homeLoc:[42.3747013,-71.1306015],workLoc:[42.3745698,-71.1284254]},{name:"LM",homeLoc:[42.3862377,-71.1113838],workLoc:[42.3896347,-71.1169921]},{name:"JZ",homeLoc:[42.3708078,-71.0718046],workLoc:[42.3622698,-71.0837989]},{name:"RD",homeLoc:[42.3733821,-71.0981386],workLoc:[42.3603595,-71.1024657]},{name:"ME",homeLoc:[42.3225994,-71.0984173],workLoc:[42.350101,-71.0773375]},{name:"RG",homeLoc:[42.2865609,-71.1303834],workLoc:[42.3532572,-71.0568642]},{name:"JM",homeLoc:[42.343579,-71.1260609],workLoc:[42.3603595,-71.1024657]},{name:"SS",homeLoc:[42.3505074,-71.0825773],workLoc:[42.3534452,-71.0765612]},{name:"KB",homeLoc:[42.3807877,-71.1060899],workLoc:[42.3601382,-71.0948792]}];
-
-
-
+  $scope.users =[{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]},
+	{name:"CF",homeLoc:[42.3466875,-71.1051336],workLoc:[42.3577002,-71.0632255]},{name:"KL",homeLoc:[42.3747013,-71.1306015],workLoc:[42.3745698,-71.1284254]},{name:"LM",homeLoc:[42.3862377,-71.1113838],workLoc:[42.3896347,-71.1169921]},{name:"JZ",homeLoc:[42.3708078,-71.0718046],workLoc:[42.3622698,-71.0837989]},{name:"RD",homeLoc:[42.3733821,-71.0981386],workLoc:[42.3603595,-71.1024657]},{name:"ME",homeLoc:[42.3225994,-71.0984173],workLoc:[42.350101,-71.0773375]},{name:"RG",homeLoc:[42.2865609,-71.1303834],workLoc:[42.3532572,-71.0568642]},{name:"JM",homeLoc:[42.343579,-71.1260609],workLoc:[42.3603595,-71.1024657]},{name:"SS",homeLoc:[42.3505074,-71.0825773],workLoc:[42.3534452,-71.0765612]}];
 
   // Management for current scenario
   var scenarioBase = {
@@ -65,12 +62,114 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
 
   $scope.variants = {
-    'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64'],corName: "Mass Ave"},
-	  'B' : { sel : null, all : {}, color: '#7DD5ED', buslines:['111', '426', '428'],corName:"N. Washington St" },
-    'C' : { sel : null, all : {}, color: '#F3E05E', buslines:['39', '66'], corName:"Huntington Ave" },
-    'D' : { sel : null, all : {}, color: '#E092DF' , buslines:['30', '34', '34E', '35', '36', '37', '40', '50', '51'], corName:"Roslindale/Forest Hills" },
-    'E' : { sel : 0 , all : {}, color: '#8D6AA8', buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave" }
-  };
+    'A' : { sel : 0, all : {}, color: '#555555',
+	  buslines:['1', 'CT1', '64'],
+	  corName: "Mass Ave",
+	  segmentData:{length:2.6},
+	  routeData: {
+	    '1':{
+		  baseHeadway:9
+		},
+		'CT1':{
+		  baseHeadway:20
+		},
+		'64':{
+		  baseHeadway:17
+		}
+	  }
+	},
+	'B' : { sel : null, all : {}, color: '#7DD5ED', 
+	  buslines:['111', '426', '428'],
+	  corName:"N. Washington St",
+	  segmentData:{length:0.6},
+	  routeData: {
+	    '111':{
+		  baseHeadway:5
+		},
+		'426':{
+		  baseHeadway:40
+		},
+		'428':{
+		  baseHeadway:60
+		}
+	  }
+	},
+    'C' : { sel : null, all : {}, color: '#F3E05E', 
+	buslines:['39', '66'],
+	corName:"Huntington Ave",
+	segmentData:{length:0.4},
+	  routeData: {
+	    '66':{
+		  baseHeadway:9
+		},
+		'39':{
+		  baseHeadway:6
+		},
+	  }
+	},
+    'D' : { sel : null, all : {}, color: '#E092DF' , 
+	buslines:['30', '34', '35', '36', '37', '40', '50', '51'],
+	corName:"Roslindale/Forest Hills",
+	  segmentData:{length:1.2},
+	  routeData: {
+	    '30':{
+		  baseHeadway:20
+		},
+		'34':{
+		  baseHeadway:20
+		},
+		'35':{
+		  baseHeadway:20
+		},
+		'36':{
+		  baseHeadway:24
+		},
+		'37':{
+		  baseHeadway:40
+		},
+		'40':{
+		  baseHeadway:24
+		},
+		'50':{
+		  baseHeadway:24
+		},
+		'51':{
+		  baseHeadway:20
+		},
+	  }
+	},
+    'E' : { sel : 0 , all : {}, color: '#8D6AA8', 
+	buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave",
+	segmentData:{length: 2.4},
+     routeData: {
+	    '14':{
+		  baseHeadway:40
+		},
+		'19':{
+		  baseHeadway:17
+		},
+		'22':{
+		  baseHeadway:7
+		},
+		'23':{
+		  baseHeadway:5
+		},
+		'28':{
+		  baseHeadway:7
+		},
+		'29':{
+		  baseHeadway:20
+		},
+		'44':{
+		  baseHeadway:13
+		},
+		'45':{
+		  baseHeadway:10
+		},
+	  }
+	}
+  }
+
   
     $scope.mode = {
     all: [],
