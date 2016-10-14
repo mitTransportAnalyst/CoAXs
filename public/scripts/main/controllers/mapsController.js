@@ -14,14 +14,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
 
-
-  $scope.users =[{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]},
-	{name:"CF",homeLoc:[42.3466875,-71.1051336],workLoc:[42.3577002,-71.0632255]},{name:"KL",homeLoc:[42.3747013,-71.1306015],workLoc:[42.3745698,-71.1284254]},{name:"LM",homeLoc:[42.3862377,-71.1113838],workLoc:[42.3896347,-71.1169921]},{name:"JZ",homeLoc:[42.3708078,-71.0718046],workLoc:[42.3622698,-71.0837989]},{name:"RD",homeLoc:[42.3733821,-71.0981386],workLoc:[42.3603595,-71.1024657]},{name:"ME",homeLoc:[42.3225994,-71.0984173],workLoc:[42.350101,-71.0773375]},{name:"RG",homeLoc:[42.2865609,-71.1303834],workLoc:[42.3532572,-71.0568642]},{name:"JM",homeLoc:[42.343579,-71.1260609],workLoc:[42.3603595,-71.1024657]},{name:"SS",homeLoc:[42.3505074,-71.0825773],workLoc:[42.3534452,-71.0765612]}];
-
   // Management for current scenario
   var scenarioBase = {
     name     : null,
-	  num		 : 0,
+    num		 : 0,
     station  : 2,
     routeId  : null,
     peak     : { min : 10,  sec : 0 },
@@ -36,7 +32,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:0, headway:0, runningTime: 0}
   };
 
-  $scope.scenario0 = {}; 
+  $scope.scenario0 = {};
   $scope.scenario1 = {};
   $scope.scenarioCompare = false;
   $scope.pointToPoint = false;
@@ -44,173 +40,171 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.indicators = {sel:'jobs',all:{jobs:'Jobs',workers:'Workers'}};
   $scope.scenarioLegend = true;
   $scope.selCordon = null;
-  
+
   $scope.cordons = {};
-    
-  analystService.refreshCred();
-  
+
   $interval(function () {
-            analystService.refreshCred();
-          } , 3540000);
-  
+    analystService.refreshCred();
+  } , 3540000);
+
   $scope.scenario = {
     'A' : angular.copy(scenarioBase),
-	'B' : angular.copy(scenarioBase),
+    'B' : angular.copy(scenarioBase),
     'C' : angular.copy(scenarioBase),
     'D' : angular.copy(scenarioBase),
     'E' : angular.copy(scenarioBase),
-	}
+  }
 
   $scope.variants = {
     'A' : { sel : 0, all : {}, color: '#555555',
-	  buslines:['1', 'CT1', '64'],
-	  corName: "Mass Ave",
-	  segmentData:{length:2.6},
-	  routeData: {
-	    '1':{
-		  baseHeadway:9
-		},
-		'CT1':{
-		  baseHeadway:20
-		},
-		'64':{
-		  baseHeadway:17
-		}
-	  }
-	},
-	'B' : { sel : null, all : {}, color: '#7DD5ED', 
-	  buslines:['111', '426', '428'],
-	  corName:"N. Washington St",
-	  segmentData:{length:0.6},
-	  routeData: {
-	    '111':{
-		  baseHeadway:5
-		},
-		'426':{
-		  baseHeadway:40
-		},
-		'428':{
-		  baseHeadway:60
-		}
-	  }
-	},
-    'C' : { sel : null, all : {}, color: '#F3E05E', 
-	buslines:['39', '66'],
-	corName:"Huntington Ave",
-	segmentData:{length:0.4},
-	  routeData: {
-	    '66':{
-		  baseHeadway:9
-		},
-		'39':{
-		  baseHeadway:6
-		},
-	  }
-	},
-    'D' : { sel : null, all : {}, color: '#E092DF' , 
-	buslines:['30', '34', '35', '36', '37', '40', '50', '51'],
-	corName:"Roslindale/Forest Hills",
-	  segmentData:{length:1.2},
-	  routeData: {
-	    '30':{
-		  baseHeadway:20
-		},
-		'34':{
-		  baseHeadway:20
-		},
-		'35':{
-		  baseHeadway:20
-		},
-		'36':{
-		  baseHeadway:24
-		},
-		'37':{
-		  baseHeadway:40
-		},
-		'40':{
-		  baseHeadway:24
-		},
-		'50':{
-		  baseHeadway:24
-		},
-		'51':{
-		  baseHeadway:20
-		},
-	  }
-	},
-    'E' : { sel : 0 , all : {}, color: '#8D6AA8', 
-	buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave",
-	segmentData:{length: 2.4},
-     routeData: {
-	    '14':{
-		  baseHeadway:40
-		},
-		'19':{
-		  baseHeadway:17
-		},
-		'22':{
-		  baseHeadway:7
-		},
-		'23':{
-		  baseHeadway:5
-		},
-		'28':{
-		  baseHeadway:7
-		},
-		'29':{
-		  baseHeadway:20
-		},
-		'44':{
-		  baseHeadway:13
-		},
-		'45':{
-		  baseHeadway:10
-		},
-	  }
-	}
+      buslines:['1', 'CT1', '64'],
+      corName: "Mass Ave",
+      segmentData:{length:2.6},
+      routeData: {
+        '1':{
+          baseHeadway:9
+        },
+        'CT1':{
+          baseHeadway:20
+        },
+        '64':{
+          baseHeadway:17
+        }
+      }
+    },
+    'B' : { sel : null, all : {}, color: '#7DD5ED',
+      buslines:['111', '426', '428'],
+      corName:"N. Washington St",
+      segmentData:{length:0.6},
+      routeData: {
+        '111':{
+          baseHeadway:5
+        },
+        '426':{
+          baseHeadway:40
+        },
+        '428':{
+          baseHeadway:60
+        }
+      }
+    },
+    'C' : { sel : null, all : {}, color: '#F3E05E',
+      buslines:['39', '66'],
+      corName:"Huntington Ave",
+      segmentData:{length:0.4},
+      routeData: {
+        '66':{
+          baseHeadway:9
+        },
+        '39':{
+          baseHeadway:6
+        },
+      }
+    },
+    'D' : { sel : null, all : {}, color: '#E092DF' ,
+      buslines:['30', '34', '35', '36', '37', '40', '50', '51'],
+      corName:"Roslindale/Forest Hills",
+      segmentData:{length:1.2},
+      routeData: {
+        '30':{
+          baseHeadway:20
+        },
+        '34':{
+          baseHeadway:20
+        },
+        '35':{
+          baseHeadway:20
+        },
+        '36':{
+          baseHeadway:24
+        },
+        '37':{
+          baseHeadway:40
+        },
+        '40':{
+          baseHeadway:24
+        },
+        '50':{
+          baseHeadway:24
+        },
+        '51':{
+          baseHeadway:20
+        },
+      }
+    },
+    'E' : { sel : 0 , all : {}, color: '#8D6AA8',
+      buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave",
+      segmentData:{length: 2.4},
+      routeData: {
+        '14':{
+          baseHeadway:40
+        },
+        '19':{
+          baseHeadway:17
+        },
+        '22':{
+          baseHeadway:7
+        },
+        '23':{
+          baseHeadway:5
+        },
+        '28':{
+          baseHeadway:7
+        },
+        '29':{
+          baseHeadway:20
+        },
+        '44':{
+          baseHeadway:13
+        },
+        '45':{
+          baseHeadway:10
+        },
+      }
+    }
   }
 
-  
-    $scope.mode = {
+
+  $scope.mode = {
     all: [],
     local: [3, 5, 6, 7],
     bus: [0, 1, 3, 5, 6, 7],
     walking: [0, 1, 2, 3, 4, 5, 6, 7],
     selected: 'all'
-};
-  
+  };
+
   $scope.combos = {
     sel : null,
     com : null,
     all : {},
-}
-  
+  }
+
   $scope.defaultsBuilt = false
-  
+
   $scope.tabnav = 'A';
-  
+
   // left globals
   var subwaysLayer_l    = null,
-      subwaysLayer    = null,
-      subStopsLayer   = null,
-	  cordonsLayer 	  = null,
-      stopsLayer      = null,
-      routesLayer     = null,
-      trunkLayer      = null,
-      poiUserPoints   = null,
-      existingMBTAKey = null;
+    subwaysLayer    = null,
+    subStopsLayer   = null,
+    cordonsLayer 	  = null,
+    stopsLayer      = null,
+    routesLayer     = null,
+    trunkLayer      = null,
+    poiUserPoints   = null,
+    existingMBTAKey = null;
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
-  $scope.loadProgress = {vis:false, val:0};
+    $scope.loadProgress = {vis:false, val:0};
   $scope.vectorIsos   = {vis:false, val:30};
   $scope.scenarioScore = {loaded: false, data: []}; //Initialize the scenario scorecard with no data for the cumulative plot.
 
   $scope.$watch('vectorIsos.val',
     function(newVal) {
-		if ($scope.scenarioScore.loaded){
-			updateCutoff(newVal);
-		};
-  });
+      if ($scope.scenarioScore.loaded){
+        updateCutoff(newVal);
+      };
+    });
 
 
 
@@ -225,48 +219,48 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
 
-    // Angular Leaflet Directive - base components
+  // Angular Leaflet Directive - base components
   var defaults_global = {
     minZoom: 9,
     maxZoom: 18,
     scrollWheelZoom    : false,
     zoomControl        : true,
-	zoomControlPosition: 'bottomright',
+    zoomControlPosition: 'bottomright',
     attributionControl : false
   };
   var maxBounds_global =  {
     northEast: {
       lat: 41.36,
       lng: -71.8
-      },
+    },
     southWest: {
       lat: 43.36,
       lng:-70.3}
   };
-  
-   var tilesDict = {
+
+  var tilesDict = {
     blank: {
-		name: 'Blank',
-		url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
-		type: 'xyz'
+      name: 'Blank',
+      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+      type: 'xyz'
     },
-	base: {
-        name: 'Neighborhoods and Parks',
-        url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
-        type: 'xyz'
+    base: {
+      name: 'Neighborhoods and Parks',
+      url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+      type: 'xyz'
     },
-	collisions: {
-        name: 'Collisions',
-        url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
-        type: 'xyz'
+    collisions: {
+      name: 'Collisions',
+      url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+      type: 'xyz'
     }
-  }; 
-  
+  };
+
   var tiles_global = tilesDict.base;
-  
+
   var center_global = {
 
-   lat  : 42.35974896174244,
+    lat  : 42.35974896174244,
     lng  : -71.09368801116943,
     zoom : 12
   };
@@ -284,34 +278,34 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.center_left_dest   = angular.copy(center_global);
   $scope.tiles_left    = angular.copy(tiles_global);
   $scope.geojson_left  = null;
-  
-  $scope.markers  = { 
-	start: { 
-		lat: $scope.center_left.lat, 
-		lng: $scope.center_left.lng, 
-		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
-			   iconSize: [48,48],
-			   iconAnchor: [46,40]
-			   },
-		draggable : true },
-	end: { 
-		lat: $scope.center_left_dest.lat, 
-		lng: $scope.center_left.lng, 
-		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
-			   iconSize: [0,0],
-			   iconAnchor: [46,40]
-			   },
-		draggable : true }
-	};
 
-  
+  $scope.markers  = {
+    start: {
+      lat: $scope.center_left.lat,
+      lng: $scope.center_left.lng,
+      icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
+        iconSize: [48,48],
+        iconAnchor: [46,40]
+      },
+      draggable : true },
+    end: {
+      lat: $scope.center_left_dest.lat,
+      lng: $scope.center_left.lng,
+      icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
+        iconSize: [0,0],
+        iconAnchor: [46,40]
+      },
+      draggable : true }
+  };
+
+
   // handles logic for progress bar loading view
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
-	$scope.markers.start.draggable = false;
-	$scope.markers.end.draggable = false;
-	var stepValue = 150;
-	if($scope.scenarioCompare){stepValue = 300} //it takes twice as long to load two scenarios.
+    $scope.markers.start.draggable = false;
+    $scope.markers.end.draggable = false;
+    var stepValue = 150;
+    if($scope.scenarioCompare){stepValue = 300} //it takes twice as long to load two scenarios.
     var runProgressBar = setInterval( function () {
       $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
@@ -325,204 +319,211 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
   finishProgressBar = function (){
     $scope.markers.start.draggable = true;
-	$scope.markers.end.draggable = true;
-	$scope.loadProgress.val = 100;
-	
-	setTimeout(function () { $scope.$apply (function () {
-                 $scope.loadProgress.vis = false; // terminate progress bar viewport
-              }) }, 200)
+    $scope.markers.end.draggable = true;
+    $scope.loadProgress.val = 100;
+
+    setTimeout(function () { $scope.$apply (function () {
+      $scope.loadProgress.vis = false; // terminate progress bar viewport
+    }) }, 200)
   }
-  
+
   $interval(function () {
-            analystService.refreshCred();
-          } , 3540000);
+    analystService.refreshCred();
+  } , 3540000);
 
   animateProgressBar();
   analystService.setDestinationData()
-  .then(function (){analystService.fetchStopTreesAndGrids()
-  .then(function (){finishProgressBar()})});
-  
+    .then(function (){analystService.fetchStopTreesAndGrids()
+      .then(function (){finishProgressBar()})});
+
   loadService.getDestinationData('chartLabels',
-	  function(data){d3Service.setChartLabels(data)}
+    function(data){d3Service.setChartLabels(data)}
   );
 
+  loadService.getUserData('currentSession',
+    function(poiUsers, poiLayer){
+      $scope.users = poiUsers;
+      poiUserPoints = poiLayer;
+      leafletData.getMap('map_left').then(function(map) {
+        map.addLayer(poiUserPoints);
+      })
+    });
 
-  
   // right globals
   var geoJsonLeft = null,
-	priorityLayer = null;
+    priorityLayer = null;
 
   $scope.introPanel = true;
-  
+
   $scope.togglePointToPoint = function() {
-	$scope.pointToPoint = !$scope.pointToPoint
-	$scope.resetMap();
-	if ($scope.pointToPoint){
-		$scope.markers.end.icon.iconSize = [48,48];
-		leafletData.getMap('map_left').then(function(map) {
-		  map.removeLayer(subStopsLayer);
-		  map.removeLayer(subwaysLayer_l);
-		})
-	}else {
-		$scope.markers.end.icon.iconSize = [0,0];
-		leafletData.getMap('map_left').then(function(map) {
-		  map.addLayer(subStopsLayer);
-		  map.addLayer(subwaysLayer_l);
-		})
-	}
+    $scope.pointToPoint = !$scope.pointToPoint
+    $scope.resetMap();
+    if ($scope.pointToPoint){
+      $scope.markers.end.icon.iconSize = [48,48];
+      leafletData.getMap('map_left').then(function(map) {
+        map.removeLayer(subStopsLayer);
+        map.removeLayer(subwaysLayer_l);
+      })
+    }else {
+      $scope.markers.end.icon.iconSize = [0,0];
+      leafletData.getMap('map_left').then(function(map) {
+        map.addLayer(subStopsLayer);
+        map.addLayer(subwaysLayer_l);
+      })
+    }
   };
 
   // snap point sensitivity
   $scope.sensitivity = 0.05;
 
   $scope.changeTilesLeft = function(tiles) {
-	$scope.tiles_left = tilesDict[tiles];
+    $scope.tiles_left = tilesDict[tiles];
   };
-  
+
   $scope.changeTilesRight = function(tiles) {
-	$scope.tiles_right = tilesDict[tiles];
+    $scope.tiles_right = tilesDict[tiles];
   };
-  
+
   $scope.resetMap = function() {
     $scope.scenarioLegend = false;
-	d3Service.clearCharts();
-	$scope.stopTimer();
-	$scope.scenarioScore.loaded = false;
-	$scope.scenarioScore.data = [];
+    d3Service.clearCharts();
+    $scope.stopTimer();
+    $scope.scenarioScore.loaded = false;
+    $scope.scenarioScore.data = [];
     leafletData.getMap('map_left').then(function(map) {
-		  analystService.resetAll(map);
-	})
+      analystService.resetAll(map);
+    })
   }
-  
+
   setScenarioScoreData = function (plotData) {
     $scope.scenarioScore.loaded = true;
-		  var name = [];
-		  var sel = $scope.combos.sel;
-		  var com = $scope.combos.com;
-		  
-		  sel ? name[0] = $scope.combos.all[sel].name : name[0] = 'Baseline';
-		  com ? name[1] = $scope.combos.all[com].name : name[0] = 'Baseline';
-	
-	for (var i = 0; i < plotData.length; i ++){
-		  $scope.scenarioScore.data[i] =
-			{'name': name[i],
-			 'data': plotData[i]};
+    var name = [];
+    var sel = $scope.combos.sel;
+    var com = $scope.combos.com;
+
+    sel ? name[0] = $scope.combos.all[sel].name : name[0] = 'Baseline';
+    com ? name[1] = $scope.combos.all[com].name : name[0] = 'Baseline';
+
+    for (var i = 0; i < plotData.length; i ++){
+      $scope.scenarioScore.data[i] =
+      {'name': name[i],
+        'data': plotData[i]};
     };
   }
-  
+
   refreshOrigin = function (marker){
     animateProgressBar();
-		$scope.resetMap();
-		var scenariosToSend = [];
-		$scope.scenarioCompare ? scenariosToSend = [$scope.scenario0, $scope.scenario1] : scenariosToSend = [$scope.scenario0];
-		analystService.moveOrigin(marker, scenariosToSend, $scope.scenarioCompare, $scope.pointToPoint).then(function(plotData){
-		  finishProgressBar();
-		  if(!$scope.pointToPoint){
-		    setScenarioScoreData(plotData);
-			drawGraph();
-		    $scope.showVectorIsosOn = true;
-		    $scope.loadProgress.vis = false;
-			$scope.scenarioLegend = true;
-		    $scope.showVectorIsos($scope.vectorIsos.val);
-		  }else{
-		    refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
-		  }
-		})
+    $scope.resetMap();
+    var scenariosToSend = [];
+    $scope.scenarioCompare ? scenariosToSend = [$scope.scenario0, $scope.scenario1] : scenariosToSend = [$scope.scenario0];
+    analystService.moveOrigin(marker, scenariosToSend, $scope.scenarioCompare, $scope.pointToPoint).then(function(plotData){
+      finishProgressBar();
+      if(!$scope.pointToPoint){
+        setScenarioScoreData(plotData);
+        drawGraph();
+        $scope.showVectorIsosOn = true;
+        $scope.loadProgress.vis = false;
+        $scope.scenarioLegend = true;
+        $scope.showVectorIsos($scope.vectorIsos.val);
+      }else{
+        refreshDestination(L.marker([$scope.markers.end.lat,$scope.markers.end.lng]));
+      }
+    })
   };
-  
+
   refreshDestination = function(marker){
-  //$scope.resetMap();
-  leafletData.getMap('map_left').then(function(map) {
-		  analystService.moveDestination(
-		  function(plotData){
-		  if (!plotData){
-		    refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng])) //we didn't get plot data, probably because an origin hasn't been set for point-to-point routing
-		  } else {
-		  setScenarioScoreData(plotData);
-		  d3Service.drawTimeGraph($scope.scenarioScore.data);	
-		}
-		},
-		  marker, $scope.scenarioCompare, map)
-		})
+    //$scope.resetMap();
+    leafletData.getMap('map_left').then(function(map) {
+      analystService.moveDestination(
+        function(plotData){
+          if (!plotData){
+            refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng])) //we didn't get plot data, probably because an origin hasn't been set for point-to-point routing
+          } else {
+            setScenarioScoreData(plotData);
+            d3Service.drawTimeGraph($scope.scenarioScore.data);
+          }
+        },
+        marker, $scope.scenarioCompare, map)
+    })
   };
-  
+
   // Handle left map queries
-  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) { 
-	
-	if (marker.modelName == 'start'){
-	  refreshOrigin(marker.leafletObject);
-	}
-	
-	if (marker.modelName == 'end'){
-	  refreshDestination(marker.leafletObject);
-	}
-	
-	$scope.markers[marker.modelName].lat = marker.model.lat;
+  $scope.$on('leafletDirectiveMarker.dragend', function (e, marker) {
+
+    if (marker.modelName == 'start'){
+      refreshOrigin(marker.leafletObject);
+    }
+
+    if (marker.modelName == 'end'){
+      refreshDestination(marker.leafletObject);
+    }
+
+    $scope.markers[marker.modelName].lat = marker.model.lat;
     $scope.markers[marker.modelName].lng = marker.model.lng;
     $scope.setCordon(null);
-	//$scope.preMarkerQuery(); 
+    //$scope.preMarkerQuery();
   });
 
   $scope.preMarkerQuery = function () {
     $scope.resetMap();
-	  refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng]));
+    refreshOrigin(L.marker([$scope.markers.start.lat,$scope.markers.start.lng]));
   }
-  
+
   //Vector Iso Autoplay timer
   $scope.timer = null;
   $scope.timerPlaying = false;
-  
+
   $scope.startTimer = function () {
-  if ($scope.scenarioScore.loaded){
-	$scope.timerPlaying = true;
-	$scope.timer = $interval (function (){
-	$scope.vectorTimeVal_add();
-	$scope.showVectorIsos($scope.vectorIsos.val);}, 150);
-  }};
-  
+    if ($scope.scenarioScore.loaded){
+      $scope.timerPlaying = true;
+      $scope.timer = $interval (function (){
+        $scope.vectorTimeVal_add();
+        $scope.showVectorIsos($scope.vectorIsos.val);}, 150);
+    }};
+
   $scope.stopTimer = function () {
     $scope.timerPlaying = false;
-	if (angular.isDefined($scope.timer)) { $interval.cancel($scope.timer); }
+    if (angular.isDefined($scope.timer)) { $interval.cancel($scope.timer); }
   };
-  
+
   drawGraph = function (){
-	var plotData = [];
-	$scope.scenarioScore.data.map(function(scen){
-	  plotData.push({
-	    name: scen.name,
-		data: scen.data[$scope.indicators.sel]
-	  })
-	});	
-	d3Service.drawGraph($scope.vectorIsos.val,plotData, $scope.indicators)
+    var plotData = [];
+    $scope.scenarioScore.data.map(function(scen){
+      plotData.push({
+        name: scen.name,
+        data: scen.data[$scope.indicators.sel]
+      })
+    });
+    d3Service.drawGraph($scope.vectorIsos.val,plotData, $scope.indicators)
   }
-  
+
   $scope.drawGraph = drawGraph;
-  
+
   updateCutoff = function (cutoff) {
-	$scope.showVectorIsos(cutoff);
-	drawGraph();
+    $scope.showVectorIsos(cutoff);
+    drawGraph();
   }
 
   $scope.setCordon = function (cordonId) {
-	$scope.selCordon = cordonId;
-	d3Service.clearCharts();
-	targetService.targetCordons(cordonsLayer,cordonId);
-	if ($scope.selCordon){
-	d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
-			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
-			$scope.markers.start.lat = $scope.cordons[$scope.selCordon].centerLat;
-			$scope.markers.start.lng = $scope.cordons[$scope.selCordon].centerLon;
-			leafletData.getMap('map_left').then(function(map) {
-		map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);})
-			$scope.preMarkerQuery();
-		
-	}}
+    $scope.selCordon = cordonId;
+    d3Service.clearCharts();
+    targetService.targetCordons(cordonsLayer,cordonId);
+    if ($scope.selCordon){
+      d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
+      if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
+        $scope.markers.start.lat = $scope.cordons[$scope.selCordon].centerLat;
+        $scope.markers.start.lng = $scope.cordons[$scope.selCordon].centerLon;
+        leafletData.getMap('map_left').then(function(map) {
+          map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);})
+        $scope.preMarkerQuery();
+
+      }}
   }
 
   // left d3 on scenario scorecard
   $scope.selectGraphData = function (dataVal) {
-	$scope.indicators.sel = dataVal;
-	drawGraph($scope.scenarioScore.data);
+    $scope.indicators.sel = dataVal;
+    drawGraph($scope.scenarioScore.data);
   }
 
   // filter for routes that match with the desired corridor
@@ -548,55 +549,55 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
-	var gs = true;
+    var gs = true;
     loadService.getExisting(function (subways) {
       subways.addTo(map);
       subwaysLayer = subways;
     },gs);
-	
-	// place stops over routes plots on map
+
+    // place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = [200, 250, 300];
       var circleList = [];
-	  var stationNameList = [];
+      var stationNameList = [];
 
       stops.eachLayer(function (marker) {
         var stationColor = marker.options.base.color,
-		    stationStroke = false,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station
-			
-   
-		var stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+          stationStroke = false,
+          stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+          size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
+          strokeWeight = 20/(map.getZoom()^(1/10)),
+          stationName = marker.options.base.station
 
-		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
-			
-		circleList.push(L.circle(stationLatLng, size, {
+        var stationNamePopup = L.popup({
+          closeButton: false,
+          className: 'station-sign'
+        }).setContent('<p style="background-color:'
+          +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+
+        if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+
+
+        circleList.push(L.circle(stationLatLng, size, {
           stroke: stationStroke,
-		  color: "#000000",
-		  weight: strokeWeight,
-		  opacity: 1,
+          color: "#000000",
+          weight: strokeWeight,
+          opacity: 1,
           fillColor: stationColor,
           fillOpacity: 0.6,
-		}).bindPopup(stationNamePopup));
-	    
-	  });
-	
+        }).bindPopup(stationNamePopup));
+
+      });
+
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
-	
+
     //
     // // get priority portions (do this first so it renders beneath other content)
     // loadService.getProposedPriorityLanes(function (priorityLanes) {
-      // priorityLanes.addTo(map);
+    // priorityLanes.addTo(map);
     // priorityLayer = priorityLanes;
     // })
 
@@ -640,14 +641,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
-	
-	loadService.getCordons(function([cordonGeos, cordonData]){
-		cordonGeos.addTo(map);
-		cordonsLayer = cordonGeos;
-		$scope.cordons = cordonData;
-	});
 
-	loadService.getTrunk(function (data) {
+    loadService.getCordons(function([cordonGeos, cordonData]){
+      cordonGeos.addTo(map);
+      cordonsLayer = cordonGeos;
+      $scope.cordons = cordonData;
+    });
+
+    loadService.getTrunk(function (data) {
       trunkLayer = data.layerGroup;
       trunkLayer.addTo(map);
 
@@ -656,46 +657,46 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       var routes = data.geoJsons;
 
     },$scope.variants);
-	
-    loadService.getExisting(function (subways) {      
+
+    loadService.getExisting(function (subways) {
       subwaysLayer_l = subways;
-	  subwaysLayer_l.addTo(map);
+      subwaysLayer_l.addTo(map);
     });
 
-	//place stops over routes plots on map
+    //place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = [200, 250, 300];
       var circleList = [];
-	  var stationNameList = [];
+      var stationNameList = [];
 
       stops.eachLayer(function (marker) {
         var stationColor = marker.options.base.color,
-		    stationStroke = false,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station;
+          stationStroke = false,
+          stationLatLng = [marker._latlng.lat, marker._latlng.lng],
+          size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
+          strokeWeight = 20/(map.getZoom()^(1/10)),
+          stationName = marker.options.base.station;
 
 
-		var stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+        var stationNamePopup = L.popup({
+          closeButton: false,
+          className: 'station-sign'
+        }).setContent('<p style="background-color:'
+          +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
 
-		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
+        if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
 
-		circleList.push(L.circle(stationLatLng, size, {
+        circleList.push(L.circle(stationLatLng, size, {
           stroke: stationStroke,
-		  color: "#000000",
-		  weight: strokeWeight,
-		  opacity: 1,
+          color: "#000000",
+          weight: strokeWeight,
+          opacity: 1,
           fillColor: stationColor,
           fillOpacity: 0.9,
-		}).bindPopup(stationNamePopup));
+        }).bindPopup(stationNamePopup));
 
-	  });
+      });
 
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
@@ -709,9 +710,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.targetCorridor = function (variant) {
     targetService.targetCorridor(routesLayer, trunkLayer ,variant._key);
     // targetService.targetStops(stopsLayer, null);
-	// targetService.targetPriority(priorityLayer, null);
-	$scope.tabnav = variant._key;
-	$scope.variants[$scope.tabnav].sel = true;
+    // targetService.targetPriority(priorityLayer, null);
+    $scope.tabnav = variant._key;
+    $scope.variants[$scope.tabnav].sel = true;
   };
 
   //highlight a busline
@@ -725,9 +726,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     var uuid = supportService.generateUUID();
     $scope.scenario[tabnav]['created'] = Date.now();
     $scope.variants[tabnav].all[uuid] = angular.copy($scope.scenario[tabnav]);
-    if (autoSet) { 
+    if (autoSet) {
       $scope.scenario[tabnav] = angular.copy(scenarioBase);
-      $scope.setSelectedVariant(tabnav, uuid); 
+      $scope.setSelectedVariant(tabnav, uuid);
     };
     return uuid;
   };
@@ -737,7 +738,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.variants[tabnav].sel = uuid;
     if (uuid) {
       $scope.scenario[tabnav].num         = $scope.variants[tabnav].all[uuid].num + 1;
-	  $scope.scenario[tabnav].name        = $scope.variants[tabnav].all[uuid].name;
+      $scope.scenario[tabnav].name        = $scope.variants[tabnav].all[uuid].name;
       $scope.scenario[tabnav].station     = $scope.variants[tabnav].all[uuid].station;
       $scope.scenario[tabnav].routeId     = $scope.variants[tabnav].all[uuid].routeId;
       $scope.scenario[tabnav].peak.min    = $scope.variants[tabnav].all[uuid].peak.min;
@@ -757,8 +758,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       });
       $scope.combos.sel = comboId;
     } else {
-      leafletData.getMap('map_left').then(function(map) { 
-        map.removeLayer(geoJsonLeft); 
+      leafletData.getMap('map_left').then(function(map) {
+        map.removeLayer(geoJsonLeft);
         $scope.combos.sel = null;
         geoJsonLeft = null;
       });
@@ -773,11 +774,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       name    : "New " + $scope.saveScenarioNum,
       created : Date.now(),
       sel     : {
-     //    'A' : $scope.variants['A'].sel,
-		// 'B' : $scope.variants['B'].sel,
-     //    'C' : $scope.variants['C'].sel,
-     //    'D' : $scope.variants['D'].sel,
-     //    'I' : $scope.variants['I'].sel,
+        //    'A' : $scope.variants['A'].sel,
+        // 'B' : $scope.variants['B'].sel,
+        //    'C' : $scope.variants['C'].sel,
+        //    'D' : $scope.variants['D'].sel,
+        //    'I' : $scope.variants['I'].sel,
       },
       param:{}
     };
@@ -789,7 +790,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // how we update the scorecard on the right side, also bound to events like range slider
   $scope.updateRouteScorecard = function (routeId, tabnav) {
-  if (!routeId && !tabnav) {
+    if (!routeId && !tabnav) {
       $scope.routeScore = scorecardService.generateEmptyScore();
     } else {
       var frequencies = {
@@ -801,15 +802,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       var time     = scorecardService.generateTimeScore(routesLayer, routeId);
       var vehicles = scorecardService.generateVehiclesScore(routesLayer, frequencies, routeId);
       $scope.routeScore = { bus: bus, length: length, time: time, vehicles: vehicles };
-} 
+    }
   }
 
   // updates on new selected scenario combo
   $scope.updateScenarioScorecard = function (id) {
     if (!id) {
       var tempScen = scorecardService.generateEmptyScore();
-      if ($scope.scenarioScore && $scope.scenarioScore.graphData) { 
-        tempScen.graphData = $scope.scenarioScore.graphData; 
+      if ($scope.scenarioScore && $scope.scenarioScore.graphData) {
+        tempScen.graphData = $scope.scenarioScore.graphData;
       }
       $scope.scenarioScore = tempScen;
     } else {
@@ -841,21 +842,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         }
       }
       if (!$scope.scenarioScore) { $scope.scenarioScore = {}; }
-      $scope.scenarioScore.bus = busTot; 
-      $scope.scenarioScore.length = lenTot; 
+      $scope.scenarioScore.bus = busTot;
+      $scope.scenarioScore.length = lenTot;
       $scope.scenarioScore.vehicles = vehTot;
     }
   }
 
-  //save
-  $scope.saveAltButton = function () {
-
-
-
-
-
-
-  }
 
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
@@ -864,47 +856,32 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     };
   }
 
-
-
   $scope.clearPOIUsers = function () {
     $scope.currentPOIUser = false;
-	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(0) });
+    poiUserPoints.eachLayer( function (layer) { layer.setOpacity(0) });
   }
-  
+
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-    console.log(id);
-    $scope.displayHomeWork();
-	// if (id) {
-	// leftService.targetPOIUsers(poiUserPoints, id);
+    if (id) {
+      leftService.targetPOIUsers(poiUserPoints, id);
 
-  $scope.markers.start.lat = $scope.users[id].homeLoc[0];
-  $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+      $scope.markers.start.lat = $scope.users[id].homeLoc[0];
+      $scope.markers.start.lng = $scope.users[id].homeLoc[1];
 
-
-	// $scope.poiUsers.forEach(function (user) {
-	// if (user.userId == id) {
-	// 	if (user.homeLoc[0] && user.homeLoc[1]){
-	// 		$scope.markers_left.main.lat = user.homeLoc[0];
-	// 		$scope.markers_left.main.lng = user.homeLoc[1];
-	// 	}
-	// }});
-
-	$scope.preMarkerQuery();
-	// leafletData.getMap('map_left').then(function(map) {
-	// 	map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
-	// });
-	// }
-	// else {
-	// leafletData.getMap('map_left').then(function(map) {
-	// 	map.panTo([center_global.lat, center_global.lng]);
-	// 	$scope.resetMap();
-	// });
-	// poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
-	// }
+      $scope.preMarkerQuery();
+      leafletData.getMap('map_left').then(function(map) {
+        map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);
+      });
+    }
+    else {
+      leafletData.getMap('map_left').then(function(map) {
+        map.panTo([center_global.lat, center_global.lng]);
+        $scope.resetMap();
+      });
+      poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+    }
   };
-
-
 
   // increment isochrones by 5 minutes
   $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<119) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 } else {$scope.vectorIsos.val = 1}}}
@@ -912,78 +889,68 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
-	if($scope.scenarioScore.loaded){
-	if (!$scope.loadProgress.vis){
-      $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-		leafletData.getMap('map_left').then(function (map) {
-        if ($scope.showVectorIsosOn)  { analystService.showVectorIsos($scope.vectorIsos.val, map); }
-        else { analystService.resetAll(map, 0); };
-      });
-	}
-  }};
-
-
-
-
-
-
-
-
-
-
+    if($scope.scenarioScore.loaded){
+      if (!$scope.loadProgress.vis){
+        $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
+        leafletData.getMap('map_left').then(function (map) {
+          if ($scope.showVectorIsosOn)  { analystService.showVectorIsos($scope.vectorIsos.val, map); }
+          else { analystService.resetAll(map, 0); };
+        });
+      }
+    }};
 
   // MANAGER CONTROLS
   // from manager control run create
-  $scope.buildScenarios = function(foo) {  
-	//check if combos have already been created
-	for (prop in $scope.combos.all) {$scope.defaultsBuilt = true;}
-	
-	if(!$scope.defaultsBuilt){
-	var comboId = supportService.generateUUID();
-    $scope.combos.all[0] = {
-      name    : 'BASELINE',
-      created : Date.now(),
-      sel     : {
-      },
-      param   : {
-        'A' : {dwell:0, headway:0, runningTime: 0},
-        'B' : {dwell:0, headway:0, runningTime: 0},
-        'C' : {dwell:0, headway:0, runningTime: 0},
-        'D' : {dwell:0, headway:0, runningTime: 0},
-        'E' : {dwell:0, headway:0, runningTime: 0}
-      }
+  $scope.buildScenarios = function(foo) {
+    //check if combos have already been created
+    for (prop in $scope.combos.all) {$scope.defaultsBuilt = true;}
+
+    if(!$scope.defaultsBuilt){
+      var comboId = supportService.generateUUID();
+      $scope.combos.all[0] = {
+        name    : 'BASELINE',
+        created : Date.now(),
+        sel     : {
+        },
+        param   : {
+          'A' : {dwell:0, headway:0, runningTime: 0},
+          'B' : {dwell:0, headway:0, runningTime: 0},
+          'C' : {dwell:0, headway:0, runningTime: 0},
+          'D' : {dwell:0, headway:0, runningTime: 0},
+          'E' : {dwell:0, headway:0, runningTime: 0}
+        }
+      };
+      var comboId = supportService.generateUUID();
+      $scope.combos.all[1] = {
+        name    : 'UPGRADES',
+        created : Date.now(),
+        sel     : {
+
+        },
+        param   : {
+          'A' : {dwell:40, headway:25, runningTime: 40},
+          'B' : {dwell:40, headway:25, runningTime: 40},
+          'C' : {dwell:40, headway:25, runningTime: 40},
+          'D' : {dwell:40, headway:25, runningTime: 40},
+          'E' : {dwell:40, headway:25, runningTime: 40}
+        }
+      };
+
+
     };
-    var comboId = supportService.generateUUID();
-    $scope.combos.all[1] = {
-      name    : 'UPGRADES',
-      created : Date.now(),
-      sel     : {
-
-      },
-      param   : {
-        'A' : {dwell:40, headway:25, runningTime: 40},
-        'B' : {dwell:40, headway:25, runningTime: 40},
-        'C' : {dwell:40, headway:25, runningTime: 40},
-        'D' : {dwell:40, headway:25, runningTime: 40},
-        'E' : {dwell:40, headway:25, runningTime: 40}
-      }
-	};
-	
-	  
-};
 
 
-  $scope.defaultsBuilt = true;
-}
+    $scope.defaultsBuilt = true;
+  }
 
   $scope.setNewSnapCache = function (id) {
     $scope.managerOperations = true;
     $scope.snapPoints.sel = id;
     loadService.loadSnapCache(id)
-    .then(function (data) {
-      $scope.snapPoints.data = data
-      $scope.managerOperations = false;
-    })
+      .then(function (data) {
+        $scope.snapPoints.data = data
+        $scope.managerOperations = false;
+      })
   }
 
   // from manager control run download
@@ -1002,13 +969,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     saveAs(blob, "sessionSave.json");
   }
 
-  
   $scope.letters = ['A','B','C','D','E'];
 
 
   $scope.updateSelectScenario = function (comboIndex) {
     $scope.resetMap();
-	var currentModificationJSON = [];
+    var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 
@@ -1021,7 +987,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         });
       });
     })
-	
+
     $scope.letters.forEach(function (key){
 
       var tempNum =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
@@ -1058,13 +1024,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.updateComScenario = function (comboIndex) {
     $scope.resetMap();
-	var currentModificationJSON = [];
+    var currentModificationJSON = [];
 
     $scope.letters.forEach(function (key){
 
       var tempNum =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
       console.log(tempNum);
-	  
+
       analystService.modifyDwells(key,tempNum,function(modifyJSON){
         modifyJSON.forEach(function (route) {
           currentModificationJSON.push(route);
@@ -1102,57 +1068,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.scenario1.modifications = currentModificationJSON;
 
     console.log($scope.scenario1);
-
   };
-
-
-  $scope.displayHomeWork = function(){
-
-
-  };
-
-
-
-
-  $scope.getUserHomeWork = function (cb) {
-          var circles = [];
-          var poiUsers = [];
-
-          var iconStyle = L.Icon.extend({
-            options : {
-              iconSize     : [22, 22],
-              iconAnchor   : [8, 18],
-              popupAnchor  : [0, -15],
-              className    : 'icon-on',
-              userId       : 'null'
-            }
-          });
-
-          for (var i=0; i<$scope.users.length; i++) {
-            // var pois = JSON.parse(data[i].POIs);
-            var userId = i;
-            var points = [];
-            var homeLoc = [];
-            var icon;
-            icon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
-            homeLoc = $scope.users[i].homeLoc;
-            var marker = L.marker($scope.users[i].homeLoc[0], $scope.users[i].homeLoc[1], {icon: icon}, {name: $scope.users[i].name});
-            marker['userId'] = userId;
-            circles.push(marker);
-            points.push({lat: $scope.users[i].homeLoc[0], lng: $scope.users[i].homeLoc[1], poiTag: "home"});
-
-            icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
-            var marker = L.marker($scope.users[i].workLoc[0], $scope.users[i].workLoc[1], {icon: icon}, {name: $scope.users[i].name});
-            marker['userId'] = userId;
-            circles.push(marker);
-            poiUsers.push({userId : userId, points: points, homeLoc: homeLoc});
-
-          }
-          console.log(L.layerGroup(circles), poiUsers)
-          cb(L.layerGroup(circles), poiUsers);
-        }
-
-
-
 
 });

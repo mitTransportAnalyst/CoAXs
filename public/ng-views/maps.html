@@ -1,10 +1,10 @@
 <!-- progress bar -->
-<div class="progress" ng-show="loadProgress.vis">
-  <div class="progress-bar progress-bar-info progress-bar-striped active"
-       role="progressbar" id="isosProgressBar"
-       style="width:{{loadProgress.val}}%">
-  </div>
-</div>
+<!--<div class="progress" ng-show="loadProgress.vis">-->
+  <!--<div class="progress-bar progress-bar-info progress-bar-striped active"-->
+       <!--role="progressbar" id="isosProgressBar"-->
+       <!--style="width:{{loadProgress.val}}%">-->
+  <!--</div>-->
+<!--</div>-->
 
 <!-- hamburger menu topleft -->
 <div class="topnav">
@@ -315,8 +315,8 @@
 </leaflet>
 
 
-<div
-  style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>
+<!--<div-->
+  <!--style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>-->
 
 <!-- 1 poi markers -->
 <div class="leftNav" style="z-index: 10000">
@@ -337,13 +337,13 @@
        ng-repeat="user in users track by $index"
        ng-click="loadProgress.vis ?'': targetPOIUsers($index)"
        ng-class="$index == currentPOIUser ? '' : 'unselected'"
-       ng-change="trackClick('user',$index)"
     >
     <i class="fa fa-user"></i><br> {{ user.name }}
   </div>
-  <!--<div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">-->
-    <!--<i class="fa fa-user"></i><br> Clear-->
-  <!--</div>-->
+  <div class="badge"  ng-click="loadProgress.vis ?'': targetPOIUsers($index)"
+       ng-click="clearPOIUsers()">
+    <i class="fa fa-user"></i><br> Clear
+  </div>
 </div>
 
 
@@ -530,9 +530,18 @@
       <div>
         <label class="btn tiny" ng-click=""><i class="fa fa-plus"></i> Select All
         </label>
-        <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};font-size: 16px; padding: 8px;"
-             ng-click="targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
+        <div  style="width: 100%;" ng-repeat="(key,variant) in variants | toArray | limitTo: 5"   >
+        <div  style="color:#FFF;background-color:{{variant.color}};font-size: 8px; padding: 8px; text-align: left; border-style: solid;border-color: #d58512; display: inline-block;"
+             ng-click="targetCorridor(variant)" >
           {{variant.corName}}
+
+
+        </div>
+          <div  style="color:#FFF;background-color:{{variant.color}};font-size: 8px; padding: 8px; text-align: left;display: inline-block;">
+            {{variant._key}}
+
+          </div>
+
         </div>
       </div>
     </div>

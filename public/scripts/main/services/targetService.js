@@ -71,7 +71,7 @@ coaxsApp.service('targetService', function (leafletData) {
 	    });
       trunkLayer.eachLayer(function (layer) {
         if (layer.options.base.corridorId == id) {
-          layer.setStyle({opacity: 1, weight: 15});
+          layer.setStyle({opacity: 0.8, weight: 10});
           // tempBounds = layer.getBounds();
         } else {
           layer.setStyle({opacity: 0, weight: 0.5});
