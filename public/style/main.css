@@ -535,12 +535,12 @@ input {
 /*maps*/
 .angular-leaflet-map {
   height           : 75.5%;
-  width: 50%;
-  width: -moz-calc(100% - 300px);
+  /*width: 50%;*/
+  /*width: -moz-calc(100% - 300px);*/
   width: calc(100% - 300px);
   position         : absolute;
   left : 300px;
-  z-index 		   : 9;
+  z-index 		   : 9
 }
 
 .leaflet-container {

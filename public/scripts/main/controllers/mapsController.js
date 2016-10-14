@@ -206,7 +206,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		};
   });
 
-  
+
+
+  $scope.trackClick = function(name, value){
+    var nowTime = Date();
+    var req = {
+      method: 'POST',
+      url: 'https://api.mlab.com/api/1/databases/tdm/collections/coax?apiKey=9zaMF9-feKwS1ZliH769u7LranDon3cC',
+      data: { name: name, value:value,time:nowTime }
+    };
+    $http(req);
+  };
+
+
     // Angular Leaflet Directive - base components
   var defaults_global = {
     minZoom: 9,
@@ -214,7 +226,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     scrollWheelZoom    : false,
     zoomControl        : true,
 	zoomControlPosition: 'bottomright',
-    attributionControl : false,
+    attributionControl : false
   };
   var maxBounds_global =  {
     northEast: {
@@ -250,7 +262,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
    lat  : 42.35974896174244,
     lng  : -71.09368801116943,
-    zoom : 12,
+    zoom : 12
   };
 
   // Assembling right map
@@ -616,6 +628,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       stops.addTo(map);
       stopsLayer = stops;
     });
+
+    // $scope.getUserHomeWork(function(data){
+    //   data.addTo(map);
+    //   poiUserPoints = stops;
+    //
+    // })
+
+
+
   });
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
@@ -827,24 +848,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }
   }
 
-  //save
-  $scope.saveAltButton = function () {
-
-
-
-
-
-
-  }
-
+ 
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
       $scope.scenario[tabnav].offpeak.min = peakMin;
     };
   }
-
-
 
   $scope.clearPOIUsers = function () {
     $scope.currentPOIUser = false;
@@ -873,8 +883,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
   };
 
-
-
   // increment isochrones by 5 minutes
   $scope.vectorTimeVal_add      = function () {if ($scope.showVectorIsosOn) { if(Number($scope.vectorIsos.val)<119) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) + 1 } else {$scope.vectorIsos.val = 1}}}
   $scope.vectorTimeVal_subtract = function () {if ($scope.showVectorIsosOn && Number($scope.vectorIsos.val)>1) { $scope.vectorIsos.val = Number($scope.vectorIsos.val) -1 }}
@@ -890,16 +898,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       });
 	}
   }};
-
-
-
-
-
-
-
-
-
-
 
   // MANAGER CONTROLS
   // from manager control run create
@@ -971,7 +969,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     saveAs(blob, "sessionSave.json");
   }
 
-  
   $scope.letters = ['A','B','C','D','E'];
 
 
@@ -1071,8 +1068,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.scenario1.modifications = currentModificationJSON;
 
     console.log($scope.scenario1);
-
-  }
-  
+  };
 
 });
