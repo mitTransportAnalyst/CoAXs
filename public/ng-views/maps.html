@@ -43,56 +43,83 @@
 
 <div class="topcol">
 
-  <div class="topright" ng-show="routeScorecard">
-    <h4>
-      <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}}
+  <div class="topright" ng-show="routeScorecard" style="background-color:{{variants[tabnav].color}};">
+	<h4>
+      <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}} ({{variants[tabnav].segmentData.length}} mile segment)
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
-    <div class="topinfo-body container" style="display:inline-block; overflow-y: auto">
-
-      <div style="width: 200px; display:inline-block">
-		  <h3>
-            <i class="fa fa-arrows-h"></i> {{variants[tabnav].segmentData.length}} mi.
-            <h6>Segment Length</h6>
-          </h3>
-      </div>
-
-      <div style="display:inline-block; overflow-y: auto">
-        <table>
-		<tbody>
-		 <thead>
-            <tr>
-			<th style="width: 80px;">
-			</th>
-			<th style="width: 240px; padding-left:0px; text-align:center"  ng-repeat="busline in variants[tabnav].buslines">
-			<span class="card">{{ busline }}</span><br>
-            <span style="width: 115px; display:inline-block; text-align:center">
+    <div class="topinfo-body container" style="overflow-x: auto; background-color:#d3d3d3; color:#696969;">
+      <div style="width:{{300*(variants[tabnav].buslines.length)+600}}px">
+      <div style="width: 275px; display:inline-block; vertical-align: top;">
+            <h3><div style="width:100%">Total Buses Needed</div></h3>
+			<div style="width: 50%; display:inline-block; text-align:center">
 			Base
-			</span>
-            <span style="width: 115px; display:inline-block; text-align:center">
-			Revised
-            </span>
-			</th>
-			</tr>
-		 </thead>
-		 <tfoot>
-		 <tr>
-		   <td>Headway (minutes)</td>
-			<td style="width: 240px; padding-left:5px; text-align: right"  ng-repeat="busline in variants[tabnav].buslines">
-			<span style="width: 115px; display:inline-block; text-align:center">
-			{{(variants[tabnav].routeData[busline].baseHeadway).toFixed(1)}}
-			</span>
-            <span style="width: 115px; display:inline-block; text-align:center">{{(variants[tabnav].routeData[busline].baseHeadway * (100-currentParam[tabnav].headway)/100).toFixed(1)}}
-            </span>
-            </span>
-            </td>
-		 </tr>
-		</tfoot>
-        </tbody>
-		</table>
+			</div><div style="width: 50%; display:inline-block; text-align:center">
+			Edit</div>
+			<div style="width: 50%; display:inline-block; text-align:center">
+			<h3>{{routeData.base.vehicles}}</h3>
+			</div><div style="width: 50%; display:inline-block; text-align:center">
+			<h3>{{routeData.edit.vehicles}}</h3>
+			</h3>
+	      </div>
+      </div><div style="display:inline-block; padding-left:25px; vertical-align: top">
+	  <table class="routeData-table">
+	  <tr>
+	    <th style="width:300px; padding-left:25px;"><h3>Routes</h3></th>
+		<th class="route" ng-repeat="line in routeData.lines" style="width:300px; padding-left:25px; text-align: center;">
+	    <h3><label class = "btn btn-xs card">{{ line }}</label></h3>
+		</th>
+      </tr>
+	  <tr>
+	    <th></th>
+		<th class="route" ng-repeat="line in routeData.lines" style=" padding-left:25px;">
+		<div style="width: 50%; display:inline-block; text-align:center">
+		Base
+		</div><div style="width: 50%; padding:0px; display:inline-block; text-align:center">
+		Edit
 		</div>
-	</div>
-    </div>
+		</th>
+      </tr>
+	  <tr>
+	    <td><h5>Running time (segment only)<div style="display: inline; width:40px"><img src="public/imgs/runningtime.png" style="height:20px"></div></h5></td>
+		<td class="route" ng-repeat="line in routeData.lines">
+		<div style="width: 50%; display:inline-block; text-align:center">
+		{{(routeData.base[line].segmentSpeed).toFixed(2)}} mph
+		</div><div style="width: 50%; padding:0px; display:inline-block; text-align:center">
+		{{(routeData.edit[line].segmentSpeed).toFixed(2)}} mph
+		</div></td>
+	  <tr>
+	  <tr>
+	    <td><h5>Total cycle time<div style="display: inline; width:40px"><i class="fa fa-refresh"></i></div></h5></td>
+		<td class="route" ng-repeat="line in routeData.lines">
+		<div style="width: 50%; display:inline-block; text-align:center">
+		{{routeData.base[line].cycleTime | minuteConverter}}
+		</div><div style="width: 50%; padding:0px; display:inline-block; text-align:center">
+		{{routeData.edit[line].cycleTime | minuteConverter}}
+		</div></td>
+	  <tr>
+	    <td><h5>Total dwell time<div style="display: inline; width:40px"><img src="public/imgs/dwelltime.png" style="height:20px"></div></h5></td>
+		<td class="route" ng-repeat="line in routeData.lines"><div style="width: 50%; display:inline-block; text-align:center">
+		{{routeData.base[line].dwellTime | minuteConverter}}
+		</div><div style="width: 50%; padding:0px; display:inline-block; text-align:center">
+		{{routeData.edit[line].dwellTime | minuteConverter}}
+		</div></td>
+	  </tr>
+	  <tr>
+	    <td><h5>Scheduled headway<div style="display: inline; width:40px"><img src="public/imgs/frequency.png" style="height:20px"></div></h5></td>
+		<td class="route" ng-repeat="line in routeData.lines">
+		<div style="width: 50%; display:inline-block; text-align:center">
+		{{routeData.base[line].headway | minuteConverter}}
+		</div><div style="width:50%; display:inline-block; text-align:center">
+		{{routeData.edit[line].headway | minuteConverter}}
+		</div>
+		</td>
+	  </tr>
+	</table>
+  </div>
+   </div>
+</div>
+</div>
 
   <!--Intro screen-->
 
@@ -163,10 +190,7 @@
   </div>
 </div>
 
-
-
 <div class="bottomCol">
-
   <!--SAVE-ROUTE PROMPT-->
   <div class="saveVar" ng-show="saveAlt && visibleTabs.customize">
     <h4>
@@ -537,7 +561,7 @@
     <div class="showToggle" ng-show="visibleTabs.customize">
 
 	  <div class="btn-group btn-group-justified">
-         <label class="btn" ng-class="routeScorecard ? 'active' : ''" ng-click="routeScorecard = !routeScorecard" style="background-color: {{variants[tabnav].color}}; color: #FFF"><i class="fa fa-line-chart"></i> 
+         <label class="btn" ng-class="routeScorecard ? 'active' : ''" ng-click="showRouteData()" style="background-color: {{variants[tabnav].color}}; color: #FFF"><i class="fa fa-line-chart"></i> 
 		 <span ng-show="routeScorecard">Hide Data</span>
 		 <span ng-show="!routeScorecard">Show Data</span>
         </label>

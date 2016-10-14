@@ -59,8 +59,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   loadService.getVariants('corridors',function(variants){
     $scope.variants = variants;
-	console.log($scope.variants);
 	getMapData();
+	updateRouteData();
     }
   );
   
@@ -71,6 +71,10 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     walking: [0, 1, 2, 3, 4, 5, 6, 7],
     selected: 'all'
 };
+  
+  $scope.routeData = {
+    buslines: []
+  };
   
   $scope.combos = {
     sel : null,
@@ -105,7 +109,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		};
   });
 
-
+  $scope.$watch('currentParam',
+    function() {
+	  updateRouteData();
+	}, true
+  );
 
   $scope.trackClick = function(name, value){
     var nowTime = Date();
@@ -615,6 +623,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	// targetService.targetPriority(priorityLayer, null);
 	$scope.tabnav = variant._key;
 	$scope.variants[$scope.tabnav].sel = true;
+	updateRouteData();
   };
 
   //highlight a busline
@@ -691,6 +700,24 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   }
 
   // how we update the scorecard on the right side, also bound to events like range slider
+  
+  $scope.showRouteData = function (){
+    if($scope.routeScorecard){
+	  $scope.routeScorecard = false;
+	} else {
+	  updateRouteData();
+	  $scope.routeScorecard = true;
+	}
+  }
+  
+  updateRouteData = function () {
+    if($scope.variants[$scope.tabnav]){
+	scorecardService.updateRouteData($scope.variants[$scope.tabnav],$scope.currentParam[$scope.tabnav], function(data){
+	  $scope.routeData = data;
+	})
+  }
+  }
+  
   $scope.updateRouteScorecard = function (routeId, tabnav) {
   if (!routeId && !tabnav) {
       $scope.routeScore = scorecardService.generateEmptyScore();
