@@ -176,7 +176,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.combos = {
     sel : null,
     com : null,
-    all : {},
+    all : {}
   }
 
   $scope.defaultsBuilt = false
@@ -602,6 +602,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     // priorityLayer = priorityLanes;
     // })
 
+
+    loadService.getTrunk(function (data) {
+      trunkLayer = data.layerGroup;
+      trunkLayer.addTo(map);
+
+      // rbind routes to scope
+      $scope.routes = data.geoJsons;
+      var routes = data.geoJsons;
+
+    },$scope.variants);
+
+
     // now pull the proposed routes
     loadService.getProposedRoutes(function (data) {
       routesLayer = data.layerGroup;
@@ -614,15 +626,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }, $scope.variants);
 
 
-    loadService.getTrunk(function (data) {
-      trunkLayer = data.layerGroup;
-      trunkLayer.addTo(map);
 
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
-
-    },$scope.variants);
 
     // place stops over routes plots on map
     loadService.getStops('/geojson/proposed_stops', function (stops) {

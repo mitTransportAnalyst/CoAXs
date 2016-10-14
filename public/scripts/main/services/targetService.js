@@ -119,7 +119,7 @@ coaxsApp.service('targetService', function (leafletData) {
 
         if (compareNum === busline) {
 
-          layer.setStyle({opacity: 0.8, weight: 10, color:"#555555"});
+          layer.setStyle({opacity: 0.7, weight: 5, color:"#555555"});
 
           tempBounds = layer.getBounds();
         } else {
