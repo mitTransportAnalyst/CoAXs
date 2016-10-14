@@ -319,33 +319,22 @@
   <!--style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>-->
 
 <!-- 1 poi markers -->
-<div class="leftNav" style="z-index: 10000">
-  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(XZ)">-->
-    <!--<i class="fa fa-user"></i><br> XZ-->
-  <!--</div>-->
+<div class="leftNav" style="z-index: 101">
 
-  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">-->
-    <!--<i class="fa fa-user"></i><br> AS-->
-  <!--</div>-->
-
-  <!--<div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">-->
-    <!--<i class="fa fa-user"></i><br> PD-->
-  <!--</div>-->
-
-
-  <div class="badge"
-       ng-repeat="user in users track by $index"
-       ng-click="loadProgress.vis ?'': targetPOIUsers($index)"
-       ng-class="$index == currentPOIUser ? '' : 'unselected'"
-    >
-    <i class="fa fa-user"></i><br> {{ user.name }}
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers()">
+    <i class="fa fa-user fa-2x"></i><br> All
   </div>
-  <div class="badge"  ng-click="loadProgress.vis ?'': targetPOIUsers($index)"
-       ng-click="clearPOIUsers()">
-    <i class="fa fa-user"></i><br> Clear
+  <div class="badge"
+
+       ng-repeat="(user, locations) in users"
+       ng-click="loadProgress.vis ? '':targetPOIUsers(user)"
+       ng-class="user == currentPOIUser ? '' : 'unselected'" >
+    <i class="fa fa-user fa-2x"></i><br> {{ user }}
+  </div>
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">
+    <i class="fa fa-user fa-2x"></i><br> Clear
   </div>
 </div>
-
 
 <div class="bottomNav">
 
@@ -406,7 +395,6 @@
 
     </div>
   </div>
-
 
   <!-- 3 scenario table module -->
   <div class="colBody" id="leftDynamic">

@@ -342,13 +342,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   loadService.getUserData('currentSession',
     function(poiUsers, poiLayer){
-      $scope.users = poiUsers;
-      poiUserPoints = poiLayer;
-      leafletData.getMap('map_left').then(function(map) {
-        map.addLayer(poiUserPoints);
-      })
-    });
 
+	$scope.users = poiUsers;
+	poiUserPoints = poiLayer;
+	leafletData.getMap('map_left').then(function(map) {
+	  map.addLayer(poiUserPoints);
+	})
+  });
+  
   // right globals
   var geoJsonLeft = null,
     priorityLayer = null;
@@ -863,24 +864,25 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-    if (id) {
-      leftService.targetPOIUsers(poiUserPoints, id);
 
-      $scope.markers.start.lat = $scope.users[id].homeLoc[0];
-      $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+	if (id) {
+	  leftService.targetPOIUsers(poiUserPoints, id);
 
-      $scope.preMarkerQuery();
-      leafletData.getMap('map_left').then(function(map) {
-        map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);
-      });
-    }
-    else {
-      leafletData.getMap('map_left').then(function(map) {
-        map.panTo([center_global.lat, center_global.lng]);
-        $scope.resetMap();
-      });
-      poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
-    }
+    $scope.markers.start.lat = $scope.users[id].homeLoc[0];
+    $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+
+	$scope.preMarkerQuery();
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);
+	});
+	}
+	else {
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([center_global.lat, center_global.lng]);
+		$scope.resetMap();
+	});
+	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+	}
   };
 
   // increment isochrones by 5 minutes
@@ -889,15 +891,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   // switch between views of vector isos and map tiles if travel access
   $scope.toggleShowVectorIsos = function () {
-    if($scope.scenarioScore.loaded){
-      if (!$scope.loadProgress.vis){
-        $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
-        leafletData.getMap('map_left').then(function (map) {
-          if ($scope.showVectorIsosOn)  { analystService.showVectorIsos($scope.vectorIsos.val, map); }
-          else { analystService.resetAll(map, 0); };
-        });
-      }
-    }};
+
+	if($scope.scenarioScore.loaded){
+	if (!$scope.loadProgress.vis){
+      $scope.showVectorIsosOn = !$scope.showVectorIsosOn;
+		leafletData.getMap('map_left').then(function (map) {
+        if ($scope.showVectorIsosOn)  { analystService.showVectorIsos($scope.vectorIsos.val, map); }
+        else { analystService.resetAll(map, 0); };
+      });
+	}
+  }};
 
   // MANAGER CONTROLS
   // from manager control run create
@@ -1069,5 +1072,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     console.log($scope.scenario1);
   };
+
 
 });
