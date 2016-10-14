@@ -48,14 +48,14 @@ angular.module('coaxsFilters', [])
 .filter('minuteConverter', function () {
   return function (input) {
     input = Math.floor(Number(input));
-    if (input < 10) {
-      return String(input + ' min.');
-    } else if (input < 60) {
-      return String(input + ' min.');
+    if (input < 60) {
+      var seconds = ((input-Math.floor(input))/60).toFixed(2);
+      var minutes = Math.floor(input);
+	  return String(minutes + ' m, ' + seconds + ' s');
     } else {
       var minutes = Math.floor(input%60);
       var hours = Math.floor(input/60);
-      return String(hours + ' hr., ' + minutes + ' min.')
+      return String(hours + ' h, ' + minutes + ' m')
     }
   }
 })

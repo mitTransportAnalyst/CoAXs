@@ -38,7 +38,7 @@ button {
 
 .tiny {
   background-color: #959595;
-  width: 100%;
+  width: 100%
 }
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
@@ -47,7 +47,6 @@ button {
 }
 .btn-choose.active, .btn-choose.focus, .btn-choose.hover, .btn-choose:active, .btn-choose:focus, .btn-choose:hover {
   color            : #FFF;
-
 }
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: rgb(220, 220, 220);
@@ -96,15 +95,27 @@ nav div.section {
   padding-right: 20px;
 }
 
+
+
 .topright {
-  /*width: 50%;*/
-  /*width: -moz-calc(100% - 300px);*/
+  width: 50%;
+  width: -moz-calc(100% - 300px);
   width: calc(100% - 300px);
   position		   : absolute;
   left			   : 300px;
   overflow         : auto;  
   z-index: 10;
   background-color : #696969
+}
+
+/* .routeData-table th{
+  width:300px;
+  padding-left:25px; 
+  text-align: center;
+} */
+
+.routeData-table .route:nth-child(odd) { 
+  background: #DDD;
 }
 
 .topleft {
@@ -365,7 +376,7 @@ background-color  : #696969;
   line-height: 18px;
   padding: 0px 8px 0px 8px;
   background-color: #b4b4b4;
-  text-align: center;
+  text-align: left;
   font-size: 12px;
   color: white;
   cursor: pointer;
@@ -418,6 +429,7 @@ background-color  : #696969;
 }
 
 .colBody .smallColVal {
+  text-align: left;
   padding: 0px 0px 0px 0px;
 }
 
@@ -533,20 +545,8 @@ input {
   background: transparent;
 }
 
-
-.borderchange{
-
-  font-size: 14px;
-  padding: 8px;
-  text-align: left;
-  border-style: solid;
-  border-color: #eb9316;
-  border-width: 0.5px;
-
-}
-
 /*maps*/
-#map_left {
+.angular-leaflet-map {
   height           : 75.5%;
   /*width: 50%;*/
   /*width: -moz-calc(100% - 300px);*/
@@ -556,20 +556,6 @@ input {
   z-index 		   : 9
 }
 
-#map_right {
-  height           : 75.5%;
-  /*width: 50%;*/
-  /*width: -moz-calc(100% - 300px);*/
-  width: calc(100% - 300px);
-  position         : absolute;
-  left : 300px;
-  z-index 		   : 10
-}
-
-/*#map_right {*/
-  /*height           : 75.5%;*/
-
-/*}*/
 .leaflet-container {
   background : -webkit-linear-gradient( #CDD2D4, #F5F5F3) !important; /* For Safari 5.1 to 6.0 */
   background : -o-linear-gradient(      #CDD2D4, #F5F5F3) !important; /* For Opera 11.1 to 12.0 */
@@ -598,9 +584,9 @@ input {
 
 
 .card{
-  width: 15px;
+  width: 25px;
 
-  height: 15px;
+  height: 25px;
 
   display: inline-table;
 
@@ -613,5 +599,6 @@ input {
   margin: 5px 5px 5px 5px;
 
   text-align: center;
-
+  vertical-align: middle;
+  border-radius: 5px;	
 }

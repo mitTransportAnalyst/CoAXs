@@ -1,6 +1,48 @@
 // crunches score for each component (row) of scorecard, should be self explanatory
 coaxsApp.service('scorecardService', function () {
 
+  this.updateRouteData = function(baseData, editParams, cb){
+    var routeData = {};
+	routeData.base = baseData.routeData;
+	routeData.lines = baseData.buslines;
+	routeData.edit = {};
+	var vehicles = {base: 0, edit: 0};
+	
+	for (i in baseData.buslines){
+      var line = baseData.buslines[i];
+	  routeData.edit[line] = {};
+	  
+	  //segment speed in mph	
+	  routeData.base[line].segmentSpeed = routeData.base[line].segmentDist/routeData.base[line].segmentTime * 60;
+	  routeData.edit[line].segmentSpeed = routeData.base[line].segmentDist/(routeData.base[line].segmentTime*((100-editParams.runningTime)/100)) * 60;
+	  
+	  //total round-trip cycle time, in seconds
+	  routeData.base[line].cycleTime = routeData.base[line].totalTime;
+	  tt = routeData.base[line].totalTime;
+	  st = (routeData.base[line].segmentTime*(editParams.runningTime/100));
+	  dt = routeData.base[line].stops*10*(editParams.dwell)/100/60;
+	  routeData.edit[line].cycleTime = (tt-st)-dt;
+	  
+	  
+	  // (routeData.base[line].totalTime - (routeData.base[line].segmentTime*(editParams.runningTime/100)))*60 - routeData.base[line].stops*10*(editParams.dwellTime)/100;
+	  
+	  //total dwell time (based on assumption of 10 sec/stop
+	  routeData.base[line].dwellTime = routeData.base[line].stops*10/60;
+	  routeData.edit[line].dwellTime = routeData.base[line].stops*10*(100-editParams.dwell)/100/60;
+	  
+	  //headway
+	  routeData.base[line].headway = routeData.base[line].baseHeadway;
+	  routeData.edit[line].headway = routeData.base[line].baseHeadway * (100-editParams.headway)/100;
+	  
+	  vehicles.base = vehicles.base + Math.ceil(routeData.base[line].cycleTime/routeData.base[line].headway);
+	  vehicles.edit = vehicles.edit + Math.ceil(routeData.edit[line].cycleTime/routeData.edit[line].headway)
+	};
+	routeData.base.vehicles = vehicles.base;
+	routeData.edit.vehicles = vehicles.edit;
+	
+	cb(routeData);
+  };
+
   // return an empty score card set of values
   this.generateEmptyScore = function () {
     var bus = {
