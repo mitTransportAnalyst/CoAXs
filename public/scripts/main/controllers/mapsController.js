@@ -232,7 +232,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     scrollWheelZoom    : false,
     zoomControl        : true,
 	zoomControlPosition: 'bottomright',
-    attributionControl : false,
+    attributionControl : false
   };
   var maxBounds_global =  {
     northEast: {
@@ -268,7 +268,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
    lat  : 42.35974896174244,
     lng  : -71.09368801116943,
-    zoom : 12,
+    zoom : 12
   };
 
   // Assembling right map
@@ -628,11 +628,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       stopsLayer = stops;
     });
 
-    $scope.getUserHomeWork(function(data){
-      data.addTo(map);
-      poiUserPoints = stops;
-
-    })
+    // $scope.getUserHomeWork(function(data){
+    //   data.addTo(map);
+    //   poiUserPoints = stops;
+    //
+    // })
 
 
 
