@@ -55,115 +55,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : angular.copy(scenarioBase),
 	}
 
-  $scope.variants = {
-    'A' : { sel : 0, all : {}, color: '#555555',
-	  buslines:['1', 'CT1', '64'],
-	  corName: "Mass Ave",
-	  segmentData:{length:2.6},
-	  routeData: {
-	    '1':{
-		  baseHeadway:9
-		},
-		'CT1':{
-		  baseHeadway:20
-		},
-		'64':{
-		  baseHeadway:17
-		}
-	  }
-	},
-	'B' : { sel : null, all : {}, color: '#7DD5ED', 
-	  buslines:['111', '426', '428'],
-	  corName:"N. Washington St",
-	  segmentData:{length:0.6},
-	  routeData: {
-	    '111':{
-		  baseHeadway:5
-		},
-		'426':{
-		  baseHeadway:40
-		},
-		'428':{
-		  baseHeadway:60
-		}
-	  }
-	},
-    'C' : { sel : null, all : {}, color: '#F3E05E', 
-	buslines:['39', '66'],
-	corName:"Huntington Ave",
-	segmentData:{length:0.4},
-	  routeData: {
-	    '66':{
-		  baseHeadway:9
-		},
-		'39':{
-		  baseHeadway:6
-		},
-	  }
-	},
-    'D' : { sel : null, all : {}, color: '#E092DF' , 
-	buslines:['30', '34', '35', '36', '37', '40', '50', '51'],
-	corName:"Roslindale/Forest Hills",
-	  segmentData:{length:1.2},
-	  routeData: {
-	    '30':{
-		  baseHeadway:20
-		},
-		'34':{
-		  baseHeadway:20
-		},
-		'35':{
-		  baseHeadway:20
-		},
-		'36':{
-		  baseHeadway:24
-		},
-		'37':{
-		  baseHeadway:40
-		},
-		'40':{
-		  baseHeadway:24
-		},
-		'50':{
-		  baseHeadway:24
-		},
-		'51':{
-		  baseHeadway:20
-		},
-	  }
-	},
-    'E' : { sel : 0 , all : {}, color: '#8D6AA8', 
-	buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave",
-	segmentData:{length: 2.4},
-     routeData: {
-	    '14':{
-		  baseHeadway:40
-		},
-		'19':{
-		  baseHeadway:17
-		},
-		'22':{
-		  baseHeadway:7
-		},
-		'23':{
-		  baseHeadway:5
-		},
-		'28':{
-		  baseHeadway:7
-		},
-		'29':{
-		  baseHeadway:20
-		},
-		'44':{
-		  baseHeadway:13
-		},
-		'45':{
-		  baseHeadway:10
-		},
-	  }
-	}
-  }
-
+  $scope.variants = {};
+  
+  loadService.getVariants('corridors',function(variants){
+    $scope.variants = variants;
+	console.log($scope.variants);
+	getMapData();
+    }
+  );
   
     $scope.mode = {
     all: [],
@@ -546,7 +445,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     })
   }
 
+  getMapData = function(){
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
+  
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
 	var gs = true;
@@ -705,7 +606,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     // load user points from phil's google spreadsheet
 
   });
-
+  }
+  
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (variant) {
     targetService.targetCorridor(routesLayer, trunkLayer ,variant._key);

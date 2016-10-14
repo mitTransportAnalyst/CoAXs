@@ -103,8 +103,6 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     });
   };
 
-
-
   this.getTrunk = function (cb,variants) {
     $http.get('/load/trunks')
       .success(function (data, status) {
@@ -159,6 +157,13 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
   this.getDestinationData = function (file, cb) {
     $http.get('/load/destinations/'+file)
+    .success(function (data, status) {
+	  cb(data);
+	})
+  };
+  
+  this.getVariants = function (file, cb) {
+    $http.get('/load/scenario/'+file)
     .success(function (data, status) {
 	  cb(data);
 	})
