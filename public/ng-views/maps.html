@@ -1,10 +1,10 @@
- <!--progress bar -->
-<div class="progress" ng-show="loadProgress.vis">
-  <div class="progress-bar progress-bar-info progress-bar-striped active"
-       role="progressbar" id="isosProgressBar"
-       style="width:{{loadProgress.val}}%">
-  </div>
-</div>
+ <!--&lt;!&ndash;progress bar &ndash;&gt;-->
+<!--<div class="progress" ng-show="loadProgress.vis">-->
+  <!--<div class="progress-bar progress-bar-info progress-bar-striped active"-->
+       <!--role="progressbar" id="isosProgressBar"-->
+       <!--style="width:{{loadProgress.val}}%">-->
+  <!--</div>-->
+<!--</div>-->
 
 <!-- hamburger menu topleft -->
 <div class="topnav">
@@ -516,10 +516,10 @@
 
 
       <div>
-        <label class="btn tiny" ng-click=""><i class="fa fa-plus"></i> Select All
+        <label class="btn tiny" ng-click="selectall=!selectall;" ng-class = "selectall ? '' : 'active tiny' " style="text-align: left;"><i class="fa fa-plus"></i> Select All
         </label>
         <div  style="width: 100%;" ng-repeat="(key,variant) in variants | toArray | limitTo: 5"   >
-        <div  style="color:#FFF;background-color:{{variant.color}};font-size: 14px; padding: 8px; text-align: left; "
+        <div  style="color:#FFF;background-color:{{variant.color}};font-size: 14px; padding: 8px; text-align: left;" ng-class = "selectall ? 'borderchange' : '' "
              ng-click="targetCorridor(variant);trackClick('corridor',variant.corName)" >
           {{variant.corName}}
 

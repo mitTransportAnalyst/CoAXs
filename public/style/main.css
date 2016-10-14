@@ -38,7 +38,7 @@ button {
 
 .tiny {
   background-color: #959595;
-  width: 100%
+  width: 100%;
 }
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
@@ -47,6 +47,7 @@ button {
 }
 .btn-choose.active, .btn-choose.focus, .btn-choose.hover, .btn-choose:active, .btn-choose:focus, .btn-choose:hover {
   color            : #FFF;
+
 }
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: rgb(220, 220, 220);
@@ -532,6 +533,18 @@ input {
   background: transparent;
 }
 
+
+.borderchange{
+
+  font-size: 14px;
+  padding: 8px;
+  text-align: left;
+  border-style: solid;
+  border-color: #eb9316;
+  border-width: 0.5px;
+
+}
+
 /*maps*/
 #map_left {
   height           : 75.5%;
@@ -550,7 +563,7 @@ input {
   width: calc(100% - 300px);
   position         : absolute;
   left : 300px;
-  z-index 		   : 9
+  z-index 		   : 10
 }
 
 /*#map_right {*/

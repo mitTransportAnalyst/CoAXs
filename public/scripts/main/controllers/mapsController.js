@@ -1,4 +1,4 @@
-coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval, leafletData, analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
+coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval, leafletData, leafletMapEvents,analystService, d3Service, loadService, targetService, scorecardService, leftService, supportService) {
 
   // control screen size situation
   var runScreenSetUp = function () {
@@ -32,6 +32,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     'E' : {dwell:0, headway:0, runningTime: 0}
   };
 
+  $scope.selectall = false;
   $scope.scenario0 = {};
   $scope.scenario1 = {};
   $scope.scenarioCompare = false;
@@ -208,12 +209,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
 
 
+
+
   $scope.trackClick = function(name, value){
     var nowTime = Date();
     var req = {
       method: 'POST',
       url: 'https://api.mlab.com/api/1/databases/tdm/collections/coax?apiKey=9zaMF9-feKwS1ZliH769u7LranDon3cC',
-      data: { name: name, value:value,time:nowTime }
+      data: { ptp:$scope.pointToPoint, name: name, value:value,time:nowTime }
     };
     $http(req);
   };
@@ -356,14 +359,16 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.introPanel = true;
 
+
   $scope.togglePointToPoint = function() {
-    $scope.pointToPoint = !$scope.pointToPoint
+    $scope.pointToPoint = !$scope.pointToPoint;
     $scope.resetMap();
     if ($scope.pointToPoint){
       $scope.markers.end.icon.iconSize = [48,48];
       leafletData.getMap('map_left').then(function(map) {
         map.removeLayer(subStopsLayer);
         map.removeLayer(subwaysLayer_l);
+
       })
     }else {
       $scope.markers.end.icon.iconSize = [0,0];
@@ -1077,5 +1082,48 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     console.log($scope.scenario1);
   };
 
+
+  $scope.$on('leafletDirectiveMap.moveend', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "left",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+    leafletData.getMap('map_right').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "right",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+  });
+
+  $scope.$on('leafletDirectiveMarker.click', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      var appStateObject= {
+        originlat: $scope.markers.start.lat,
+        originlng:$scope.markers.start.lng,
+        destlat: $scope.markers.end.lat,
+        destlng: $scope.markers.end.lng
+    };
+      console.log(appStateObject);
+      $scope.trackClick("markerMove",appStateObject);
+    });
+
+  });
 
 });
