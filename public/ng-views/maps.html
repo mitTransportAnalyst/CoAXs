@@ -48,95 +48,51 @@
       <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}}
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
-    <div class="topinfo-body container">
+    <div class="topinfo-body container" style="display:inline-block; overflow-y: auto">
 
-	        <table class="table table-condensed table-hover">
-          <thead>
+      <div style="width: 200px; display:inline-block">
+		  <h3>
+            <i class="fa fa-arrows-h"></i> {{variants[tabnav].segmentData.length}} mi.
+            <h6>Segment Length</h6>
+          </h3>
+      </div>
 
-          </thead>
-          <tbody>
-          <tr ng-repeat="busline in variants[tabnav].buslines">
-            <td style="width: 35%; padding-left:0px">{{
-              busline }}
+      <div style="display:inline-block; overflow-y: auto">
+        <table>
+		<tbody>
+		 <thead>
+            <tr>
+			<th style="width: 80px;">
+			</th>
+			<th style="width: 240px; padding-left:0px; text-align:center"  ng-repeat="busline in variants[tabnav].buslines">
+			<span class="card">{{ busline }}</span><br>
+            <span style="width: 115px; display:inline-block; text-align:center">
+			Base
+			</span>
+            <span style="width: 115px; display:inline-block; text-align:center">
+			Revised
+            </span>
+			</th>
+			</tr>
+		 </thead>
+		 <tfoot>
+		 <tr>
+		   <td>Headway (minutes)</td>
+			<td style="width: 240px; padding-left:5px; text-align: right"  ng-repeat="busline in variants[tabnav].buslines">
+			<span style="width: 115px; display:inline-block; text-align:center">
+			{{(variants[tabnav].routeData[busline].baseHeadway).toFixed(1)}}
+			</span>
+            <span style="width: 115px; display:inline-block; text-align:center">{{(variants[tabnav].routeData[busline].baseHeadway * (100-currentParam[tabnav].headway)/100).toFixed(1)}}
+            </span>
+            </span>
             </td>
-          </tr>
-          </tbody>
-      </table>
-	
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-dot-circle-o"></i> {{ routeScore.bus.count }}
-            <h6>Stops</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Standard:</b> {{ routeScore.bus.dist[0] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Upgraded:</b> {{ routeScore.bus.dist[1] | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Full:</b> {{ routeScore.bus.dist[2] | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.bus.cost | number:0 }}
-            <h6>Station construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-arrows-h"></i> {{ routeScore.length.count | number:1 }}
-            <h6>Miles Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Shared:</b> {{ routeScore.length.dist.non | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Priority:</b> {{ routeScore.length.dist.ded | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.length.cost | number:0 }}
-            <h6>Dedicated lane construction</h6>
-          </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-5">
-          <h3>
-            <i class="fa fa-clock-o"></i> {{ routeScore.time.count | minuteConverter }}
-            <h6>Peak Round-Trip</h6>
-          </h3>
-        </div>
-        <div class="col-xs-3">
-          <h5>
-            <b>Moving:</b> {{ routeScore.time.dist.move | convertPercentage | number:0 }}%
-          </h5>
-          <h5>
-            <b>Loading:</b> {{ routeScore.time.dist.load | convertPercentage | number:0 }}%
-          </h5>
-        </div>
-        <div class="col-xs-4">
-          <h5>
-            <i class="fa fa-usd"></i> {{ routeScore.vehicles.cost | number:0 }}
-            <h6>Annual Cost of Operations</h6>
-          </h5>
-        </div>
-      </div>
-
+		 </tr>
+		</tfoot>
+        </tbody>
+		</table>
+		</div>
+	</div>
     </div>
-  </div>
 
   <!--Intro screen-->
 
@@ -349,6 +305,7 @@
          maxbounds="maxBounds_left"
 >
 </leaflet>
+
 <leaflet ng-show="visibleTabs.customize"
          center="center_right"
          defaults="defaults_right"
@@ -362,31 +319,21 @@
   style="position:absolute;right:50%;height:100%;width:0px;border-style:solid;border-color:#999;border-width:1px"></div>
 
 <!-- 1 poi markers -->
-<div class="leftNav" style="z-index: 10000">
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(XZ)">
-    <i class="fa fa-user"></i><br> XZ
+<div class="leftNav" style="z-index: 101">
+
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers()">
+    <i class="fa fa-user fa-2x"></i><br> All
   </div>
-
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
-    <i class="fa fa-user"></i><br> AS
+  <div class="badge"
+       ng-repeat="(user, locations) in users"
+       ng-click="loadProgress.vis ? '':targetPOIUsers(user)"
+       ng-class="user == currentPOIUser ? '' : 'unselected'" >
+    <i class="fa fa-user fa-2x"></i><br> {{ user }}
   </div>
-
-  <div class="badge" ng-class="!currentPOIUser ? '' : 'unselected'" ng-click="targetPOIUsers(user.userId)">
-    <i class="fa fa-user"></i><br> PD
+  <div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">
+    <i class="fa fa-user fa-2x"></i><br> Clear
   </div>
-
-
-  <!--<div class="badge"-->
-       <!--ng-repeat="user in poiUsers track by $index"-->
-       <!--ng-click="targetPOIUsers(user.userId)"-->
-       <!--ng-class="user.userId == currentPOIUser ? '' : 'unselected'">-->
-    <!--<i class="fa fa-user"></i><br> {{ user.userId }}-->
-  <!--</div>-->
-  <!--<div class="badge" ng-class="currentPOIUser ? '' : 'unselected'" ng-click="clearPOIUsers()">-->
-    <!--<i class="fa fa-user"></i><br> Clear-->
-  <!--</div>-->
 </div>
-
 
 <div class="bottomNav">
 
@@ -424,7 +371,7 @@
              ng-click="!showVectorIsosOn ? toggleShowVectorIsos() : ''">
 		  <span ng-class="!pointToPoint && scenarioScore.loaded ? '' : 'disabled unselected'">
             <input type="range" min="5" max="115" step="5" class="isosRange"
-                   ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn"/>
+                   ng-model="vectorIsos.val" ng-disabled="!showVectorIsosOn" ng-change="trackClick('changeTimeMap',vectorIsos.val)"/>
 			<div>
 			<span ng-click="stopTimer(); vectorTimeVal_subtract()"
             style="position: absolute; left: 10px; padding-right: 10px;"><i
@@ -439,7 +386,7 @@
       </div>
 	  <br>
 	  <br>
-	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;">
+	  <div ng-click = "togglePointToPoint()" style="cursor: pointer;" >
 		Point-to-point mode:  
 		<i class="fa fa-check-square" ng-show="pointToPoint"></i>
 		<i class="fa fa-square" ng-show="!pointToPoint"></i>
@@ -447,7 +394,6 @@
 
     </div>
   </div>
-
 
   <!-- 3 scenario table module -->
   <div class="colBody" id="leftDynamic">
@@ -479,8 +425,8 @@
         </label>
 
 
-        <label class="btn" ng-class="saveCombo ? '' : 'active tiny'"
-               ><i class="fa fa-plus-square"></i> Rename
+        <label class="btn" ng-class="rename ? '' : 'active tiny'"
+               ng-click="rename = !rename"><i class="fa fa-plus-square"></i> Rename
         </label>
 
 
@@ -498,10 +444,12 @@
                >
 
 
-            <div class="subHead">
+            <div ng-show="!rename" class="subHead">
               {{ combo.name }}
             </div>
 
+            <input type ="text" ng-show="rename" class="subHead" ng-model="combo.name">
+            </input>
 
 
             <!--<div class="subHead" ng-click='inputIsOn = true' ng-show='!inputIsOn'>-->
@@ -644,7 +592,7 @@
             <div style="padding-top: 0px;"><img
               src="public/imgs/runningtime.png" style="height:35px">
 
-            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" />
+            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
             <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
             </div>
           </div>
@@ -664,7 +612,7 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/dwelltime.png" style="height:25px">
 
-              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" />
+              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].dwell}}%
             </div>
           </div>
@@ -686,7 +634,7 @@
             <div style="padding-top: 5px;"><img
               src="public/imgs/frequency.png" style="height:25px">
 
-              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" />
+              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].headway}}%
             </div>
           </div>

@@ -157,13 +157,19 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
     });
   };
 
-  // update map with phil's spread sheet points
-  this.getUsersPoints = function (cb) {
-    $http.get('/pois')
+  this.getDestinationData = function (file, cb) {
+    $http.get('/load/destinations/'+file)
     .success(function (data, status) {
-      if (status == 200) {       
+	  cb(data);
+	})
+  }
+
+
+  this.getUserData = function (file, cb) {
+    $http.get('/load/users/'+file)
+      .success(function (data, status) {
         var circles = [];
-        var poiUsers = [];
+        var poiUsers = data;
 
         var iconStyle = L.Icon.extend({
           options : {
@@ -174,58 +180,21 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
             userId       : 'null'
           }
         });
-
-        for (var i=0; i<data.length; i++) {
-          var pois = JSON.parse(data[i].POIs);
-          var userId = data[i].Name[0] + data[i].Name[1]; 
-          var points = [];
-		  var homeLoc = [];
-  
-          for (var n=0; n<pois.length; n++) {
-            var icon;
-            if (pois[n].poiTag == "HOME") {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});
-			  homeLoc = [pois[n].lat, pois[n].lng];
-            }
-            else if (pois[n].poiTag == "missed-bus")  {
-              icon = new L.divIcon({className: 'missed-bus'});;  
-            }
-			else if (pois[n].poiTag == "missed-train")  {
-              icon = new L.divIcon({className: 'missed-train'});;  
-            }
-			else if (pois[n].poiTag == "HEALTHCARE")  {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
-            }
-			else if (pois[n].poiTag == "HEALTHCARE")  {
-              icon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
-            }
-            else {
-              icon = new iconStyle({iconUrl: 'public/imgs/userShop.png'});
-            }
-            var marker = L.marker([pois[n].lat, pois[n].lng], {icon: icon}, {name: data[i].Name});
-            marker['userId'] = userId;
-            circles.push(marker);
-            points.push({lat: pois[n].lat, lng: pois[n].lng, poiTag: pois[n].poiTag});
-          }
-          poiUsers.push({userId : userId, points: points, homeLoc: homeLoc});
+        
+		var homeIcon = new iconStyle({iconUrl: 'public/imgs/userHome.png'});
+		
+		var workIcon = new iconStyle({iconUrl: 'public/imgs/userHeart.png'});  
+		
+        for (user in data) {
+            var homeMarker = L.marker([data[user].homeLoc[0], data[user].homeLoc[1]], {icon: homeIcon});
+			var workMarker = L.marker([data[user].workLoc[0], data[user].workLoc[1]], {icon: workIcon});
+            homeMarker['userId'] = user;
+			workMarker['userId'] = user;
+            circles.push(homeMarker);
+			circles.push(workMarker);
         }
-        cb(L.layerGroup(circles), poiUsers);
-      }
+        cb(poiUsers, L.layerGroup(circles));
     })
-  };
-
-  this.getDestinationData = function (file, cb) {
-    $http.get('/load/destinations/'+file)
-    .success(function (data, status) {
-	  cb(data);
-	})
   }
+
 });
-
-
-
-
-
-
-
-

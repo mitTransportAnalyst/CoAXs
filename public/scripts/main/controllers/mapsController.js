@@ -14,7 +14,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
 
-
   // Management for current scenario
   var scenarioBase = {
     name     : null,
@@ -43,8 +42,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.selCordon = null;
   
   $scope.cordons = {};
-    
-  analystService.refreshCred();
   
   $interval(function () {
             analystService.refreshCred();
@@ -59,12 +56,114 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	}
 
   $scope.variants = {
-    'A' : { sel : 0, all : {}, color: '#555555',buslines:['1', 'CT1', '64'],corName: "Mass Ave"},
-	  'B' : { sel : null, all : {}, color: '#7DD5ED', buslines:['111', '426', '428'],corName:"N. Washington St" },
-    'C' : { sel : null, all : {}, color: '#F3E05E', buslines:['39', '66'], corName:"Huntington Ave" },
-    'D' : { sel : null, all : {}, color: '#E092DF' , buslines:['30', '34', '34E', '35', '36', '37', '40', '50', '51'], corName:"Roslindale/Forest Hills" },
-    'E' : { sel : 0 , all : {}, color: '#8D6AA8', buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave" }
-  };
+    'A' : { sel : 0, all : {}, color: '#555555',
+	  buslines:['1', 'CT1', '64'],
+	  corName: "Mass Ave",
+	  segmentData:{length:2.6},
+	  routeData: {
+	    '1':{
+		  baseHeadway:9
+		},
+		'CT1':{
+		  baseHeadway:20
+		},
+		'64':{
+		  baseHeadway:17
+		}
+	  }
+	},
+	'B' : { sel : null, all : {}, color: '#7DD5ED', 
+	  buslines:['111', '426', '428'],
+	  corName:"N. Washington St",
+	  segmentData:{length:0.6},
+	  routeData: {
+	    '111':{
+		  baseHeadway:5
+		},
+		'426':{
+		  baseHeadway:40
+		},
+		'428':{
+		  baseHeadway:60
+		}
+	  }
+	},
+    'C' : { sel : null, all : {}, color: '#F3E05E', 
+	buslines:['39', '66'],
+	corName:"Huntington Ave",
+	segmentData:{length:0.4},
+	  routeData: {
+	    '66':{
+		  baseHeadway:9
+		},
+		'39':{
+		  baseHeadway:6
+		},
+	  }
+	},
+    'D' : { sel : null, all : {}, color: '#E092DF' , 
+	buslines:['30', '34', '35', '36', '37', '40', '50', '51'],
+	corName:"Roslindale/Forest Hills",
+	  segmentData:{length:1.2},
+	  routeData: {
+	    '30':{
+		  baseHeadway:20
+		},
+		'34':{
+		  baseHeadway:20
+		},
+		'35':{
+		  baseHeadway:20
+		},
+		'36':{
+		  baseHeadway:24
+		},
+		'37':{
+		  baseHeadway:40
+		},
+		'40':{
+		  baseHeadway:24
+		},
+		'50':{
+		  baseHeadway:24
+		},
+		'51':{
+		  baseHeadway:20
+		},
+	  }
+	},
+    'E' : { sel : 0 , all : {}, color: '#8D6AA8', 
+	buslines:['14', '19', '22', '23', '28', '29', '44', '45'], corName:"Blue Hill Ave",
+	segmentData:{length: 2.4},
+     routeData: {
+	    '14':{
+		  baseHeadway:40
+		},
+		'19':{
+		  baseHeadway:17
+		},
+		'22':{
+		  baseHeadway:7
+		},
+		'23':{
+		  baseHeadway:5
+		},
+		'28':{
+		  baseHeadway:7
+		},
+		'29':{
+		  baseHeadway:20
+		},
+		'44':{
+		  baseHeadway:13
+		},
+		'45':{
+		  baseHeadway:10
+		},
+	  }
+	}
+  }
+
   
     $scope.mode = {
     all: [],
@@ -107,7 +206,19 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		};
   });
 
-  
+
+
+  $scope.trackClick = function(name, value){
+    var nowTime = Date();
+    var req = {
+      method: 'POST',
+      url: 'https://api.mlab.com/api/1/databases/tdm/collections/coax?apiKey=9zaMF9-feKwS1ZliH769u7LranDon3cC',
+      data: { name: name, value:value,time:nowTime }
+    };
+    $http(req);
+  };
+
+
     // Angular Leaflet Directive - base components
   var defaults_global = {
     minZoom: 9,
@@ -115,7 +226,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     scrollWheelZoom    : false,
     zoomControl        : true,
 	zoomControlPosition: 'bottomright',
-    attributionControl : false,
+    attributionControl : false
   };
   var maxBounds_global =  {
     northEast: {
@@ -151,7 +262,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
    lat  : 42.35974896174244,
     lng  : -71.09368801116943,
-    zoom : 12,
+    zoom : 12
   };
 
   // Assembling right map
@@ -174,7 +285,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-start-shadowed.png',
 			   iconSize: [48,48],
-			   iconAnchor: [46,40],
+			   iconAnchor: [46,40]
 			   },
 		draggable : true },
 	end: { 
@@ -182,7 +293,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		lng: $scope.center_left.lng, 
 		icon: {iconUrl: 'public/imgs/marker-flag-end-shadowed.png',
 			   iconSize: [0,0],
-			   iconAnchor: [46,40],
+			   iconAnchor: [46,40]
 			   },
 		draggable : true }
 	};
@@ -228,6 +339,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   loadService.getDestinationData('chartLabels',
 	  function(data){d3Service.setChartLabels(data)}
   );
+
+  loadService.getUserData('currentSession',
+    function(poiUsers, poiLayer){
+	$scope.users = poiUsers;
+	poiUserPoints = poiLayer;
+	leafletData.getMap('map_left').then(function(map) {
+	  map.addLayer(poiUserPoints);
+	})
+  });
   
   // right globals
   var geoJsonLeft = null,
@@ -508,6 +628,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       stops.addTo(map);
       stopsLayer = stops;
     });
+
+    // $scope.getUserHomeWork(function(data){
+    //   data.addTo(map);
+    //   poiUserPoints = stops;
+    //
+    // })
+
+
+
   });
 
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
@@ -719,16 +848,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     }
   }
 
-  //save
-  $scope.saveAltButton = function () {
-
-
-
-
-
-
-  }
-
+ 
   // this is to control against having offpeak val lower than peak val
   $scope.updateOffPeakVal = function (peakMin, tabnav) {
     if (Number(peakMin) > Number($scope.scenario[tabnav].offpeak.min)) {
@@ -743,25 +863,22 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-	if (id) { 
-	leftService.targetPOIUsers(poiUserPoints, id); 
-	$scope.poiUsers.forEach(function (user) {
-	if (user.userId == id) {
-		if (user.homeLoc[0] && user.homeLoc[1]){
-			$scope.markers_left.main.lat = user.homeLoc[0];
-			$scope.markers_left.main.lng = user.homeLoc[1];
-		}
-	}});
+	if (id) {
+	  leftService.targetPOIUsers(poiUserPoints, id);
+
+    $scope.markers.start.lat = $scope.users[id].homeLoc[0];
+    $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+
 	$scope.preMarkerQuery();
 	leafletData.getMap('map_left').then(function(map) {
-		map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
+		map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);
 	});
 	}
-	else { 
+	else {
 	leafletData.getMap('map_left').then(function(map) {
 		map.panTo([center_global.lat, center_global.lng]);
 		$scope.resetMap();
-	});	
+	});
 	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
 	}
   };
@@ -781,16 +898,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       });
 	}
   }};
-
-
-
-
-
-
-
-
-
-
 
   // MANAGER CONTROLS
   // from manager control run create
@@ -862,7 +969,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     saveAs(blob, "sessionSave.json");
   }
 
-  
   $scope.letters = ['A','B','C','D','E'];
 
 
@@ -962,8 +1068,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     $scope.scenario1.modifications = currentModificationJSON;
 
     console.log($scope.scenario1);
-
-  }
-  
+  };
 
 });
