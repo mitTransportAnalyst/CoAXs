@@ -515,7 +515,7 @@
 
 
       <div>
-        <label class="btn tiny" ng-click=""><i class="fa fa-plus"></i> Select All
+        <label class="btn tiny" ng-click=""><i class="fa fa-level-down fa-flip-horizontal"></i>
         </label>
         <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};font-size: 16px; padding: 8px;"
              ng-click="targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
@@ -537,7 +537,7 @@
     <div class="showToggle" ng-show="visibleTabs.customize">
 
 	  <div class="btn-group btn-group-justified">
-         <label class="btn" ng-class="tabnav ? '' : 'disabled active'" ng-click="routeScorecard = !routeScorecard" style="background-color: {{variants[tabnav].color}}; color: #FFF"><i class="fa fa-line-chart"></i> 
+         <label class="btn" ng-class="routeScorecard ? 'active' : ''" ng-click="routeScorecard = !routeScorecard" style="background-color: {{variants[tabnav].color}}; color: #FFF"><i class="fa fa-line-chart"></i> 
 		 <span ng-show="routeScorecard">Hide Data</span>
 		 <span ng-show="!routeScorecard">Show Data</span>
         </label>
@@ -573,30 +573,32 @@
 
 
       <div class="btn-group btn-group-justified">
-        <label class="btn btn-xs" ng-show=""></label>
-        <label class="btn btn-info" ng-click="newCombo()">
-
+		<div class="btn" style="width:300px; color:{{variants[tabnav].color}}; background-color:{{variants[tabnav].color}}">
+		  <i class="fa fa-level-down "></i>	
+	    </div>
+        <div class="btn btn-info" ng-click="newCombo()" style="width:150px; position: absolute; right:0px">
           <i class="fa fa-save"></i> Save
-        </label>
+        </div>
       </div>
       <div>
 
-
+	  <div class="setTimesTitle">
         <div class="subHead" >
           Running time change (segment only)
         </div>
-
-        <div class="setTimesTitle">
-
           <div>
-            <div style="padding-top: 0px;"><img
-              src="public/imgs/runningtime.png" style="height:35px">
-
+            <div style="padding-top: 0px;">
+			
+			<div style="width:60px; display:inline-block">
+			<img src="public/imgs/runningtime.png" style="height:35px">
+			</div>
+			<div style="width:75%; display:inline-block">
             <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
             <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
             </div>
           </div>
         </div>
+	  </div>
 
       </div>
 
@@ -609,13 +611,16 @@
           </div>
 
           <div>
-            <div style="padding-top: 5px;"><img
-              src="public/imgs/dwelltime.png" style="height:25px">
-
+            <div style="padding-top: 5px;">
+			<div style="width:60px; display:inline-block">
+			<img src="public/imgs/dwelltime.png" style="height:35px">
+			</div>
+			<div style="width:75%; display:inline-block">
               <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].dwell}}%
             </div>
           </div>
+		  </div>
 
 
         </div>
@@ -631,13 +636,16 @@
           </div>
 
           <div>
-            <div style="padding-top: 5px;"><img
-              src="public/imgs/frequency.png" style="height:25px">
-
+            <div style="padding-top: 5px;">
+			<div style="width:60px; display:inline-block">
+			<img src="public/imgs/frequency.png" style="height:35px">
+			</div>
+			<div style="width:75%; display:inline-block">
               <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />
               <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].headway}}%
             </div>
           </div>
+		  </div>
 
 
         </div>
