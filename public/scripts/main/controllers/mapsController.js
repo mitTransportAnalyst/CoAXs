@@ -998,4 +998,49 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     console.log($scope.scenario1);
   };
 
+
+  $scope.$on('leafletDirectiveMap.moveend', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "left",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+    leafletData.getMap('map_right').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "right",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+  });
+
+  $scope.$on('leafletDirectiveMarker.click', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      var appStateObject= {
+        originlat: $scope.markers.start.lat,
+        originlng:$scope.markers.start.lng,
+        destlat: $scope.markers.end.lat,
+        destlng: $scope.markers.end.lng
+      };
+      console.log(appStateObject);
+      $scope.trackClick("markerMove",appStateObject);
+    });
+
+  });
+
+
 });
