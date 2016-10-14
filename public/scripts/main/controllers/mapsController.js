@@ -14,11 +14,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
 
-
-  $scope.users =
-    [{name:"PD",homeLoc:[42.3752666,-71.112716],workLoc:[42.3601382,-71.0948792]},{name:"AS",homeLoc:[42.376542,-71.0994836],workLoc:[42.3601382,-71.0948792]},
-	{name:"CF",homeLoc:[42.3466875,-71.1051336],workLoc:[42.3577002,-71.0632255]},{name:"KL",homeLoc:[42.3747013,-71.1306015],workLoc:[42.3745698,-71.1284254]},{name:"LM",homeLoc:[42.3862377,-71.1113838],workLoc:[42.3896347,-71.1169921]},{name:"JZ",homeLoc:[42.3708078,-71.0718046],workLoc:[42.3622698,-71.0837989]},{name:"RD",homeLoc:[42.3733821,-71.0981386],workLoc:[42.3603595,-71.1024657]},{name:"ME",homeLoc:[42.3225994,-71.0984173],workLoc:[42.350101,-71.0773375]},{name:"RG",homeLoc:[42.2865609,-71.1303834],workLoc:[42.3532572,-71.0568642]},{name:"JM",homeLoc:[42.343579,-71.1260609],workLoc:[42.3603595,-71.1024657]},{name:"SS",homeLoc:[42.3505074,-71.0825773],workLoc:[42.3534452,-71.0765612]}];
-
   // Management for current scenario
   var scenarioBase = {
     name     : null,
@@ -47,8 +42,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.selCordon = null;
   
   $scope.cordons = {};
-    
-  analystService.refreshCred();
   
   $interval(function () {
             analystService.refreshCred();
@@ -335,7 +328,14 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	  function(data){d3Service.setChartLabels(data)}
   );
 
-
+  loadService.getUserData('currentSession',
+    function(poiUsers, poiLayer){
+	$scope.users = poiUsers;
+	poiUserPoints = poiLayer;
+	leafletData.getMap('map_left').then(function(map) {
+	  map.addLayer(poiUserPoints);
+	})
+  });
   
   // right globals
   var geoJsonLeft = null,
@@ -853,34 +853,24 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.targetPOIUsers = function (id) {
     $scope.currentPOIUser = id;
-    console.log(id);
-	// if (id) {
-	// leftService.targetPOIUsers(poiUserPoints, id);
+	if (id) {
+	  leftService.targetPOIUsers(poiUserPoints, id);
 
-  $scope.markers.start.lat = $scope.users[id].homeLoc[0];
-  $scope.markers.start.lng = $scope.users[id].homeLoc[1];
+    $scope.markers.start.lat = $scope.users[id].homeLoc[0];
+    $scope.markers.start.lng = $scope.users[id].homeLoc[1];
 
-
-	// $scope.poiUsers.forEach(function (user) {
-	// if (user.userId == id) {
-	// 	if (user.homeLoc[0] && user.homeLoc[1]){
-	// 		$scope.markers_left.main.lat = user.homeLoc[0];
-	// 		$scope.markers_left.main.lng = user.homeLoc[1];
-	// 	}
-	// }});
-
-	// $scope.preMarkerQuery();
-	// leafletData.getMap('map_left').then(function(map) {
-	// 	map.panTo([$scope.markers_left.main.lat, $scope.markers_left.main.lng]);
-	// });
-	// }
-	// else {
-	// leafletData.getMap('map_left').then(function(map) {
-	// 	map.panTo([center_global.lat, center_global.lng]);
-	// 	$scope.resetMap();
-	// });
-	// poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
-	// }
+	$scope.preMarkerQuery();
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([$scope.markers.start.lat, $scope.markers.start.lng]);
+	});
+	}
+	else {
+	leafletData.getMap('map_left').then(function(map) {
+		map.panTo([center_global.lat, center_global.lng]);
+		$scope.resetMap();
+	});
+	poiUserPoints.eachLayer( function (layer) { layer.setOpacity(1) })
+	}
   };
 
 

@@ -251,17 +251,15 @@ app.post('/cachedLocs/:fileId', bodyParser.json({limit: '50mb'}), function (req,
 
 
 // gather google responses from phil's survey, uses csv-streamify to convert csv (not the best library to use)
-app.get('/pois', function (req, res) {
-  var url = 'http://docs.google.com/spreadsheets/d/19tQgf9MQ_0aD6cDsnT66pKt35GwJxzY3BCm0Uznrdac/export?format=csv&id';
-  request(url)
-  .pipe(csv({
-    objectMode : true, 
-    columns    : true
-  }, function (err, doc) {
-    if (err) { res.status(500).send() }
-    else { res.status(200).send(doc) }
-  }));;
-})
+app.get('/load/users/:fileId', function (req, res) {
+  var url = 'https://www.dropbox.com/s/k97r75o90j3z8w6/'+req.params.fileId+'.json?dl=1';
+  request.get(url,function(err, response, body){
+    if (!err && response.statusCode == 200) {
+      res.send(body);
+    }
+  })
+});
+  
 
 // this is how the app is actually started up, the port can be specified either in command line or will default to 3000
 var server = app.listen(process.env.PORT || 3000, function () {
