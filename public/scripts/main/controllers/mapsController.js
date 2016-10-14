@@ -9,7 +9,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     document.getElementById('service-tab').style.width = (window.innerWidth)/2 - 275 + 'px';
 
-
   };
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
