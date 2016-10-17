@@ -49,8 +49,11 @@ angular.module('coaxsFilters', [])
   return function (input) {
     input = Math.floor(Number(input));
     if (input < 60) {
-      var seconds = ((input-Math.floor(input))/60).toFixed(2);
+      var seconds = Math.round((input-Math.floor(input))/60);
       var minutes = Math.floor(input);
+	  if (seconds < 10){
+	    seconds = '0' + seconds;
+	  }
 	  return String(minutes + ' m, ' + seconds + ' s');
     } else {
       var minutes = Math.floor(input%60);
