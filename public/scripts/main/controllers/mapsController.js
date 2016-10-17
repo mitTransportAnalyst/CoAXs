@@ -93,7 +93,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       stopsLayer      = null,
       routesLayer     = null,
       trunkLayer      = null,
-      poiUserPoints   = null,
+       trunkLayerForleft      = null,
+
+    poiUserPoints   = null,
       existingMBTAKey = null;
 
   $scope.snapPoints   = {all: [], sel: null, data: null},
@@ -119,7 +121,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     var req = {
       method: 'POST',
       url: 'https://api.mlab.com/api/1/databases/tdm/collections/coax?apiKey=9zaMF9-feKwS1ZliH769u7LranDon3cC',
-      data: { name: name, value:value,time:nowTime }
+      data: { ptp:$scope.pointToPoint, name: name, value:value, time:nowTime }
     };
     $http(req);
   };
@@ -550,15 +552,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
 	
-	loadService.getCordons(function([cordonGeos, cordonData]){
-		cordonGeos.addTo(map);
-		cordonsLayer = cordonGeos;
-		$scope.cordons = cordonData;
-	});
+	// loadService.getCordons(function([cordonGeos, cordonData]){
+	// 	cordonGeos.addTo(map);
+	// 	cordonsLayer = cordonGeos;
+	// 	$scope.cordons = cordonData;
+	// });
 
-	loadService.getTrunk(function (data) {
-      trunkLayer = data.layerGroup;
-      trunkLayer.addTo(map);
+	loadService.getTrunkforleft(function (data) {
+    trunkLayerForleft = data.layerGroup;
+    trunkLayerForleft.addTo(map);
 
       // rbind routes to scope
       $scope.routes = data.geoJsons;
@@ -997,5 +999,50 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     console.log($scope.scenario1);
   };
+
+
+  $scope.$on('leafletDirectiveMap.moveend', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "left",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+    leafletData.getMap('map_right').then(function(map){
+      zoomLevel = map.getZoom();
+      mapBounds = map.getBounds().toBBoxString();
+      var appStateObject= {
+        map: "right",
+        zoom: zoomLevel,
+        box: mapBounds
+      };
+      appStateString = JSON.stringify(appStateObject);
+      // console.log(appStateObject);
+      $scope.trackClick("mapmove",appStateObject);
+    });
+
+  });
+
+  $scope.$on('leafletDirectiveMarker.click', function(event){
+    leafletData.getMap('map_left').then(function(map){
+      var appStateObject= {
+        originlat: $scope.markers.start.lat,
+        originlng:$scope.markers.start.lng,
+        destlat: $scope.markers.end.lat,
+        destlng: $scope.markers.end.lng
+      };
+      console.log(appStateObject);
+      $scope.trackClick("markerMove",appStateObject);
+    });
+
+  });
+
 
 });

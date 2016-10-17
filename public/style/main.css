@@ -556,6 +556,17 @@ input {
   z-index 		   : 9
 }
 
+#map_right {
+  height           : 75.5%;
+  /*width: 50%;*/
+  /*width: -moz-calc(100% - 300px);*/
+  width: calc(100% - 300px);
+  position         : absolute;
+  left : 300px;
+  z-index 		   : 10
+}
+
+
 .leaflet-container {
   background : -webkit-linear-gradient( #CDD2D4, #F5F5F3) !important; /* For Safari 5.1 to 6.0 */
   background : -o-linear-gradient(      #CDD2D4, #F5F5F3) !important; /* For Opera 11.1 to 12.0 */

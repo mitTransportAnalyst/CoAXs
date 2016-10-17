@@ -133,6 +133,35 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
       });
   };
 
+  this.getTrunkforleft = function (cb,variants) {
+    $http.get('/load/trunks')
+      .success(function (data, status) {
+        var geojsonList   = [];
+        var routes = {};
+
+        for (var i = 0; i < data.features.length; i++) {
+          var feature = data.features[i].properties;
+          feature['length'] = supportService.getLength(data.features[i].geometry);
+
+          var color = variants[feature.corridorId].color;
+          routes[i] = L.geoJson(data.features[i], {
+            style: function (feature) {
+              return {
+                color: color,
+                weight: 10,
+                opacity: 0.4
+              };
+            },
+            base: feature
+          });
+
+          geojsonList.push(routes[i]);
+        }
+        var routesLayer = L.layerGroup(geojsonList);
+        cb({layerGroup:L.layerGroup(geojsonList), geoJsons:routes});
+
+      });
+  };
 
   this.getStops = function (url, cb) {
     $http.get(url)
