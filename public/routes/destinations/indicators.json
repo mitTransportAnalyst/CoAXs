@@ -1,4 +1,4 @@
-{"jobs":[
+{"jobs":{"categories":[
 	 {"id": "jobs1",
 	  "grid": "Jobs_with_earnings__1250_per_month_or_less.grid",
 	  "verbose": "Jobs | $"},
@@ -8,7 +8,9 @@
 	 {"id": "jobs3",
 	  "grid": "Jobs_with_earnings_greater_than__3333_per_month.grid",
 	  "verbose": "Jobs | $$$"}],
-	  "workers":[
+	  "basemapUrl":"https://ansoncfit.carto.com/api/v2/viz/73156de8-9b48-11e6-a28c-0e05a8b3e3d7/viz.json"
+	  },
+"workers":{"categories":[
 	 {"id": "workers1",
 	  "grid": "Workers_with_earnings__1250_per_month_or_less.grid",
 	  "verbose": "Workers | $"},
@@ -18,4 +20,5 @@
 	 {"id": "workers3",
 	  "grid": "Workers_with_earnings_greater_than__3333_per_month.grid",
 	  "verbose": "Workers | $$$"}]
+	  }
 }

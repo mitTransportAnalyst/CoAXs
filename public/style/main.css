@@ -290,7 +290,8 @@ background-color  : #696969;
   text-align: center;
   position: absolute;
   max-height: 65%;
-  bottom: 25%;
+  /*bottom: 27%;*/
+  bottom: calc(25% + 50px);
   left: 300px;
   display: inline;
 

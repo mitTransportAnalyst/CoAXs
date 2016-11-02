@@ -59,7 +59,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   loadService.getVariants('corridors',function(variants){
     $scope.variants = variants;
 	getMapData();
-	updateRouteData();
+	updateRouteData();	
     }
   );
   
@@ -134,7 +134,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     scrollWheelZoom    : false,
     zoomControl        : true,
 	zoomControlPosition: 'bottomright',
-    attributionControl : false
+    attributionControl : 'topleft'
   };
   var maxBounds_global =  {
     northEast: {
@@ -147,14 +147,18 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   
    var tilesDict = {
-    blank: {
+    base: {
 		name: 'Blank',
-		url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
+		url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png',
 		type: 'xyz'
     },
-	base: {
+	jobs: {
+	    url: 'https://ansoncfit.carto.com/api/v2/viz/73156de8-9b48-11e6-a28c-0e05a8b3e3d7/viz.json'
+    },
+	residents: {
         name: 'Neighborhoods and Parks',
-        url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
+        url:'https://api.mapbox.com/styles/v1/ansoncfit/ciupzxofp006n2js5k23t0lwi/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA'
+		,
         type: 'xyz'
     },
 	collisions: {
@@ -240,7 +244,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           } , 3540000);
 
   animateProgressBar();
-  analystService.setDestinationData()
+  analystService.setDestinationData(function(destinationBasempUrls){
+    for (indicator in destinationBasempUrls){
+	  tilesDict[indicator] = destinationBasempUrls[indicator]
+	}
+  })
   .then(function (){analystService.fetchStopTreesAndGrids()
   .then(function (){finishProgressBar()})});
   
@@ -415,7 +423,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.setCordon = function (cordonId) {
 	$scope.selCordon = cordonId;
 	d3Service.clearCharts();
-	targetService.targetCordons(cordonsLayer,cordonId);
+	//targetService.targetCordons(cordonsLayer,cordonId);
 	if ($scope.selCordon){
 	d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
 			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
@@ -552,21 +560,36 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
 	
+	var jobsLayer = cartodb.createLayer(map,
+	tilesDict.jobs.url,
+	{legends:false}).addTo(map)
+	.on('done',
+	function(layer){  
+	  addLayerHack = function(){
+		if (layer.urls){
+		  L.tileLayer(layer.urls.tiles[0]).addTo(map);
+		}  else {
+		  setTimeout(function(){addLayerHack()},500);
+	    }
+	  }
+	  addLayerHack();	 
+	});
+	
 	// loadService.getCordons(function([cordonGeos, cordonData]){
 	// 	cordonGeos.addTo(map);
 	// 	cordonsLayer = cordonGeos;
 	// 	$scope.cordons = cordonData;
 	// });
 
-	loadService.getTrunkforleft(function (data) {
-    trunkLayerForleft = data.layerGroup;
-    trunkLayerForleft.addTo(map);
+	// loadService.getTrunkforleft(function (data) {
+    // trunkLayerForleft = data.layerGroup;
+    // trunkLayerForleft.addTo(map);
 
-      // rbind routes to scope
-      $scope.routes = data.geoJsons;
-      var routes = data.geoJsons;
+      // // rbind routes to scope
+      // $scope.routes = data.geoJsons;
+      // var routes = data.geoJsons;
 
-    },$scope.variants);
+    // },$scope.variants);
 	
     loadService.getExisting(function (subways) {      
       subwaysLayer_l = subways;
@@ -611,10 +634,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
-
-    // load user points from phil's google spreadsheet
-
-  });
+	
+  })
   }
   
   // highlight a corridor, all routes within
@@ -1043,6 +1064,4 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     });
 
   });
-
-
 });

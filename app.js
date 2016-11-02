@@ -27,12 +27,15 @@ var csv     = require('csv-streamify');
 var analystCreds = require('request');
 
 var analystReqOpts = {
-  url: 'https://analyst-preview.conveyal.com/oauth/token',
+  url: 'https://analyst-preview.conveyal.com/oauth/token',//'http://ansons.mit.edu:9090/oauth/token',
+  
   method: 'POST',
   timeout: 10000,
   auth: {
-    'user' : process.env.analyst_key,
+    'user' : process.env.analyst_key,//'36S7EA3BE85O48RQVW0CCZKOO',
+	
     'pass' : process.env.analyst_secret
+//'/sL4SssYnCSefhomGkoYwL35mCInJezUve2xeuo0vbo' 
   },
   headers : {
     'content-type'  : 'application/x-www-form-urlencoded',
