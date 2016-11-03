@@ -1065,7 +1065,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   });
 
   leafletData.getMap('map_left').then(function (map) {
-    $scope.topLayer =  L.tileLayer('https://api.mapbox.com/styles/v1/ctrob/civ2rmzq1000f2iobr3004bmy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg').addTo(map).bringToFront();
+    $scope.topLayer =  L.tileLayer('https://api.mapbox.com/styles/v1/ctrob/civ2ucrck000x2irow3xgc9sj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg').addTo(map).bringToFront();
 
     $scope.topLayer.setZIndex(10000);
 
