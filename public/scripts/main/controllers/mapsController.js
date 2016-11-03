@@ -156,15 +156,27 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         name: 'Neighborhoods and Parks',
         url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
+    //
+    // 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA'
+    // 'https://api.mapbox.com/styles/v1/ctrob/civ2q03xt00082iry0vj6nqew/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg'
     },
 	collisions: {
         name: 'Collisions',
         url: 'https://api.mapbox.com/v4/ansoncfit.a18ea9ba/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
-    }
-  }; 
-  
-  var tiles_global = tilesDict.base;
+    },
+     light: {
+       name: 'light',
+       url: 'https://api.mapbox.com/styles/v1/ctrob/civ2rkezr00042ilnogrj4zjm/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg',
+       type: 'xyz'
+     }
+  };
+
+
+
+
+
+  var tiles_global = tilesDict.light;
   
   var center_global = {
 
@@ -206,7 +218,15 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		draggable : true }
 	};
 
-  
+
+
+
+
+
+
+
+
+
   // handles logic for progress bar loading view
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
@@ -1044,5 +1064,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   });
 
+  leafletData.getMap('map_left').then(function (map) {
+    $scope.topLayer =  L.tileLayer('https://api.mapbox.com/styles/v1/ctrob/civ2rmzq1000f2iobr3004bmy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg').addTo(map).bringToFront();
+
+    $scope.topLayer.setZIndex(10000);
+
+  });
 
 });
