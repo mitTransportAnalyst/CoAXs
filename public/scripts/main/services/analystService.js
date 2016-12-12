@@ -2,12 +2,12 @@
 coaxsApp.service('analystService', function (supportService, $interval, $http, $q) {
 
   var token = null;	//oauth2 token for analyst-server login
-  var analystUrlBase = 'https://analyst-preview.conveyal.com/api/single?accessToken='; //base URL for Conveyal Analyst-Server
+  var analystUrlBase = 'http://coaxs.mit.edu:9090/api/single?accessToken='; //base URL for Conveyal Analyst-Server
   var analystUrl = ''; //to take the base and the oauth2 token
   var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/'; //base URL for destination grid data
-  var defaultShapefile = '6f0207c4-0759-445b-bb2a-170b81bfeec6',
-     defaultGraph = '650b39507bce5c884334aa960deb093d',
-	 workerVersion =  'v1.5.0-74-geb0f8d0';
+  var defaultShapefile = 'd54d12d0-b34a-4921-89f7-484973dbc3ac',
+     defaultGraph = '709b3861891d5ea98975ab8317f8f270',
+	 workerVersion =  'v2.0.0-SNAPSHOT';
   var indicatorAttributes = {};
   var attributeUrlArray = [];
   var attributeIdArray = [];
@@ -61,7 +61,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
     "jobId": supportService.generateUUID(),
 	"transportNetworkId": defaultGraph,
 	"request": {
-	  "date":"2015-10-20","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"WALK,TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":120,
+	  "date":"2015-10-19","fromTime":25200,"toTime":32400,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":60,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":8,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":120,
 		"scenario":{"id":999}
 	}
   };
@@ -261,7 +261,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 
   processTransitiveResult = function (res, scenNum) {
     var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,1);
+	  transitive.journeys = transitive.journeys.slice(0,3);
 	  if (res.travelTime > 254){ //not a feasible journey
 	    plotData[scenNum] = {
 		  'walkTime' : 0,

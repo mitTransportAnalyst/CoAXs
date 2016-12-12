@@ -262,7 +262,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   animateProgressBar();
   analystService.setDestinationData()
   .then(function (){analystService.fetchStopTreesAndGrids()
-  .then(function (){finishProgressBar()})});
+  .then(function (){finishProgressBar()})
+  });
   
   loadService.getDestinationData('chartLabels',
 	  function(data){d3Service.setChartLabels(data)}
@@ -435,7 +436,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.setCordon = function (cordonId) {
 	$scope.selCordon = cordonId;
 	d3Service.clearCharts();
-	targetService.targetCordons(cordonsLayer,cordonId);
+	//targetService.targetCordons(cordonsLayer,cordonId);
 	if ($scope.selCordon){
 	d3Service.drawCordonGraph($scope.cordons[$scope.selCordon].dataset);
 			if ($scope.cordons[$scope.selCordon].centerLat && $scope.cordons[$scope.selCordon].centerLon){
