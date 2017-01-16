@@ -22,6 +22,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     peak     : { min : 10,  sec : 0 },
     offpeak  : { min : 20, sec : 0 },
   };
+  
+  var baseUUID = '13bcc06a-49af-4629-a123-db959159224c';
 
   $scope.currentParam = {
     'B' : {seedVariantId: 'B0', dwell:0, headway:0, runningTime: 0},
@@ -39,7 +41,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.cordons = {};
   
   $interval(function () {
-            analystService.refreshCred();
+            analystService.refreshCred(baseUUID);
           } , 3540000);
   
   $scope.scenario = {
@@ -174,6 +176,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     lng  : -0.134300,
     zoom : 13
   };
+  
 
   // Assembling right map
   $scope.defaults_right  = angular.copy(defaults_global);
@@ -237,10 +240,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
               }) }, 200)
   }
   
-  $interval(function () {
-            analystService.refreshCred();
-          } , 3540000);
-
   animateProgressBar();
   analystService.setDestinationData()
   .then(function (){analystService.fetchStopTreesAndGrids()
@@ -839,7 +838,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	for (prop in $scope.combos.all) {$scope.defaultsBuilt = true;}
 	
 	if(!$scope.defaultsBuilt){
-	var comboId = supportService.generateUUID();
+	var comboId = baseUUID;
     $scope.combos.all[0] = {
 	  id : comboId,
       name    : 'Current',
@@ -898,6 +897,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		//apply frequency modification
 		var frequencyScale =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
 		analystService.modifyHeadway(key,frequencyScale,seed,function(modifyJSON){
+          modifyJSON.forEach(function (route) {
+            currentModificationJSON.push(route);
+          });
+        });
+		analystService.removeTrips(key,seed,function(modifyJSON){
           modifyJSON.forEach(function (route) {
             currentModificationJSON.push(route);
           });

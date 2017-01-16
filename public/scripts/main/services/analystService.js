@@ -46,12 +46,15 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	browsochrones[i] = new Browsochrones();
   }
   
-  refreshCred = function () {
+  var baseId = '';
+  
+  refreshCred = function (baseUUID) {
   return new Promise(function(resolve, reject){
   $http.get('/credentials').success(function (t, status) { 
       token = t.access_token 
 	  analystUrl = '';
 	  analystUrl = analystUrlBase + token; 
+	  baseId = baseUUID;
 	  resolve();
 	});
   })
@@ -64,7 +67,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	"transportNetworkId": defaultGraph,
 	"request": {
 	  "date":"2016-04-11","fromTime":28800,"toTime":30600,"accessModes":"WALK","directModes":"WALK","egressModes":"WALK","transitModes":"TRANSIT","walkSpeed":1.1,"bikeSpeed":4.1,"carSpeed":20,"streetTime":90,"maxWalkTime":20,"maxBikeTime":20,"maxCarTime":45,"minBikeTime":10,"minCarTime":10,"suboptimalMinutes":5,"reachabilityThreshold":0,"bikeSafe":1,"bikeSlope":1,"bikeTime":1,"maxRides":4,"bikeTrafficStress":4,"boardingAssumption":"RANDOM","monteCarloDraws":120,
-		"scenario":{"id":'13bcc06a-49af-4629-a123-db959159224c'}
+		"scenario":{"id":baseId}
 	}
   };
   
@@ -75,14 +78,18 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	"workerVersion": workerVersion,
 	"request": staticRequest
   };
+  
+  var stopTreesBody = [];
 
-  //to get stopTrees (walking distances from grid cells to nearby stops)
-  var stopTreesBody = JSON.stringify({
+  stopTreesBody[0] = {
     "type": 'static-stop-trees',
 	"graphId": defaultGraph,
 	"workerVersion": workerVersion,
 	"request": staticRequest
-  });
+  };
+  
+  //to get stopTrees (walking distances from grid cells to nearby stops)
+  var stopTreesResponses = {}
   
   var postToAnalyst = function(body,cb) {return fetch(analystUrl,{method: 'POST', body: body});
   };
@@ -122,14 +129,15 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	 }})
   };
   
-  this.fetchStopTreesAndGrids = function () {  
+  this.fetchStopTreesAndGrids = function (baseUUID) {  
     return new Promise(function(resolve, reject){
 		checkWarmup().then(function(){
 			$q.all([
-			postToAnalyst(stopTreesBody['base']).then(function(res){
+			postToAnalyst(JSON.stringify(stopTreesBody[0])).then(function(res){
 			  console.log('fetching stopTrees');
 			  return res.arrayBuffer();
 			})]).then(function([stopTrees]){
+			  stopTreesResponses[baseId]=stopTrees.slice(0);
 			  browsochrones[0].setStopTrees(stopTrees.slice(0));
 			  browsochrones[1].setStopTrees(stopTrees.slice(0));
 			  resolve();
@@ -224,22 +232,45 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		
 		//set scenario
 		staticDefault[i].request.request.scenario = scenarios[i];
-		staticDefault[i].request.request.scenario.id = supportService.generateUUID();
+		//staticDefault[i].request.request.scenario.id = scenarios[i].id //supportService.generateUUID();
 		staticBody[i] = JSON.stringify(staticDefault[i]);
     }
-	//fetch a grid for travel times
 	
-
+	//fetch a grid for travel times
 	if(!isComparison){
+	  (function(){
+	    return new Promise(function(resolve, reject){
+		if(stopTreesBody[0].request.request.scenario.id != scenarios[0].id){ //if the scenario requested is not the same as the scenario for which we have stopTrees loaded in slot 1...
+	      if(!stopTreesResponses[scenarios[0].id]){ //and if we don't have the stopTrees cached from a previous request...
+		  stopTreesBody[0].request.request.scenario = scenarios[0];
+		  console.log('loading new stop trees');
+		  postToAnalyst(stopTreesBody[0]).then(function(res){
+ 		    var stopTrees = res.arrayBuffer();
+		    stopTreesResponses[scenarios[0].id] = stopTrees.slice(0);
+		    browsochrones[0].setStopTrees(stopTrees.slice(0));
+		    console.log('reloaded stop trees');
+		    resolve();
+		  })
+	     } else { //we do have the stopTrees cached from a previous request, so set them
+	       console.log('resetting stop trees');
+		   browsochrones[0].setStopTrees(stopTreesResponses[scenarios[0].id]);
+		   resolve();
+	     }
+	   } else {
+	     console.log('not resetting stop trees');
+	     resolve();
+	   }
+	  })}).then(
 	  fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
 	  postToAnalyst(staticBody[0]).then(function(res){
 		  return res.arrayBuffer()})
 		.then(function(buff){
+		  console.log('reset bc');
 		  browsochrones[0].setOrigin(buff, xy)
 		  .then(function(){
 			makeIsochronesAndPlotData(0,type).then(function(){resolve(plotData);})
 		  })
-		}))
+		})))
 	} else {
 //todo fix callback hell
 		$q.all(scenNumArray.map(function(i){
@@ -257,7 +288,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 
   processTransitiveResult = function (res, scenNum) {
     var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,3);
+	  transitive.journeys = transitive.journeys.slice(0,2);
 	  if (res.travelTime > 254){ //not a feasible journey
 	    plotData[scenNum] = {
 		  'walkTime' : 0,
@@ -376,21 +407,24 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
             scenarioJSON.push(route);
           }
         });
-		if (scenarioJSON[0]){
-		  var tempReq = staticRequest;
-		  tempReq.request.scenario.id = comboId;
-		  tempReq.request.scenario.modifications = scenarioJSON;
-		  
-		  stopTreesBody[comboId] = JSON.stringify({
-				"type": 'static-stop-trees',
-				"graphId": defaultGraph,
-				"workerVersion": workerVersion,
-				"request": tempReq
-		  });
-		  reloadStopTrees[com] = true;
-		} else {
-		  reloadStopTrees[com] = false;
+		if (!scenarioJSON[0]){ //no reroute modifications, so we can just copy the base stopTrees for this scenario
+		  stopTreesResponses[comboId]=stopTreesResponses[baseId];
 		}
+		// if (scenarioJSON[0]){
+		  // var tempReq = staticRequest;
+		  // tempReq.request.scenario.id = comboId;
+		  // tempReq.request.scenario.modifications = scenarioJSON;
+		  
+		  // stopTreesBody[com] = JSON.stringify({
+				// "type": 'static-stop-trees',
+				// "graphId": defaultGraph,
+				// "workerVersion": workerVersion,
+				// "request": tempReq
+		  // });
+		  // reloadStopTrees[com] = true;
+		// } else {
+		  // reloadStopTrees[com] = false;
+		// }
 		cb(scenarioJSON);
   };
   
