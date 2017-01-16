@@ -92,17 +92,16 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
       console.log('checking if analyst server is warmed up');
 	  refreshCred()
 	  .then(function(){
-	    postToAnalyst(JSON.stringify(metadataBody))
-	  .then(function(res){
-	    if(res.status == 200){
+	    postToAnalyst(JSON.stringify(metadataBody)).then(function(res){
+		  return res.json()})
+	  .then(function(metadata){
+		  browsochrones[0].setQuery(metadata);
+		  browsochrones[1].setQuery(metadata);
 		  console.log('analyst server is warmed up');
 	      resolve();
-		}else{
-		  setTimeout(function () {checkWarmup()} , 15000);
-		}
+		})
 	  })
       })
-    })
   };
   
   fetchMetadataIfNeeded = function (isPointToPoint, scenNum, scenarios){
@@ -127,16 +126,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
     return new Promise(function(resolve, reject){
 		checkWarmup().then(function(){
 			$q.all([
-			postToAnalyst(JSON.stringify(metadataBody)).then(function(res){
-			  console.log('fetched metadata');
-			  return res.json()}),
-			postToAnalyst(stopTreesBody).then(function(res){
-			  console.log('fetched stopTrees');
+			postToAnalyst(stopTreesBody['base']).then(function(res){
+			  console.log('fetching stopTrees');
 			  return res.arrayBuffer();
-			})]).then(function([metadata, stopTrees]){
-			  browsochrones[0].setQuery(metadata);
+			})]).then(function([stopTrees]){
 			  browsochrones[0].setStopTrees(stopTrees.slice(0));
-			  browsochrones[1].setQuery(metadata);
 			  browsochrones[1].setStopTrees(stopTrees.slice(0));
 			  resolve();
 			});
