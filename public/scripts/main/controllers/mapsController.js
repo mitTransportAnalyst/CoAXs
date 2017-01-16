@@ -716,9 +716,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   updateRouteData = function () {
     if($scope.variants[$scope.tabnav]){
-	scorecardService.updateRouteData($scope.variants[$scope.tabnav],$scope.currentParam[$scope.tabnav], function(data){
-	  $scope.routeData = data;
-	})
+	//scorecardService.updateRouteData($scope.variants[$scope.tabnav],$scope.currentParam[$scope.tabnav], function(data){
+	//  $scope.routeData = data;
+	//})
   }
   }
   
