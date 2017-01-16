@@ -24,11 +24,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
 
   $scope.currentParam = {
-    'A' : {dwell:0, headway:0, runningTime: 0},
-    'B' : {dwell:0, headway:0, runningTime: 0},
-    'C' : {dwell:0, headway:0, runningTime: 0},
-    'D' : {dwell:0, headway:0, runningTime: 0},
-    'E' : {dwell:0, headway:0, runningTime: 0}
+    'B' : {seedVariantId: 'B0', dwell:0, headway:0, runningTime: 0},
   };
 
   $scope.scenario0 = {}; 
@@ -47,12 +43,8 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           } , 3540000);
   
   $scope.scenario = {
-    'A' : angular.copy(scenarioBase),
 	'B' : angular.copy(scenarioBase),
-    'C' : angular.copy(scenarioBase),
-    'D' : angular.copy(scenarioBase),
-    'E' : angular.copy(scenarioBase),
-	}
+    }
 
   $scope.variants = {};
   
@@ -83,7 +75,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.defaultsBuilt = false
   
-  $scope.tabnav = 'A';
+  $scope.tabnav = 'B';
   
   // left globals
   var subwaysLayer_l    = null,
@@ -138,12 +130,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   };
   var maxBounds_global =  {
     northEast: {
-      lat: 41.36,
-      lng: -71.8
+      lat: 52.94145,
+      lng: 1.74973
       },
     southWest: {
-      lat: 43.36,
-      lng:-70.3}
+      lat: 50.6339,
+      lng: -1.71413}
   };
   
    var tilesDict = {
@@ -156,8 +148,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         name: 'Neighborhoods and Parks',
         url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
         type: 'xyz'
-    //
-    // 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA'
     // 'https://api.mapbox.com/styles/v1/ctrob/civ2q03xt00082iry0vj6nqew/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg'
     },
 	collisions: {
@@ -167,7 +157,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
     },
      light: {
        name: 'light',
-       url: 'https://api.mapbox.com/styles/v1/ctrob/civ2rkezr00042ilnogrj4zjm/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3Ryb2IiLCJhIjoiY2lrZTh5ajZkMDAzcnZmbHo4ZzBjdTBiaSJ9.vcZYiN_V3wV-VS3-KMoQdg',
+       url: 'https://api.mapbox.com/v4/ansoncfit.0bdb54c9/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW5zb25jZml0IiwiYSI6IkVtYkNiRWMifQ.LnNJImFvUIYbeAT5SE3glA',
        type: 'xyz'
      }
   };
@@ -180,9 +170,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   var center_global = {
 
-   lat  : 42.35974896174244,
-    lng  : -71.09368801116943,
-    zoom : 12
+   lat  : 51.499362,
+    lng  : -0.134300,
+    zoom : 13
   };
 
   // Assembling right map
@@ -219,21 +209,13 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	};
 
 
-
-
-
-
-
-
-
-
   // handles logic for progress bar loading view
   animateProgressBar = function () {
     $scope.loadProgress = {vis:true, val:0};
 	$scope.markers.start.draggable = false;
 	$scope.markers.end.draggable = false;
-	var stepValue = 150;
-	if($scope.scenarioCompare){stepValue = 300} //it takes twice as long to load two scenarios.
+	var stepValue = 200;
+	if($scope.scenarioCompare){stepValue = 400} //it takes twice as long to load two scenarios.
     var runProgressBar = setInterval( function () {
       $scope.$apply(function () {
         if ($scope.loadProgress.val > 98) {
@@ -859,69 +841,34 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	if(!$scope.defaultsBuilt){
 	var comboId = supportService.generateUUID();
     $scope.combos.all[0] = {
-      name    : 'BASELINE',
+	  id : comboId,
+      name    : 'Current',
       created : Date.now(),
-      sel     : {
+      seedVariantId:'ble0', 
+	  sel     : {
       },
       param   : {
-        'A' : {dwell:0, headway:0, runningTime: 0},
         'B' : {dwell:0, headway:0, runningTime: 0},
-        'C' : {dwell:0, headway:0, runningTime: 0},
-        'D' : {dwell:0, headway:0, runningTime: 0},
-        'E' : {dwell:0, headway:0, runningTime: 0}
       }
     };
     var comboId = supportService.generateUUID();
     $scope.combos.all[1] = {
-      name    : 'UPGRADES',
+      id : comboId,
+	  name    : 'Phase 1',
       created : Date.now(),
+	  seedVariantId:'ble1',
       sel     : {
-
       },
       param   : {
-        'A' : {dwell:40, headway:25, runningTime: 40},
-        'B' : {dwell:40, headway:25, runningTime: 40},
-        'C' : {dwell:40, headway:25, runningTime: 40},
-        'D' : {dwell:40, headway:25, runningTime: 40},
-        'E' : {dwell:40, headway:25, runningTime: 40}
-      }
+        'B' : {dwell:0, headway:0, runningTime: 0}
+        }
 	};
-	
-	  
 };
-
 
   $scope.defaultsBuilt = true;
 }
 
-  $scope.setNewSnapCache = function (id) {
-    $scope.managerOperations = true;
-    $scope.snapPoints.sel = id;
-    loadService.loadSnapCache(id)
-    .then(function (data) {
-      $scope.snapPoints.data = data
-      $scope.managerOperations = false;
-    })
-  }
-
-  // from manager control run download
-  $scope.downloadSession = function () {
-    var comboAll = angular.copy($scope.combos.all);
-    for (combo in comboAll) {
-      combo = comboAll[combo].sel;
-      for (cor in combo) {
-        if (combo[cor]) {
-          combo[cor] = $scope.variants[cor].all[combo[cor]];
-        }
-      }
-    }
-    var text = [JSON.stringify(comboAll)];
-    var blob = new Blob(text, {type: "text/json;charset=utf-8"});
-    saveAs(blob, "sessionSave.json");
-  }
-
-  $scope.letters = ['A','B','C','D','E'];
-
+  $scope.letters = ['B'];
 
   $scope.updateSelectScenario = function (comboIndex) {
     $scope.resetMap();

@@ -139,12 +139,12 @@
 
 <div class="topleft">
     <h4>
-      <b>CoAXs</b> | Bus Priority
+      <b>CoAXs</b> | BLE
 	</h4>
 	<div class="topinfo-body container" style="min-height:75vh">
 	
       <div style="height: 100%">
-		<h5>Showing door-to-door travel, with MBTA weekday morning schedule as baseline.</h5>
+		<h5>Showing average door-to-door travel by public transport during the morning peak.</h5>
 		<h5 ng-show="!loadProgress.vis">Drag the pin to explore.</h5>
 		<h5 ng-show="loadProgress.vis" class="blink">Loading</h5>
 
@@ -438,7 +438,7 @@
   <div class="colBody" id="leftDynamic">
     <div class="colHead" ng-click="visibleTabs.scenarios = !visibleTabs.scenarios">
       <i class="fa fa-random " ng-class="scenarioScore.loaded && !defaultsBuilt? 'faa-pulse animated' : ''"></i>
-      <span ng-show="!combos.sel">Scenario: Existing MBTA</span>
+      <span ng-show="!combos.sel">Scenario: Current Service</span>
       <span ng-show="combos.sel">
         Scenario<span ng-show="scenarioCompare"> Comparison</span>: {{ combos.all[combos.sel].name }}
         <span ng-show="scenarioCompare">
@@ -496,9 +496,6 @@
             <!--</div>-->
 
             <!--<input class="subHead" ng-show='inputIsOn'>  </input>-->
-
-
-
 
             <div style="width:20px;position:absolute">
               <div class="square" style="color:#FFF;background-color:{{variant.color}};"

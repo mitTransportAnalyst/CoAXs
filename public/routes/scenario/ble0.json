@@ -1,0 +1,48 @@
+{
+  "id": 0,
+  "description": "London Base (1-7-17)",
+  "feedChecksums": {
+    "NR": 4044460260,
+    "LU": 196155556,
+    "LB": 3390268265
+  },
+  "modifications": [
+    {
+      "type": "adjust-frequency",
+      "route": "LU:bakerloo",
+      "retainTripsOutsideFrequencyEntries": false,
+      "entries": [
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": true,
+          "sunday": true,
+          "name": "Inbound",
+          "startTime": 25200,
+          "endTime": 79200,
+          "headwaySecs": 120,
+          "startTimes": null,
+          "sourceTrip": "LU:bakerloo 940GZZLUHAW to 940GZZLUEAC scheduled Saturdays and Public Holidays departs 07:08"
+        },
+        {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": true,
+          "sunday": true,
+          "name": "Outbound",
+          "startTime": 25200,
+          "endTime": 79200,
+          "headwaySecs": 120,
+          "startTimes": null,
+          "sourceTrip": "LU:bakerloo 940GZZLUEAC to 940GZZLUHAW scheduled Monday to Friday departs 07:03"
+        }
+      ],
+      "comment": "Bakerloo - Frequency"
+    }]
+}
