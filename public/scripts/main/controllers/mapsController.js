@@ -844,7 +844,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	  id : comboId,
       name    : 'Current',
       created : Date.now(),
-      seedVariantId:'ble0', 
+      seedVariantId:'ble_0', 
 	  sel     : {
       },
       param   : {
@@ -856,7 +856,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       id : comboId,
 	  name    : 'Phase 1',
       created : Date.now(),
-	  seedVariantId:'ble1',
+	  seedVariantId:'ble_1',
       sel     : {
       },
       param   : {
