@@ -1,0 +1,26 @@
+{
+  "id": 0,
+  "description": "Bakerloo 2",
+  "feedChecksums": {
+    "LU": 196155556,
+    "NR": 1987199406,
+    "LB": 3390268265,
+    "ble": 351849629
+  },
+  "modifications": [
+    {
+      "type": "remove-trips",
+      "routes": [
+        "LU:bakerloo"
+      ],
+      "comment": "Remove Timetabled Trips"
+    },
+    {
+      "type": "remove-trips",
+      "routes": [
+        "ble:B0"
+      ],
+      "comment": "Remove Existing"
+    }
+  ]
+}

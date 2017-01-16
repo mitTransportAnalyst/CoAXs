@@ -1,0 +1,21 @@
+{
+  "id": 0,
+  "description": "Bakerloo 2",
+  "feedChecksums": {},
+  "modifications": [
+    {
+      "type": "remove-trips",
+      "routes": [
+        "LU:bakerloo"
+      ],
+      "comment": "Remove Timetabled Trips"
+    },
+    {
+      "type": "remove-trips",
+      "routes": [
+        "ble:B1"
+      ],
+      "comment": "Remove Extension"
+    }
+  ]
+}

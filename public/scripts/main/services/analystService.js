@@ -6,7 +6,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var analystUrl = ''; //to take the base and the oauth2 token
   var destinationUrlBase = '/load/destinations/'; //base URL for destination grid data
   var defaultShapefile = 'd54d12d0-b34a-4921-89f7-484973dbc3ac',
-     defaultGraph = '26a3c5c933b5c9e5cbbdb39fee92a571',
+     defaultGraph = '9d1291a32bf1a1911381fae998a049ad',
 	 workerVersion =  'v2.0.0-SNAPSHOT';
   var indicatorAttributes = {};
   var attributeUrlArray = [];
@@ -423,6 +423,16 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
               route.entries.forEach(function (entry) {
                 entry.headwaySecs = entry.headwaySecs*scale ;
               });
+              scenarioJSON.push(route);
+            }
+          });
+        cb(scenarioJSON)
+  };
+  
+ this.removeTrips = function (corridorId,seed,cb) {
+        var scenarioJSON = [];
+        seed.modifications.forEach(function(route){
+            if (route.type === "remove-trips"){
               scenarioJSON.push(route);
             }
           });
