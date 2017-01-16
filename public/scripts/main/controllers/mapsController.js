@@ -870,104 +870,50 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.letters = ['B'];
 
-  $scope.updateSelectScenario = function (comboIndex) {
+  $scope.updateScenario = function (comboIndex,com) {
     $scope.resetMap();
 	var currentModificationJSON = [];
-
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
-      console.log(tempNum);
-
-      analystService.modifyDwells(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
+	var seed = {};
+	modFun = function (modifyJSON) {
+		modifyJSON.forEach(function (route) {
+		  currentModificationJSON.push(route);
+		});
+	};	
+	//get the seed variant (stored as a json)
+	analystService.getSeedVariant($scope.combos.all[comboIndex].seedVariantId, function(seed) {
+      //for each route in the seed variant...
+	  $scope.letters.forEach(function (key){
+	    //apply reroute
+		analystService.reroute(key, seed, com, $scope.combos.all[comboIndex].id, modFun);
+		//apply dwell time modification
+		var dwellScale =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
+        analystService.modifyDwell(key,dwellScale,seed,modFun);
+		//apply speed modification
+		var speedScale =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
+		analystService.modifySpeed(key,speedScale,seed,function(modifyJSON){
+          modifyJSON.forEach(function (route) {
+            currentModificationJSON.push(route);
+          });
         });
-      });
-    })
-	
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
-      console.log(tempNum);
-
-      analystService.modifySpeed(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
+		//apply frequency modification
+		var frequencyScale =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
+		analystService.modifyHeadway(key,frequencyScale,seed,function(modifyJSON){
+          modifyJSON.forEach(function (route) {
+            currentModificationJSON.push(route);
+          });
         });
-      });
-    });
-
-
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
-      console.log(tempNum);
-
-      analystService.modifyHeadway(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
-        });
-      });
-    });
-
-
-    $scope.scenario0.modifications = currentModificationJSON;
-
-    console.log($scope.scenario0);
-
+      })
+		if (com==0){
+		  $scope.scenario0.modifications = currentModificationJSON;
+		  $scope.scenario0.id = $scope.combos.all[comboIndex].id;
+		  console.log($scope.scenario0);
+		} else if (com==1){
+		  $scope.scenario1.modifications = currentModificationJSON;
+		  $scope.scenario1.id = $scope.combos.all[comboIndex].id;
+		  console.log($scope.scenario1);
+		}
+	})
   }
-
-
-
-  $scope.updateComScenario = function (comboIndex) {
-    $scope.resetMap();
-	var currentModificationJSON = [];
-
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].dwell)/100;
-      console.log(tempNum);
-	  
-      analystService.modifyDwells(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
-        });
-      });
-    })
-
-
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  1/((100-$scope.combos.all[comboIndex].param[key].runningTime)/100);
-      console.log(tempNum);
-
-      analystService.modifySpeed(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
-        });
-      });
-    });
-
-
-    $scope.letters.forEach(function (key){
-
-      var tempNum =  (100-$scope.combos.all[comboIndex].param[key].headway)/100;
-      console.log(tempNum);
-
-      analystService.modifyHeadway(key,tempNum,function(modifyJSON){
-        modifyJSON.forEach(function (route) {
-          currentModificationJSON.push(route);
-        });
-      });
-    });
-
-
-    $scope.scenario1.modifications = currentModificationJSON;
-
-    console.log($scope.scenario1);
-  };
-
 
   $scope.$on('leafletDirectiveMap.moveend', function(event){
     leafletData.getMap('map_left').then(function(map){

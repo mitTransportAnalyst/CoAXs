@@ -359,51 +359,74 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   };
   
   // New modification functions  corridorID: "A", "B", "C", "D", "E"  scale: the modification scale
-  this.modifyDwells = function (corridorId,scale,cb) {
-    $http.get('/load/scenario/'+corridorId)
+  
+  
+  
+  this.getSeedVariant = function (seedVariantId, cb) {
+    $http.get('/load/scenario/'+seedVariantId)
       .success(function (data, status) {
+	    cb(data)
+	  })
+  }
+  
+  this.reroute = function (corridorId,seed,com,comboId, cb) {
+		var scenarioJSON = [];
+        seed.modifications.forEach(function(route){
+          if (route.type === "reroute"){
+            scenarioJSON.push(route);
+          }
+        });
+		if (scenarioJSON[0]){
+		  var tempReq = staticRequest;
+		  tempReq.request.scenario.id = comboId;
+		  tempReq.request.scenario.modifications = scenarioJSON;
+		  
+		  stopTreesBody[comboId] = JSON.stringify({
+				"type": 'static-stop-trees',
+				"graphId": defaultGraph,
+				"workerVersion": workerVersion,
+				"request": tempReq
+		  });
+		  reloadStopTrees[com] = true;
+		} else {
+		  reloadStopTrees[com] = false;
+		}
+		cb(scenarioJSON);
+  };
+  
+  this.modifyDwell = function (corridorId,scale,seed,cb) {
         var scenarioJSON = [];
-        data.modifications.forEach(function(route){
+        seed.modifications.forEach(function(route){
           if (route.type === "adjust-dwell-time"){
             route.scale = scale;
             scenarioJSON.push(route);
           }
-          }
-        );
+        });
         cb(scenarioJSON)
-      })
   };
   
-  this.modifySpeed = function (corridorId,scale,cb) {
-    $http.get('/load/scenario/'+corridorId)
-      .success(function (data, status) {
+  this.modifySpeed = function (corridorId,scale,seed,cb) {
         var scenarioJSON = [];
-        data.modifications.forEach(function(route){
+        seed.modifications.forEach(function(route){
             if (route.type === "adjust-speed"){
               route.scale = scale;
               scenarioJSON.push(route);
             }
-          }
-        );
+        });
         cb(scenarioJSON)
-      })
-  };
+   };
   
-  this.modifyHeadway = function (corridorId,scale,cb) {
-    $http.get('/load/scenario/'+corridorId)
-      .success(function (data, status) {
+  this.modifyHeadway = function (corridorId,scale,seed,cb) {
         var scenarioJSON = [];
-        data.modifications.forEach(function(route){
+        seed.modifications.forEach(function(route){
             if (route.type === "adjust-frequency"){
               route.entries.forEach(function (entry) {
                 entry.headwaySecs = entry.headwaySecs*scale ;
               });
               scenarioJSON.push(route);
             }
-          }
-        );
+          });
         cb(scenarioJSON)
-      })
   };
   
   this.modifyModes = function (routeTypes, c) {
