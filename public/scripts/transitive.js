@@ -18211,9 +18211,8 @@ exports.segments = {
       if (!segment.focused) return notFocusedColor;
       if (segment.type === 'TRANSIT') {
         if (segment.patterns) {
-          if (segment.patterns[0].route.route_short_name.toLowerCase().substring(
-            0,
-            2) === 'dc') return '#f00';
+          if (segment.patterns[0].route.route_type === 3) return '#C33'; //london bus
+		  if (segment.patterns[0].route.route_type === 2) return '#e86a10'; //overground
           return segment.patterns[0].route.getColor();
         }
       } else if (segment.type === 'CAR') {
@@ -18299,12 +18298,12 @@ exports.segments_halo = {
 
 exports.segment_label_containers = {
   fill: function(display, data) {
-    if (!data.isFocused()) return notFocusedColor;
-  },
-  'stroke-width': function(display, data) {
-    if (data.parent.pattern && data.parent.pattern.route.route_short_name.toLowerCase()
-      .substring(0, 2) === 'dc') return 1;
-    return 0;
+   var segment = data;
+      //if (!segment.focused) return notFocusedColor;
+      if (segment.type === 'TRANSIT') {
+		if (segment.patterns[0].route.route_type === 3) return '#C33'; //london bus
+		if (segment.patterns[0].route.route_type === 2) return '#e86a10'; //overground
+	  }
   },
   rx: 3,
   ry: 3
