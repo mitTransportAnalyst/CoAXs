@@ -1,21 +1,14 @@
-{"jobs":[
-	 {"id": "jobs1",
-	  "grid": "Jobs_with_earnings__1250_per_month_or_less.grid",
-	  "verbose": "Jobs | $"},
-	 {"id": "jobs2",
-	  "grid": "Jobs_with_earnings__1251_-__3333_per_month.grid",
-	  "verbose": "Jobs | $$"},
-	 {"id": "jobs3",
-	  "grid": "Jobs_with_earnings_greater_than__3333_per_month.grid",
-	  "verbose": "Jobs | $$$"}],
-	  "workers":[
-	 {"id": "workers1",
-	  "grid": "Workers_with_earnings__1250_per_month_or_less.grid",
-	  "verbose": "Workers | $"},
-	 {"id": "workers2",
-	  "grid": "Workers_with_earnings__1251_-__3333_per_month.grid",
-	  "verbose": "Workers | $$"},
-	 {"id": "workers3",
-	  "grid": "Workers_with_earnings_greater_than__3333_per_month.grid",
-	  "verbose": "Workers | $$$"}]
+{"jobs":
+[{"id": "agric", "verbose": "Agriculture", "color": "#CE7E50", "grid":"lon_wz_in_A_Agric"},	{"id": "minin", "verbose": "Mining", "color": "#BA6A3C", "grid":"lon_wz_in_B_Minin"},	
+{"id": "utili1", "verbose": "Utilities | Electric", "color": "#FF4244", "grid":"lon_wz_in_D_Elect"},	{"id": "utili2", "verbose": "Utilities | Water", "color": "#F82E30", "grid":"lon_wz_in_E_Water"},	
+{"id": "manuf", "verbose": "Manufacturing", "color": "#FFFF61", "grid":"lon_wz_in_C_Manuf"},	{"id": "const", "verbose": "Construction", "color": "#FFFF47", "grid":"lon_wz_in_F_Const"},	{"id": "whole", "verbose": "Wholesale", "color": "#FFFF33", "grid":"lon_wz_in_G_Whole"},
+{"id": "trans", "verbose": "Transport", "color": "#6EFFFB", "grid":"lon_wz_in_H_Trans"},	{"id": "accom", "verbose": "Accommodations", "color": "#5AF3E7", "grid":"lon_wz_in_I_Accom"},	{"id": "infor", "verbose": "Information Services", "color": "#46DFD3", "grid":"lon_wz_in_J_Infor"},
+{"id": "finan", "verbose": "Finance", "color": "#28D236", "grid":"lon_wz_in_K_Finan"},	{"id": "reale", "verbose": "Real Estate", "color": "#14BE22", "grid":"lon_wz_in_L_Real"},	{"id": "profe", "verbose": "Professional Services", "color": "#00AA0E", "grid":"lon_wz_in_M_Profe"},
+{"id": "admin", "verbose": "Administrative Services", "color": "#CEF6FF", "grid":"lon_wz_in_N_Admin"},	{"id": "publi", "verbose": "Public Administration", "color": "#BAE2F7", "grid":"lon_wz_in_O_Publi"},	{"id": "educa", "verbose": "Education", "color": "#A6CEE3", "grid":"lon_wz_in_P_Educa"},
+{"id": "healt", "verbose": "Human Health", "color": "#9265C2", "grid":"lon_wz_in_Q_Human"},
+{"id": "arten", "verbose": "Arts and Entertainment", "color": "#5097D2", "grid":"lon_wz_in_R_S_Art"},
+{"id": "activ1", "verbose": "Other", "color": "#FFC2C1", "grid":"lon_wz_in_T_Activ"}, {"id": "activ2", "verbose": "Other", "color": "#FFAEAD","grid":"lon_wz_in_U_Activ"}]
+,
+	 "workers":[],
+	 "minutes":[{"id": "walkTime", "verbose": "min. walking", "color": "#FFA728"},	{"id": "waitTime", "verbose": "min. waiting", "color": "#FF9314"},	{"id": "rideTime", "verbose": "min. riding", "color": "#FF7F00"}]
 }

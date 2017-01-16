@@ -4,14 +4,15 @@ coaxsApp.service('d3Service', function () {
 var attributes = [];
 
   this.setChartLabels = function(data){
-	attributes = data;
-	attributes = d3.map(attributes, function(d){return d.code;});
+	attributes = data.minutes;
+    attributes = attributes.concat(data.jobs);
+	attributes = d3.map(attributes, function(d){return d.id;});
   };
 
 //Map attributes so they can be get/set by code.
 
 //Defaults
-var	selCode = 'jobs1',
+var	selCode = 'finan',
 	xScale = null;
 
 colors = d3.scale.category10();
@@ -480,7 +481,7 @@ this.drawTimeGraph = function(plotData, indicator) {
 //Cumulative plot of accessible opportunities vs time, and stacked bar chart
 this.drawGraph = function (cutoff, plotData, indicator) {
   
-  selCode = 'jobs1';
+  selCode = 'finan';
   
   if (indicator.sel === 'workers'){
 	selCode = 'workers1';

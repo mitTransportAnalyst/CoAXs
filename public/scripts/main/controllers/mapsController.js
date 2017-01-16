@@ -265,7 +265,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   .then(function (){finishProgressBar()})
   });
   
-  loadService.getDestinationData('chartLabels',
+  loadService.getDestinationData('indicators.json',
 	  function(data){d3Service.setChartLabels(data)}
   );
 

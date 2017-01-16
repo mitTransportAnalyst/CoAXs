@@ -4,7 +4,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   var token = null;	//oauth2 token for analyst-server login
   var analystUrlBase = 'http://coaxs.mit.edu:9090/api/single?accessToken='; //base URL for Conveyal Analyst-Server
   var analystUrl = ''; //to take the base and the oauth2 token
-  var destinationUrlBase = 'https://analyst-static.s3.amazonaws.com/grids/boston/'; //base URL for destination grid data
+  var destinationUrlBase = '/load/destinations/'; //base URL for destination grid data
   var defaultShapefile = 'd54d12d0-b34a-4921-89f7-484973dbc3ac',
      defaultGraph = '709b3861891d5ea98975ab8317f8f270',
 	 workerVersion =  'v2.0.0-SNAPSHOT';
@@ -14,13 +14,15 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   
   this.setDestinationData = function(){
     return new Promise(function(resolve, reject){
-	  $http.get('/load/destinations/indicators')
+	  $http.get('/load/destinations/indicators.json')
       .success(function (data, status) {
 	    indicatorAttributes = data;
 	      for (indicator in indicatorAttributes){
             for (var i =0 ; i < indicatorAttributes[indicator].length; i ++){
-	          attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
-	          attributeIdArray.push(indicatorAttributes[indicator][i]['id']);
+	          if (indicatorAttributes[indicator][i]['grid']) {
+			    attributeUrlArray.push(indicatorAttributes[indicator][i]['grid']);
+	            attributeIdArray.push(indicatorAttributes[indicator][i]['id']);
+			  }
 	        }
         };
 	    resolve();	  
@@ -142,8 +144,8 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		
 		//get destination grid data for calculating accessibility indicators
 		$q.all(attributeUrlArray.map(function(gridName){
-			return fetch(destinationUrlBase+gridName).then(function(res){
-			return res.arrayBuffer()})
+			  return fetch(destinationUrlBase+gridName+'.grid').then(function(res){
+			  return res.arrayBuffer()})
 		  })).then( function(res){
 			console.log('fetched grids');
 			for (i in attributeIdArray) {

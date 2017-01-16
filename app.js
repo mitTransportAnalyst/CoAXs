@@ -123,7 +123,7 @@ app.get('/load/destinations/:fileName', function (req, res) {
       'x-sent'      : true
     }
   };
-  var file = req.params.fileName+".json";
+  var file = req.params.fileName;
   res.sendFile(file, options, function (err) {
     if (err) {
       console.log('sendFile error:', err);
