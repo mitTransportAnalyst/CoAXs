@@ -57,7 +57,10 @@ angular.module('coaxsFilters', [])
 	  return String(minutes + ' m, ' + seconds + ' s');
     } else {
       var minutes = Math.floor(input%60);
-      var hours = Math.floor(input/60);
+      if (minutes < 10){
+	    minutes = '0' + minutes;
+	  }
+	  var hours = Math.floor(input/60);
       return String(hours + ' h, ' + minutes + ' m')
     }
   }
