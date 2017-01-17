@@ -2,7 +2,7 @@
 coaxsApp.service('analystService', function (supportService, $interval, $http, $q) {
 
   var token = null;	//oauth2 token for analyst-server login
-  var analystUrlBase = 'http://coaxs.mit.edu:9090/api/single?accessToken='; //base URL for Conveyal Analyst-Server
+  var analystUrlBase = 'http://coaxs.mit.edu/api/single?accessToken='; //base URL for Conveyal Analyst-Server
   var analystUrl = ''; //to take the base and the oauth2 token
   var destinationUrlBase = '/load/destinations/'; //base URL for destination grid data
   var defaultShapefile = 'd54d12d0-b34a-4921-89f7-484973dbc3ac',
