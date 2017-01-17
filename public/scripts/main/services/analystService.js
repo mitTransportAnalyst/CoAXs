@@ -132,11 +132,10 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   this.fetchStopTreesAndGrids = function (baseUUID) {  
     return new Promise(function(resolve, reject){
 		checkWarmup().then(function(){
-			$q.all([
 			postToAnalyst(JSON.stringify(stopTreesBody[0])).then(function(res){
 			  console.log('fetching stopTrees');
 			  return res.arrayBuffer();
-			})]).then(function([stopTrees]){
+			}).then(function(stopTrees){
 			  stopTreesResponses[baseId]=stopTrees.slice(0);
 			  browsochrones[0].setStopTrees(stopTrees.slice(0));
 			  browsochrones[1].setStopTrees(stopTrees.slice(0));
