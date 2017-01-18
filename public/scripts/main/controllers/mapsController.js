@@ -272,7 +272,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 		$scope.markers.end.icon.iconSize = [48,48];
 		leafletData.getMap('map_left').then(function(map) {
 		  map.removeLayer(subStopsLayer);
-		  map.removeLayer(subwaysLayer_l);
 		})
 	}else {
 		$scope.markers.end.icon.iconSize = [0,0];
@@ -461,11 +460,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   leafletData.getMap('map_right').then(function (map) {
     // get mbta existing subway information
-	var gs = true;
-    loadService.getExisting(function (subways) {
-      subways.addTo(map);
-      subwaysLayer = subways;
-    },gs);
 	
 	// place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
@@ -559,6 +553,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	// 	cordonsLayer = cordonGeos;
 	// 	$scope.cordons = cordonData;
 	// });
+	
+	var gs = false;
+    loadService.getExisting(function (subways) {
+      subways.addTo(map);
+      subwaysLayer = subways;
+    },gs);
 
 	loadService.getTrunkforleft(function (data) {
     trunkLayerForleft = data.layerGroup;
@@ -570,11 +570,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
     },$scope.variants);
 	
-    loadService.getExisting(function (subways) {      
-      subwaysLayer_l = subways;
-	  subwaysLayer_l.addTo(map);
-    });
-
 	//place stops over routes plots on map
     loadService.getStops('/geojson/t_stops', function (stops) {
       var stopTypeSizes = [200, 250, 300];
@@ -613,8 +608,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
-
-    // load user points from phil's google spreadsheet
 
   });
   }
