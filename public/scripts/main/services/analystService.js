@@ -237,29 +237,29 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	
 	//fetch a grid for travel times
 	if(!isComparison){
-	  (function(){
-	    return new Promise(function(resolve, reject){
-		if(stopTreesBody[0].request.request.scenario.id != scenarios[0].id){ //if the scenario requested is not the same as the scenario for which we have stopTrees loaded in slot 1...
-	      if(!stopTreesResponses[scenarios[0].id]){ //and if we don't have the stopTrees cached from a previous request...
-		  stopTreesBody[0].request.request.scenario = scenarios[0];
-		  console.log('loading new stop trees');
-		  postToAnalyst(stopTreesBody[0]).then(function(res){
- 		    var stopTrees = res.arrayBuffer();
-		    stopTreesResponses[scenarios[0].id] = stopTrees.slice(0);
-		    browsochrones[0].setStopTrees(stopTrees.slice(0));
-		    console.log('reloaded stop trees');
-		    resolve();
-		  })
-	     } else { //we do have the stopTrees cached from a previous request, so set them
-	       console.log('resetting stop trees');
-		   browsochrones[0].setStopTrees(stopTreesResponses[scenarios[0].id]);
-		   resolve();
-	     }
-	   } else {
-	     console.log('not resetting stop trees');
-	     resolve();
-	   }
-	  })}).then(
+	  // (function(){
+	    // return new Promise(function(resolve, reject){
+		// if(stopTreesBody[0].request.request.scenario.id != scenarios[0].id){ //if the scenario requested is not the same as the scenario for which we have stopTrees loaded in slot 1...
+	      // if(!stopTreesResponses[scenarios[0].id]){ //and if we don't have the stopTrees cached from a previous request...
+		  // stopTreesBody[0].request.request.scenario = scenarios[0];
+		  // console.log('loading new stop trees');
+		  // postToAnalyst(stopTreesBody[0]).then(function(res){
+ 		    // var stopTrees = res.arrayBuffer();
+		    // stopTreesResponses[scenarios[0].id] = stopTrees.slice(0);
+		    // browsochrones[0].setStopTrees(stopTrees.slice(0));
+		    // console.log('reloaded stop trees');
+		    // resolve();
+		  // })
+	     // } else { //we do have the stopTrees cached from a previous request, so set them
+	       // console.log('resetting stop trees');
+		   // browsochrones[0].setStopTrees(stopTreesResponses[scenarios[0].id]);
+		   // resolve();
+	     // }
+	   // } else {
+	     // console.log('not resetting stop trees');
+	     // resolve();
+	   // }
+	  // })}).then(
 	  fetchMetadataIfNeeded(isPointToPoint, 0, scenarios).then(
 	  postToAnalyst(staticBody[0]).then(function(res){
 		  return res.arrayBuffer()})
@@ -269,7 +269,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		  .then(function(){
 			makeIsochronesAndPlotData(0,type).then(function(){resolve(plotData);})
 		  })
-		})))
+		}))
 	} else {
 //todo fix callback hell
 		$q.all(scenNumArray.map(function(i){
