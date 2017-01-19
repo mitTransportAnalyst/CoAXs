@@ -12,10 +12,10 @@ coaxsApp.service('targetService', function (leafletData) {
 
     this.targetCordons = function(cordonLayer, id){
 		cordonLayer.eachLayer(function(boundary){
-			if (boundary.options.style.id == id) {
+			//if (boundary.options.style.id == id) {
 				boundary.setStyle({opacity:0.75})}
-			else{boundary.setStyle({opacity:0})}
-		})
+			//else{boundary.setStyle({opacity:0})}}
+		)
 	};
 	
   // highlight the stops of a specific route

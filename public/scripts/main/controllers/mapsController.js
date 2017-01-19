@@ -36,7 +36,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   $scope.routeScorecard = false;
   $scope.indicators = {sel:'jobs',all:{jobs:'Jobs',workers:'Workers'}};
   $scope.scenarioLegend = true;
-  $scope.selCordon = null;
+  $scope.selCordon = 'all';
   
   $scope.cordons = {};
   
@@ -369,7 +369,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 	
 	$scope.markers[marker.modelName].lat = marker.model.lat;
     $scope.markers[marker.modelName].lng = marker.model.lng;
-    $scope.setCordon(null);
+    //$scope.setCordon(null);
 	//$scope.preMarkerQuery(); 
   });
 
@@ -548,11 +548,12 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
 	
-	// loadService.getCordons(function([cordonGeos, cordonData]){
-	// 	cordonGeos.addTo(map);
-	// 	cordonsLayer = cordonGeos;
-	// 	$scope.cordons = cordonData;
-	// });
+	loadService.getCordons(function([cordonGeos, cordonData]){
+		cordonGeos.addTo(map);
+		cordonsLayer = cordonGeos;
+		$scope.cordons = cordonData;
+		targetService.targetCordons(cordonsLayer,'all');
+	});
 	
 	var gs = false;
     loadService.getExisting(function (subways) {
