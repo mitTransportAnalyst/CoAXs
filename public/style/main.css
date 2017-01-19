@@ -530,9 +530,8 @@ background-color  : #696969;
 
 .station-sign .leaflet-popup-content p {
 	margin: 0px 0;
-	color: white;
-	background-color: black;
-	text-transform: uppercase;
+	color: black;
+	background-color: white;
 	padding-left: 15px;
 	padding-right: 15px;
 	padding-top: 5px;

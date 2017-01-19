@@ -10,10 +10,15 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 		cordonGeos = L.layerGroup();
 		var cordonData = {}; //new Array(numCordons);
 		for (cordonId in data){
+		    content = '<strong>'+data[cordonId].features[0].properties.verbose+'</strong><p style="text-align:left">Housing Target: '+data[cordonId].features[0].properties.hou_tar+'</p><p style="text-align:left">Job Target: '+data[cordonId].features[0].properties.job_tar ;
+			cordonPopup = L.popup({
+			  closeButton:false,
+			  className: 'station-sign'
+			}).setContent(content);
 			cordonGeos.addLayer(
 				L.geoJson(data[cordonId],
-				{style: {weight: 1.5,
-						 opacity:0,
+				{style: {weight: 1,
+						 opacity:0.9,
 						 fillOpacity:0,
 						 id: cordonId,
 						 dashArray: 3,
@@ -174,7 +179,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 
         stopList.push(L.circle([stop.geometry.coordinates[1], stop.geometry.coordinates[0]], 0, {
           stroke: false,
-          fillOpacity: 0.0,
+          fillOpacity: 1.0,
           base: stop.properties
         }));
       };
