@@ -45,7 +45,7 @@
 
   <div class="topright" ng-show="routeScorecard" style="background-color:{{variants[tabnav].color}};">
 	<h4>
-      <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}} ({{variants[tabnav].segmentData.length}} mile segment)
+      <i class="fa fa-line-chart"></i> Corridor Data: {{variants[tabnav].corName}} ({{variants[tabnav].segmentData.length}} km segment)
       <i class="fa fa-times-circle-o pull-right" ng-click="routeScorecard=false"></i>
     </h4>
     <div class="topinfo-body container" style="overflow-x: auto; background-color:#d3d3d3; color:#696969;">
@@ -95,9 +95,9 @@
 		<td><h5>Speed (segment only)</h5></td>
 		<td class="route" ng-repeat="line in routeData.lines">
 		<div class="route-base">
-		{{(routeData.base[line].segmentSpeed).toFixed(2)}} mph
+		{{(routeData.base[line].segmentSpeed).toFixed(1)}} kph
 		</div><div class="route-base">
-		{{(routeData.edit[line].segmentSpeed).toFixed(2)}} mph
+		{{(routeData.edit[line].segmentSpeed).toFixed(1)}} kph
 		</div></td>
 	  <tr>
 	  <tr>
@@ -507,7 +507,7 @@
             <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null;combos.sel=combo._key; updateScenario(combos.sel,0)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
-                <small>R: {{combo.param[variant._key].runningTime}} | D:{{combo.param[variant._key].dwell}}  | H:{{combo.param[variant._key].headway}}  </small>
+                <small>R: {{combo.param[variant._key].runningTime}} | D: {{combo.param[variant._key].dwell}}  | H:{{combo.param[variant._key].headway}}  </small>
               </div>
 
             </div>
