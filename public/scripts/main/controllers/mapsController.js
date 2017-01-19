@@ -809,6 +809,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       },
       param   : {
         'B' : {dwell:0, headway:0, runningTime: 0}
+		'K' : {dwell:0, headway:0, runningTime: 0}
         }
 	};
 };
