@@ -285,9 +285,11 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 	})
   }
 
-  processTransitiveResult = function (res, scenNum) {
+  processTransitiveResult = function (res, scenNum, gs) {
     var transitive = res.transitive;
-	  transitive.journeys = transitive.journeys.slice(0,2);
+	var numPaths = 2;
+	if(gs){numPaths = 1;}
+	  transitive.journeys = transitive.journeys.slice(0,numPaths);
 	  if (res.travelTime > 254){ //not a feasible journey
 	    plotData[scenNum] = {
 		  'walkTime' : 0,
@@ -307,9 +309,8 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		  'rideTime' : res.inVehicleTravelTime
 	    }
 	  }
-	  var transitiveLines = new Transitive({
-	    data:transitive,
-		styles: {
+	  
+	  tstyle = {
 		  multipoints_merged: {
 		    r: 6
 		  },
@@ -324,15 +325,24 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
 		  },
 		  segments: {
 		    'stroke-width': '4px',
-			'stroke-opacity': 0.8,
+			'stroke-opacity': 0.9,
 			'stroke-dasharray': function(display, segment){
 			  if (segment.type === 'WALK'){return '6,8'}
 			}
 		  },
-		  'segments-halo': {
-		    'stroke-opacity': 0.4
-		  }
-        },
+		  segments_halo: {
+		    'stroke-opacity': 0.5
+		}
+	  };
+		
+		if (gs) {
+		  tstyle.segments.stroke = '#444';
+		  tstyle.segments['stroke-opacity'] = 0.4;
+		}
+        
+	  var transitiveLines = new Transitive({
+	    data:transitive,
+		styles:tstyle,
 		zoomFactors: [{
           minScale: 0,
           gridCellSize: 25,
@@ -343,37 +353,40 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
           minScale: 0.5,
           gridCellSize: 0,
           internalVertexFactor: 0,
-          angleConstraint: 5,
+          angleConstraint: 10,
           mergeVertexThreshold: 0
         }]
 	  });
 	  transitiveLayer[scenNum] = new L.TransitiveLayer(transitiveLines)
   }
   
-  this.moveDestination = function (cb, marker, isComparison, map){
-    plotData = [];
-	if (browsochrones[0].surfaceLoaded ){ //time surface for origin already loaded
-	if(transitiveLayer[0]){map.removeLayer(transitiveLayer[0])};
+  this.moveDestination = function (cb, marker, isComparison, map){ //a destination pin is only available to be moved in point to point mode, so we know we'll be drawing the Transitive stylized map
+    plotData = []; //clear d3 chart of travel times
+	if (browsochrones[0].surfaceLoaded ){ // if time surface for origin already loaded...
+	if(transitiveLayer[0]){map.removeLayer(transitiveLayer[0])}; //rm Transitive layers
 	if(transitiveLayer[1]){map.removeLayer(transitiveLayer[1])};
 	var xy = browsochrones[0].latLonToOriginPoint(marker.getLatLng());
     browsochrones[0].generateDestinationData(xy).
 	then(function(res){
-	  processTransitiveResult(res,0);
-	  if(!isComparison){  
-	  cb(plotData);
-	  map.addLayer(transitiveLayer[0]);
-	  transitiveLayer[0]._refresh();
-	  } else { 
+	  if(!isComparison){   //if it's not a comparison, don't make the baseline Transitive segments grayscale, and callback right away
+	    processTransitiveResult(res,0,false);
+	    map.addLayer(transitiveLayer[0]);
+	    transitiveLayer[0]._refresh();
+	    cb(plotData);
+	  } else { //otherwise generate the destination and Transitive data for the second scenario
+		processTransitiveResult(res,0,true);  //make the baseline scenario grayscale and low opacity
 		browsochrones[1].generateDestinationData(xy).
 		then(function(res){
-		  processTransitiveResult(res,1)
-		  cb(plotData);
-		  map.addLayer(transitiveLayer[1]);
+		  processTransitiveResult(res,1,false);
+	      map.addLayer(transitiveLayer[1]);
 		  transitiveLayer[1] ._refresh();
+		  map.addLayer(transitiveLayer[0]);
+	      transitiveLayer[0]._refresh();
+		  cb(plotData);
 		});
 	  }
 	})
-	} else { //time surface for origin not yet loaded
+	} else { //otherwise, a time surface for origin is not yet loaded
 	  cb(null); //passing null to the callback function runs refresh origin
 	}
   }
