@@ -22,7 +22,8 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 						 fillOpacity:0,
 						 id: cordonId,
 						 dashArray: 3,
-						 color: data[cordonId].features[0].properties.color}}));
+						 color: data[cordonId].features[0].properties.color}}).
+						 bindPopup(cordonPopup));
 			cordonData[cordonId] = data[cordonId].features[0].properties;
 		}
 	  cb([cordonGeos,cordonData]);
@@ -88,7 +89,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
         feature['length'] = supportService.getLength(data.features[i].geometry);
 
         if (!routes[feature.pid]) { routes[feature.pid] = {} };
-        var color = variants[feature.corridorId].color;
+        var color = variants[feature.corName].color;
         routes[feature.pid] = L.geoJson(data.features[i], {
           style: function (feature) {
             return {

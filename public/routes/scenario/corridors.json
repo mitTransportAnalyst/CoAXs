@@ -1,28 +1,51 @@
 {"B" : { "sel" : null, "all" : {}, "color": "#b26300", 
 	  "buslines":["bakerloo"],
-	  "corName":"Bakerloo",
-	  "segmentData":{"length":0.6},
+	  "corName":"Extension",
+	  "corridorId":"B",
+	  "segmentData":{"length":7.4},
 	  "routeData": {
-	    "111":{
+	    "bakerloo":{
+		  "baseHeadway":2,
+		  "totalTime":100,
+		  "segmentTime":10,
+		  "segmentDist":0.6,
+		  "stops":25
+		}
+	  }
+},
+"K" : { "sel" : null, "all" : {}, "color": "#C33", 
+	  "buslines":["21","53","172","453"],
+	  "corName":"Buses",
+	  "corridorId":"K",
+	  "segmentData":{"length":4.3},
+	  "routeData": {
+	    "21":{
+		  "baseHeadway":6,
+		  "totalTime":147,
+		  "segmentTime":34,
+		  "segmentDist":8.6,
+		  "stops":182
+		},
+		"53":{
+		  "baseHeadway":7,
+		  "totalTime":157,
+		  "segmentTime":32,
+		  "segmentDist":8.6,
+		  "stops":110
+		},
+		"172":{
+		  "baseHeadway":10,
+		  "totalTime":134,
+		  "segmentTime":36,
+		  "segmentDist":8.6,
+		  "stops":86
+		},
+		"453":{
 		  "baseHeadway":5,
-		  "totalTime":70,
-		  "segmentTime":10,
-		  "segmentDist":0.6,
-		  "stops":37
-		},
-		"426":{
-		  "baseHeadway":40,
-		  "totalTime":113,
-		  "segmentTime":10,
-		  "segmentDist":0.6,
-		  "stops":108
-		},
-		"428":{
-		  "baseHeadway":60,
-		  "totalTime":137,
-		  "segmentTime":10,
-		  "segmentDist":0.6,
-		  "stops":100
+		  "totalTime":156,
+		  "segmentTime":34,
+		  "segmentDist":8.6,
+		  "stops":76
 		}
 	  }
 }

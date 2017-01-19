@@ -2,6 +2,9 @@
 "type": "FeatureCollection",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
-{ "type": "Feature", "properties": { "stopId": "lewi", "stopName": "Lewisham", "stopLat": 51.4650234, "stopLon": -0.0134861, "shapeId": "B1", "corId": 0, "altId": 1, "varId": 0, "direction": 0, "stopType": 2, "activated": 1, "routeId": "B1" }, "geometry": { "type": "Point", "coordinates": [ 51.4650234,-0.0134861 ] } },
+{ "type": "Feature", "properties": { "stopId": "lewi", "station": "Lewisham", "stopLat": 51.4650234, "stopLon": -0.0134861, "shapeId": "B1", "corId": 0, "altId": 1, "varId": 0, "direction": 0, "stopType": 2, "activated": 1, "routeId": "B1", "color":"#894E24" }, "geometry": { "type": "Point", "coordinates": [ -0.0134861,51.4650234] } },
+{ "type": "Feature", "properties": { "stopId": "nwcg", "station": "New Cross Gate", "stopLat": 51.4746474, "stopLon": -0.0407696, "shapeId": "B1", "corId": 0, "altId": 1, "varId": 0, "direction": 0, "stopType": 2, "activated": 1, "routeId": "B1", "color":"#894E24" }, "geometry": { "type": "Point", "coordinates": [ -0.0407696,51.4746474] } },
+{ "type": "Feature", "properties": { "stopId": "okr1", "station": "Old Kent Road 1", "stopLat": 51.4887053, "stopLon": -0.0775909, "shapeId": "B1", "corId": 0, "altId": 1, "varId": 0, "direction": 0, "stopType": 2, "activated": 1, "routeId": "B1", "color":"#894E24" }, "geometry": { "type": "Point", "coordinates": [ -0.0775909,51.4887053] } },
+{ "type": "Feature", "properties": { "stopId": "okr2", "station": "Old Kent Road 2", "stopLat": 51.4836813, "stopLon": -0.0653172, "shapeId": "B1", "corId": 0, "altId": 1, "varId": 0, "direction": 0, "stopType": 2, "activated": 1, "routeId": "B1", "color":"#894E24" }, "geometry": { "type": "Point", "coordinates": [ -0.0653172,51.4836813] } }
 ]
 }

@@ -61,18 +61,18 @@ coaxsApp.service('targetService', function (leafletData) {
 	  leafletData.getMap('map_right').then(function(map) {
 	    var tempBounds = null;
 	    routesLayer.eachLayer(function (layer) {
-	      if (layer.options.base.corridorId == id) {
-	        layer.setStyle({opacity: 0.7, weight: 2, color:"#555555"});
+	      if (layer.options.base.corName == id) {
+	        layer.setStyle({opacity: 0.7, weight: 2});
 	        tempBounds = layer.getBounds();
 	      } else {
-	        layer.setStyle({opacity: 0.1, weight: 0.5, color:"#555555"});
+	        layer.setStyle({opacity: 0.5, weight: 1});
 	      }
 
 	    });
       trunkLayer.eachLayer(function (layer) {
         if (layer.options.base.corridorId == id) {
           layer.setStyle({opacity: 1, weight: 15});
-          // tempBounds = layer.getBounds();
+          tempBounds = layer.getBounds();
         } else {
           layer.setStyle({opacity: 0, weight: 0.5});
 

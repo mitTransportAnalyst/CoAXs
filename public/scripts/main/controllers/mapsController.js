@@ -27,6 +27,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   $scope.currentParam = {
     'B' : {seedVariantId: 'B0', dwell:0, headway:0, runningTime: 0},
+	'K' : {seedVariantId: 'K0', dwell:0, headway:0, runningTime: 0}
   };
 
   $scope.scenario0 = {}; 
@@ -46,6 +47,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   $scope.scenario = {
 	'B' : angular.copy(scenarioBase),
+	'K' : angular.copy(scenarioBase),
     }
 
   $scope.variants = {};
@@ -459,48 +461,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP LEFT (this all runs on load, call backs are used for asynchronous operations)
   
   leafletData.getMap('map_right').then(function (map) {
-    // get mbta existing subway information
-	
-	// place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
-      var stopTypeSizes = [200, 250, 300];
-      var circleList = [];
-	  var stationNameList = [];
 
-      stops.eachLayer(function (marker) {
-        var stationColor = marker.options.base.color,
-		    stationStroke = false,
-            stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station
-			
-   
-		var stationNamePopup = L.popup({
-			  closeButton: false,
-			  className: 'station-sign'
-			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
-
-		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
-
-			
-		circleList.push(L.circle(stationLatLng, size, {
-          stroke: stationStroke,
-		  color: "#000000",
-		  weight: strokeWeight,
-		  opacity: 1,
-          fillColor: stationColor,
-          fillOpacity: 0.6,
-		}).bindPopup(stationNamePopup));
-	    
-	  });
-	
-      subStopsLayer = L.layerGroup(circleList);
-      subStopsLayer.addTo(map);
-    });
-	
-    //
     // // get priority portions (do this first so it renders beneath other content)
     // loadService.getProposedPriorityLanes(function (priorityLanes) {
       // priorityLanes.addTo(map);
@@ -534,14 +495,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       stops.addTo(map);
       stopsLayer = stops;
     });
-
-    // $scope.getUserHomeWork(function(data){
-    //   data.addTo(map);
-    //   poiUserPoints = stops;
-    //
-    // })
-
-
 
   });
 
@@ -581,26 +534,26 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
         var stationColor = marker.options.base.color,
 		    stationStroke = false,
             stationLatLng = [marker._latlng.lat, marker._latlng.lng],
-            size = stopTypeSizes[marker.options.base.stopType]/(map.getZoom()),
-            strokeWeight = 20/(map.getZoom()^(1/10)),
-			stationName = marker.options.base.station;
-
-
+            size = 400/(map.getZoom()^(1/2)),
+            strokeWeight = 15/(map.getZoom()^(1/5)),
+			stationName = marker.options.base.station
+			
+   
 		var stationNamePopup = L.popup({
 			  closeButton: false,
 			  className: 'station-sign'
 			}).setContent('<p style="background-color:'
-            +stationColor+';">'+stationName+'</p><br><p style="background-color: white;"></p>');
+            +stationColor+';"></p><p style="background-color: white;">'+stationName+'</p>');
 
 		if (stationColor == null){stationColor = "#FFFFFF"; stationStroke = true;};
 
-
+			
 		circleList.push(L.circle(stationLatLng, size, {
-          stroke: stationStroke,
-		  color: "#000000",
+          stroke: stationColor,
+		  color: stationColor,
 		  weight: strokeWeight,
 		  opacity: 1,
-          fillColor: stationColor,
+          fillColor: "#FFFFFF",
           fillOpacity: 0.9,
 		}).bindPopup(stationNamePopup));
 
@@ -609,15 +562,17 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
-
+	
   });
   }
+  
+
   
   // highlight a corridor, all routes within
   $scope.targetCorridor = function (variant) {
     targetService.targetCorridor(routesLayer, trunkLayer ,variant._key);
-    // targetService.targetStops(stopsLayer, null);
-	// targetService.targetPriority(priorityLayer, null);
+    //targetService.targetStops(stopsLayer, null);
+	//targetService.targetPriority(priorityLayer, null);
 	$scope.tabnav = variant._key;
 	$scope.variants[$scope.tabnav].sel = true;
 	updateRouteData();
@@ -625,7 +580,6 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
 
   //highlight a busline
   $scope.targetBusline = function (busline) {
-
     targetService.targetBusline(routesLayer,busline);
   };
 
@@ -709,10 +663,11 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   
   updateRouteData = function () {
     if($scope.variants[$scope.tabnav]){
-	//scorecardService.updateRouteData($scope.variants[$scope.tabnav],$scope.currentParam[$scope.tabnav], function(data){
-	//  $scope.routeData = data;
-	//})
-  }
+	if ($scope.tabnav != 'B'){
+	  scorecardService.updateRouteData($scope.variants[$scope.tabnav],$scope.currentParam[$scope.tabnav], function(data){
+	  $scope.routeData = data;
+	})
+  } else {$scope.routeData = null}}
   }
   
   $scope.updateRouteScorecard = function (routeId, tabnav) {
