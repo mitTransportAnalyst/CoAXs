@@ -507,7 +507,7 @@
             <div style="width:100%;position:absolute;left:22px;" ng-click="combos.com=null;combos.sel=combo._key; updateScenario(combos.sel,0)">
               <div ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
               <span class="text-success">
-                <small>R: {{combo.param[variant._key].runningTime}} | D: {{combo.param[variant._key].dwell}}  | H:{{combo.param[variant._key].headway}}  </small>
+                <small>R: {{-combo.param[variant._key].runningTime}} | D: {{-combo.param[variant._key].dwell}}  | H:{{-combo.param[variant._key].headway}}  </small>
               </div>
 
             </div>
@@ -629,8 +629,8 @@
 			<img src="public/imgs/runningtime.png" style="height:35px">
 			</div>
 			<div style="width:75%; display:inline-block">
-            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
-            <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
+            <input type="range" min="-40" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
+            <i class="fa fa-arrow-down" ng-class="currentParam[tabnav].runningTime > 0 ? '' : 'fa-rotate-180'"></i> {{currentParam[tabnav].runningTime | abs}}%
             </div>
           </div>
         </div>
@@ -652,8 +652,8 @@
 			<img src="public/imgs/dwelltime.png" style="height:35px">
 			</div>
 			<div style="width:75%; display:inline-block">
-              <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
-              <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].dwell}}%
+              <input type="range" min="-40" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
+              <i class="fa fa-arrow-down" ng-class="currentParam[tabnav].dwell > 0 ? '' : 'fa-rotate-180'"></i> {{currentParam[tabnav].dwell | abs}}%
             </div>
           </div>
 		  </div>
@@ -677,8 +677,8 @@
 			<img src="public/imgs/frequency.png" style="height:35px">
 			</div>
 			<div style="width:75%; display:inline-block">
-              <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />
-              <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].headway}}%
+              <input type="range" min="-50" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />
+              <i class="fa fa-arrow-down" ng-class="currentParam[tabnav].headway > 0 ? '' : 'fa-rotate-180'"></i> {{currentParam[tabnav].headway | abs}}%
             </div>
           </div>
 		  </div>

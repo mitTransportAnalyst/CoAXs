@@ -11,6 +11,11 @@ angular.module('coaxsFilters', [])
   };
 })
 
+.filter ('abs', function () {
+  return function(input){
+    return Math.abs(input);
+  }
+})
 
 // UPDATED AVG WAIT TIME FILTER TO PREVENT NnN DEFAULT STATE
 // this converts minute values in half for the purpose of getting avg wait times (and converts fractions into seconds)
