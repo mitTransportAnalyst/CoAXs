@@ -523,9 +523,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
       var routes = data.geoJsons;
 
     },$scope.variants);
-	
-	//place stops over routes plots on map
-    loadService.getStops('/geojson/t_stops', function (stops) {
+
+	    // place stops over routes plots on map
+	loadService.getStops('/geojson/proposed_stops', function (stops) {
       var stopTypeSizes = [200, 250, 300];
       var circleList = [];
 	  var stationNameList = [];
@@ -556,9 +556,9 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
           fillColor: "#FFFFFF",
           fillOpacity: 0.9,
 		}).bindPopup(stationNamePopup));
-
+	    
 	  });
-
+	
       subStopsLayer = L.layerGroup(circleList);
       subStopsLayer.addTo(map);
     });
