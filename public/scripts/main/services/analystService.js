@@ -91,7 +91,7 @@ coaxsApp.service('analystService', function (supportService, $interval, $http, $
   //to get stopTrees (walking distances from grid cells to nearby stops)
   var stopTreesResponses = {}
   
-  var postToAnalyst = function(body,cb) {return fetch(analystUrl,{method: 'POST', body: body});
+  var postToAnalyst = function(body) {return fetch(analystUrl,{method: 'POST', body: body});
   };
  
   var checkWarmup = function(){

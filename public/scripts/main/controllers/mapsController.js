@@ -501,7 +501,7 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   // initialize imported data - MAP RIGHT (this all runs on load, call backs are used for asynchronous operations)
   leafletData.getMap('map_left').then(function (map) {
 	
-	loadService.getCordons(function([cordonGeos, cordonData]){
+	loadService.getCordons(function(cordonGeos, cordonData){
 		cordonGeos.addTo(map);
 		cordonsLayer = cordonGeos;
 		$scope.cordons = cordonData;

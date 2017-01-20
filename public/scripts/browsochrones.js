@@ -59,7 +59,8 @@ function typedArraySupport () {
     return arr.foo() === 42 && // typed array instances can be augmented
         arr.constructor === Bar && // constructor can be set
         typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+        arr.subarray(1, 1).byteLength === 0 && // ie10 has broken `subarray`
+		arr.sort() //ie doesn't have sort.
   } catch (e) {
     return false
   }
@@ -2002,7 +2003,19 @@ function computeMedianPixelValue(travelTimes) {
   // be sorted to the end of the list. If more than half of the values are infinite, the median will
   // be infinite, which is fine and correct as long as the travel times are being censored at a value
   // larger than the time cutoff used for accessibility.
-  travelTimes.sort();
+  
+  if (Uint8Array.prototype.sort){ //IE will fail here
+    travelTimes.sort();
+  } else { //IE has array.sort(), but not UInt8Array.sort
+    var tmp = [];
+	for (var i = 0; i < travelTimes.length; i ++){
+	  tmp[i] = travelTimes[i];
+	}
+	var tmp2 = tmp.sort();
+    for (var i = 0; i < travelTimes.length; i ++){
+	  travelTimes[i] = tmp2[i];
+	}
+  }
 
   if (travelTimes.length === 1) {
     return travelTimes[0];
@@ -8656,9 +8669,23 @@ function jsolines(_ref) {
     // This is sufficient as shells don't overlap, and holes are guaranteed to be completely
     // contained by a single shell.
     var holePoint = (0, _turfPoint2.default)(hole.geometry.coordinates[0][0]);
-    var containingShell = shells.find(function (shell) {
-      return (0, _turfInside2.default)(holePoint, shell);
-    });
+    var containingShell;
+	if(Array.prototype.find){
+	  containingShell = shells.find(function (shell) {
+        return (0, _turfInside2.default)(holePoint, shell);
+      });
+	} else {
+	  var len = shells.length;
+	  var k = 0;
+	  while (k < len){
+	    var shell = shells[k];
+		if (_turfInside2.default(holePoint,shell) == 0){
+		  containingShell = shell;
+		  return;
+		}
+		k++;
+	  }
+	}
 
     if (containingShell) {
       containingShell.geometry.coordinates.push(hole.geometry.coordinates[0]);

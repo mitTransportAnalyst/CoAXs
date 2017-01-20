@@ -26,7 +26,7 @@ coaxsApp.service('loadService', function ($q, $http, analystService, leafletData
 						 bindPopup(cordonPopup));
 			cordonData[cordonId] = data[cordonId].features[0].properties;
 		}
-	  cb([cordonGeos,cordonData]);
+	  cb(cordonGeos,cordonData);
 	});
   }
 
