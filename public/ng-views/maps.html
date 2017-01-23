@@ -557,7 +557,7 @@
       <div>
         <label class="btn tiny" ng-click=""><i class="fa fa-level-down fa-flip-horizontal"></i>
         </label>
-        <div class="smallColVal" style="color:#FFF;background-color:{{variant.color}};font-size: 16px; padding: 8px;"
+        <div class="smallColVal" style="height:4vh;color:#FFF;background-color:{{variant.color}};font-size: 14px; padding: 8px;"
              ng-click="targetCorridor(variant)" ng-repeat="(key,variant) in variants | toArray | limitTo: 5">
           {{variant.corName}}
         </div>
@@ -623,17 +623,17 @@
       <div>
 
 	  <div class="setTimesTitle">
-        <div class="subHead" >
+        <div class="subHead" style="margin-top: -5px;">
           Running time change (segment only)
         </div>
           <div>
             <div style="margin-top: -2px;">
 			
-			<div style="width:60px; display:inline-block">
-			<img src="public/imgs/runningtime.png" style="height:35px">
+			<div style="padding-top: 2px;width:60px; display:inline-block">
+			<img src="public/imgs/runningtime.png" style="height:3.5vh">
 			</div>
-			<div style="width:75%; display:inline-block">
-            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 10px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
+			<div style="width:75%; display:inline-block;">
+            <input type="range" min="0" max="60" value="0" step="5" style="margin-top: 5px;" class="right" ng-model="currentParam[tabnav].runningTime" ng-change="trackClick('runningtime',currentParam[tabnav].runningTime)"/>
             <i class="fa fa-arrow-down"></i> {{currentParam[tabnav].runningTime}}%
             </div>
           </div>
@@ -642,7 +642,7 @@
 
       </div>
 
-      <div style="margin-top: 4px;">
+      <div style="margin-top: -2px;">
 
         <div class="setTimesTitle">
 
@@ -653,7 +653,7 @@
           <div>
             <div style="padding-top: 5px;">
 			<div style="width:60px; display:inline-block">
-			<img src="public/imgs/dwelltime.png" style="height:35px">
+			<img src="public/imgs/dwelltime.png" style="height:3vh">
 			</div>
 			<div style="width:75%; display:inline-block">
               <input type="range" min="0" max="60" value="0" step="5" class="right" ng-model="currentParam[tabnav].dwell" ng-change="trackClick('dwelltime',currentParam[tabnav].dwell)"/>
@@ -667,7 +667,7 @@
 
       </div>
 
-      <div style="margin-top: 7px;">
+      <div style="margin-top: 5px;">
 
         <div class="setTimesTitle">
 
@@ -678,7 +678,7 @@
           <div>
             <div style="padding-top: 5px;">
 			<div style="width:60px; display:inline-block">
-			<img src="public/imgs/frequency.png" style="height:35px">
+			<img src="public/imgs/frequency.png" style="height:3vh">
 			</div>
 			<div style="width:75%; display:inline-block">
               <input type="range" min="0" max="75" value="0" step="5" class="right" ng-model="currentParam[tabnav].headway" ng-change="trackClick('headway',currentParam[tabnav].headway)"  />

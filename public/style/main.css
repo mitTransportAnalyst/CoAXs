@@ -39,6 +39,7 @@ button {
 .tiny {
   background-color: #959595;
   width: 100%
+
 }
 
 .btn-savealt.active, .btn-savealt.focus, .btn-savealt.hover, .btn-savealt:active, .btn-savealt:focus, .btn-savealt:hover {
@@ -161,7 +162,7 @@ nav div.section {
   color: #FFF;
   z-index: 95;
   width: 100%;
-  bottom: 25%
+  bottom: 25%;
 }
 .bottomCol h1, .bottomCol h2, .bottomCol h3, .bottomCol h4, .bottomCol h5, .bottomCol h6, .introPan h4 {
   padding-left: 15px;
@@ -290,7 +291,7 @@ background-color  : #696969;
   text-align: center;
   position: absolute;
   max-height: 65%;
-  bottom: 25%;
+  bottom: 27vh;
   left: 300px;
   display: inline;
 
@@ -318,7 +319,7 @@ background-color  : #696969;
   position: absolute;
   background-color: #d3d3d3;
   bottom: 0px; 
-  height: 25%;
+  height: 27vh;
   min-height: 150px;
   overflow: hidden;
   padding-top: 28px;
@@ -551,7 +552,7 @@ input {
 
 /*maps*/
 .angular-leaflet-map {
-  height           : 75.5%;
+  height           : 73%;
   /*width: 50%;*/
   /*width: -moz-calc(100% - 300px);*/
   width: calc(100% - 300px);
@@ -561,7 +562,7 @@ input {
 }
 
 #map_right {
-  height           : 75.5%;
+  height           : 73%;
   /*width: 50%;*/
   /*width: -moz-calc(100% - 300px);*/
   width: calc(100% - 300px);
