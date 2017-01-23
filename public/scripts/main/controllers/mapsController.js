@@ -13,6 +13,54 @@ coaxsApp.controller('mapsController', function ($http, $scope, $state, $interval
   runScreenSetUp();
   window.onresize = function(event) { runScreenSetUp(); };
 
+
+
+    window.onload = function(e) {
+        // Instance the tour
+        var tour = new Tour({
+
+            steps: [
+                {
+                    element: "#map_left",
+                    title: "Map",
+                    content: "Move start pin",
+                    placement: "left"
+
+                },
+                {
+                    element: "#timeMap",
+                    title: "Time Map Panel",
+                    content: "Open time map panel and move time slider",
+                    placement: "top"
+                },
+                {
+                    element: "#leftDynamic",
+                    title: "Scenario Panel",
+                    content: "Open scenario panel and select/compare scenario",
+                    placement: "top"
+                },
+                {
+                    element: "#service-tab",
+                    title: "Service Editor",
+                    content: "Edit/save scenario",
+                    placement: "top"
+
+                }
+            ],
+            smartPlacement: false,
+            orphan: true
+        });
+
+        // Initialize the tour
+        tour.init();
+
+        // Start the tour
+        tour.start();
+
+
+
+
+    };
   // Management for current scenario
   var scenarioBase = {
     name     : null,
