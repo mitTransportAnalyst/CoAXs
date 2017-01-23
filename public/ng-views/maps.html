@@ -1,12 +1,13 @@
 <!-- progress bar -->
-<div class="progress" ng-show="loadProgress.vis">
+<!-- <div class="progress" ng-show="loadProgress.vis">
   <div class="progress-bar progress-bar-info progress-bar-striped active"
        role="progressbar" id="isosProgressBar"
        style="width:{{loadProgress.val}}%">
   </div>
-</div>
+</div> -->
 
 <!-- hamburger menu topleft -->
+<link rel="stylesheet" href="../style/main.css">
 <div class="topnav">
 <!--   <div class="fa-stack" ng-click="visibleTabs.routes=!visibleTabs.routes">
     <i class="fa fa-stop fa-stack-2x"></i>
@@ -377,7 +378,7 @@
 <div class="bottomNav">
 
   <!-- 2 destination and time filters -->
-  <div class="colBody">
+  <div class="colBody" id="timeMap">
     <div class="colHead" ng-click="visibleTabs.travel = !visibleTabs.travel">
       <i class="fa fa-clock-o" ng-class="scenarioScore.loaded && !visibleTabs.travel? 'faa-flash animated' : ''"></i>
       Time Map
