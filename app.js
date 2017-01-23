@@ -27,7 +27,7 @@ var csv     = require('csv-streamify');
 var analystCreds = require('request');
 
 var analystReqOpts = {
-  url: 'https://analyst-preview.conveyal.com/oauth/token',
+  url: 'http://coaxs.mit.edu:9090/oauth/token',
   method: 'POST',
   timeout: 10000,
   auth: {
