@@ -2,7 +2,7 @@
 
 input[type=range] {
   -webkit-appearance: none;
-  margin: 10px 0;
+  margin: 0px 0;
   width: 100%;
 }
 input[type=range]:focus {
@@ -10,7 +10,7 @@ input[type=range]:focus {
 }
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 17px;
+  height: 1.5vh;
   cursor: pointer;
   animate: 0.2s;
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
@@ -21,8 +21,8 @@ input[type=range]::-webkit-slider-runnable-track {
 input[type=range]::-webkit-slider-thumb {
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   border: 1px solid #353535;
-  height: 27px;
-  width: 30px;
+  height: 2.2vh;
+  width: 2.2vh;
   border-radius: 0px;
   background: #808080;
   cursor: pointer;
@@ -34,7 +34,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 input[type=range]::-moz-range-track {
   width: 100%;
-  height: 17px;
+  height: 1.5vh;
   cursor: pointer;
   animate: 0.2s;
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
@@ -45,15 +45,15 @@ input[type=range]::-moz-range-track {
 input[type=range]::-moz-range-thumb {
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   border: 1px solid #353535;
-  height: 27px;
-  width: 30px;
+  height: 2.2vh;
+  width: 2.2vh;
   border-radius: 0px;
   background: #808080;
   cursor: pointer;
 }
 input[type=range]::-ms-track {
   width: 100%;
-  height: 17px;
+  height: 1.5vh;
   cursor: pointer;
   animate: 0.2s;
   background: transparent;
@@ -76,8 +76,8 @@ input[type=range]::-ms-fill-upper {
 input[type=range]::-ms-thumb {
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   border: 1px solid #353535;
-  height: 27px;
-  width: 30px;
+  height: 2.2vh;
+  width: 2.2vh;
   border-radius: 0px;
   background: #808080;
   cursor: pointer;
