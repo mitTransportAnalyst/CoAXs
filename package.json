@@ -2,7 +2,7 @@
   "name": "coaxs",
   "main": "app.js",
   "engines": {
-    "node": "6.11.11"
+    "node": "6.11.1"
   },
   "dependencies": {
     "aws-sdk": "^2.1.45",
