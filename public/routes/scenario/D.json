@@ -2499,7 +2499,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 900,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28498997"
         },
         {
@@ -2514,7 +2514,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27953084"
         }
       ],
@@ -2537,7 +2537,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 450,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28499682"
         },
         {
@@ -2552,7 +2552,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 480,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27954457"
         }
       ],
@@ -2575,7 +2575,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 900,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27777718"
         },
         {
@@ -2590,7 +2590,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1350,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28361905"
         }
       ],
@@ -2613,7 +2613,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27950212"
         },
         {
@@ -2628,7 +2628,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28350868"
         }
       ],
@@ -2651,7 +2651,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1800,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28498560"
         },
         {
@@ -2666,7 +2666,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1350,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28498559"
         }
       ],
@@ -2689,7 +2689,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27776927"
         },
         {
@@ -2704,7 +2704,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1350,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27776928"
         }
       ],
@@ -2727,7 +2727,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28499608"
         },
         {
@@ -2742,7 +2742,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27954292"
         }
       ],
@@ -2765,7 +2765,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 900,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:27954372"
         },
         {
@@ -2780,7 +2780,7 @@
           "startTime": 25200,
           "endTime": 32400,
           "headwaySecs": 1080,
-          "startTimes": null,
+          "firstDepartures": null,
           "sourceTrip": "MBTA:28350213"
         }
       ],
