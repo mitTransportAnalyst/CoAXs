@@ -23,6 +23,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node app.js"
+    "start": "bower install node app.js"
   }
 }
